@@ -9,19 +9,32 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selection = 0
+    @State private var selection = 1
  
     var body: some View {
         TabView(selection: $selection){
-            Text("First View")
-                .font(.title)
+            Form {
+                Section {
+                /*@START_MENU_TOKEN@*/ /*@PLACEHOLDER=Section Content@*/Text("Section Content")/*@END_MENU_TOKEN@*/
+            }
                 .tabItem {
                     VStack {
                         Image("first")
-                        Text("First")
+                        Text("Coco")
                     }
                 }
                 .tag(0)
+
+            }
+            Text("First View")
+                .font(.largeTitle)
+                .tabItem {
+                    VStack {
+                        Image("first")
+                        Text("Coco")
+                    }
+                }
+                .tag(1)
             Text("Second View")
                 .font(.title)
                 .tabItem {
@@ -30,7 +43,7 @@ struct ContentView: View {
                         Text("Second")
                     }
                 }
-                .tag(1)
+                .tag(2)
         }
     }
 }
