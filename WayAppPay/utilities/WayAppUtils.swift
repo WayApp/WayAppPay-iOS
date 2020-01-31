@@ -28,13 +28,13 @@ extension WayAppUtils {
     /* Embed confidential information in items that you store in a keychain
      * Typical use is:
      * 1) Credentials:
-     *    let genericPassword = WayAppUtils.KeychainHandler.GenericPasswordCredentials(account: "myAccount", password: "myPassword", service: "myService")
+     *    let genericPassword = KeychainHandler.GenericPasswordCredentials(account: "myAccount", password: "myPassword", service: "myService")
      * 2) Create:
-     *    let query = WayAppUtils.KeychainHandler.createGenericPasswordQuery(for: genericPassword)
+     *    let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
      * 3) Add or update:
-     *    try WayAppUtils.KeychainHandler.addQuery(query)
+     *    try KeychainHandler.addQuery(query)
      * 4) Search:
-     *    try WayAppUtils.KeychainHandler.searchGenericPasswordQuery(account: "myAccount", service: "myService")
+     *    try KeychainHandler.searchGenericPasswordQuery(account: "myAccount", service: "myService")
      */
     struct KeychainHandler {
         typealias Query = [String: Any]
@@ -84,7 +84,7 @@ extension WayAppUtils {
         // MARK: - Generic to all query formats
         static func deleteQuery(_ query: Query) throws {
             let status = SecItemDelete(query as CFDictionary)
-            guard status != errSecItemNotFound else { throw WayAppUtils.KeychainHandler.Error.passwordNotFound }
+            guard status != errSecItemNotFound else { throw KeychainHandler.Error.passwordNotFound }
             guard status == errSecSuccess else { throw Error.unhandled(status: status) }
         }
 
@@ -92,13 +92,13 @@ extension WayAppUtils {
             let passwordData = password.data(using: String.Encoding.utf8)!
             let attribute: [String: Any] = [kSecValueData as String: passwordData]
             let status = SecItemUpdate(query as CFDictionary, attribute as CFDictionary)
-            guard status != errSecItemNotFound else { throw WayAppUtils.KeychainHandler.Error.passwordNotFound }
+            guard status != errSecItemNotFound else { throw KeychainHandler.Error.passwordNotFound }
             guard status == errSecSuccess else { throw Error.unhandled(status: status) }
         }
 
         static func addQuery(_ query: Query) throws {
             let status = SecItemAdd(query as CFDictionary, nil)
-            guard status != errSecDuplicateItem else { throw WayAppUtils.KeychainHandler.Error.duplicateItem }
+            guard status != errSecDuplicateItem else { throw KeychainHandler.Error.duplicateItem }
             guard status == errSecSuccess else { throw Error.unhandled(status: status) }
         }
         
@@ -125,8 +125,8 @@ extension WayAppUtils {
                                         kSecReturnData as String: true]
             var item: CFTypeRef?
             let status = SecItemCopyMatching(query as CFDictionary, &item)
-            guard status != errSecItemNotFound else { throw WayAppUtils.KeychainHandler.Error.passwordNotFound }
-            guard status == errSecSuccess else { throw WayAppUtils.KeychainHandler.Error.unhandled(status: status) }
+            guard status != errSecItemNotFound else { throw KeychainHandler.Error.passwordNotFound }
+            guard status == errSecSuccess else { throw KeychainHandler.Error.unhandled(status: status) }
             guard let existingItem = item as? Query,
                 let passwordData = existingItem[kSecValueData as String] as? Data,
                 let password = String(data: passwordData, encoding: String.Encoding.utf8),

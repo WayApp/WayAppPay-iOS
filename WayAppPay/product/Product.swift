@@ -10,8 +10,11 @@ import Foundation
 
 extension WayAppPay {
     
-    struct Product: Codable {
+    struct Product: Codable, Identifiable {
         
+        static let defaultImageName = "questionmark.square"
+        static let defaultName = "missing name"
+
         var productUUID: String?
         var merchantUUID: String?
         var name: String?
@@ -23,6 +26,11 @@ extension WayAppPay {
         var keywords: [String]?
         var creationDate: Date?
         var lastUpdateDate: Date?
+        
+        // Protocol Identifiable
+        var id: String {
+            return productUUID ?? UUID().uuidString
+        }
 
     }
 }
