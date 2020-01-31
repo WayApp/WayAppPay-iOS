@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF3A373823E45B3400E437CA /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373723E45B3400E437CA /* DisplayView.swift */; };
+		AF3A373A23E45BD200E437CA /* DeleteButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373923E45BD200E437CA /* DeleteButtonView.swift */; };
+		AF3A373C23E4770500E437CA /* DescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373B23E4770500E437CA /* DescriptionView.swift */; };
+		AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373D23E4797100E437CA /* NumberButtonView.swift */; };
+		AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373F23E47A3700E437CA /* AddButtonView.swift */; };
+		AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374223E4881F00E437CA /* AuthenticationView.swift */; };
+		AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374423E48A7200E437CA /* CartButtonView.swift */; };
 		B12DE95023AA638500C02657 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE94F23AA638500C02657 /* Account.swift */; };
 		B12DE95323AA643E00C02657 /* WayAppPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95223AA643E00C02657 /* WayAppPay.swift */; };
 		B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95423AA654E00C02657 /* UserMessage.swift */; };
@@ -48,6 +55,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF3A373723E45B3400E437CA /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
+		AF3A373923E45BD200E437CA /* DeleteButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonView.swift; sourceTree = "<group>"; };
+		AF3A373B23E4770500E437CA /* DescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionView.swift; sourceTree = "<group>"; };
+		AF3A373D23E4797100E437CA /* NumberButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberButtonView.swift; sourceTree = "<group>"; };
+		AF3A373F23E47A3700E437CA /* AddButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButtonView.swift; sourceTree = "<group>"; };
+		AF3A374223E4881F00E437CA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
+		AF3A374423E48A7200E437CA /* CartButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartButtonView.swift; sourceTree = "<group>"; };
 		B12DE94F23AA638500C02657 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B12DE95223AA643E00C02657 /* WayAppPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppPay.swift; sourceTree = "<group>"; };
 		B12DE95423AA654E00C02657 /* UserMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessage.swift; sourceTree = "<group>"; };
@@ -102,6 +116,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AF3A374123E4879800E437CA /* main */ = {
+			isa = PBXGroup;
+			children = (
+				B19ACCBC238B092A009FF084 /* MainView.swift */,
+				AF3A374423E48A7200E437CA /* CartButtonView.swift */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
 		B12DE94C23AA632400C02657 /* account */ = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +132,7 @@
 				B12DE98123AA7CA300C02657 /* Session.swift */,
 				B12DE98523AA7F0E00C02657 /* Biometrics.swift */,
 				B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */,
+				AF3A374223E4881F00E437CA /* AuthenticationView.swift */,
 			);
 			path = account;
 			sourceTree = "<group>";
@@ -228,7 +252,7 @@
 				B12DE94C23AA632400C02657 /* account */,
 				B19ACCB8238B092A009FF084 /* AppDelegate.swift */,
 				B19ACCBA238B092A009FF084 /* SceneDelegate.swift */,
-				B19ACCBC238B092A009FF084 /* MainView.swift */,
+				AF3A374123E4879800E437CA /* main */,
 				B19ACCBE238B092C009FF084 /* Assets.xcassets */,
 				B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */,
 				B19ACCC6238B092C009FF084 /* Info.plist */,
@@ -249,6 +273,11 @@
 			isa = PBXGroup;
 			children = (
 				B1E7A57D23E4474A00CC2E04 /* AmountView.swift */,
+				AF3A373723E45B3400E437CA /* DisplayView.swift */,
+				AF3A373923E45BD200E437CA /* DeleteButtonView.swift */,
+				AF3A373B23E4770500E437CA /* DescriptionView.swift */,
+				AF3A373D23E4797100E437CA /* NumberButtonView.swift */,
+				AF3A373F23E47A3700E437CA /* AddButtonView.swift */,
 			);
 			path = amount;
 			sourceTree = "<group>";
@@ -342,20 +371,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				B12DE95323AA643E00C02657 /* WayAppPay.swift in Sources */,
+				AF3A373A23E45BD200E437CA /* DeleteButtonView.swift in Sources */,
 				B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */,
 				B12DE97423AA718300C02657 /* Card.swift in Sources */,
 				B12DE97123AA713C00C02657 /* Issuer.swift in Sources */,
 				B12DE98623AA7F0E00C02657 /* Biometrics.swift in Sources */,
 				B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */,
+				AF3A373C23E4770500E437CA /* DescriptionView.swift in Sources */,
 				B12DE95C23AA6A9B00C02657 /* UserInterfaceStyleGuide.swift in Sources */,
 				B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
+				AF3A373823E45B3400E437CA /* DisplayView.swift in Sources */,
 				B12DE97E23AA7A3300C02657 /* PaymentMethod.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
 				B1E7A58623E448D000CC2E04 /* ReportsView.swift in Sources */,
 				B12DE97623AA73CC00C02657 /* Address.swift in Sources */,
 				B12DE96B23AA701E00C02657 /* Product.swift in Sources */,
+				AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */,
 				B12DE95823AA66F700C02657 /* DefaultKeys.swift in Sources */,
 				B12DE97C23AA79B800C02657 /* IdentityDocument.swift in Sources */,
 				B12DE98223AA7CA300C02657 /* Session.swift in Sources */,
@@ -364,6 +397,7 @@
 				B12DE96923AA6FAE00C02657 /* HTTPNetworkAccess.swift in Sources */,
 				B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
+				AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */,
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
 				B12DE97823AA783900C02657 /* Currency.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
@@ -372,9 +406,11 @@
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
 				B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */,
+				AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */,
 				B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,
 				B12DE98023AA7B9400C02657 /* API.swift in Sources */,
+				AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */,
 				B12DE96023AA6C5900C02657 /* JsonCoding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
