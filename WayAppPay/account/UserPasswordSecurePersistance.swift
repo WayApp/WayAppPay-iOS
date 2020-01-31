@@ -11,33 +11,33 @@ import Foundation
 extension WayAppPay {
     
     static func savePassword(_ password: String, forEmail email: String) throws {
-        let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
-        let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
+        let genericPassword = WayAppUtils.KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
+        let query = WayAppUtils.KeychainHandler.createGenericPasswordQuery(for: genericPassword)
         do {
-            try KeychainHandler.addQuery(query)
-        } catch KeychainHandler.Error.duplicateItem {
-            try KeychainHandler.updateQuery(query, password: password)
+            try WayAppUtils.KeychainHandler.addQuery(query)
+        } catch WayAppUtils.KeychainHandler.Error.duplicateItem {
+            try WayAppUtils.KeychainHandler.updateQuery(query, password: password)
         } catch {
-            Log.message(error.localizedDescription)
+            WayAppUtils.Log.message(error.localizedDescription)
             throw error
         }
     }
     
     static func deletePassword(_ password: String, forEmail email: String) throws {
-        let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
-        let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
+        let genericPassword = WayAppUtils.KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
+        let query = WayAppUtils.KeychainHandler.createGenericPasswordQuery(for: genericPassword)
         do {
-            try KeychainHandler.deleteQuery(query)
+            try WayAppUtils.KeychainHandler.deleteQuery(query)
         } catch {
             throw error
         }
     }
     
     static func updatePassword(_ password: String, forEmail email: String) throws {
-        let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
-        let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
+        let genericPassword = WayAppUtils.KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
+        let query = WayAppUtils.KeychainHandler.createGenericPasswordQuery(for: genericPassword)
         do {
-            try KeychainHandler.updateQuery(query, password: password)
+            try WayAppUtils.KeychainHandler.updateQuery(query, password: password)
         } catch {
             throw error
         }
@@ -46,9 +46,9 @@ extension WayAppPay {
     static func retrievePassword(forEmail: String) -> String? {
         var password: String?
         do {
-            password = try KeychainHandler.searchGenericPasswordQuery(account: forEmail, service: WayAppPay.appName)
+            password = try WayAppUtils.KeychainHandler.searchGenericPasswordQuery(account: forEmail, service: WayAppPay.appName)
         } catch {
-            Log.message(error.localizedDescription)
+            WayAppUtils.Log.message(error.localizedDescription)
         }
         return password
     }

@@ -113,7 +113,7 @@ extension WayAppPay {
                             let oopsVC = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "OopsVC")
                             view.present(oopsVC, animated: true, completion: nil)
                         } else {
-                            Log.message(error.localizedDescription)
+                            WayAppUtils.Log.message(error.localizedDescription)
                         }
                     }
                 }
@@ -199,7 +199,7 @@ extension WayAppPay {
                         httpCall(type: decodingType, completionHandler: completion)
                     default:
         //                guard let token = WayAppPay.Session.token else {
-        //                    Log.message("Missing WayAppPay.Session.token")
+        //                    WayAppUtils.Log.message("Missing WayAppPay.Session.token")
         //                    return
         //                }
                         return

@@ -19,7 +19,7 @@ extension DefaultKeyPersistence {
             UserDefaults.standard.set(data, forKey: defaultKey.uppercased())
             UserDefaults.standard.synchronize()
         } catch {
-            Log.message("Error: \(error.localizedDescription)")
+            WayAppUtils.Log.message("Error: \(error.localizedDescription)")
         }
     }
     
@@ -28,7 +28,7 @@ extension DefaultKeyPersistence {
             do {
                 return try WayAppPay.jsonDecoder.decode(T.self, from: data)
             } catch {
-                Log.message("Error: \(error.localizedDescription)")
+                WayAppUtils.Log.message("Error: \(error.localizedDescription)")
             }
         }
         return nil

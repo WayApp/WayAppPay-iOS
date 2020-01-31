@@ -154,7 +154,7 @@ enum HTTPCall {
             completion(nil, .invalidRequest)
             return
         }
-        Log.message("urlRequest=\(String(describing: urlRequest.url))")
+        WayAppUtils.Log.message("urlRequest=\(String(describing: urlRequest.url))")
         DispatchQueue.main.async { UIApplication.shared.isNetworkActivityIndicatorVisible = true }
         URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) -> Void in
             DispatchQueue.main.async { UIApplication.shared.isNetworkActivityIndicatorVisible = false }
@@ -171,9 +171,9 @@ enum HTTPCall {
                 } else if self.endpoint.isSuccessStatusCodeWithJSONResponse(httpResponse.statusCode),
                     let data = data {
                     if let json = ((try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? JSON) as JSON??) {
-                        Log.message("\nRequest: \(urlRequest.url!.absoluteString)\nJSON: " + String(describing: json))
+                        WayAppUtils.Log.message("\nRequest: \(urlRequest.url!.absoluteString)\nJSON: " + String(describing: json))
                     } else {
-                        Log.message("\nDid not get valid JSON response")
+                        WayAppUtils.Log.message("\nDid not get valid JSON response")
                     }
                     if let response = try? WayAppPay.jsonDecoder.decode(decodingType, from: data) {
                         completion(response, nil)
