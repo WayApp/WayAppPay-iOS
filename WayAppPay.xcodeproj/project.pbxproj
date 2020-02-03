@@ -14,6 +14,10 @@
 		AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373F23E47A3700E437CA /* AddButtonView.swift */; };
 		AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374223E4881F00E437CA /* AuthenticationView.swift */; };
 		AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374423E48A7200E437CA /* CartButtonView.swift */; };
+		AF3A375023E6E72F00E437CA /* ForgotPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374F23E6E72F00E437CA /* ForgotPinView.swift */; };
+		AF3A375223E6E78800E437CA /* RememberUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375123E6E78800E437CA /* RememberUserView.swift */; };
+		AF3A375423E6EBA500E437CA /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375323E6EBA500E437CA /* PinView.swift */; };
+		AF3A375623E6EBB800E437CA /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375523E6EBB800E437CA /* UserView.swift */; };
 		B12DE95023AA638500C02657 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE94F23AA638500C02657 /* Account.swift */; };
 		B12DE95323AA643E00C02657 /* WayAppPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95223AA643E00C02657 /* WayAppPay.swift */; };
 		B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95423AA654E00C02657 /* UserMessage.swift */; };
@@ -63,6 +67,10 @@
 		AF3A373F23E47A3700E437CA /* AddButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButtonView.swift; sourceTree = "<group>"; };
 		AF3A374223E4881F00E437CA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		AF3A374423E48A7200E437CA /* CartButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartButtonView.swift; sourceTree = "<group>"; };
+		AF3A374F23E6E72F00E437CA /* ForgotPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPinView.swift; sourceTree = "<group>"; };
+		AF3A375123E6E78800E437CA /* RememberUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RememberUserView.swift; sourceTree = "<group>"; };
+		AF3A375323E6EBA500E437CA /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
+		AF3A375523E6EBB800E437CA /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		B12DE94F23AA638500C02657 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B12DE95223AA643E00C02657 /* WayAppPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppPay.swift; sourceTree = "<group>"; };
 		B12DE95423AA654E00C02657 /* UserMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessage.swift; sourceTree = "<group>"; };
@@ -136,6 +144,10 @@
 				B12DE98523AA7F0E00C02657 /* Biometrics.swift */,
 				B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */,
 				AF3A374223E4881F00E437CA /* AuthenticationView.swift */,
+				AF3A374F23E6E72F00E437CA /* ForgotPinView.swift */,
+				AF3A375123E6E78800E437CA /* RememberUserView.swift */,
+				AF3A375323E6EBA500E437CA /* PinView.swift */,
+				AF3A375523E6EBB800E437CA /* UserView.swift */,
 			);
 			path = account;
 			sourceTree = "<group>";
@@ -384,6 +396,7 @@
 				B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */,
 				B12DE97423AA718300C02657 /* Card.swift in Sources */,
 				B12DE97123AA713C00C02657 /* Issuer.swift in Sources */,
+				AF3A375423E6EBA500E437CA /* PinView.swift in Sources */,
 				B12DE98623AA7F0E00C02657 /* Biometrics.swift in Sources */,
 				B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */,
 				AF3A373C23E4770500E437CA /* DescriptionView.swift in Sources */,
@@ -407,6 +420,7 @@
 				B12DE96923AA6FAE00C02657 /* HTTPNetworkAccess.swift in Sources */,
 				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */,
+				AF3A375623E6EBB800E437CA /* UserView.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
 				AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */,
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
@@ -414,9 +428,11 @@
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
 				B12DE97A23AA790100C02657 /* TransactionReadingType.swift in Sources */,
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
+				AF3A375223E6E78800E437CA /* RememberUserView.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
 				B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */,
 				AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */,
+				AF3A375023E6E72F00E437CA /* ForgotPinView.swift in Sources */,
 				B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,
 				B12DE98023AA7B9400C02657 /* API.swift in Sources */,
