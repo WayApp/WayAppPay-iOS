@@ -28,8 +28,6 @@
 		B12DE96E23AA709700C02657 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE96D23AA709700C02657 /* Transaction.swift */; };
 		B12DE97123AA713C00C02657 /* Issuer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97023AA713C00C02657 /* Issuer.swift */; };
 		B12DE97423AA718300C02657 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97323AA718300C02657 /* Card.swift */; };
-		B12DE97623AA73CC00C02657 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97523AA73CC00C02657 /* Address.swift */; };
-		B12DE97823AA783900C02657 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97723AA783900C02657 /* Currency.swift */; };
 		B12DE97A23AA790100C02657 /* TransactionReadingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97923AA790100C02657 /* TransactionReadingType.swift */; };
 		B12DE97C23AA79B800C02657 /* IdentityDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97B23AA79B800C02657 /* IdentityDocument.swift */; };
 		B12DE97E23AA7A3300C02657 /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97D23AA7A3300C02657 /* PaymentMethod.swift */; };
@@ -52,6 +50,9 @@
 		B1E7A58623E448D000CC2E04 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58523E448D000CC2E04 /* ReportsView.swift */; };
 		B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58723E44A1B00CC2E04 /* ProductRowView.swift */; };
 		B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58923E44E3E00CC2E04 /* ProductDetailView.swift */; };
+		B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58C23E5860100CC2E04 /* Merchant.swift */; };
+		B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58E23E617ED00CC2E04 /* Container.swift */; };
+		B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,14 +72,11 @@
 		B12DE95D23AA6C1300C02657 /* DefaultKeyPersistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultKeyPersistance.swift; sourceTree = "<group>"; };
 		B12DE95F23AA6C5900C02657 /* JsonCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonCoding.swift; sourceTree = "<group>"; };
 		B12DE96423AA6E2B00C02657 /* SecurityUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityUtilities.swift; sourceTree = "<group>"; };
-		B12DE96623AA6EC700C02657 /* WayAppPay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WayAppPay-Bridging-Header.h"; sourceTree = "<group>"; };
 		B12DE96823AA6FAE00C02657 /* HTTPNetworkAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPNetworkAccess.swift; sourceTree = "<group>"; };
 		B12DE96A23AA701E00C02657 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		B12DE96D23AA709700C02657 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		B12DE97023AA713C00C02657 /* Issuer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issuer.swift; sourceTree = "<group>"; };
 		B12DE97323AA718300C02657 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
-		B12DE97523AA73CC00C02657 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
-		B12DE97723AA783900C02657 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		B12DE97923AA790100C02657 /* TransactionReadingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionReadingType.swift; sourceTree = "<group>"; };
 		B12DE97B23AA79B800C02657 /* IdentityDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityDocument.swift; sourceTree = "<group>"; };
 		B12DE97D23AA7A3300C02657 /* PaymentMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
@@ -103,6 +101,9 @@
 		B1E7A58523E448D000CC2E04 /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
 		B1E7A58723E44A1B00CC2E04 /* ProductRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRowView.swift; sourceTree = "<group>"; };
 		B1E7A58923E44E3E00CC2E04 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
+		B1E7A58C23E5860100CC2E04 /* Merchant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merchant.swift; sourceTree = "<group>"; };
+		B1E7A58E23E617ED00CC2E04 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +120,8 @@
 		AF3A374123E4879800E437CA /* main */ = {
 			isa = PBXGroup;
 			children = (
+				B19ACCB8238B092A009FF084 /* AppDelegate.swift */,
+				B19ACCBA238B092A009FF084 /* SceneDelegate.swift */,
 				B19ACCBC238B092A009FF084 /* MainView.swift */,
 				AF3A374423E48A7200E437CA /* CartButtonView.swift */,
 			);
@@ -163,8 +166,6 @@
 				B12DE95423AA654E00C02657 /* UserMessage.swift */,
 				B12DE95723AA66F700C02657 /* DefaultKeys.swift */,
 				B12DE95923AA694F00C02657 /* TermsAndConditions.swift */,
-				B12DE97523AA73CC00C02657 /* Address.swift */,
-				B12DE97723AA783900C02657 /* Currency.swift */,
 				B12DE97923AA790100C02657 /* TransactionReadingType.swift */,
 				B12DE97B23AA79B800C02657 /* IdentityDocument.swift */,
 				B12DE97D23AA7A3300C02657 /* PaymentMethod.swift */,
@@ -178,6 +179,8 @@
 				B12DE95D23AA6C1300C02657 /* DefaultKeyPersistance.swift */,
 				B183449A23E40E76006D414D /* WayAppUtils.swift */,
 				B12DE95B23AA6A9B00C02657 /* UserInterfaceStyleGuide.swift */,
+				B1E7A58E23E617ED00CC2E04 /* Container.swift */,
+				B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */,
 			);
 			path = utilities;
 			sourceTree = "<group>";
@@ -186,7 +189,6 @@
 			isa = PBXGroup;
 			children = (
 				B12DE96423AA6E2B00C02657 /* SecurityUtilities.swift */,
-				B12DE96623AA6EC700C02657 /* WayAppPay-Bridging-Header.h */,
 				B12DE96823AA6FAE00C02657 /* HTTPNetworkAccess.swift */,
 				B12DE97F23AA7B9400C02657 /* API.swift */,
 				B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */,
@@ -238,6 +240,7 @@
 		B19ACCB7238B092A009FF084 /* WayAppPay */ = {
 			isa = PBXGroup;
 			children = (
+				B1E7A58B23E585ED00CC2E04 /* merchant */,
 				B1E7A58423E448BB00CC2E04 /* reports */,
 				B1E7A58123E4485200CC2E04 /* settings */,
 				B1E7A57C23E4472F00CC2E04 /* amount */,
@@ -250,8 +253,6 @@
 				B12DE94E23AA636800C02657 /* cart */,
 				B12DE94D23AA634600C02657 /* product */,
 				B12DE94C23AA632400C02657 /* account */,
-				B19ACCB8238B092A009FF084 /* AppDelegate.swift */,
-				B19ACCBA238B092A009FF084 /* SceneDelegate.swift */,
 				AF3A374123E4879800E437CA /* main */,
 				B19ACCBE238B092C009FF084 /* Assets.xcassets */,
 				B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */,
@@ -296,6 +297,14 @@
 				B1E7A58523E448D000CC2E04 /* ReportsView.swift */,
 			);
 			path = reports;
+			sourceTree = "<group>";
+		};
+		B1E7A58B23E585ED00CC2E04 /* merchant */ = {
+			isa = PBXGroup;
+			children = (
+				B1E7A58C23E5860100CC2E04 /* Merchant.swift */,
+			);
+			path = merchant;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -381,12 +390,13 @@
 				B12DE95C23AA6A9B00C02657 /* UserInterfaceStyleGuide.swift in Sources */,
 				B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
+				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
 				AF3A373823E45B3400E437CA /* DisplayView.swift in Sources */,
 				B12DE97E23AA7A3300C02657 /* PaymentMethod.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
+				B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */,
 				B1E7A58623E448D000CC2E04 /* ReportsView.swift in Sources */,
-				B12DE97623AA73CC00C02657 /* Address.swift in Sources */,
 				B12DE96B23AA701E00C02657 /* Product.swift in Sources */,
 				AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */,
 				B12DE95823AA66F700C02657 /* DefaultKeys.swift in Sources */,
@@ -395,11 +405,11 @@
 				B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */,
 				B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */,
 				B12DE96923AA6FAE00C02657 /* HTTPNetworkAccess.swift in Sources */,
+				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
 				AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */,
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
-				B12DE97823AA783900C02657 /* Currency.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
 				B12DE97A23AA790100C02657 /* TransactionReadingType.swift in Sources */,
@@ -560,7 +570,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wayapp.WayAppPay;
 				PRODUCT_NAME = "WayApp Pay";
-				SWIFT_OBJC_BRIDGING_HEADER = "WayAppPay/network/WayAppPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -584,7 +594,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wayapp.WayAppPay;
 				PRODUCT_NAME = "WayApp Pay";
-				SWIFT_OBJC_BRIDGING_HEADER = "WayAppPay/network/WayAppPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

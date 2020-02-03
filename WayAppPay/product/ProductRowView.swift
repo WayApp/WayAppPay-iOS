@@ -13,9 +13,7 @@ struct ProductRowView: View {
 
     var body: some View {
         HStack {
-             (product.image == nil ? Image(systemName: WayAppPay.Product.defaultImageName) : Image(product.image!))
-                .resizable()
-                .frame(width: 50, height: 50)
+            ImageView(withURL: product.image)
             Text(verbatim: product.name ?? WayAppPay.Product.defaultName)
             Spacer()
         }
@@ -24,6 +22,6 @@ struct ProductRowView: View {
 
 struct ProductRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductRowView(product: WayAppPay.Product())
+        ProductRowView(product: WayAppPay.Product(merchantUUID: "myMerchantUUID", name: "debug"))
     }
 }

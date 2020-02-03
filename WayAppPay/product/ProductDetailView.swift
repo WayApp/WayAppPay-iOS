@@ -18,6 +18,6 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product())
+        ProductDetailView(product: WayAppPay.Product(merchantUUID: "uuid", name: "debug"))
     }
 }

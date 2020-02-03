@@ -44,13 +44,17 @@ struct AmountView: View {
                         AddButtonView()
                     }
                 }
-
             }
     }
 }
 
 struct AmountView_Previews: PreviewProvider {
     static var previews: some View {
-        AmountView()
+        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
+            AmountView()
+                .previewDevice(PreviewDevice(rawValue: deviceName))
+                .previewDisplayName(deviceName)
+        }
+        .environmentObject(WayAppPay.Session.accountData)
     }
 }

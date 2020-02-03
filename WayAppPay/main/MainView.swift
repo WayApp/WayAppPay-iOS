@@ -9,11 +9,12 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var selection = 1
+    @EnvironmentObject private var accountData: WayAppPay.Session.AccountData
+    @State private var selection = 0
  
     var body: some View {
         NavigationView {
-            TabView(selection: $selection){
+            TabView(selection: $selection) {
                 ShoppingCartView()
                     .tabItem {
                         VStack {
@@ -22,7 +23,7 @@ struct MainView: View {
                         }
                     }
                     .tag(0)
-                ProductGalleryView()
+                ProductGalleryView().environmentObject(accountData)
                     .tabItem {
                         VStack {
                             Image(systemName: "tag")
@@ -67,6 +68,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        MainView().environmentObject(WayAppPay.Session.accountData)
     }
 }

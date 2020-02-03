@@ -6,12 +6,12 @@
 //  Copyright © 2020 WayApp. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct WayAppUtils {
     
     struct Log {
-        static let isOn = false
+        static let isOn = true
         
         static func message(fileName: String = #file, functionName: String = #function, _ message: String = "") {
             if (isOn) {
@@ -225,6 +225,66 @@ extension WayAppUtils {
             }
         }
     }
-    
+}
 
+extension WayAppUtils {
+    struct CachedImages {
+        /*
+         * In this first stage all images will have the same cost
+         * There is no use of countLimit and totalCostLimit
+         */
+        static var images = NSCache<NSString, UIImage>()
+        static func add(image: UIImage, forURL url: String) {
+            images.setObject(image, forKey: url as NSString, cost: 1)
+        }
+        static func get(url: String) -> UIImage? {
+            return images.object(forKey: url as NSString)
+        }
+        static func empty() {
+            images.removeAllObjects()
+        }
+    }
+
+    struct ImageDownloader {
+        private var sessionTask: URLSessionDataTask?
+        
+        mutating func get(imageURL: String?, orDefault defaultImage: UIImage, addToCache: Bool = false, result: @escaping (UIImage) -> Void) {
+            get(imageURL: imageURL, addToCache: addToCache) { image in
+                if let image = image {
+                    result(image)
+                } else {
+                    result(defaultImage)
+                }
+            }
+        }
+        
+        mutating func get(imageURL: String?, addToCache: Bool = false, result: @escaping (UIImage?) -> Void) {
+            guard let imageURL = imageURL else {
+                result(nil)
+                return
+            }
+            if let image = CachedImages.get(url: imageURL) {
+                result(image)
+            } else if let url = URL(string: imageURL) {
+                sessionTask = URLSession.shared.dataTask(with: URLRequest(url:url), completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+                    if let data = data,
+                        let scaledImage = UIImage(data: data, scale: 1.5) {
+                        if addToCache {
+                            CachedImages.add(image: scaledImage, forURL: imageURL)
+                        }
+                        result(scaledImage)
+                    } else {
+                        result(nil)
+                    }
+                })
+                sessionTask?.resume()
+            } else {
+                result(nil)
+            }
+        }
+        
+        func cancel() {
+            sessionTask?.cancel()
+        }
+    }
 }

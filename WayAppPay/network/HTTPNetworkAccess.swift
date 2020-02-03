@@ -142,49 +142,45 @@ enum HTTPCall {
         }
     }
     
-    func task<T: Decodable>(type decodingType: T.Type, completionHandler completion: @escaping (Decodable? ,Error?) -> Void) {
+    func task<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Decodable? ,Error?) -> Void) {
         
         // Check Internet access
         guard HTTPCall.isNetworkReachable() else {
-            completion(nil, .noNetwork)
+            result(nil, .noNetwork)
             return
         }
         // Builds URLRequest
         guard let urlRequest = self.urlRequest else {
-            completion(nil, .invalidRequest)
+            result(nil, .invalidRequest)
             return
         }
-        WayAppUtils.Log.message("urlRequest=\(String(describing: urlRequest.url))")
-        DispatchQueue.main.async { UIApplication.shared.isNetworkActivityIndicatorVisible = true }
         URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) -> Void in
-            DispatchQueue.main.async { UIApplication.shared.isNetworkActivityIndicatorVisible = false }
             // First check needs to be with error (not data), as data can be nil in successful responses
             if let error = error {
-                completion(nil, .unhandled(error))
+                result(nil, .unhandled(error))
             } else if let httpResponse = response as? HTTPURLResponse {
                 guard !self.endpoint.isUnauthorizedStatusCode(httpResponse.statusCode) else {
-                    completion(nil, .http(statusCode: httpResponse.statusCode, description: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), data: data))
+                    result(nil, .http(statusCode: httpResponse.statusCode, description: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), data: data))
                     return
                 }
                 if self.endpoint.isSuccessStatusCodeWithNoDataResponse(httpResponse.statusCode) {
-                    completion(nil, nil)
+                    result(nil, nil)
                 } else if self.endpoint.isSuccessStatusCodeWithJSONResponse(httpResponse.statusCode),
                     let data = data {
-                    if let json = ((try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? JSON) as JSON??) {
+                    if WayAppUtils.Log.isOn,
+                        let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? JSON {
                         WayAppUtils.Log.message("\nRequest: \(urlRequest.url!.absoluteString)\nJSON: " + String(describing: json))
-                    } else {
-                        WayAppUtils.Log.message("\nDid not get valid JSON response")
                     }
                     if let response = try? WayAppPay.jsonDecoder.decode(decodingType, from: data) {
-                        completion(response, nil)
+                        result(response, nil)
                     } else {
-                        completion(nil, .invalidData)
+                        result(nil, .invalidData)
                     }
                 } else {
-                    completion(nil, .http(statusCode: httpResponse.statusCode, description: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), data: data))
+                    result(nil, .http(statusCode: httpResponse.statusCode, description: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), data: data))
                 }
             } else {
-                completion(nil, .invalidServerResponse)
+                result(nil, .invalidServerResponse)
             }
         }).resume()
     }

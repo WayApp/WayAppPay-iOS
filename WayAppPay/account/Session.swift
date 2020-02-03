@@ -6,28 +6,42 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import UIKit
+import Combine
+import SwiftUI
 
 extension WayAppPay {
     
-        struct Session {
-            static let downloadGroup = DispatchGroup()
+    struct Session {
             
-            private init() { }
-            // Data
+        private init() { }
+        
+        final class AccountData: ObservableObject {
+            @Published var merchants = Container<Merchant>()
+            @Published var products = Container<Product>()
+        }
 
-            // MARK: - Account
-            static var account = WayAppPay.Account()
-            
-            
-            static var accountUUID: String {
-                if account.accountUUID == nil {
-                    fatalError("Missing accountUUID")
+        static var accountData = AccountData()
+        
+        static var account: Account? {
+            didSet {
+                if let account = account {
+                    Merchant.loadMerchantsForAccount(account.accountUUID)
                 }
-                return account.accountUUID!
             }
-            
-            static var userAvatar: UIImage?
+        }
+        
+        static var accountUUID: String? {
+            return account?.accountUUID
+        }
+
+        static var merchantUUID: String? {
+            didSet {
+                if let merchantUUID = merchantUUID {
+                    Product.loadForMerchant(merchantUUID)
+                }
+            }
+        }
+        
     }
 
 }

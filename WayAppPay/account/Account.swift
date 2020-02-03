@@ -15,14 +15,14 @@ extension WayAppPay {
         static let PINLength = 4
         static let phoneNumberMinLength = 9
         static let phoneNumberMaxLength = 9
-        
+                
         enum Status: String, Codable {
-            case REGISTERED // registered but not validated
+            case CREATED // registered but not validated
             case ACTIVE // email validated
             case INACTIVE // blocked by Admin
         }
         
-        var accountUUID: String?
+        var accountUUID: String
         var status: Status?
         var firstName: String?
         var lastName: String?
@@ -44,8 +44,46 @@ extension WayAppPay {
             return WayAppPay.DefaultKey.ACCOUNT.rawValue
         }
         
-        init() {
+        static func load(email: String, password: String) {
+            WayAppPay.API.getAccount(email, password).fetch(type: [WayAppPay.Account].self) { response in
+                if case .success(let response?) = response {
+                    if let accounts = response.result,
+                        let account = accounts.first {
+                        Session.account = account
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+        
+    }
+}
+
+extension WayAppPay {
+    
+    enum Currency: String, Codable {
+        case USD
+        case EUR
+    }
+
+    struct Address: Codable {
+        var line1: String?
+        var city: String?
+        var stateProvince: String?
+        var country: String?
+        var postalCode: String?
+        var formatted: String {
+            if let line1 = line1,
+                let city = city {
+                return "\(line1) \(postalCode ?? "") \(city), \(stateProvince ?? "")"
+            } else {
+                return "-"
+            }
         }
     }
 
 }
+
