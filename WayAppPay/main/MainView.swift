@@ -58,8 +58,8 @@ struct MainView: View {
 
             }
         //.navigationBarTitle("WayApp Pay")
-        .navigationBarItems(trailing:
-              CartButtonView()
+                .navigationBarItems(leading: AddProductButtonView(),
+                                    trailing: CartButtonView()
             )
 
         }

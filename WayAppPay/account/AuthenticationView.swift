@@ -9,14 +9,31 @@
 import SwiftUI
 
 struct AuthenticationView: View {
+    @State var email: String = ""
+    @State var pin: String = ""
+    
     var body: some View {
         VStack {
-            Image(/*@START_MENU_TOKEN@*/ /*@PLACEHOLDER=Image Name@*/"Image Name"/*@END_MENU_TOKEN@*/)
-            UserView()
-            PinView()
+            Image(systemName: "tortoise.fill")
+            HStack {
+               Image(systemName: "person.circle")
+                TextField("User", text: $email).autocapitalization(.none).textContentType(.emailAddress).keyboardType(.emailAddress)
+            }
+            HStack {
+                Image(systemName: "lock.rotation")
+                TextField("Pin", text: $pin).keyboardType(.numberPad)
+                HidePinView()
+            }
             RememberUserView()
             ForgotPinView()
-        }
+            Button(action: {
+
+                WayAppPay.Account.load(email: self.email.lowercased(), password: self.pin)
+            }) {
+                Text("Start session")
+            }
+        }.padding()
+
     }
 }
 
