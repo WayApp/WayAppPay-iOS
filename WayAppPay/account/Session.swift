@@ -27,12 +27,14 @@ extension WayAppPay {
         
         @Published var merchants = Container<Merchant>()
         @Published var products = Container<Product>()
-        
-        
+        @Published var showAuthenticationView: Bool = true
+        @Published var selectedTab: MainView.Tab = .amount
+
         init() {
             print("@@@@@@@@@@@@@@@@@@@@@@@@ INIT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
+                self.showAuthenticationView = false
             }
         }
         
@@ -47,14 +49,10 @@ extension WayAppPay {
         var merchantUUID: String? {
             return merchants[seletectedMerchant].merchantUUID
         }
-        
-        var isLogout: Bool {
-            return accountUUID == nil
-        }
-        
+                
         func saveLoginData(password: String) {
             // Saves account
-            print("ACCOUNT=\(account.debugDescription)")
+            showAuthenticationView = false
             if let account = account,
                 let email = account.email {
                 account.save()
@@ -77,6 +75,7 @@ extension WayAppPay {
                     WayAppUtils.Log.message("Cannot retrieve saved email or password")
                     return
             }
+            showAuthenticationView = true
             UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.ACCOUNT.rawValue)
             UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
             do {

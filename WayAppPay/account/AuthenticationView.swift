@@ -13,7 +13,7 @@ struct AuthenticationView: View {
     @State var pin: String = ""
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center, spacing: 20.0) {
             Image("WPAY-P")
                 .resizable()
                 .frame(width: 120.0, height: 120.0, alignment: .center)
@@ -21,22 +21,31 @@ struct AuthenticationView: View {
             HStack {
                 Image(systemName: "person.circle")
                 TextField("User", text: $email).autocapitalization(.none).textContentType(.emailAddress).keyboardType(.emailAddress)
+                    .padding()
                     .background(Color.gray)
-                    .cornerRadius(8.0)
+                    .cornerRadius(20.0)
             }
-            .frame(height: 40.0)
             HStack {
                 Image(systemName: "lock.rotation")
                 SecureField("Pin", text: $pin).keyboardType(.numberPad)
+                    .padding()
+                    .background(Color.gray)
+                    .cornerRadius(20.0)
             }
-            .frame(height: 40.0)
             RememberUserView()
             ForgotPinView()
             Button(action: {
                 WayAppPay.Account.load(email: self.email.lowercased(), password: self.pin)
             }) {
-                Text("Start session")
+                Text("Sign in")
             }
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding()
+            .frame(width: 300, height: 50)
+            .background(Color.green)
+            .cornerRadius(15.0)
+            Spacer()
         }.padding()
 
     }

@@ -31,10 +31,9 @@ struct SettingsView: View {
                 .labelsHidden()
                 Text("Selected merchant: \(session.merchants[session.seletectedMerchant].name ?? "")")
                 Button(action: {
-                    self.session.logout()
                     DispatchQueue.main.async {
+                        self.session.logout()
                     }
-
                 }) {
                     Text("Logout")
                 }

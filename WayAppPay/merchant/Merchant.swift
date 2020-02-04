@@ -16,7 +16,6 @@ extension WayAppPay {
             return ls.merchantUUID == rs.merchantUUID
         }
 
-        
         static let defaultImageName = "questionmark.square"
         static let defaultName = "missing name"
 
@@ -52,7 +51,12 @@ extension WayAppPay {
                 if case .success(let response?) = response {
                     if let merchants = response.result {
                         DispatchQueue.main.async {
-                            session.merchants.setTo(merchants)
+                            if merchants.isEmpty {
+                                // Display settings Tab so user can select merchant
+                                session.selectedTab = .settings
+                            } else {
+                                session.merchants.setTo(merchants)
+                            }
                         }
                     } else {
                         WayAppPay.API.reportError(response)

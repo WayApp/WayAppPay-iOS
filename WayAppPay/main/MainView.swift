@@ -10,13 +10,20 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject private var session: WayAppPay.Session
-    @State private var selection = 0
+    
+    enum Tab: Hashable {
+        case cart
+        case products
+        case amount
+        case reports
+        case settings
+    }
     
     var body: some View {
-        if session.isLogout {
+        if session.showAuthenticationView {
             return AnyView(AuthenticationView())
         } else {
-            return AnyView(TabView(selection: $selection) {
+            return AnyView(TabView(selection: $session.selectedTab) {
                 ShoppingCartView()
                     .tabItem {
                         VStack {
@@ -24,7 +31,7 @@ struct MainView: View {
                             Text("Cart")
                         }
                     }
-                    .tag(0)
+                .tag(Tab.cart)
                 ProductGalleryView().environmentObject(session)
                     .tabItem {
                         VStack {
@@ -32,7 +39,7 @@ struct MainView: View {
                             Text("Products")
                         }
                     }
-                    .tag(1)
+                .tag(Tab.products)
                 AmountView()
                     .tabItem {
                         VStack {
@@ -40,7 +47,7 @@ struct MainView: View {
                             Text("Amount")
                         }
                     }
-                    .tag(2)
+                .tag(Tab.amount)
                 ReportsView()
                     .tabItem {
                         VStack {
@@ -48,7 +55,7 @@ struct MainView: View {
                             Text("Reports")
                         }
                     }
-                    .tag(3)
+                .tag(Tab.reports)
                 SettingsView().environmentObject(session)
                     .tabItem {
                         VStack {
@@ -56,7 +63,7 @@ struct MainView: View {
                             Text("Settings")
                         }
                     }
-                    .tag(4)
+                .tag(Tab.settings)
             })
         }
     }
