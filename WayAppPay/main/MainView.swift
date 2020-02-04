@@ -9,12 +9,14 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject private var accountData: WayAppPay.Session.AccountData
+    @EnvironmentObject private var session: WayAppPay.Session
     @State private var selection = 0
- 
+    
     var body: some View {
-        NavigationView {
-            TabView(selection: $selection) {
+        if session.isLogout {
+            return AnyView(AuthenticationView())
+        } else {
+            return AnyView(TabView(selection: $selection) {
                 ShoppingCartView()
                     .tabItem {
                         VStack {
@@ -23,7 +25,7 @@ struct MainView: View {
                         }
                     }
                     .tag(0)
-                ProductGalleryView().environmentObject(accountData)
+                ProductGalleryView().environmentObject(session)
                     .tabItem {
                         VStack {
                             Image(systemName: "tag")
@@ -47,7 +49,7 @@ struct MainView: View {
                         }
                     }
                     .tag(3)
-                SettingsView()
+                SettingsView().environmentObject(session)
                     .tabItem {
                         VStack {
                             Image(systemName: "gear")
@@ -55,19 +57,13 @@ struct MainView: View {
                         }
                     }
                     .tag(4)
-
-            }
-        //.navigationBarTitle("WayApp Pay")
-                .navigationBarItems(leading: AddProductButtonView(),
-                                    trailing: CartButtonView()
-            )
-
+            })
         }
     }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environmentObject(WayAppPay.Session.accountData)
+        MainView().environmentObject(WayAppPay.session)
     }
 }

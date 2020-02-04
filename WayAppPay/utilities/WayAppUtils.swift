@@ -288,3 +288,28 @@ extension WayAppUtils {
         }
     }
 }
+
+// MARK: Login
+extension WayAppUtils {
+    static func validateEmail(_ email: String?) -> Bool {
+        guard let email = email else { return false }
+
+        let pattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let count = email.count
+
+        if let formatter = try? NSRegularExpression(pattern: pattern, options: []),
+            let match = formatter.firstMatch(in: email, options: [], range: NSMakeRange(0, count)),
+            match.range.length == count {
+            return true
+        }
+        return false
+    }
+    
+    static func validatePassword(_ pwd: String?) -> Bool {
+        if let pwd = pwd {
+            return pwd.count == WayAppPay.Account.PINLength
+        }
+        return false
+    }
+
+}

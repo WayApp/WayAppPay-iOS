@@ -81,18 +81,18 @@ extension WayAppPay {
             case .deleteProduct(let merchantUUID, let productUUID): return "/merchants/\(merchantUUID)/products/\(productUUID)/"
                 
             case .createVoucher(let accountUUID, let uuid): return "/accounts/\(accountUUID)/offers/\(uuid)/vouchers/"
-            case .createEventTicket(let uuid): return "/accounts/\(WayAppPay.Session.accountUUID!)/events/\(uuid)/tickets/"
-            case .createLoyaltyCard(let id): return "/accounts/\(WayAppPay.Session.accountUUID!)/merchants/\(id)/loyalties/cards/"
+            case .createEventTicket(let uuid): return "/accounts/\(WayAppPay.session.accountUUID!)/events/\(uuid)/tickets/"
+            case .createLoyaltyCard(let id): return "/accounts/\(WayAppPay.session.accountUUID!)/merchants/\(id)/loyalties/cards/"
             
-            case .disableLoyaltyCard(let id): return "/accounts/\(WayAppPay.Session.accountUUID!)/loyalties/cards/\(id)/disables/"
+            case .disableLoyaltyCard(let id): return "/accounts/\(WayAppPay.session.accountUUID!)/loyalties/cards/\(id)/disables/"
             case .account: return "/accounts/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
-            case .editAccount: return "/accounts/\(WayAppPay.Session.accountUUID!)/"
-            case .changePassword: return "/accounts/\(WayAppPay.Session.accountUUID!)/passwords/"
+            case .editAccount: return "/accounts/\(WayAppPay.session.accountUUID!)/"
+            case .changePassword: return "/accounts/\(WayAppPay.session.accountUUID!)/passwords/"
             case .forgotPassword: return "/accounts/forgots/"
             case .registrationOTP: return "/accounts/registrations/otp/"
             case .registration: return "/accounts/registrations/"
-            case .markNotificationRead: return "/accounts/\(Session.accountUUID!)/notifications/"
+            case .markNotificationRead: return "/accounts/\(WayAppPay.session.accountUUID!)/notifications/"
             }
         }
         

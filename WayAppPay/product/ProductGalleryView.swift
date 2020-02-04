@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProductGalleryView: View {
-    @EnvironmentObject private var accountData: WayAppPay.Session.AccountData
+    @EnvironmentObject private var session: WayAppPay.Session
     @State var testToggle: Bool = true
     
     var body: some View {
@@ -18,7 +18,7 @@ struct ProductGalleryView: View {
                 Text("Show Favorites Only")
             }
             
-            ForEach(accountData.products) { product in
+            ForEach(session.products) { product in
                 NavigationLink(
                     destination: ProductDetailView(product: product)
                 ) {
@@ -30,7 +30,7 @@ struct ProductGalleryView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        accountData.products.remove(at: offsets)
+        session.products.remove(at: offsets)
     }
 
 }
@@ -42,6 +42,6 @@ struct ProductGalleryView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.Session.accountData)
+        .environmentObject(WayAppPay.session)
     }
 }

@@ -50,7 +50,7 @@ extension WayAppPay {
                 if case .success(let response?) = response {
                     if let products = response.result {
                         DispatchQueue.main.async {
-                            Session.accountData.products.setTo(products)
+                            session.products.setTo(products)
                         }
                     } else {
                         WayAppPay.API.reportError(response)
@@ -62,7 +62,7 @@ extension WayAppPay {
         }
         
         static func add(_ product: Product) {
-            guard let merchantUUID = Session.merchantUUID else {
+            guard let merchantUUID = session.merchantUUID else {
                 WayAppUtils.Log.message("missing Session.merchantUUID")
                 return
             }
@@ -70,7 +70,7 @@ extension WayAppPay {
                 if case .success(let response?) = response {
                     if let products = response.result,
                         let product = products.first {
-                        Session.accountData.products.add(product)
+                        session.products.add(product)
                     } else {
                         WayAppPay.API.reportError(response)
                     }
@@ -81,7 +81,7 @@ extension WayAppPay {
         }
 
         func update() {
-            guard let merchantUUID = Session.merchantUUID else {
+            guard let merchantUUID = session.merchantUUID else {
                 WayAppUtils.Log.message("missing Session.merchantUUID")
                 return
             }
@@ -89,7 +89,7 @@ extension WayAppPay {
                 if case .success(let response?) = response {
                     if let products = response.result,
                         let product = products.first {
-                        Session.accountData.products[product.containerID] = product
+                        session.products[product.containerID] = product
                     } else {
                         WayAppPay.API.reportError(response)
                     }
@@ -100,13 +100,13 @@ extension WayAppPay {
         }
         
         func delete() {
-            guard let merchantUUID = Session.merchantUUID else {
+            guard let merchantUUID = session.merchantUUID else {
                 WayAppUtils.Log.message("missing Session.merchantUUID")
                 return
             }
             WayAppPay.API.deleteProduct(merchantUUID, self.productUUID).fetch(type: String.self) { response in
                 if case .success(_) = response {
-                    Session.accountData.products.remove(self)
+                    session.products.remove(self)
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
                 }

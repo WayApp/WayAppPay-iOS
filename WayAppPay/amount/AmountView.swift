@@ -55,6 +55,6 @@ struct AmountView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.Session.accountData)
+        .environmentObject(WayAppPay.session)
     }
 }
