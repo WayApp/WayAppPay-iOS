@@ -11,29 +11,43 @@ import SwiftUI
 struct AuthenticationView: View {
     @State var email: String = ""
     @State var pin: String = ""
+    @State var remember: Bool = true
+
+    let imageSize: CGFloat = 120.0
+    let textFieldcornerRadius: CGFloat = 20.0
     
     var body: some View {
         VStack(alignment: .center, spacing: 20.0) {
-            Image("WPAY-P")
+            Image("WAP-P")
                 .resizable()
-                .frame(width: 120.0, height: 120.0, alignment: .center)
+                .frame(width: imageSize, height: imageSize, alignment: .center)
                 .scaledToFit()
             HStack {
                 Image(systemName: "person.circle")
                 TextField("User", text: $email).autocapitalization(.none).textContentType(.emailAddress).keyboardType(.emailAddress)
                     .padding()
-                    .background(Color.gray)
-                    .cornerRadius(20.0)
+                    .background(Color("tertiarySystemBackgroundColor"))
+                    .foregroundColor(.primary)
+                    .cornerRadius(textFieldcornerRadius)
             }
             HStack {
                 Image(systemName: "lock.rotation")
-                SecureField("Pin", text: $pin).keyboardType(.numberPad)
+                SecureField("PIN", text: $pin).keyboardType(.numberPad)
                     .padding()
-                    .background(Color.gray)
-                    .cornerRadius(20.0)
+                    .foregroundColor(.primary)
+                    .background(Color("tertiarySystemBackgroundColor"))
+                    .cornerRadius(textFieldcornerRadius)
             }
-            RememberUserView()
-            ForgotPinView()
+            HStack {
+                Spacer()
+                Toggle(isOn: $remember) {
+                    Text("Remember email?")
+                }
+            }
+            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                Text("Forgot your PIN?")
+                    .foregroundColor(Color("link"))
+            }
             Button(action: {
                 WayAppPay.Account.load(email: self.email.lowercased(), password: self.pin)
             }) {
@@ -41,9 +55,8 @@ struct AuthenticationView: View {
             }
             .font(.headline)
             .foregroundColor(.white)
-            .padding()
-            .frame(width: 300, height: 50)
-            .background(Color.green)
+            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
+            .background(Color("WAP-Blue"))
             .cornerRadius(15.0)
             Spacer()
         }.padding()

@@ -21,24 +21,28 @@ struct SettingsView: View {
         if session.merchants.isEmpty {
             return AnyView(Text("There are no merchants"))
         } else {
-            return AnyView(VStack {
-                Text("Select merchant:")
-                Picker(selection: $session.seletectedMerchant, label: Text("Please choose a merchant")) {
-                    ForEach(0..<session.merchants.count) {
-                        Text(self.session.merchants[$0].name ?? "SILVANA")
-                    }
-                }
-                .labelsHidden()
-                Text("Selected merchant: \(session.merchants[session.seletectedMerchant].name ?? "")")
-                Button(action: {
-                    DispatchQueue.main.async {
-                        self.session.logout()
-                    }
-                }) {
-                    Text("Logout")
-                }
-            }
-            .padding())
+            return AnyView(
+                NavigationView {
+                    Form {
+                        Section(header: Text("Operating merchant")) {
+                            Picker(selection: $session.seletectedMerchant, label: Text("Merchant")) {
+                                ForEach(0..<session.merchants.count) {
+                                    Text(self.session.merchants[$0].name ?? "SILVANA")
+                                }
+                            }
+                            Text("Selected merchant: \(session.merchants[session.seletectedMerchant].name ?? "")")
+                        }
+                        Section(header: Text("Other")) {
+                            Button(action: {
+                                DispatchQueue.main.async {
+                                    self.session.logout()
+                                }
+                            }) {
+                                Text("Logout")
+                            }
+                        }
+                    }.navigationBarTitle("Settings", displayMode: .inline)
+                })
         }
     }
 }

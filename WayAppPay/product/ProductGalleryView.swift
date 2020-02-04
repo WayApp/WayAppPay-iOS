@@ -13,19 +13,37 @@ struct ProductGalleryView: View {
     @State var testToggle: Bool = true
     
     var body: some View {
-        List {
-            Toggle(isOn: $testToggle) {
-                Text("Show Favorites Only")
-            }
-            
-            ForEach(session.products) { product in
-                NavigationLink(
-                    destination: ProductDetailView(product: product)
-                ) {
-                    ProductRowView(product: product)
+        NavigationView {
+            List {
+                Toggle(isOn: $testToggle) {
+                    Text("Show Favorites Only")
                 }
+                
+                ForEach(session.products) { product in
+                    NavigationLink(
+                        destination: ProductDetailView(product: product)
+                    ) {
+                        ProductRowView(product: product)
+                    }
+                }
+                .onDelete(perform: delete)
             }
-            .onDelete(perform: delete)
+            .navigationBarTitle("Products")
+            .navigationBarItems(trailing:
+                HStack {
+                    Button(action: { }, label: { Image(systemName: "plus.circle")
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center) })
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.trailing, 16)
+                    Button(action: { }, label: { Image(systemName: "qrcode.viewfinder")
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center) })
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.trailing, 16)
+                }
+
+            )
         }
     }
     

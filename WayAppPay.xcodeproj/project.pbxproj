@@ -7,15 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AF3A373823E45B3400E437CA /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373723E45B3400E437CA /* DisplayView.swift */; };
-		AF3A373A23E45BD200E437CA /* DeleteButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373923E45BD200E437CA /* DeleteButtonView.swift */; };
-		AF3A373C23E4770500E437CA /* DescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373B23E4770500E437CA /* DescriptionView.swift */; };
 		AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373D23E4797100E437CA /* NumberButtonView.swift */; };
 		AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373F23E47A3700E437CA /* AddButtonView.swift */; };
 		AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374223E4881F00E437CA /* AuthenticationView.swift */; };
 		AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374423E48A7200E437CA /* CartButtonView.swift */; };
-		AF3A375023E6E72F00E437CA /* ForgotPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374F23E6E72F00E437CA /* ForgotPinView.swift */; };
-		AF3A375223E6E78800E437CA /* RememberUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375123E6E78800E437CA /* RememberUserView.swift */; };
 		AF3A375A23E8233C00E437CA /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375923E8233C00E437CA /* TransactionsView.swift */; };
 		AF3A376023E840FF00E437CA /* HidePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375F23E840FF00E437CA /* HidePinView.swift */; };
 		AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A376323E844FC00E437CA /* AddProductButtonView.swift */; };
@@ -48,6 +43,7 @@
 		B19ACCBF238B092C009FF084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCBE238B092C009FF084 /* Assets.xcassets */; };
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
 		B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */; };
+		B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D6990523EA22A40049E1D8 /* ScannerView.swift */; };
 		B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E792E923E9CCE2001296F2 /* KeychainHandler.swift */; };
 		B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57A23E4470E00CC2E04 /* ProductGalleryView.swift */; };
 		B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57D23E4474A00CC2E04 /* AmountView.swift */; };
@@ -62,15 +58,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AF3A373723E45B3400E437CA /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
-		AF3A373923E45BD200E437CA /* DeleteButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonView.swift; sourceTree = "<group>"; };
-		AF3A373B23E4770500E437CA /* DescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionView.swift; sourceTree = "<group>"; };
 		AF3A373D23E4797100E437CA /* NumberButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberButtonView.swift; sourceTree = "<group>"; };
 		AF3A373F23E47A3700E437CA /* AddButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButtonView.swift; sourceTree = "<group>"; };
 		AF3A374223E4881F00E437CA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		AF3A374423E48A7200E437CA /* CartButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartButtonView.swift; sourceTree = "<group>"; };
-		AF3A374F23E6E72F00E437CA /* ForgotPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPinView.swift; sourceTree = "<group>"; };
-		AF3A375123E6E78800E437CA /* RememberUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RememberUserView.swift; sourceTree = "<group>"; };
 		AF3A375923E8233C00E437CA /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
 		AF3A375F23E840FF00E437CA /* HidePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HidePinView.swift; sourceTree = "<group>"; };
 		AF3A376323E844FC00E437CA /* AddProductButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductButtonView.swift; sourceTree = "<group>"; };
@@ -105,6 +96,7 @@
 		B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B19ACCC4238B092C009FF084 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B19ACCC6238B092C009FF084 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B1D6990523EA22A40049E1D8 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		B1E792E923E9CCE2001296F2 /* KeychainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHandler.swift; sourceTree = "<group>"; };
 		B1E7A57A23E4470E00CC2E04 /* ProductGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGalleryView.swift; sourceTree = "<group>"; };
 		B1E7A57D23E4474A00CC2E04 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
@@ -150,8 +142,6 @@
 				B12DE98523AA7F0E00C02657 /* Biometrics.swift */,
 				B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */,
 				AF3A374223E4881F00E437CA /* AuthenticationView.swift */,
-				AF3A374F23E6E72F00E437CA /* ForgotPinView.swift */,
-				AF3A375123E6E78800E437CA /* RememberUserView.swift */,
 				AF3A375F23E840FF00E437CA /* HidePinView.swift */,
 			);
 			path = account;
@@ -235,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				B12DE97323AA718300C02657 /* Card.swift */,
+				B1D6990523EA22A40049E1D8 /* ScannerView.swift */,
 			);
 			path = card;
 			sourceTree = "<group>";
@@ -292,9 +283,6 @@
 			isa = PBXGroup;
 			children = (
 				B1E7A57D23E4474A00CC2E04 /* AmountView.swift */,
-				AF3A373723E45B3400E437CA /* DisplayView.swift */,
-				AF3A373923E45BD200E437CA /* DeleteButtonView.swift */,
-				AF3A373B23E4770500E437CA /* DescriptionView.swift */,
 				AF3A373D23E4797100E437CA /* NumberButtonView.swift */,
 				AF3A373F23E47A3700E437CA /* AddButtonView.swift */,
 			);
@@ -398,19 +386,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				B12DE95323AA643E00C02657 /* WayAppPay.swift in Sources */,
-				AF3A373A23E45BD200E437CA /* DeleteButtonView.swift in Sources */,
 				B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */,
 				B12DE97423AA718300C02657 /* Card.swift in Sources */,
 				B12DE97123AA713C00C02657 /* Issuer.swift in Sources */,
 				B12DE98623AA7F0E00C02657 /* Biometrics.swift in Sources */,
 				B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */,
-				AF3A373C23E4770500E437CA /* DescriptionView.swift in Sources */,
 				B12DE95C23AA6A9B00C02657 /* UserInterfaceStyleGuide.swift in Sources */,
 				B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */,
 				AF3A376023E840FF00E437CA /* HidePinView.swift in Sources */,
+				B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
-				AF3A373823E45B3400E437CA /* DisplayView.swift in Sources */,
 				B12DE97E23AA7A3300C02657 /* PaymentMethod.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
@@ -435,11 +421,9 @@
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
 				B12DE97A23AA790100C02657 /* TransactionReadingType.swift in Sources */,
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
-				AF3A375223E6E78800E437CA /* RememberUserView.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
 				B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */,
 				AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */,
-				AF3A375023E6E72F00E437CA /* ForgotPinView.swift in Sources */,
 				B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,
 				B12DE98023AA7B9400C02657 /* API.swift in Sources */,

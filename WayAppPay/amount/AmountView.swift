@@ -9,25 +9,46 @@
 import SwiftUI
 
 struct AmountView: View {
+    @State private var showScanner = false
+
+
+    func handleScan(result: Result<String, ScannerView.ScanError>) {
+       self.showScanner = false
+    
+       switch result {
+       case .success(let code):
+            print("Success. QR=\(code)")
+       case .failure(let error):
+            print("Scanning failed: \(error.localizedDescription)")
+       }
+    }
+    
     var body: some View {
-            VStack {
+        NavigationView {
+            VStack(alignment: .center, spacing: 8.0){
                 Spacer()
-                HStack {
-                    DisplayView()
-                    DeleteButtonView()
+                HStack(alignment: .center, spacing: 40.0) {
+                    Text("0,00€")
+                        .font(.largeTitle)
+                        .foregroundColor(Color.black)
+                        .fontWeight(.bold)
+                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                        Image(systemName: "delete.left.fill")
+                            .resizable()
+                            .frame(width: 40, height: 25)
+                            .foregroundColor(Color.black)
+                    }
                 }
-                DescriptionView()
-                //Divider()
-                //    .frame(width: 300.0, height: 20.0, alignment: .center)
-                //    .padding()
-                Spacer()
+                TextField("description", text:/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.bottom, 16.0)
                 VStack {
                     HStack(spacing: 0.0) {
                         NumberButtonView(button: 1)
                         NumberButtonView(button: 2)
                         NumberButtonView(button: 3)
                     }
-                    .frame(height: 100)
                     HStack(spacing: 0.0) {
                         NumberButtonView(button: 4)
                         NumberButtonView(button: 5)
@@ -45,6 +66,33 @@ struct AmountView: View {
                     }
                 }
             }
+            .navigationBarTitle("Amount")
+            .navigationBarItems(trailing:
+                HStack {
+                    Button(action: { }, label: { Image(systemName: "cart.fill.badge.plus")
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center) })
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.trailing, 16)
+                    Button(action: {
+                        self.showScanner = true
+                    }, label: { Image(systemName: "qrcode.viewfinder")
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center) })
+                        .sheet(isPresented: $showScanner) {
+                            VStack {
+                                ScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: self.handleScan)
+                                HStack {
+                                    Text("Dismiss")
+                                    Spacer()
+                                    Button("Done") { self.showScanner = false }
+                                }
+                                .padding()
+                            }
+                    }
+                }
+            )
+        }
     }
 }
 
