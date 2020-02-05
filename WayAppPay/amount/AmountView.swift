@@ -10,13 +10,13 @@ import SwiftUI
 
 struct AmountView: View {
     @State private var showScanner = false
-
+    @State private var showAlert = false
+    @State private var scannedCode = String()
 
     func handleScan(result: Result<String, ScannerView.ScanError>) {
-       self.showScanner = false
-    
        switch result {
        case .success(let code):
+            scannedCode = code
             print("Success. QR=\(code)")
        case .failure(let error):
             print("Scanning failed: \(error.localizedDescription)")
@@ -78,10 +78,12 @@ struct AmountView: View {
                         self.showScanner = true
                     }, label: { Image(systemName: "qrcode.viewfinder")
                         .resizable()
-                        .frame(width: 30, height: 30, alignment: .center) })
-                        .sheet(isPresented: $showScanner) {
+                        .frame(width: 30, height: 30, alignment: .center) }
+                    )
+                    .sheet(isPresented: $showScanner) {
+                        if self.scannedCode.isEmpty {
                             VStack {
-                                ScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: self.handleScan)
+                                ScannerView(codeTypes: [.qr], simulatedData: "Simulated code", completion: self.handleScan)
                                 HStack {
                                     Text("Dismiss")
                                     Spacer()
@@ -89,6 +91,16 @@ struct AmountView: View {
                                 }
                                 .padding()
                             }
+                        } else {
+                            Text("scanned code:\n\(self.scannedCode)")
+                        }
+                    }
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("Scan successful"),
+                              message: Text("Scanned code: ...."),
+                              dismissButton: .default(Text("Done")) {
+                                self.showAlert = false
+                            })
                     }
                 }
             )

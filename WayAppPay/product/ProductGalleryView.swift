@@ -28,6 +28,7 @@ struct ProductGalleryView: View {
                 }
                 .onDelete(perform: delete)
             }
+            .listStyle(GroupedListStyle())
             .navigationBarTitle("Products")
             .navigationBarItems(trailing:
                 HStack {
