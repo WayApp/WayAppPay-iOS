@@ -84,6 +84,10 @@ struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, Ran
         self.elements = ContiguousArray(elements)
     }
 
+    mutating func setToInOrder(_ elements: [T], by: (T, T) -> Bool) {
+        self.elements = ContiguousArray(elements.sorted(by: by))
+    }
+
     mutating func setTo(_ elements: Container<T>) {
         self.elements = ContiguousArray(elements)
     }

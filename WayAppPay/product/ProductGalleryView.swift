@@ -43,7 +43,7 @@ struct ProductGalleryView: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(.trailing, 16)
                 }
-
+                
             )
         }
     }

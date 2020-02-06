@@ -10,7 +10,7 @@ import Foundation
 
 extension WayAppPay {
 
-    struct Account: Codable, DefaultKeyPersistence {
+    struct Account: Codable, DefaultKeyPersistence, ContainerProtocol {
         
         static let PINLength = 4
         static let phoneNumberMinLength = 9
@@ -44,6 +44,10 @@ extension WayAppPay {
             return WayAppPay.DefaultKey.ACCOUNT.rawValue
         }
         
+        var containerID: String {
+            return accountUUID
+        }
+
         static func savePassword(_ password: String, forEmail email: String) throws {
             let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
             let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
@@ -112,8 +116,7 @@ extension WayAppPay {
 extension WayAppPay {
     
     enum Currency: String, Codable {
-        case USD
-        case EUR
+        case CHF, CLP, COP, EUR, GBP, USD, VEF, Unknown
     }
 
     struct Address: Codable, Hashable {

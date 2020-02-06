@@ -48,7 +48,7 @@ struct MainView: View {
                         }
                     }
                 .tag(Tab.amount)
-                ReportsView()
+                TransactionsView()
                     .tabItem {
                         VStack {
                             Image(systemName: "chart.bar")

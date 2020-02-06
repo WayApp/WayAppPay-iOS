@@ -9,63 +9,98 @@
 import SwiftUI
 
 struct AuthenticationView: View {
+    @SwiftUI.Environment(\.presentationMode) var presentationMode
+    
     @State var email: String = ""
     @State var pin: String = ""
     @State var remember: Bool = true
+    @State var scrollOffset: CGSize = CGSize.zero
 
     let imageSize: CGFloat = 120.0
     let textFieldcornerRadius: CGFloat = 20.0
     
+    private func keywordScrollCalculation(height: Int) -> Int {
+        switch height {
+        case 0..<600: return -180
+        case 600..<700: return -80
+        default: return 0
+        }
+    }
+    
     var body: some View {
-        VStack(alignment: .center, spacing: 20.0) {
-            Image("WAP-P")
-                .resizable()
-                .frame(width: imageSize, height: imageSize, alignment: .center)
-                .scaledToFit()
-            HStack {
-                Image(systemName: "person.circle")
-                TextField("User", text: $email).autocapitalization(.none).textContentType(.emailAddress).keyboardType(.emailAddress)
-                    .padding()
-                    .background(Color("tertiarySystemBackgroundColor"))
-                    .foregroundColor(.primary)
-                    .cornerRadius(textFieldcornerRadius)
-            }
-            HStack {
-                Image(systemName: "lock.rotation")
-                SecureField("PIN", text: $pin).keyboardType(.numberPad)
-                    .padding()
-                    .foregroundColor(.primary)
-                    .background(Color("tertiarySystemBackgroundColor"))
-                    .cornerRadius(textFieldcornerRadius)
-            }
-            HStack {
-                Spacer()
-                Toggle(isOn: $remember) {
-                    Text("Remember email?")
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(alignment: .center, spacing: 16.0) {
+                    Spacer()
+                    Text("Geometry: width=\(Int(geometry.size.width)), height=\(Int(geometry.size.height))")
+                    Image("WAP-P")
+                        .resizable()
+                        .frame(width: self.imageSize, height: self.imageSize, alignment: .center)
+                        .scaledToFit()
+                    HStack {
+                        Image(systemName: "person.circle")
+                        TextField("User", text: self.$email).autocapitalization(.none).textContentType(.emailAddress).keyboardType(.emailAddress)
+                            .padding()
+                            .background(Color("tertiarySystemBackgroundColor"))
+                            .foregroundColor(.primary)
+                            .cornerRadius(self.textFieldcornerRadius)
+                            .onTapGesture {
+                                if self.scrollOffset == CGSize.zero {
+                                        self.scrollOffset = CGSize(width: 0, height: self.keywordScrollCalculation(height: Int(geometry.size.height)))
+                                    }
+                                }
+                    }
+                    HStack {
+                        Image(systemName: "lock.rotation")
+                        SecureField("PIN", text: self.$pin).keyboardType(.numberPad)
+                            .padding()
+                            .foregroundColor(.primary)
+                            .background(Color("tertiarySystemBackgroundColor"))
+                            .cornerRadius(self.textFieldcornerRadius)
+                            .onTapGesture {
+                                if self.scrollOffset == CGSize.zero {
+                                        self.scrollOffset = CGSize(width: 0, height: self.keywordScrollCalculation(height: Int(geometry.size.height)))
+                                    }
+                                }
+                    }
+                    HStack {
+                        Spacer()
+                        Toggle(isOn: self.$remember) {
+                            Text("Remember email?")
+                        }
+                    }
+                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                        Text("Forgot your PIN?")
+                            .foregroundColor(Color("link"))
+                    }
+                    Button(action: {
+                        WayAppPay.Account.load(email: self.email.lowercased(), password: self.pin)
+                    }) {
+                        Text("Sign in")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
+                    .background(Color(#colorLiteral(red: 0.0120000001, green: 0.4350000024, blue: 0.5649999976, alpha: 1)))
+                    .cornerRadius(15.0)
+                    Spacer()
+                }.padding()
+                    .onTapGesture {
+                        UIApplication.shared.keyWindow?.endEditing(true)
+                        self.scrollOffset = CGSize.zero
                 }
-            }
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                Text("Forgot your PIN?")
-                    .foregroundColor(Color("link"))
-            }
-            Button(action: {
-                WayAppPay.Account.load(email: self.email.lowercased(), password: self.pin)
-            }) {
-                Text("Sign in")
-            }
-            .font(.headline)
-            .foregroundColor(.white)
-            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-            .background(Color("WAP-Blue"))
-            .cornerRadius(15.0)
-            Spacer()
-        }.padding()
-
+            }.offset(self.scrollOffset)
+        }
     }
 }
 
 struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
-        AuthenticationView()
+        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
+            AuthenticationView()
+                .previewDevice(PreviewDevice(rawValue: deviceName))
+                .previewDisplayName(deviceName)
+        }
+
     }
 }

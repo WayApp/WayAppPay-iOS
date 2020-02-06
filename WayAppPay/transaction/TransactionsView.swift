@@ -9,8 +9,14 @@
 import SwiftUI
 
 struct TransactionsView: View {
+    @EnvironmentObject var session: WayAppPay.Session
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            ForEach(session.transactions) { transaction in
+                TransactionRowView(transaction: transaction)
+            }
+        }
     }
 }
 

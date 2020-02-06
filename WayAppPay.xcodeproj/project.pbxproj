@@ -28,14 +28,13 @@
 		B12DE96E23AA709700C02657 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE96D23AA709700C02657 /* Transaction.swift */; };
 		B12DE97123AA713C00C02657 /* Issuer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97023AA713C00C02657 /* Issuer.swift */; };
 		B12DE97423AA718300C02657 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97323AA718300C02657 /* Card.swift */; };
-		B12DE97A23AA790100C02657 /* TransactionReadingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97923AA790100C02657 /* TransactionReadingType.swift */; };
 		B12DE97C23AA79B800C02657 /* IdentityDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97B23AA79B800C02657 /* IdentityDocument.swift */; };
-		B12DE97E23AA7A3300C02657 /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97D23AA7A3300C02657 /* PaymentMethod.swift */; };
 		B12DE98023AA7B9400C02657 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE97F23AA7B9400C02657 /* API.swift */; };
 		B12DE98223AA7CA300C02657 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98123AA7CA300C02657 /* Session.swift */; };
 		B12DE98623AA7F0E00C02657 /* Biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98523AA7F0E00C02657 /* Biometrics.swift */; };
 		B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */; };
 		B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */; };
+		B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12F17FA23EBD1530012890E /* TransactionRowView.swift */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
 		B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCB8238B092A009FF084 /* AppDelegate.swift */; };
 		B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBA238B092A009FF084 /* SceneDelegate.swift */; };
@@ -79,14 +78,13 @@
 		B12DE96D23AA709700C02657 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		B12DE97023AA713C00C02657 /* Issuer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issuer.swift; sourceTree = "<group>"; };
 		B12DE97323AA718300C02657 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
-		B12DE97923AA790100C02657 /* TransactionReadingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionReadingType.swift; sourceTree = "<group>"; };
 		B12DE97B23AA79B800C02657 /* IdentityDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityDocument.swift; sourceTree = "<group>"; };
-		B12DE97D23AA7A3300C02657 /* PaymentMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		B12DE97F23AA7B9400C02657 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		B12DE98123AA7CA300C02657 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		B12DE98523AA7F0E00C02657 /* Biometrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biometrics.swift; sourceTree = "<group>"; };
 		B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordSecurePersistance.swift; sourceTree = "<group>"; };
 		B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationalEnvironment.swift; sourceTree = "<group>"; };
+		B12F17FA23EBD1530012890E /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayApp Pay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WayApp Pay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCB8238B092A009FF084 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -173,8 +171,6 @@
 				B12DE95423AA654E00C02657 /* UserMessage.swift */,
 				B12DE95723AA66F700C02657 /* DefaultKeys.swift */,
 				B12DE95923AA694F00C02657 /* TermsAndConditions.swift */,
-				B12DE97923AA790100C02657 /* TransactionReadingType.swift */,
-				B12DE97D23AA7A3300C02657 /* PaymentMethod.swift */,
 			);
 			path = general;
 			sourceTree = "<group>";
@@ -209,6 +205,7 @@
 			children = (
 				B12DE96D23AA709700C02657 /* Transaction.swift */,
 				AF3A375923E8233C00E437CA /* TransactionsView.swift */,
+				B12F17FA23EBD1530012890E /* TransactionRowView.swift */,
 			);
 			path = transaction;
 			sourceTree = "<group>";
@@ -233,6 +230,7 @@
 		B19ACCAC238B092A009FF084 = {
 			isa = PBXGroup;
 			children = (
+				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB7238B092A009FF084 /* WayAppPay */,
 				B19ACCB6238B092A009FF084 /* Products */,
 			);
@@ -249,11 +247,12 @@
 		B19ACCB7238B092A009FF084 /* WayAppPay */ = {
 			isa = PBXGroup;
 			children = (
+				AF3A374123E4879800E437CA /* main */,
+				B12DE94C23AA632400C02657 /* account */,
 				B1E7A58B23E585ED00CC2E04 /* merchant */,
 				B1E7A58423E448BB00CC2E04 /* reports */,
 				B1E7A58123E4485200CC2E04 /* settings */,
 				B1E7A57C23E4472F00CC2E04 /* amount */,
-				B12DE95623AA66A600C02657 /* utilities */,
 				B12DE97223AA716D00C02657 /* card */,
 				B12DE96F23AA712700C02657 /* issuer */,
 				B12DE96C23AA707C00C02657 /* transaction */,
@@ -261,8 +260,6 @@
 				B12DE95123AA641000C02657 /* general */,
 				B12DE94E23AA636800C02657 /* cart */,
 				B12DE94D23AA634600C02657 /* product */,
-				B12DE94C23AA632400C02657 /* account */,
-				AF3A374123E4879800E437CA /* main */,
 				B19ACCBE238B092C009FF084 /* Assets.xcassets */,
 				B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */,
 				B19ACCC6238B092C009FF084 /* Info.plist */,
@@ -397,7 +394,6 @@
 				B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
-				B12DE97E23AA7A3300C02657 /* PaymentMethod.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
 				B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */,
@@ -406,6 +402,7 @@
 				AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */,
 				B12DE95823AA66F700C02657 /* DefaultKeys.swift in Sources */,
 				B12DE97C23AA79B800C02657 /* IdentityDocument.swift in Sources */,
+				B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */,
 				B12DE98223AA7CA300C02657 /* Session.swift in Sources */,
 				B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */,
 				B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */,
@@ -419,7 +416,6 @@
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
-				B12DE97A23AA790100C02657 /* TransactionReadingType.swift in Sources */,
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
 				B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */,

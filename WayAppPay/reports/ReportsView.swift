@@ -9,9 +9,10 @@
 import SwiftUI
 
 struct ReportsView: View {
+    @EnvironmentObject var session: WayAppPay.Session
+
     var body: some View {
         Text("Reports")
-            .font(.largeTitle)
     }
 }
 

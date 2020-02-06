@@ -21,6 +21,7 @@ extension WayAppPay {
         
         typealias Email = String
         typealias PIN = String
+        typealias PAN = String
 
         enum Result<T: Decodable, U> where U: Swift.Error {
             case success(Response<T>?)
@@ -45,11 +46,20 @@ extension WayAppPay {
         // Account
         case getAccount(Email, PIN) // GET
         case getMerchants(String) // GET
+        case getMerchantDetail(String) // GET
+        case getMerchantAccounts(String) // GET
+        case getMerchantAccountDetail(String, String) // GET
+        case getMerchantAccountTransactions(String, String) // GET
         case getProducts(String) // GET
         case addProduct(String, WayAppPay.Product, UIImage?) // POST
         case updateProduct(String, WayAppPay.Product, UIImage?) // PATCH
         case deleteProduct(String, String) // DELETE
-
+        case getProductDetail(String, String) // GET
+        case getCards(String) // GET
+        case getCardDetail(String, PAN) // GET
+        case getCardTransactions(String, PAN) // GET
+        case getTransactionPayer(String, String, String) // GET
+        
         case deleteAccount(String) // DELETE
         case account(WayAppPay.Account) // POST
         case editAccount(WayAppPay.Account, UIImage?) // PATCH
@@ -72,14 +82,29 @@ extension WayAppPay {
         }
         private var path: String {
             switch self {
-            // Products
+            // Account
             case .getAccount(let email, let pin): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN(pin))/"
+            // Merchants
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
+            case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
+            case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
+            case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/"
+            case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
+            // Products
             case .getProducts(let merchantUUID): return "/merchants/\(merchantUUID)/products/"
             case .addProduct(let merchantUUID, _, _): return "/merchants/\(merchantUUID)/products/"
             case .updateProduct(let merchantUUID, let product, _): return "/merchants/\(merchantUUID)/products/\(product.productUUID)/"
             case .deleteProduct(let merchantUUID, let productUUID): return "/merchants/\(merchantUUID)/products/\(productUUID)/"
+            case .getProductDetail(let merchantUUID, let productUUID): return "/merchants/\(merchantUUID)/products/\(productUUID)/"
+            // Cards
+            case .getCards(let accountUUID): return "/accounts/\(accountUUID)/cards/"
+            case .getCardDetail(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/"
+            case .getCardTransactions(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/transactions/"
+            // Transactions
+            case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID):
+                return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
                 
+            // TRASH
             case .createVoucher(let accountUUID, let uuid): return "/accounts/\(accountUUID)/offers/\(uuid)/vouchers/"
             case .createEventTicket(let uuid): return "/accounts/\(WayAppPay.session.accountUUID!)/events/\(uuid)/tickets/"
             case .createLoyaltyCard(let id): return "/accounts/\(WayAppPay.session.accountUUID!)/merchants/\(id)/loyalties/cards/"
@@ -101,10 +126,19 @@ extension WayAppPay {
             // Products
             case .getAccount(let email, let pin): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN(pin)
             case .getMerchants(let accountUUID): return accountUUID
+            case .getMerchantDetail(let merchantUUID): return merchantUUID
+            case .getMerchantAccounts(let merchantUUID): return merchantUUID
+            case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
+            case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
             case .getProducts(let merchantUUID): return merchantUUID
             case .addProduct(let merchantUUID, _, _): return merchantUUID
             case .deleteProduct(let merchantUUID, let productUUID): return merchantUUID + "/" + productUUID
+            case .getProductDetail(let merchantUUID, let productUUID): return merchantUUID + "/" + productUUID
             case .updateProduct(let merchantUUID, let product, _): return merchantUUID + "/" + product.productUUID
+            case .getCards(let accountUUID): return accountUUID
+            case .getCardDetail(let accountUUID, let pan): return accountUUID + "/" + pan
+            case .getCardTransactions(let accountUUID, let pan): return accountUUID + "/" + pan
+            case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
             default:
                 return ""
             }
@@ -134,7 +168,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getProducts, .getMerchants:
+            case .getAccount, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))

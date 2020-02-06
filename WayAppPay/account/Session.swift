@@ -19,16 +19,20 @@ extension WayAppPay {
                 }
             }
         }
+        @Published var merchants = Container<Merchant>()
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
+//                Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
+                merchants[seletectedMerchant].getAccounts()
             }
         }
         
-        @Published var merchants = Container<Merchant>()
         @Published var products = Container<Product>()
+        @Published var selectedAccount: Int = 0
+        @Published var accounts = Container<Account>()
         @Published var showAuthenticationView: Bool = true
         @Published var selectedTab: MainView.Tab = .amount
+        @Published var transactions = Container<Transaction>()
 
         init() {
             print("@@@@@@@@@@@@@@@@@@@@@@@@ INIT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
