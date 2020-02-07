@@ -28,13 +28,12 @@ extension HandleScanner {
 
 }
 
-public struct ScannerView: UIViewControllerRepresentable {
-
-    public enum ScanError: Error {
+struct ScannerView: UIViewControllerRepresentable {
+    enum ScanError: Error {
         case badInput, badOutput
     }
     
-    public class ScannerCoordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
+    class ScannerCoordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var parent: ScannerView
         
         init(parent: ScannerView) {

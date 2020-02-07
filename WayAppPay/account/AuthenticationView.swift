@@ -39,7 +39,10 @@ struct AuthenticationView: View {
                         .scaledToFit()
                     HStack {
                         Image(systemName: "person.circle")
-                        TextField("User", text: self.$email).autocapitalization(.none).textContentType(.emailAddress).keyboardType(.emailAddress)
+                        TextField("User", text: self.$email)
+                            .autocapitalization(.none)
+                            .textContentType(.emailAddress)
+                            .keyboardType(.emailAddress)
                             .padding()
                             .background(Color("tertiarySystemBackgroundColor"))
                             .foregroundColor(.primary)
@@ -74,7 +77,7 @@ struct AuthenticationView: View {
                             .foregroundColor(Color("link"))
                     }
                     Button(action: {
-                        WayAppPay.Account.load(email: self.email.lowercased(), password: self.pin)
+                        WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
                     }) {
                         Text("Sign in")
                     }

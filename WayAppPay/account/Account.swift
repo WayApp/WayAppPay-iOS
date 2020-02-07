@@ -10,6 +10,20 @@ import Foundation
 
 extension WayAppPay {
 
+    struct ChangePIN: Codable {
+        var email: String
+        var oldPin: String
+        var newPin: String
+    }
+    
+    struct OTP: Codable {
+        var email: String
+        var otp: String
+        var timeExpiration: Int
+        var timeRequest: Int
+        var creationDate: Date
+    }
+
     struct Account: Codable, DefaultKeyPersistence, ContainerProtocol {
         
         static let PINLength = 4
@@ -46,6 +60,11 @@ extension WayAppPay {
         
         var containerID: String {
             return accountUUID
+        }
+        
+        static func hashedPIN(_ pin: String) -> String {
+            let escapedPIN = pin.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+            return escapedPIN.sha1()
         }
 
         static func savePassword(_ password: String, forEmail email: String) throws {
@@ -91,15 +110,65 @@ extension WayAppPay {
             return password
         }
 
+        func changePIN(currentPIN: String, newPIN: String) {
+            guard let email = session.account?.email else {
+                WayAppUtils.Log.message("missing session account email")
+                return
+            }
+            WayAppPay.API.changePIN(ChangePIN(email: email, oldPin: Account.hashedPIN(currentPIN), newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
+                WayAppUtils.Log.message("RESPONSE: \(response)")
+                if case .success(let response?) = response {
+                    if let accounts = response.result,
+                        let account = accounts.first {
+                        print("success success success success success: \(account)")
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
         
-        static func load(email: String, password: String) {
-            WayAppPay.API.getAccount(email, password).fetch(type: [WayAppPay.Account].self) { response in
+        func forgotPIN() {
+            guard let email = session.account?.email else {
+                WayAppUtils.Log.message("missing session account email")
+                return
+            }
+            WayAppPay.API.forgotPIN(ChangePIN(email: email, oldPin: "", newPin: "")).fetch(type: [OTP].self) { response in
+                WayAppUtils.Log.message("RESPONSE: \(response)")
+                if case .success(let response?) = response {
+                    if let otps = response.result,
+                        let otp = otps.first {
+                        print("OTP success success success success success: \(otp)")
+                        session.account?.verifyOTP(otp)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
+        func verifyOTP(_ otp: OTP) {
+            WayAppPay.API.verifyOTP(otp).fetch(type: [OTP].self) { response in
+                WayAppUtils.Log.message("RESPONSE: \(response)")
+                if case .success(let response?) = response {
+                    if let otps = response.result,
+                        let otp = otps.first {
+                        print("success success success success success: \(otp)")
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
+        static func load(email: String, pin: String) {
+            WayAppPay.API.getAccount(email, Account.hashedPIN(pin)).fetch(type: [WayAppPay.Account].self) { response in
                 if case .success(let response?) = response {
                     if let accounts = response.result,
                         let account = accounts.first {
                         DispatchQueue.main.async {
                             session.account = account
-                            session.saveLoginData(password: password)
+                            session.saveLoginData(password: pin)
                         }
                     } else {
                         WayAppPay.API.reportError(response)

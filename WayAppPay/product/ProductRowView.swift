@@ -18,8 +18,11 @@ struct ProductRowView: View {
                 Text(product.name ?? WayAppPay.Product.defaultName)
                 Text("\(WayAppPay.priceFormatter(product.price))")
             }
-        }.onTapGesture {
-            WayAppPay.session.shoppingCart.addProduct(self.product)
+        }
+        .contextMenu {
+            Button("Add to cart ➕") {
+                WayAppPay.session.shoppingCart.addProduct(self.product)
+            }
         }
     }
 }

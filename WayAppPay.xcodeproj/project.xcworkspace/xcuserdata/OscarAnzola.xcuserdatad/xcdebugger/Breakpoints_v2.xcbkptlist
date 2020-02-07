@@ -3,4 +3,54 @@
    uuid = "5E847BB8-DD71-4394-9279-FBF78744A450"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FCF2CED8-6877-4C5A-A085-CF27D47327D2"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../WayAppPay/merchant/Merchant.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "getAccounts()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "FCF2CED8-6877-4C5A-A085-CF27D47327D2 - 77f05125a662dc9f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WayApp_Pay.WayAppPay.Merchant.getAccounts() -&gt; ()"
+                  moduleName = "WayApp Pay"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/OscarAnzola/Dropbox/Developer/Git/WayAppPay/WayAppPay/merchant/Merchant.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "452">
+               </Location>
+               <Location
+                  uuid = "FCF2CED8-6877-4C5A-A085-CF27D47327D2 - 6c45424869739f07"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (WayApp_Pay.WayAppPay.API.Result&lt;Swift.Array&lt;WayApp_Pay.WayAppPay.Account&gt;, WayApp_Pay.HTTPCall.Error&gt;) -&gt; () in WayApp_Pay.WayAppPay.Merchant.getAccounts() -&gt; ()"
+                  moduleName = "WayApp Pay"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/OscarAnzola/Dropbox/Developer/Git/WayAppPay/WayAppPay/merchant/Merchant.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "49"
+                  endingLineNumber = "49"
+                  offsetFromSymbolStart = "205">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

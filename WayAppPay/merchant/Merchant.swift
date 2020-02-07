@@ -47,6 +47,9 @@ extension WayAppPay {
         }
 
         func getAccounts() {
+//            session.account!.changePIN(currentPIN: "4321", newPIN: "1234")
+            session.account!.forgotPIN()
+            
             WayAppPay.API.getMerchantAccounts(merchantUUID).fetch(type: [Account].self) { response in
                 if case .success(let response?) = response {
                     if let accounts = response.result {

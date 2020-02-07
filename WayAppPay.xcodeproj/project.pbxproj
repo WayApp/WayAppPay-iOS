@@ -12,7 +12,6 @@
 		AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374223E4881F00E437CA /* AuthenticationView.swift */; };
 		AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374423E48A7200E437CA /* CartButtonView.swift */; };
 		AF3A375A23E8233C00E437CA /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375923E8233C00E437CA /* TransactionsView.swift */; };
-		AF3A376023E840FF00E437CA /* HidePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375F23E840FF00E437CA /* HidePinView.swift */; };
 		AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A376323E844FC00E437CA /* AddProductButtonView.swift */; };
 		B11F695023EC83DF005C880A /* ShoppingCartRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */; };
 		B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F695123EC8C85005C880A /* ShoppingCart.swift */; };
@@ -45,6 +44,7 @@
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
 		B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */; };
 		B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D6990523EA22A40049E1D8 /* ScannerView.swift */; };
+		B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750123ED8CA000A1967F /* ChangePinView.swift */; };
 		B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E792E923E9CCE2001296F2 /* KeychainHandler.swift */; };
 		B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57A23E4470E00CC2E04 /* ProductGalleryView.swift */; };
 		B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57D23E4474A00CC2E04 /* AmountView.swift */; };
@@ -64,7 +64,6 @@
 		AF3A374223E4881F00E437CA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		AF3A374423E48A7200E437CA /* CartButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartButtonView.swift; sourceTree = "<group>"; };
 		AF3A375923E8233C00E437CA /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
-		AF3A375F23E840FF00E437CA /* HidePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HidePinView.swift; sourceTree = "<group>"; };
 		AF3A376323E844FC00E437CA /* AddProductButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductButtonView.swift; sourceTree = "<group>"; };
 		B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartRowView.swift; sourceTree = "<group>"; };
 		B11F695123EC8C85005C880A /* ShoppingCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCart.swift; sourceTree = "<group>"; };
@@ -99,6 +98,7 @@
 		B19ACCC4238B092C009FF084 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B19ACCC6238B092C009FF084 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1D6990523EA22A40049E1D8 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
+		B1D8750123ED8CA000A1967F /* ChangePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePinView.swift; sourceTree = "<group>"; };
 		B1E792E923E9CCE2001296F2 /* KeychainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHandler.swift; sourceTree = "<group>"; };
 		B1E7A57A23E4470E00CC2E04 /* ProductGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGalleryView.swift; sourceTree = "<group>"; };
 		B1E7A57D23E4474A00CC2E04 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
@@ -144,7 +144,6 @@
 				B12DE97B23AA79B800C02657 /* IdentityDocument.swift */,
 				B12DE98523AA7F0E00C02657 /* Biometrics.swift */,
 				B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */,
-				AF3A375F23E840FF00E437CA /* HidePinView.swift */,
 			);
 			path = account;
 			sourceTree = "<group>";
@@ -296,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				B1E7A58223E4486700CC2E04 /* SettingsView.swift */,
+				B1D8750123ED8CA000A1967F /* ChangePinView.swift */,
 			);
 			path = settings;
 			sourceTree = "<group>";
@@ -397,7 +397,6 @@
 				B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */,
 				B12DE95C23AA6A9B00C02657 /* UserInterfaceStyleGuide.swift in Sources */,
 				B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */,
-				AF3A376023E840FF00E437CA /* HidePinView.swift in Sources */,
 				B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
@@ -431,6 +430,7 @@
 				B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,
 				B12DE98023AA7B9400C02657 /* API.swift in Sources */,
+				B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */,
 				AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */,
 				B12DE96023AA6C5900C02657 /* JsonCoding.swift in Sources */,
 				AF3A375A23E8233C00E437CA /* TransactionsView.swift in Sources */,

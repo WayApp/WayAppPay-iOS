@@ -45,6 +45,12 @@ struct SettingsView: View {
                     }
                 }
                 Section(header: Text("Other")) {
+                    VStack {
+                        Button(action: {
+                        }) {
+                            Text("Change PIN")
+                        }
+                    }
                     Button(action: {
                         DispatchQueue.main.async {
                             self.session.logout()

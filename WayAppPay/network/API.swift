@@ -45,16 +45,22 @@ extension WayAppPay {
         
         // Account
         case getAccount(Email, PIN) // GET
+        case forgotPIN(ChangePIN) // POST
+        case changePIN(ChangePIN) // POST
+        case verifyOTP(OTP) // POST
+        // Merchant
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
         case getMerchantAccountDetail(String, String) // GET
         case getMerchantAccountTransactions(String, String) // GET
+        // Product
         case getProducts(String) // GET
-        case addProduct(String, WayAppPay.Product, UIImage?) // POST
-        case updateProduct(String, WayAppPay.Product, UIImage?) // PATCH
+        case addProduct(String, Product, UIImage?) // POST
+        case updateProduct(String, Product, UIImage?) // PATCH
         case deleteProduct(String, String) // DELETE
         case getProductDetail(String, String) // GET
+        // Card
         case getCards(String) // GET
         case getCardDetail(String, PAN) // GET
         case getCardTransactions(String, PAN) // GET
@@ -62,29 +68,16 @@ extension WayAppPay {
         case walletPayment(String, String, Transaction) // POST
         
         case deleteAccount(String) // DELETE
-        case account(WayAppPay.Account) // POST
-        case editAccount(WayAppPay.Account, UIImage?) // PATCH
-        case changePassword(PIN, PIN) // PATCH
-        case forgotPassword(Email) // POST
-        case registrationOTP(Email) // POST
-        case registration(Email, PIN) // POST
-        case markNotificationRead(String) // PATCH
+        case account(Account) // POST
+        case editAccount(Account, UIImage?) // PATCH
 
-        // Product
-        case createVoucher(String, String) // POST
-        case createEventTicket(String) // POST
-        // Loyalty
-        case createLoyaltyCard(String) // POST
-        case disableLoyaltyCard(String) // PATCH
-
-        private func hashedPIN(_ pin: String) -> String {
-            let escapedPIN = pin.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-            return escapedPIN.sha1()
-        }
         private var path: String {
             switch self {
             // Account
-            case .getAccount(let email, let pin): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN(pin))/"
+            case .getAccount(let email, let hashedPIN): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN)/"
+            case .forgotPIN: return "/accounts/forgots/"
+            case .changePIN: return "/accounts/passwords/"
+            case .verifyOTP: return "/accounts/otps/"
             // Merchants
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
@@ -102,48 +95,40 @@ extension WayAppPay {
             case .getCardDetail(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/"
             case .getCardTransactions(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/transactions/"
             // Transactions
-            case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID):
-                return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
-            case .walletPayment(let merchantUUID, let accountUUID, _):
-                return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
+            case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
+            case .walletPayment(let merchantUUID, let accountUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
             // TRASH
-            case .createVoucher(let accountUUID, let uuid): return "/accounts/\(accountUUID)/offers/\(uuid)/vouchers/"
-            case .createEventTicket(let uuid): return "/accounts/\(WayAppPay.session.accountUUID!)/events/\(uuid)/tickets/"
-            case .createLoyaltyCard(let id): return "/accounts/\(WayAppPay.session.accountUUID!)/merchants/\(id)/loyalties/cards/"
-            
-            case .disableLoyaltyCard(let id): return "/accounts/\(WayAppPay.session.accountUUID!)/loyalties/cards/\(id)/disables/"
             case .account: return "/accounts/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
             case .editAccount: return "/accounts/\(WayAppPay.session.accountUUID!)/"
-            case .changePassword: return "/accounts/\(WayAppPay.session.accountUUID!)/passwords/"
-            case .forgotPassword: return "/accounts/forgots/"
-            case .registrationOTP: return "/accounts/registrations/otp/"
-            case .registration: return "/accounts/registrations/"
-            case .markNotificationRead: return "/accounts/\(WayAppPay.session.accountUUID!)/notifications/"
             }
         }
         
         private var signature: String {
             switch self {
-            // Products
-            case .getAccount(let email, let pin): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN(pin)
+            // Account
+            case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
+            case .forgotPIN, .changePIN, .verifyOTP: return ""
+            // Merchant
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
             case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
+            // Product
             case .getProducts(let merchantUUID): return merchantUUID
             case .addProduct(let merchantUUID, _, _): return merchantUUID
             case .deleteProduct(let merchantUUID, let productUUID): return merchantUUID + "/" + productUUID
             case .getProductDetail(let merchantUUID, let productUUID): return merchantUUID + "/" + productUUID
             case .updateProduct(let merchantUUID, let product, _): return merchantUUID + "/" + product.productUUID
+            // Card
             case .getCards(let accountUUID): return accountUUID
             case .getCardDetail(let accountUUID, let pan): return accountUUID + "/" + pan
+            // Transaction
             case .getCardTransactions(let accountUUID, let pan): return accountUUID + "/" + pan
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
             case .walletPayment(let merchantUUID, let accountUUID, _): return merchantUUID + "/" + accountUUID
-            default:
-                return ""
+            default: return ""
             }
         }
         static func checkForNetworkError(_ error: HTTPCall.Error, view: UIViewController) {
@@ -179,7 +164,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .createVoucher, .registrationOTP, .registration, .account, .createLoyaltyCard, .createEventTicket, .walletPayment:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .verifyOTP:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -188,32 +173,13 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .forgotPassword:
-                // Response with no data
-                HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
-                    if let error = error {
-                        result(.failure(error))
-                    } else {
-                        result(.success(nil))
-                    }
-                }
-                
-            case .updateProduct, .editAccount, .changePassword, .disableLoyaltyCard:
+            case .updateProduct, .editAccount:
                 // Response with data
                 HTTPCall.PATCH(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
                     } else if let response = response as? Response<T> {
                         result(.success(response))
-                    }
-                }
-            case .markNotificationRead:
-                // Response with no data
-                HTTPCall.PATCH(self).task(type: Response<T>.self) { response, error in
-                    if let error = error {
-                        result(.failure(error))
-                    } else {
-                        result(.success(nil))
                     }
                 }
             case .deleteProduct:
@@ -239,11 +205,11 @@ extension WayAppPay {
 
         var url: URL? {
             let timestamp = Date().timeIntervalSince1970
-            let signatureTimestamped = signature.appending("/" + String(timestamp))
+            let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
             let baseURL = environment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
             return URL(string: baseURL + environment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: environment.wayAppPayPrivateKey))
         }
-        
+                
         var body: (String, Data)? {
             switch self {
             case .account(let account):
@@ -264,11 +230,6 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-//            case .walletPayment(_, _, let transaction):
-//                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
-//                    return (part.contentType, part.data)
-//                }
-//                return nil
             case .walletPayment(_, _, let transaction):
                 var parts: [HTTPCall.BodyPart]?
                 if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
@@ -292,32 +253,16 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .registration(let email, let pin):
-                let dictionary = ["email": email, "pin": pin] as JSON
-                if let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: []) {
-                    let part = HTTPCall.BodyPart.data(name: "registration", data: jsonData)
-                    return (part.contentType, part.data)
+            case .changePIN(let changePIN), .forgotPIN(let changePIN):
+                if let part = HTTPCall.BodyPart(changePIN, name: "account") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .changePassword(let old, let new):
-                let dictionary = ["oldPin": old, "newPin": new] as JSON
-                if let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: []) {
-                    let part = HTTPCall.BodyPart.data(name: "registration", data: jsonData)
-                    return (part.contentType, part.data)
-                }
-                return nil
-            case .forgotPassword(let email):
-                let dictionary = ["email": email] as JSON
-                if let jsonData = try? JSONSerialization.data(withJSONObject: dictionary) {
-                    let part = HTTPCall.BodyPart.data(name: "pin", data: jsonData)
-                    return (part.contentType, part.data)
-                }
-                return nil
-            case .markNotificationRead(let id):
-                let dictionary = ["notificationID": id] as JSON
-                if let jsonData = try? JSONSerialization.data(withJSONObject: [dictionary], options: []) {
-                    let part = HTTPCall.BodyPart.data(name: "notification", data: jsonData)
-                    return (part.contentType, part.data)
+            case .verifyOTP(let otp):
+                if let part = HTTPCall.BodyPart(otp, name: "otp") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
                 }
                 return nil
             default:
