@@ -27,9 +27,9 @@ extension WayAppPay {
         var website: String?
         var identityDocument: IdentityDocument?
         var logo: String?
-//        var creationDate: Date?
-//        var lastUpdateDate: Date?
-//        var currency: Currency?
+        var creationDate: Date?
+        var lastUpdateDate: Date?
+        var currency: Currency?
         
         init(name: String) {
             self.merchantUUID = UUID().uuidString

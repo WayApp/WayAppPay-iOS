@@ -9,8 +9,10 @@
 import Foundation
 
 extension WayAppPay {
-    
     struct Transaction: Codable, ContainerProtocol, Identifiable {
+        
+        static let defaultCurrency = Currency.EUR
+        
         enum TransactionType: String, Codable {
             case SALE
             case REFUND
@@ -19,12 +21,6 @@ extension WayAppPay {
 
         enum TransactionResult: String, Codable {
             case DENIED, ACCEPTED, PROCESSING
-        }
-
-        struct PurchaseDetail: Codable {
-            let name: String?
-            let price: Int?
-            let quantity: Double?
         }
         
         enum ReadingType: String, Codable {
@@ -35,14 +31,14 @@ extension WayAppPay {
             case WALLET, CARD_PINPAD, CASH, TICKET, OTHER, PAYPAL, STRIPE
         }
 
-        var transactionUUID: String
+        var transactionUUID: String?
         var merchantUUID: String?
         var accountUUID: String?
         var pan: String?
         var authorizationCode: String?
         var type: TransactionType?
         var result: TransactionResult?
-        var purchaseDetail: [PurchaseDetail]?
+        var purchaseDetail: [CartItem]?
         var readingType: ReadingType?
         var paymentMethod: PaymentMethod?
         var amount: Int?
@@ -54,20 +50,44 @@ extension WayAppPay {
         var lastUpdateDate: Date?
         
         var id: String {
-            return transactionUUID
+            return transactionUUID ?? UUID().uuidString
         }
         
         var containerID: String {
-            return transactionUUID
+            return transactionUUID ?? UUID().uuidString
+        }
+                
+        // Payment with Wallet card
+        init(amount: Double, token: String = String()) {
+            self.accountUUID = session.accountUUID
+            self.merchantUUID = session.merchantUUID
+            self.amount = Int(amount * 100)
+            self.authorizationCode = token
+            self.paymentMethod = .WALLET
+            self.type = .SALE
+            self.currency = session.merchants.isEmpty ?  Transaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
+            self.readingType = .STANDARD
         }
         
-        // This init only used for debugging
-        init(amount: Int) {
-            self.transactionUUID = UUID().uuidString
-            self.accountUUID = "no account"
-            self.merchantUUID = "no merchant"
-            self.amount = amount
-            self.creationDate = Date()
+        func walletPayment() {
+            guard let merchantUUID = self.merchantUUID,
+                let accountUUID = self.accountUUID else {
+                WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
+                return
+            }
+            WayAppPay.API.walletPayment(merchantUUID, accountUUID, self).fetch(type: [WayAppPay.Transaction].self) { response in
+                if case .success(let response?) = response {
+                    if let transactions = response.result,
+                        let transaction = transactions.first {
+                        WayAppUtils.Log.message("PAGO HECHO!!!!=\(transaction)")
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
         }
+
     }
 }

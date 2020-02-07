@@ -59,6 +59,7 @@ extension WayAppPay {
         case getCardDetail(String, PAN) // GET
         case getCardTransactions(String, PAN) // GET
         case getTransactionPayer(String, String, String) // GET
+        case walletPayment(String, String, Transaction) // POST
         
         case deleteAccount(String) // DELETE
         case account(WayAppPay.Account) // POST
@@ -103,7 +104,8 @@ extension WayAppPay {
             // Transactions
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID):
                 return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
-                
+            case .walletPayment(let merchantUUID, let accountUUID, _):
+                return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
             // TRASH
             case .createVoucher(let accountUUID, let uuid): return "/accounts/\(accountUUID)/offers/\(uuid)/vouchers/"
             case .createEventTicket(let uuid): return "/accounts/\(WayAppPay.session.accountUUID!)/events/\(uuid)/tickets/"
@@ -139,6 +141,7 @@ extension WayAppPay {
             case .getCardDetail(let accountUUID, let pan): return accountUUID + "/" + pan
             case .getCardTransactions(let accountUUID, let pan): return accountUUID + "/" + pan
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
+            case .walletPayment(let merchantUUID, let accountUUID, _): return merchantUUID + "/" + accountUUID
             default:
                 return ""
             }
@@ -176,7 +179,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .createVoucher, .registrationOTP, .registration, .account, .createLoyaltyCard, .createEventTicket:
+            case .addProduct, .createVoucher, .registrationOTP, .registration, .account, .createLoyaltyCard, .createEventTicket, .walletPayment:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -255,6 +258,21 @@ extension WayAppPay {
                     if let picture = picture {
                         parts?.append(HTTPCall.BodyPart.image(name: "picture", image: picture))
                     }
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+//            case .walletPayment(_, _, let transaction):
+//                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
+//                    return (part.contentType, part.data)
+//                }
+//                return nil
+            case .walletPayment(_, _, let transaction):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
+                    parts = [part]
                 }
                 if let parts = parts {
                     let multipart = HTTPCall.BodyPart.multipart(parts)

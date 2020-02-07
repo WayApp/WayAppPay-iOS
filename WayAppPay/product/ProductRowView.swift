@@ -14,8 +14,12 @@ struct ProductRowView: View {
     var body: some View {
         HStack {
             ImageView(withURL: product.image)
-            Text(verbatim: product.name ?? WayAppPay.Product.defaultName)
-            Spacer()
+            VStack(alignment: .leading, spacing: 1.0) {
+                Text(product.name ?? WayAppPay.Product.defaultName)
+                Text("\(WayAppPay.priceFormatter(product.price))")
+            }
+        }.onTapGesture {
+            WayAppPay.session.shoppingCart.addProduct(self.product)
         }
     }
 }

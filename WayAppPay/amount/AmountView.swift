@@ -8,20 +8,24 @@
 
 import SwiftUI
 
-struct AmountView: View {
+struct AmountView: View, HandleScanner {
     @State private var showScanner = false
     @State private var showAlert = false
-    @State private var scannedCode = String()
-
+    @State var scannedCode: String = String()
+    
     func handleScan(result: Result<String, ScannerView.ScanError>) {
        switch result {
        case .success(let code):
+            let transaction = WayAppPay.Transaction(amount: WayAppPay.session.amount, token: code)
             scannedCode = code
+            print("***********TRANSACTION: \(transaction)")
+            transaction.walletPayment()
             print("Success. QR=\(code)")
        case .failure(let error):
             print("Scanning failed: \(error.localizedDescription)")
        }
     }
+
     
     var body: some View {
         NavigationView {
@@ -81,18 +85,24 @@ struct AmountView: View {
                         .frame(width: 30, height: 30, alignment: .center) }
                     )
                     .sheet(isPresented: $showScanner) {
-                        if self.scannedCode.isEmpty {
-                            VStack {
-                                ScannerView(codeTypes: [.qr], simulatedData: "Simulated code", completion: self.handleScan)
-                                HStack {
-                                    Text("Dismiss")
-                                    Spacer()
-                                    Button("Done") { self.showScanner = false }
+                        VStack {
+                            if self.scannedCode.isEmpty {
+                                VStack {
+                                    ScannerView(codeTypes: [.qr], simulatedData: "Simulated code", completion: self.handleScan)
                                 }
-                                .padding()
+                            } else {
+                                Text("scanned code:\n\(self.scannedCode)")
                             }
-                        } else {
-                            Text("scanned code:\n\(self.scannedCode)")
+                            HStack {
+                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: WayAppPay.session.amount)!)")
+                                    .foregroundColor(Color.black)
+                                    .fontWeight(.medium)
+                                Spacer()
+                                Button("Done") { self.showScanner = false }
+                            }
+                            .frame(height: 40.0)
+                            .padding()
+                            .background(Color.white)
                         }
                     }
                     .alert(isPresented: $showAlert) {

@@ -9,10 +9,33 @@
 import SwiftUI
 
 struct ShoppingCartView: View {
+    @EnvironmentObject private var session: WayAppPay.Session
+    
     var body: some View {
-        Text("Shopping cart")
-            .font(.largeTitle)
+        NavigationView {
+            List {
+                ForEach(session.shoppingCart.items) { item in
+                    ShoppingCartRowView(item: item)
+                }
+                .onDelete(perform: delete)
+            }
+            .listStyle(GroupedListStyle())
+            .navigationBarTitle("Products")
+            .navigationBarItems(trailing:
+                Button(action: { }, label: { Image(systemName: "qrcode.viewfinder")
+                    .resizable()
+                    .frame(width: 30, height: 30, alignment: .center) })
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.trailing, 16)
+            )
+        }
     }
+    
+    func delete(at offsets: IndexSet) {
+        session.shoppingCart.items.remove(at: offsets)
+    }
+
+
 }
 
 struct ShoppingCartView_Previews: PreviewProvider {

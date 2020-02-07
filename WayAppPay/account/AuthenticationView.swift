@@ -11,25 +11,25 @@ import SwiftUI
 struct AuthenticationView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode
     
-    @State var email: String = ""
-    @State var pin: String = ""
-    @State var remember: Bool = true
-    @State var scrollOffset: CGSize = CGSize.zero
+    @State private var email: String = ""
+    @State private var pin: String = ""
+    @State private var remember: Bool = true
+    @State private var scrollOffset: CGSize = CGSize.zero
 
     let imageSize: CGFloat = 120.0
     let textFieldcornerRadius: CGFloat = 20.0
     
     private func keywordScrollCalculation(height: Int) -> Int {
         switch height {
-        case 0..<600: return -180
-        case 600..<700: return -80
+        case 0..<600: return -200
+        case 600..<700: return -130
         default: return 0
         }
     }
     
     var body: some View {
         GeometryReader { geometry in
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .center, spacing: 16.0) {
                     Spacer()
                     Text("Geometry: width=\(Int(geometry.size.width)), height=\(Int(geometry.size.height))")
@@ -52,7 +52,7 @@ struct AuthenticationView: View {
                     }
                     HStack {
                         Image(systemName: "lock.rotation")
-                        SecureField("PIN", text: self.$pin).keyboardType(.numberPad)
+                        SecureField("PIN", text: self.$pin).textContentType(.password).keyboardType(.numberPad)
                             .padding()
                             .foregroundColor(.primary)
                             .background(Color("tertiarySystemBackgroundColor"))

@@ -10,8 +10,11 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject private var session: WayAppPay.Session
-    
-    enum Tab: Hashable {
+    @State private var badgeNumber: Int = 3
+    private var badgePosition: CGFloat = 1
+    private var tabsCount: CGFloat = CGFloat(Tab.allCases.count)
+
+    enum Tab: Hashable, CaseIterable {
         case cart
         case products
         case amount
@@ -23,48 +26,66 @@ struct MainView: View {
         if session.showAuthenticationView {
             return AnyView(AuthenticationView())
         } else {
-            return AnyView(TabView(selection: $session.selectedTab) {
-                ShoppingCartView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "cart")
-                            Text("Cart")
-                        }
+            return AnyView(
+                GeometryReader { geometry in
+                  ZStack(alignment: .bottomLeading) {
+                    // TabView
+                    TabView(selection: self.$session.selectedTab) {
+                        ShoppingCartView()
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: "cart")
+                                    Text("Cart")
+                                }
+                            }
+                        .tag(Tab.cart)
+                        ProductGalleryView().environmentObject(self.session)
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: "tag")
+                                    Text("Products")
+                                }
+                            }
+                        .tag(Tab.products)
+                        AmountView()
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: "eurosign.circle")
+                                    Text("Amount")
+                                }
+                            }
+                        .tag(Tab.amount)
+                        TransactionsView()
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: "chart.bar")
+                                    Text("Reports")
+                                }
+                            }
+                        .tag(Tab.reports)
+                        SettingsView().environmentObject(self.session)
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: "gear")
+                                    Text("Settings")
+                                }
+                            }
+                        .tag(Tab.settings)
                     }
-                .tag(Tab.cart)
-                ProductGalleryView().environmentObject(session)
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "tag")
-                            Text("Products")
-                        }
+                    // Badge View
+                    ZStack {
+                      Circle()
+                        .foregroundColor(.red)
+                      Text("\(self.session.shoppingCart.count)")
+                        .foregroundColor(.white)
+                        .font(Font.system(size: 12))
                     }
-                .tag(Tab.products)
-                AmountView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "eurosign.circle")
-                            Text("Amount")
-                        }
+                    .frame(width: 20, height: 20)
+                    .offset(x: ( ( 2 * self.badgePosition) - 1 ) * ( geometry.size.width / ( 2 * self.tabsCount ) ), y: -30)
+                    .opacity(self.session.shoppingCart.count == 0 ? 0 : 1)
                     }
-                .tag(Tab.amount)
-                TransactionsView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "chart.bar")
-                            Text("Reports")
-                        }
-                    }
-                .tag(Tab.reports)
-                SettingsView().environmentObject(session)
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "gear")
-                            Text("Settings")
-                        }
-                    }
-                .tag(Tab.settings)
-            })
+                }
+            )
         }
     }
 }

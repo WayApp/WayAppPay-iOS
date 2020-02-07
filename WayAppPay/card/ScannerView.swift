@@ -9,6 +9,25 @@
 import AVFoundation
 import SwiftUI
 
+protocol HandleScanner {
+    func handleScan(result: Result<String, ScannerView.ScanError>)
+}
+
+extension HandleScanner {
+    func handleScan(result: Result<String, ScannerView.ScanError>) {
+       switch result {
+       case .success(let code):
+            let transaction = WayAppPay.Transaction(amount: WayAppPay.session.amount, token: code)
+            print("***********TRANSACTION: \(transaction)")
+            transaction.walletPayment()
+            print("Success. QR=\(code)")
+       case .failure(let error):
+            print("Scanning failed: \(error.localizedDescription)")
+       }
+    }
+
+}
+
 public struct ScannerView: UIViewControllerRepresentable {
 
     public enum ScanError: Error {

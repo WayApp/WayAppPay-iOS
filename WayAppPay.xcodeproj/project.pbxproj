@@ -14,6 +14,8 @@
 		AF3A375A23E8233C00E437CA /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375923E8233C00E437CA /* TransactionsView.swift */; };
 		AF3A376023E840FF00E437CA /* HidePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375F23E840FF00E437CA /* HidePinView.swift */; };
 		AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A376323E844FC00E437CA /* AddProductButtonView.swift */; };
+		B11F695023EC83DF005C880A /* ShoppingCartRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */; };
+		B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F695123EC8C85005C880A /* ShoppingCart.swift */; };
 		B12DE95023AA638500C02657 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE94F23AA638500C02657 /* Account.swift */; };
 		B12DE95323AA643E00C02657 /* WayAppPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95223AA643E00C02657 /* WayAppPay.swift */; };
 		B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95423AA654E00C02657 /* UserMessage.swift */; };
@@ -64,6 +66,8 @@
 		AF3A375923E8233C00E437CA /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
 		AF3A375F23E840FF00E437CA /* HidePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HidePinView.swift; sourceTree = "<group>"; };
 		AF3A376323E844FC00E437CA /* AddProductButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductButtonView.swift; sourceTree = "<group>"; };
+		B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartRowView.swift; sourceTree = "<group>"; };
+		B11F695123EC8C85005C880A /* ShoppingCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCart.swift; sourceTree = "<group>"; };
 		B12DE94F23AA638500C02657 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B12DE95223AA643E00C02657 /* WayAppPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppPay.swift; sourceTree = "<group>"; };
 		B12DE95423AA654E00C02657 /* UserMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessage.swift; sourceTree = "<group>"; };
@@ -134,12 +138,12 @@
 		B12DE94C23AA632400C02657 /* account */ = {
 			isa = PBXGroup;
 			children = (
-				B12DE97B23AA79B800C02657 /* IdentityDocument.swift */,
-				B12DE94F23AA638500C02657 /* Account.swift */,
 				B12DE98123AA7CA300C02657 /* Session.swift */,
+				B12DE94F23AA638500C02657 /* Account.swift */,
+				AF3A374223E4881F00E437CA /* AuthenticationView.swift */,
+				B12DE97B23AA79B800C02657 /* IdentityDocument.swift */,
 				B12DE98523AA7F0E00C02657 /* Biometrics.swift */,
 				B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */,
-				AF3A374223E4881F00E437CA /* AuthenticationView.swift */,
 				AF3A375F23E840FF00E437CA /* HidePinView.swift */,
 			);
 			path = account;
@@ -160,6 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				B1E7A57F23E4482D00CC2E04 /* ShoppingCartView.swift */,
+				B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */,
+				B11F695123EC8C85005C880A /* ShoppingCart.swift */,
 			);
 			path = cart;
 			sourceTree = "<group>";
@@ -383,6 +389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B12DE95323AA643E00C02657 /* WayAppPay.swift in Sources */,
+				B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */,
 				B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */,
 				B12DE97423AA718300C02657 /* Card.swift in Sources */,
 				B12DE97123AA713C00C02657 /* Issuer.swift in Sources */,
@@ -407,6 +414,7 @@
 				B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */,
 				B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */,
 				AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */,
+				B11F695023EC83DF005C880A /* ShoppingCartRowView.swift in Sources */,
 				B12DE96923AA6FAE00C02657 /* HTTPNetworkAccess.swift in Sources */,
 				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */,

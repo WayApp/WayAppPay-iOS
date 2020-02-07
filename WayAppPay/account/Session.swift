@@ -22,7 +22,7 @@ extension WayAppPay {
         @Published var merchants = Container<Merchant>()
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-//                Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
+                Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                 merchants[seletectedMerchant].getAccounts()
             }
         }
@@ -33,13 +33,22 @@ extension WayAppPay {
         @Published var showAuthenticationView: Bool = true
         @Published var selectedTab: MainView.Tab = .amount
         @Published var transactions = Container<Transaction>()
+        @Published var shoppingCart = ShoppingCart()
 
         init() {
-            print("@@@@@@@@@@@@@@@@@@@@@@@@ INIT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
                 self.showAuthenticationView = false
             }
+        }
+        
+        
+        var amount: Double {
+            var total: Double = 0
+            for item in shoppingCart.items {
+                total += Double(item.cartItem.quantity) * (Double(item.cartItem.price) / 100)
+            }
+            return total
         }
         
         var accountUUID: String? {
@@ -51,7 +60,7 @@ extension WayAppPay {
         }
 
         var merchantUUID: String? {
-            return merchants[seletectedMerchant].merchantUUID
+            return merchants.isEmpty ? nil : merchants[seletectedMerchant].merchantUUID
         }
                 
         func saveLoginData(password: String) {

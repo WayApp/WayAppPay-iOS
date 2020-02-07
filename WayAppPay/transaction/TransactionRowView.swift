@@ -41,6 +41,6 @@ struct TransactionRowView: View {
 
 struct TransactionRowView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionRowView(transaction: WayAppPay.Transaction(amount: 1000))
+        TransactionRowView(transaction: WayAppPay.Transaction(amount: 1000.0))
     }
 }
