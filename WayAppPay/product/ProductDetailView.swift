@@ -12,12 +12,12 @@ struct ProductDetailView: View {
     @EnvironmentObject private var session: WayAppPay.Session
     var product: WayAppPay.Product
     
-    @State var updatedProduct = WayAppPay.Product(merchantUUID: "dd", name: "")
+    @State var updatedProduct = WayAppPay.Product(name: "no name", price: 100)
     @State var newName: String = ""
     @State var newPrice: String = ""
     
-    @State private var showImagePicker : Bool = false
-    @State private var image : Image? = nil
+    @State private var showImagePicker: Bool = false
+    @State private var image: Image? = nil
 
     let imageSize: CGFloat = 120.0
     var body: some View {
@@ -60,6 +60,6 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product(merchantUUID: "uuid", name: "debug"))
+        ProductDetailView(product: WayAppPay.Product(name: "no name", price: 100))
     }
 }

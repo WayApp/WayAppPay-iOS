@@ -36,13 +36,13 @@ extension WayAppPay {
             return productUUID
         }
 
-        init(merchantUUID: String, name: String) {
+        init(name: String, description: String = String(), price: Int) {
             self.productUUID = UUID().uuidString
-            self.merchantUUID = merchantUUID
+            self.merchantUUID = WayAppPay.session.merchantUUID
             self.name = name
-            self.description = name
+            self.description = description
             self.iva = 0
-            self.price = 1
+            self.price = price
         }
         
         static func loadForMerchant(_ merchantUUID: String) {

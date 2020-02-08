@@ -47,7 +47,7 @@ struct MainView: View {
                                 }
                             }
                         .tag(Tab.products)
-                        AmountView()
+                        AmountView().environmentObject(self.session)
                             .tabItem {
                                 VStack {
                                     Image(systemName: "eurosign.circle")

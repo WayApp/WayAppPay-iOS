@@ -8,72 +8,122 @@
 
 import SwiftUI
 
-struct AmountView: View, HandleScanner {
+struct AmountView: View {
+    @EnvironmentObject private var session: WayAppPay.Session
+
     @State private var showScanner = false
     @State private var showAlert = false
-    @State var scannedCode: String = String()
-    
-    func handleScan(result: Result<String, ScannerView.ScanError>) {
-       switch result {
-       case .success(let code):
-            let transaction = WayAppPay.Transaction(amount: WayAppPay.session.amount, token: code)
-            scannedCode = code
-            print("***********TRANSACTION: \(transaction)")
-            transaction.walletPayment()
-            print("Success. QR=\(code)")
-       case .failure(let error):
-            print("Scanning failed: \(error.localizedDescription)")
-       }
-    }
+    @State private var scannedCode: String? = nil
+    @State private var cartDescription: String = ""
+    @State private var wasPaymentSuccessful: Bool = false
+    @State private var amount: Double = 0
+        
 
+    func handleScan() {
+        processPayment()
+    }
+    
+    func numberEntered(number: Int) {
+        if number < 10 {
+            amount = (amount*10 + Double(number))
+        } else {
+            amount *= 100
+        }
+    }
+    
+    func delete() {
+        amount = 0
+    }
+    
+    func processPayment() {
+        guard let merchantUUID = WayAppPay.session.merchantUUID,
+            let accountUUID = WayAppPay.session.accountUUID,
+            let code = scannedCode else {
+            WayAppUtils.Log.message("missing session.merchantUUID or session.accountUUID")
+            return
+        }
+        let payment = WayAppPay.PaymentTransaction(amount: Int(amount * 100) / 100, token: code)
+        WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
+            self.scannedCode = nil
+            if case .success(let response?) = response {
+                if let transactions = response.result,
+                    let transaction = transactions.first {
+                    DispatchQueue.main.async {
+                        self.session.transactions.addAsFirst(transaction)
+                    }
+                    self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
+                    self.showAlert = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                        self.showAlert = false
+                    }
+                } else {
+                    self.wasPaymentSuccessful = false
+                    self.showAlert = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                        self.showAlert = false
+                    }
+                    WayAppPay.API.reportError(response)
+                }
+            } else if case .failure(let error) = response {
+                WayAppUtils.Log.message(error.localizedDescription)
+            }
+        }
+
+    }
+    
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .center, spacing: 8.0){
-                Spacer()
-                HStack(alignment: .center, spacing: 40.0) {
-                    Text("0,00€")
+            ZStack {
+                VStack(alignment: .center, spacing: 8.0) {
+                    Spacer()
+                    Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
                         .font(.largeTitle)
-                        .foregroundColor(Color.black)
+                        .foregroundColor(Color.primary)
                         .fontWeight(.bold)
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(systemName: "delete.left.fill")
-                            .resizable()
-                            .frame(width: 40, height: 25)
-                            .foregroundColor(Color.black)
+                        .onTapGesture {
+                            self.delete()
+                        }
+                    TextField("description", text: $cartDescription)
+                        .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.bottom, 16.0)
+                    VStack {
+                        HStack(spacing: 0) {
+                            NumberButtonView(number: 1, completion: numberEntered)
+                            NumberButtonView(number: 2, completion: numberEntered)
+                            NumberButtonView(number: 3, completion: numberEntered)
+                        }
+                        HStack(spacing: 0) {
+                            NumberButtonView(number: 4, completion: numberEntered)
+                            NumberButtonView(number: 5, completion: numberEntered)
+                            NumberButtonView(number: 6, completion: numberEntered)
+                        }
+                        HStack(spacing: 0) {
+                            NumberButtonView(number: 7, completion: numberEntered)
+                            NumberButtonView(number: 8, completion: numberEntered)
+                            NumberButtonView(number: 9, completion: numberEntered)
+                        }
+                        HStack(spacing: 0) {
+                            NumberButtonView(number: 100, completion: numberEntered)
+                            NumberButtonView(number: 0, completion: numberEntered)
+                            OperationButtonView(image: "delete.left", completion: delete)
+                        }
                     }
                 }
-                TextField("description", text:/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.bottom, 16.0)
-                VStack {
-                    HStack(spacing: 0.0) {
-                        NumberButtonView(button: 1)
-                        NumberButtonView(button: 2)
-                        NumberButtonView(button: 3)
-                    }
-                    HStack(spacing: 0.0) {
-                        NumberButtonView(button: 4)
-                        NumberButtonView(button: 5)
-                        NumberButtonView(button: 6)
-                    }
-                    HStack(spacing: 0.0) {
-                        NumberButtonView(button: 7)
-                        NumberButtonView(button: 8)
-                        NumberButtonView(button: 9)
-                    }
-                    HStack(spacing: 0.0) {
-                        NumberButtonView(button: 100)
-                        NumberButtonView(button: 0)
-                        AddButtonView()
-                    }
+                if showAlert {
+                    Image(systemName: wasPaymentSuccessful ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
+                        .resizable()
+                        .foregroundColor(wasPaymentSuccessful ? Color.green : Color.red)
+                        .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
                 }
             }
             .navigationBarTitle("Amount")
             .navigationBarItems(trailing:
                 HStack {
-                    Button(action: { }, label: { Image(systemName: "cart.fill.badge.plus")
+                    Button(action: {
+                        WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(name: "Amount", description: self.cartDescription, price: Int(self.amount * 100) / 100), isAmount: true)
+                    }, label: { Image(systemName: "cart.fill.badge.plus")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center) })
                         .aspectRatio(contentMode: .fit)
@@ -86,15 +136,9 @@ struct AmountView: View, HandleScanner {
                     )
                     .sheet(isPresented: $showScanner) {
                         VStack {
-                            if self.scannedCode.isEmpty {
-                                VStack {
-                                    ScannerView(codeTypes: [.qr], simulatedData: "Simulated code", completion: self.handleScan)
-                                }
-                            } else {
-                                Text("scanned code:\n\(self.scannedCode)")
-                            }
+                            CodeCaptureView(showCodePicker: self.$showScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
                             HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: WayAppPay.session.amount)!)")
+                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.amount / 100))!)")
                                     .foregroundColor(Color.black)
                                     .fontWeight(.medium)
                                 Spacer()
@@ -104,13 +148,6 @@ struct AmountView: View, HandleScanner {
                             .padding()
                             .background(Color.white)
                         }
-                    }
-                    .alert(isPresented: $showAlert) {
-                        Alert(title: Text("Scan successful"),
-                              message: Text("Scanned code: ...."),
-                              dismissButton: .default(Text("Done")) {
-                                self.showAlert = false
-                            })
                     }
                 }
             )

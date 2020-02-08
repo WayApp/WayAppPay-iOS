@@ -29,7 +29,6 @@ struct SettingsView: View {
                                 Text(self.session.merchants[$0].name ?? "SILVANA")
                             }
                         }
-                        Text("Selected merchant: \(session.merchants[session.seletectedMerchant].name ?? "")")
                     }
                 }
                 Section(header: Text("Accounts")) {
@@ -41,10 +40,9 @@ struct SettingsView: View {
                                 Text(self.session.accounts[$0].email ?? "no email")
                             }
                         }
-                        Text("Selected account: \(session.accounts[session.selectedAccount].email ?? "")")
                     }
                 }
-                Section(header: Text("Other")) {
+                Section(header: Text("Account: \(session.account?.email ?? "no email")")) {
                     VStack {
                         Button(action: {
                         }) {

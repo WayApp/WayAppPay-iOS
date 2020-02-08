@@ -76,9 +76,9 @@ struct ImageView: View {
     }
 }
 
-class ImagePickerCordinator : NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate{    
-    @Binding var isShown    : Bool
-    @Binding var image      : Image?
+class ImagePickerCordinator : NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    @Binding var isShown: Bool
+    @Binding var image: Image?
     
     init(isShown : Binding<Bool>, image: Binding<Image?>) {
         _isShown = isShown
@@ -99,8 +99,8 @@ class ImagePickerCordinator : NSObject, UINavigationControllerDelegate, UIImageP
 }
 
 struct ImagePicker : UIViewControllerRepresentable {
-    @Binding var isShown    : Bool
-    @Binding var image      : Image?
+    @Binding var isShown: Bool
+    @Binding var image: Image?
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
         let picker = UIImagePickerController()
@@ -117,9 +117,8 @@ struct ImagePicker : UIViewControllerRepresentable {
 }
 
 struct PhotoCaptureView: View {
-    
-    @Binding var showImagePicker    : Bool
-    @Binding var image              : Image?
+    @Binding var showImagePicker: Bool
+    @Binding var image: Image?
     
     var body: some View {
         ImagePicker(isShown: $showImagePicker, image: $image)

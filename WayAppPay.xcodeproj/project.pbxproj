@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373D23E4797100E437CA /* NumberButtonView.swift */; };
 		AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A373F23E47A3700E437CA /* AddButtonView.swift */; };
 		AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374223E4881F00E437CA /* AuthenticationView.swift */; };
 		AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374423E48A7200E437CA /* CartButtonView.swift */; };
@@ -45,12 +44,15 @@
 		B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */; };
 		B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D6990523EA22A40049E1D8 /* ScannerView.swift */; };
 		B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750123ED8CA000A1967F /* ChangePinView.swift */; };
+		B1D8750623EEDC1700A1967F /* NumberButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750523EEDC1700A1967F /* NumberButtonView.swift */; };
+		B1D8750823EEDF6600A1967F /* OperationButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750723EEDF6500A1967F /* OperationButtonView.swift */; };
+		B1D8750A23EF2F3B00A1967F /* ReportID.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750923EF2F3B00A1967F /* ReportID.swift */; };
+		B1D8750C23EF47C800A1967F /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750B23EF47C800A1967F /* BarView.swift */; };
 		B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E792E923E9CCE2001296F2 /* KeychainHandler.swift */; };
 		B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57A23E4470E00CC2E04 /* ProductGalleryView.swift */; };
 		B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57D23E4474A00CC2E04 /* AmountView.swift */; };
 		B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A57F23E4482D00CC2E04 /* ShoppingCartView.swift */; };
 		B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58223E4486700CC2E04 /* SettingsView.swift */; };
-		B1E7A58623E448D000CC2E04 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58523E448D000CC2E04 /* ReportsView.swift */; };
 		B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58723E44A1B00CC2E04 /* ProductRowView.swift */; };
 		B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58923E44E3E00CC2E04 /* ProductDetailView.swift */; };
 		B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58C23E5860100CC2E04 /* Merchant.swift */; };
@@ -59,7 +61,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AF3A373D23E4797100E437CA /* NumberButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberButtonView.swift; sourceTree = "<group>"; };
 		AF3A373F23E47A3700E437CA /* AddButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButtonView.swift; sourceTree = "<group>"; };
 		AF3A374223E4881F00E437CA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		AF3A374423E48A7200E437CA /* CartButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartButtonView.swift; sourceTree = "<group>"; };
@@ -99,12 +100,15 @@
 		B19ACCC6238B092C009FF084 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1D6990523EA22A40049E1D8 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		B1D8750123ED8CA000A1967F /* ChangePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePinView.swift; sourceTree = "<group>"; };
+		B1D8750523EEDC1700A1967F /* NumberButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberButtonView.swift; sourceTree = "<group>"; };
+		B1D8750723EEDF6500A1967F /* OperationButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationButtonView.swift; sourceTree = "<group>"; };
+		B1D8750923EF2F3B00A1967F /* ReportID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportID.swift; sourceTree = "<group>"; };
+		B1D8750B23EF47C800A1967F /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
 		B1E792E923E9CCE2001296F2 /* KeychainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHandler.swift; sourceTree = "<group>"; };
 		B1E7A57A23E4470E00CC2E04 /* ProductGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGalleryView.swift; sourceTree = "<group>"; };
 		B1E7A57D23E4474A00CC2E04 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
 		B1E7A57F23E4482D00CC2E04 /* ShoppingCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartView.swift; sourceTree = "<group>"; };
 		B1E7A58223E4486700CC2E04 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		B1E7A58523E448D000CC2E04 /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
 		B1E7A58723E44A1B00CC2E04 /* ProductRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRowView.swift; sourceTree = "<group>"; };
 		B1E7A58923E44E3E00CC2E04 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
 		B1E7A58C23E5860100CC2E04 /* Merchant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merchant.swift; sourceTree = "<group>"; };
@@ -211,6 +215,8 @@
 				B12DE96D23AA709700C02657 /* Transaction.swift */,
 				AF3A375923E8233C00E437CA /* TransactionsView.swift */,
 				B12F17FA23EBD1530012890E /* TransactionRowView.swift */,
+				B1D8750923EF2F3B00A1967F /* ReportID.swift */,
+				B1D8750B23EF47C800A1967F /* BarView.swift */,
 			);
 			path = transaction;
 			sourceTree = "<group>";
@@ -255,7 +261,6 @@
 				AF3A374123E4879800E437CA /* main */,
 				B12DE94C23AA632400C02657 /* account */,
 				B1E7A58B23E585ED00CC2E04 /* merchant */,
-				B1E7A58423E448BB00CC2E04 /* reports */,
 				B1E7A58123E4485200CC2E04 /* settings */,
 				B1E7A57C23E4472F00CC2E04 /* amount */,
 				B12DE97223AA716D00C02657 /* card */,
@@ -285,8 +290,9 @@
 			isa = PBXGroup;
 			children = (
 				B1E7A57D23E4474A00CC2E04 /* AmountView.swift */,
-				AF3A373D23E4797100E437CA /* NumberButtonView.swift */,
 				AF3A373F23E47A3700E437CA /* AddButtonView.swift */,
+				B1D8750523EEDC1700A1967F /* NumberButtonView.swift */,
+				B1D8750723EEDF6500A1967F /* OperationButtonView.swift */,
 			);
 			path = amount;
 			sourceTree = "<group>";
@@ -298,14 +304,6 @@
 				B1D8750123ED8CA000A1967F /* ChangePinView.swift */,
 			);
 			path = settings;
-			sourceTree = "<group>";
-		};
-		B1E7A58423E448BB00CC2E04 /* reports */ = {
-			isa = PBXGroup;
-			children = (
-				B1E7A58523E448D000CC2E04 /* ReportsView.swift */,
-			);
-			path = reports;
 			sourceTree = "<group>";
 		};
 		B1E7A58B23E585ED00CC2E04 /* merchant */ = {
@@ -400,17 +398,19 @@
 				B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
+				B1D8750823EEDF6600A1967F /* OperationButtonView.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
 				B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */,
-				B1E7A58623E448D000CC2E04 /* ReportsView.swift in Sources */,
 				B12DE96B23AA701E00C02657 /* Product.swift in Sources */,
 				AF3A374523E48A7200E437CA /* CartButtonView.swift in Sources */,
 				B12DE95823AA66F700C02657 /* DefaultKeys.swift in Sources */,
 				B12DE97C23AA79B800C02657 /* IdentityDocument.swift in Sources */,
 				B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */,
 				B12DE98223AA7CA300C02657 /* Session.swift in Sources */,
+				B1D8750A23EF2F3B00A1967F /* ReportID.swift in Sources */,
 				B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */,
+				B1D8750C23EF47C800A1967F /* BarView.swift in Sources */,
 				B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */,
 				AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */,
 				B11F695023EC83DF005C880A /* ShoppingCartRowView.swift in Sources */,
@@ -418,7 +418,6 @@
 				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
-				AF3A373E23E4797100E437CA /* NumberButtonView.swift in Sources */,
 				B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */,
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
@@ -426,6 +425,7 @@
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
 				B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */,
+				B1D8750623EEDC1700A1967F /* NumberButtonView.swift in Sources */,
 				AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */,
 				B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,

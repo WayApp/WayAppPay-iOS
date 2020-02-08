@@ -24,6 +24,7 @@ extension WayAppPay {
             didSet {
                 Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                 merchants[seletectedMerchant].getAccounts()
+                merchants[seletectedMerchant].getReportID(for: session.accountUUID, month: ReportID.idReportForMonth(Date()))
             }
         }
         
@@ -32,16 +33,16 @@ extension WayAppPay {
         @Published var accounts = Container<Account>()
         @Published var showAuthenticationView: Bool = true
         @Published var selectedTab: MainView.Tab = .amount
-        @Published var transactions = Container<Transaction>()
+        @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
-
+        @Published var thisMonthReportID: ReportID?
+        
         init() {
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
                 self.showAuthenticationView = false
             }
         }
-        
         
         var amount: Double {
             var total: Double = 0

@@ -6,10 +6,21 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import UIKit
+import AVFoundation
+import SwiftUI
 
 struct WayAppPay {
     
+    struct UI {
+        static let paymentResultSuccessImage = "checkmark.circle.fill"
+        static let paymentResultFailureImage = "x.circle.fill"
+        static let paymentResultImageSize: CGFloat = 220.0
+        static let paymentResultDisplayDuration: TimeInterval = 1.5
+        static let shoppingCartRowImageSize: CGFloat = 36.0
+    }
+    
+    static let acceptedPaymentCodes: [AVMetadataObject.ObjectType] = [.qr, .code128]
+
     static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = true

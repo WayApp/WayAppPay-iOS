@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TransactionRowView: View {
     @EnvironmentObject var session: WayAppPay.Session
-    var transaction: WayAppPay.Transaction
+    var transaction: WayAppPay.PaymentTransaction
 
     static var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -20,19 +20,32 @@ struct TransactionRowView: View {
     }()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
-                Spacer()
-                Text("\((transaction.amount != nil ? Double(transaction.amount!) / 100 : 0.00), specifier: "%.2f")")
-                //
+        HStack {
+            if transaction.result == .ACCEPTED {
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(Color.green)
+            } else {
+                Image(systemName: "x.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(Color.red)
             }
-            Text(transaction.accountUUID != nil ?
-                "..." + transaction.accountUUID!.suffix(12) :
-                "no account")
-            Text((transaction.accountUUID != nil && session.accounts[transaction.accountUUID!] != nil) ?
-                session.accounts[transaction.accountUUID!]!.email ?? "no email" :
-                "no account")
+            VStack(alignment: .leading, spacing: 8) {
+                Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
+                Text(transaction.pan != nil ?
+                    "PAN: ..." + transaction.pan!.suffix(12) :
+                    "no account")
+                Text((transaction.accountUUID != nil && session.accounts[transaction.accountUUID!] != nil) ?
+                    session.accounts[transaction.accountUUID!]!.email ?? "no email" :
+                    "no account")
+            }
+            Spacer()
+            Text(WayAppPay.priceFormatter(transaction.amount))
+                .fontWeight(.medium)
         }
         .padding()
 
@@ -41,6 +54,6 @@ struct TransactionRowView: View {
 
 struct TransactionRowView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionRowView(transaction: WayAppPay.Transaction(amount: 1000.0))
+        TransactionRowView(transaction: WayAppPay.PaymentTransaction(amount: 100))
     }
 }

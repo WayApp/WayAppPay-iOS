@@ -1,5 +1,5 @@
 //
-//  NumberButtonView.swift
+//  OperationButtonView.swift
 //  WayAppPay
 //
 //  Created by Oscar Anzola on 2/8/20.
@@ -8,16 +8,16 @@
 
 import SwiftUI
 
-struct NumberButtonView: View {
+struct OperationButtonView: View {
     
-    let number: Int
-    var completion: (Int) -> Void = { i in }
+    let image: String
+    var completion: () -> Void = { }
     
     var body: some View {
         Button(action: {
-            self.completion(self.number)
+            self.completion()
         }) {
-            number == 100 ? Text("00") : Text(number.description)
+            Text("⌫")
         }
         .foregroundColor(Color.black)
         .font(.largeTitle)
@@ -27,8 +27,8 @@ struct NumberButtonView: View {
     }
 }
 
-struct NumberButtonView_Previews: PreviewProvider {
+struct OperationButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        NumberButtonView(number: 1)
+        OperationButtonView(image: "delete.left")
     }
 }

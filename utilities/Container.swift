@@ -72,6 +72,10 @@ struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, Ran
         self.elements += elements
     }
     
+    mutating func addAsFirst(_ element: T) {
+        self.elements.insert(element, at: 0)
+    }
+
     mutating func addInOrder(_ element: T, by: (T, T) -> Bool) {
         if let index = elements.firstIndex(where: {by($0, element) }) {
             elements.insert(element, at: index)

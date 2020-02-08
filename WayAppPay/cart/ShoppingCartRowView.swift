@@ -13,9 +13,19 @@ struct ShoppingCartRowView: View {
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            ImageView(withURL: item.product.image)
+            if item.isAmount {
+                Image(systemName: "number.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: WayAppPay.UI.shoppingCartRowImageSize, height: WayAppPay.UI.shoppingCartRowImageSize)
+            } else {
+                ImageView(withURL: item.product.image, size: WayAppPay.UI.shoppingCartRowImageSize)
+            }
             Text("\(item.cartItem.quantity)").fontWeight(.bold)
-            Text(verbatim: item.product.name ?? WayAppPay.Product.defaultName)
+            Text(verbatim: item.isAmount ?
+                item.product.description == nil ? item.product.name ?? WayAppPay.Product.defaultName : item.product.description!
+                :
+                item.product.name ?? WayAppPay.Product.defaultName)
             Spacer()
             Text("\(WayAppPay.priceFormatter(item.cartItem.price))")
         }
@@ -47,6 +57,6 @@ struct ShoppingCartRowView: View {
 
 struct ShoppingCartRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingCartRowView(item: WayAppPay.ShoppingCartItem(product: WayAppPay.Product(merchantUUID: "merchantUUID", name: WayAppPay.Product.defaultName)))
+        ShoppingCartRowView(item: WayAppPay.ShoppingCartItem(product: WayAppPay.Product(name: "no name", price: 100)))
     }
 }

@@ -65,8 +65,9 @@ extension WayAppPay {
         case getCardDetail(String, PAN) // GET
         case getCardTransactions(String, PAN) // GET
         case getTransactionPayer(String, String, String) // GET
-        case walletPayment(String, String, Transaction) // POST
-        
+        case walletPayment(String, String, PaymentTransaction) // POST
+        //Report
+        case getMonthReportID(String, String, String) // GET
         case deleteAccount(String) // DELETE
         case account(Account) // POST
         case editAccount(Account, UIImage?) // PATCH
@@ -97,6 +98,8 @@ extension WayAppPay {
             // Transactions
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .walletPayment(let merchantUUID, let accountUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
+            case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/reports/\(reportID)/"
+
             // TRASH
             case .account: return "/accounts/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
@@ -124,10 +127,11 @@ extension WayAppPay {
             // Card
             case .getCards(let accountUUID): return accountUUID
             case .getCardDetail(let accountUUID, let pan): return accountUUID + "/" + pan
-            // Transaction
+            // PaymentTransaction
             case .getCardTransactions(let accountUUID, let pan): return accountUUID + "/" + pan
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
             case .walletPayment(let merchantUUID, let accountUUID, _): return merchantUUID + "/" + accountUUID
+            case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return merchantUUID + "/" + accountUUID + "/" + reportID
             default: return ""
             }
         }
@@ -156,7 +160,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer:
+            case .getAccount, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))

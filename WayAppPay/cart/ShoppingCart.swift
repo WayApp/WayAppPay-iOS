@@ -21,6 +21,7 @@ extension WayAppPay {
     struct ShoppingCartItem: Identifiable, ContainerProtocol {
         var cartItem: CartItem
         var product: Product
+        var isAmount: Bool = false
         
         var id: String {
             return product.productUUID
@@ -30,8 +31,9 @@ extension WayAppPay {
             return product.productUUID
         }
         
-        init(product: Product) {
+        init(product: Product, isAmount: Bool = false) {
             self.product = product
+            self.isAmount = isAmount
             self.cartItem = CartItem(name: product.name ?? Product.defaultName, price: product.price ?? 0, quantity: 1)
         }
     }
@@ -47,11 +49,11 @@ extension WayAppPay {
             return total
         }
         
-        mutating func addProduct(_ product: Product) {
+        mutating func addProduct(_ product: Product, isAmount: Bool = false) {
             if let index = items.index(forID: product.productUUID) {
                 items[index].cartItem.quantity += 1
             } else {
-                items.add(ShoppingCartItem(product: product))
+                items.add(ShoppingCartItem(product: product, isAmount: isAmount))
             }
         }
         

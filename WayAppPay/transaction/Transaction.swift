@@ -1,5 +1,5 @@
 //
-//  Transaction.swift
+//  PaymentTransaction.swift
 //  WayAppPay
 //
 //  Created by Oscar Anzola on 12/18/19.
@@ -9,7 +9,7 @@
 import Foundation
 
 extension WayAppPay {
-    struct Transaction: Codable, ContainerProtocol, Identifiable {
+    struct PaymentTransaction: Codable, ContainerProtocol, Identifiable {
         
         static let defaultCurrency = Currency.EUR
         
@@ -58,14 +58,14 @@ extension WayAppPay {
         }
                 
         // Payment with Wallet card
-        init(amount: Double, token: String = String()) {
+        init(amount: Int, token: String = String()) {
             self.accountUUID = session.accountUUID
             self.merchantUUID = session.merchantUUID
-            self.amount = Int(amount * 100)
+            self.amount = amount
             self.authorizationCode = token
             self.paymentMethod = .WALLET
             self.type = .SALE
-            self.currency = session.merchants.isEmpty ?  Transaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
+            self.currency = session.merchants.isEmpty ?  PaymentTransaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
             self.readingType = .STANDARD
         }
         
@@ -75,10 +75,13 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
                 return
             }
-            WayAppPay.API.walletPayment(merchantUUID, accountUUID, self).fetch(type: [WayAppPay.Transaction].self) { response in
+            WayAppPay.API.walletPayment(merchantUUID, accountUUID, self).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result,
                         let transaction = transactions.first {
+                        DispatchQueue.main.async {
+                            session.transactions.addAsFirst(transaction)
+                        }
                         WayAppUtils.Log.message("PAGO HECHO!!!!=\(transaction)")
                     } else {
                         WayAppPay.API.reportError(response)

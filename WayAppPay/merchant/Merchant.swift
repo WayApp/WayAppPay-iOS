@@ -48,7 +48,7 @@ extension WayAppPay {
 
         func getAccounts() {
 //            session.account!.changePIN(currentPIN: "4321", newPIN: "1234")
-            session.account!.forgotPIN()
+//            session.account!.forgotPIN()
             
             WayAppPay.API.getMerchantAccounts(merchantUUID).fetch(type: [Account].self) { response in
                 if case .success(let response?) = response {
@@ -82,13 +82,35 @@ extension WayAppPay {
         }
 
         func getTransactionsForAccount(_ accountUUID: String) {
-            WayAppPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [Transaction].self) { response in
+            WayAppPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result {
                         DispatchQueue.main.async {
                             session.transactions.setToInOrder(transactions, by:
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                         }
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
+        func getReportID(for accountUUID: String?, month: String) {
+            guard let accountUUID = accountUUID else {
+                WayAppUtils.Log.message("missing accountUUID")
+                return
+            }
+            WayAppPay.API.getMonthReportID(merchantUUID, accountUUID, month).fetch(type: [ReportID].self) { response in
+                if case .success(let response?) = response {
+                    if let reportIDs = response.result,
+                        let reportID = reportIDs.first {
+                        DispatchQueue.main.async {
+                            session.thisMonthReportID = reportID
+                        }
+                        WayAppUtils.Log.message("ReportID=\(reportID)")
                     } else {
                         WayAppPay.API.reportError(response)
                     }
@@ -117,12 +139,16 @@ extension WayAppPay {
             WayAppPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
                 if case .success(let response?) = response {
                     if let merchants = response.result {
+                        let count = merchants.count
                         DispatchQueue.main.async {
-                            if merchants.isEmpty {
+                            if count == 0 {
                                 // Display settings Tab so user can select merchant
                                 session.selectedTab = .settings
                             } else {
                                 session.merchants.setTo(merchants)
+                                if count == 1 {
+                                    session.seletectedMerchant = 0
+                                }
                             }
                         }
                     } else {
