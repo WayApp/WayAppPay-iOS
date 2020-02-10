@@ -75,6 +75,7 @@ struct AmountView: View {
     var body: some View {
         NavigationView {
             ZStack {
+                Color("WAP-Blue").edgesIgnoringSafeArea(.all)
                 VStack(alignment: .center, spacing: 8.0) {
                     Spacer()
                     Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)

@@ -91,7 +91,6 @@ extension WayAppPay {
             }
             showAuthenticationView = true
             UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.ACCOUNT.rawValue)
-            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
             do {
                 try Account.deletePassword(password, forEmail: email)
             } catch {

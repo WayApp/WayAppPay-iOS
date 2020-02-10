@@ -16,6 +16,7 @@ extension String: ContainerProtocol {
 
 struct SettingsView: View {
     @EnvironmentObject var session: WayAppPay.Session
+    @State private var changePIN = false
 
     var body: some View {
         NavigationView {
@@ -45,9 +46,14 @@ struct SettingsView: View {
                 Section(header: Text("Account: \(session.account?.email ?? "no email")")) {
                     VStack {
                         Button(action: {
+                            self.changePIN = true
                         }) {
                             Text("Change PIN")
                         }
+                        .sheet(isPresented: self.$changePIN) {
+                            ChangePinView()
+                        }
+
                     }
                     Button(action: {
                         DispatchQueue.main.async {

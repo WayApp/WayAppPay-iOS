@@ -9,12 +9,23 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @SwiftUI.Environment(\.presentationMode) var presentationMode
-    
-    @State private var email: String = ""
+    @State private var email: String = UserDefaults.standard.string(forKey: WayAppPay.DefaultKey.EMAIL.rawValue) ?? "" {
+        didSet {
+            print("SETTING REMEMBER")
+            UserDefaults.standard.set(email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
+            UserDefaults.standard.synchronize()
+        }
+    }
     @State private var pin: String = ""
-    @State private var remember: Bool = true
+//    @State private var remember: Bool = UserDefaults.standard.bool(forKey:WayAppPay.DefaultKey.REMEMBER_EMAIL.rawValue) {
+//        didSet {
+//            print("SETTING REMEMBER")
+//            UserDefaults.standard.set(remember, forKey: WayAppPay.DefaultKey.REMEMBER_EMAIL.rawValue)
+//            UserDefaults.standard.synchronize()
+//        }
+//    }
     @State private var scrollOffset: CGSize = CGSize.zero
+    @State private var forgotPIN = false
 
     let imageSize: CGFloat = 120.0
     let textFieldcornerRadius: CGFloat = 20.0
@@ -32,14 +43,16 @@ struct AuthenticationView: View {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .center, spacing: 16.0) {
                     Spacer()
-                    Text("Geometry: width=\(Int(geometry.size.width)), height=\(Int(geometry.size.height))")
+//                    Text("Geometry: width=\(Int(geometry.size.width)), height=\(Int(geometry.size.height))")
                     Image("WAP-P")
                         .resizable()
                         .frame(width: self.imageSize, height: self.imageSize, alignment: .center)
                         .scaledToFit()
                     HStack {
                         Image(systemName: "person.circle")
-                        TextField("User", text: self.$email)
+                        TextField(
+                            WayAppPay.session.account?.email != nil ? WayAppPay.session.account!.email! : "email"
+                            , text: self.$email)
                             .autocapitalization(.none)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
@@ -55,7 +68,8 @@ struct AuthenticationView: View {
                     }
                     HStack {
                         Image(systemName: "lock.rotation")
-                        SecureField("PIN", text: self.$pin).textContentType(.password).keyboardType(.numberPad)
+                        SecureField("PIN", text: self.$pin).textContentType(.password)
+                            .keyboardType(.numberPad)
                             .padding()
                             .foregroundColor(.primary)
                             .background(Color("tertiarySystemBackgroundColor"))
@@ -66,15 +80,20 @@ struct AuthenticationView: View {
                                     }
                                 }
                     }
+//                    Toggle(isOn: self.$remember) {
+//                        Text("Remember email?")
+//                    }
                     HStack {
                         Spacer()
-                        Toggle(isOn: self.$remember) {
-                            Text("Remember email?")
+                        Button(action: {
+                            self.forgotPIN = true
+                        }) {
+                            Text("Forgot your PIN?")
+                                .foregroundColor(Color("link"))
                         }
-                    }
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Text("Forgot your PIN?")
-                            .foregroundColor(Color("link"))
+                        .sheet(isPresented: self.$forgotPIN) {
+                            EnterOTP()
+                        }
                     }
                     Button(action: {
                         WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
