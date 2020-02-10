@@ -50,6 +50,7 @@ extension WayAppPay {
 //            session.account!.changePIN(currentPIN: "4321", newPIN: "1234")
 //            session.account!.forgotPIN()
             
+            
             WayAppPay.API.getMerchantAccounts(merchantUUID).fetch(type: [Account].self) { response in
                 if case .success(let response?) = response {
                     if let accounts = response.result {
@@ -89,6 +90,47 @@ extension WayAppPay {
                             session.transactions.setToInOrder(transactions, by:
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                         }
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
+        func getTransactionDetailFor(accountUUID: String?, uuid: String) {
+            guard let accountUUID = accountUUID else {
+                WayAppUtils.Log.message("missing accountUUID")
+                return
+            }
+            WayAppPay.API.getTransaction(merchantUUID, accountUUID, uuid).fetch(type: [PaymentTransaction].self) { response in
+                if case .success(let response?) = response {
+                    if let transactions = response.result,
+                        let transaction = transactions.first {
+                        print("TRANSACTION DETAIL=\(transaction)")
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
+        func getTransactionsForAccountForDay(_ accountUUID: String?, day: Date) {
+            guard let accountUUID = accountUUID else {
+                WayAppUtils.Log.message("missing accountUUID")
+                return
+            }
+            WayAppPay.API.getMerchantAccountTransactionsForDay(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: day)).fetch(type: [PaymentTransaction].self) { response in
+                if case .success(let response?) = response {
+                    if let transactions = response.result {
+//                        DispatchQueue.main.async {
+//                            session.transactions.setToInOrder(transactions, by:
+//                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
+//                        }
+                        print("TRANSACTIONS=\(transactions)")
                     } else {
                         WayAppPay.API.reportError(response)
                     }

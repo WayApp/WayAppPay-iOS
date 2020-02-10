@@ -38,6 +38,13 @@ struct WayAppPay {
         return ""
     }
 
+    static let reportDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        formatter.locale = Locale.current
+        return formatter
+    }()
+
     static let appName = "WayApp Pay"
 
     struct Constant {

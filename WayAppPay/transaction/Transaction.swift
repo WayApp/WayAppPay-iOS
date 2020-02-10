@@ -92,5 +92,26 @@ extension WayAppPay {
             }
         }
 
+        func processRefund() {
+            guard let merchantUUID = self.merchantUUID,
+                let accountUUID = self.accountUUID,
+                let transactionUUID = self.transactionUUID else {
+                WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
+                return
+            }
+            WayAppPay.API.refundTransaction(merchantUUID, accountUUID, transactionUUID, self).fetch(type: [PaymentTransaction].self) { response in
+                if case .success(let response?) = response {
+                    if let transactions = response.result,
+                        let transaction = transactions.first {
+                        WayAppUtils.Log.message("REFUND HECHO!!!!=\(transaction)")
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
     }
 }

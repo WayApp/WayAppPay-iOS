@@ -22,6 +22,7 @@ extension WayAppPay {
         typealias Email = String
         typealias PIN = String
         typealias PAN = String
+        typealias Day = String
 
         enum Result<T: Decodable, U> where U: Swift.Error {
             case success(Response<T>?)
@@ -54,6 +55,7 @@ extension WayAppPay {
         case getMerchantAccounts(String) // GET
         case getMerchantAccountDetail(String, String) // GET
         case getMerchantAccountTransactions(String, String) // GET
+        case getMerchantAccountTransactionsForDay(String, String, Day) // GET
         // Product
         case getProducts(String) // GET
         case addProduct(String, Product, UIImage?) // POST
@@ -67,6 +69,8 @@ extension WayAppPay {
         case getTransactionPayer(String, String, String) // GET
         case walletPayment(String, String, PaymentTransaction) // POST
         //Report
+        case getTransaction(String, String, String) // GET
+        case refundTransaction(String, String, String, PaymentTransaction) // POST
         case getMonthReportID(String, String, String) // GET
         case deleteAccount(String) // DELETE
         case account(Account) // POST
@@ -85,6 +89,7 @@ extension WayAppPay {
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/"
             case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
+            case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/dates/\(day)/"
             // Products
             case .getProducts(let merchantUUID): return "/merchants/\(merchantUUID)/products/"
             case .addProduct(let merchantUUID, _, _): return "/merchants/\(merchantUUID)/products/"
@@ -99,7 +104,8 @@ extension WayAppPay {
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .walletPayment(let merchantUUID, let accountUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
             case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/reports/\(reportID)/"
-
+            case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
+            case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/refunds/"
             // TRASH
             case .account: return "/accounts/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
@@ -118,6 +124,7 @@ extension WayAppPay {
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
             case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
+            case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return merchantUUID + "/" + accountUUID + "/" + day
             // Product
             case .getProducts(let merchantUUID): return merchantUUID
             case .addProduct(let merchantUUID, _, _): return merchantUUID
@@ -132,6 +139,8 @@ extension WayAppPay {
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
             case .walletPayment(let merchantUUID, let accountUUID, _): return merchantUUID + "/" + accountUUID
             case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return merchantUUID + "/" + accountUUID + "/" + reportID
+            case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
+            case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
             default: return ""
             }
         }
@@ -160,7 +169,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID:
+            case .getAccount, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -168,7 +177,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .verifyOTP:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .verifyOTP, .refundTransaction:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -218,6 +227,11 @@ extension WayAppPay {
             switch self {
             case .account(let account):
                 if let part = HTTPCall.BodyPart(account, name: "account") {
+                    return (part.contentType, part.data)
+                }
+                return nil
+            case .refundTransaction(_, _, _, let transaction):
+                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
                     return (part.contentType, part.data)
                 }
                 return nil

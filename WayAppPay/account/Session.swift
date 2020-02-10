@@ -25,6 +25,11 @@ extension WayAppPay {
                 Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                 merchants[seletectedMerchant].getAccounts()
                 merchants[seletectedMerchant].getReportID(for: session.accountUUID, month: ReportID.idReportForMonth(Date()))
+//                merchants[seletectedMerchant].getTransactionsForAccountForDay(session.accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
+                // transactionUUID = "b76d02ec-9fb3-42e8-91c4-ca0c1fb0b9bc" REFUND
+                // transactionUUID = "8ce0f952-9b2a-4058-8d6e-6ba21f57871c" DETAIL
+
+//                merchants[seletectedMerchant].getTransactionDetailFor(accountUUID: session.accountUUID, uuid: "8ce0f952-9b2a-4058-8d6e-6ba21f57871c")
             }
         }
         
