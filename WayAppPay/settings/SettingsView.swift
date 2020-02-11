@@ -49,6 +49,7 @@ struct SettingsView: View {
                             self.changePIN = true
                         }) {
                             Text("Change PIN")
+                            .foregroundColor(Color("ColorPrimaryWp"))
                         }
                         .sheet(isPresented: self.$changePIN) {
                             ChangePinView()
@@ -61,6 +62,7 @@ struct SettingsView: View {
                         }
                     }) {
                         Text("Logout")
+                        .foregroundColor(Color("ColorPrimaryWp"))
                     }
                 }
             }.navigationBarTitle("Settings", displayMode: .inline)
@@ -70,6 +72,12 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView()
+        //SettingsView()
+        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
+            SettingsView()
+                .previewDevice(PreviewDevice(rawValue: deviceName))
+                .previewDisplayName(deviceName)
+        }
+        .environmentObject(WayAppPay.session)
     }
 }

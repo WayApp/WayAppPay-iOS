@@ -70,9 +70,11 @@ struct ShoppingCartView: View {
                 .navigationBarItems(trailing:
                     Button(action: {
                         self.showScanner = true
-                    }, label: { Image(systemName: "qrcode.viewfinder")
+                    }, label: {
+                        Image(systemName: "qrcode.viewfinder")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center) })
+                        .foregroundColor(Color("ColorPrimaryWp"))
                         .aspectRatio(contentMode: .fit)
                         .padding(.trailing, 16)
                 )
@@ -110,6 +112,12 @@ struct ShoppingCartView: View {
 
 struct ShoppingCartView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingCartView()
+        //ShoppingCartView()
+        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
+            ShoppingCartView()
+                .previewDevice(PreviewDevice(rawValue: deviceName))
+                .previewDisplayName(deviceName)
+        }
+        .environmentObject(WayAppPay.session)
     }
 }

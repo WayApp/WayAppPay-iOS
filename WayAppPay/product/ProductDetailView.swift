@@ -18,6 +18,8 @@ struct ProductDetailView: View {
     
     @State private var showImagePicker: Bool = false
     @State private var image: Image? = nil
+    
+    let textFieldcornerRadius: CGFloat = 20.0
 
     let imageSize: CGFloat = 120.0
     var body: some View {
@@ -33,23 +35,40 @@ struct ProductDetailView: View {
             Button(action: {
                 self.showImagePicker = true
             }, label: {
-                Image(systemName: "camera")
+                Image(systemName: "camera.fill")
+                    .resizable()
+                    .frame(width: 40, height: 30)
+                    .foregroundColor(Color("ColorDarkText"))
+                    
             })
+            .padding(.bottom, 30)
             HStack(alignment: .center, spacing: 12) {
                 Text("Name").fontWeight(.medium)
                 TextField("\(product.name ?? WayAppPay.Product.defaultName)", text: $newName)
+                    .padding()
                     .background(Color("tertiarySystemBackgroundColor"))
                     .foregroundColor(.primary)
-                    .cornerRadius(8)
+                    .cornerRadius(self.textFieldcornerRadius)
 
             }
             HStack(alignment: .center, spacing: 12) {
                 Text("Price").fontWeight(.medium)
                 TextField("\(WayAppPay.priceFormatter(product.price))", text: $newPrice)
+                .padding()
                 .background(Color("tertiarySystemBackgroundColor"))
                 .foregroundColor(.primary)
-                .cornerRadius(8)
+                .cornerRadius(self.textFieldcornerRadius)
+                    .padding(.bottom, 20)
             }
+            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                Text("Save")
+            }
+            .padding()
+                      .font(.headline)
+                      .foregroundColor(.white)
+                      .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
+                      .background(Color("ColorWpGreenDark"))
+                      .cornerRadius(15.0)
         }
         .padding()
         .sheet(isPresented: self.$showImagePicker){

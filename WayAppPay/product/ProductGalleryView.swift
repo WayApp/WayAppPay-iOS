@@ -26,9 +26,11 @@ struct ProductGalleryView: View {
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Products")
             .navigationBarItems(trailing:
-                Button(action: { }, label: { Image(systemName: "plus.circle")
+                Button(action: { }, label: {
+                    Image(systemName: "plus.circle")
                     .resizable()
                     .frame(width: 30, height: 30, alignment: .center) })
+                    .foregroundColor(Color("ColorPrimaryWp"))
                     .aspectRatio(contentMode: .fit)
                     .padding(.trailing, 16)
             )

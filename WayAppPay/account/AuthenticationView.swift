@@ -49,7 +49,10 @@ struct AuthenticationView: View {
                         .frame(width: self.imageSize, height: self.imageSize, alignment: .center)
                         .scaledToFit()
                     HStack {
-                        Image(systemName: "person.circle")
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(Color("ColorDarkText"))
                         TextField(
                             WayAppPay.session.account?.email != nil ? WayAppPay.session.account!.email! : "email"
                             , text: self.$email)
@@ -67,7 +70,10 @@ struct AuthenticationView: View {
                                 }
                     }
                     HStack {
-                        Image(systemName: "lock.rotation")
+                        Image(systemName: "lock.circle.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(Color("ColorDarkText"))
                         SecureField("PIN", text: self.$pin).textContentType(.password)
                             .keyboardType(.numberPad)
                             .padding()
@@ -89,7 +95,7 @@ struct AuthenticationView: View {
                             self.forgotPIN = true
                         }) {
                             Text("Forgot your PIN?")
-                                .foregroundColor(Color("link"))
+                                .foregroundColor(Color("ColorPrimaryWp"))
                         }
                         .sheet(isPresented: self.$forgotPIN) {
                             EnterOTP()
@@ -103,7 +109,7 @@ struct AuthenticationView: View {
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-                    .background(Color(#colorLiteral(red: 0.0120000001, green: 0.4350000024, blue: 0.5649999976, alpha: 1)))
+                    .background(Color("ColorWpGreenDark"))
                     .cornerRadius(15.0)
                     Spacer()
                 }.padding()

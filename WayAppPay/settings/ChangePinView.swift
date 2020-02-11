@@ -19,6 +19,7 @@ struct ChangePinView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Change PIN")
                 .font(.largeTitle)
+                .bold()
                 .padding(.bottom, 16)
             Divider()
             HStack {
@@ -62,10 +63,11 @@ struct ChangePinView: View {
             }) {
                 Text("Confirm")
             }
+            .padding()
             .font(.headline)
             .foregroundColor(.white)
             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-            .background(Color(#colorLiteral(red: 0.0120000001, green: 0.4350000024, blue: 0.5649999976, alpha: 1)))
+            .background(Color("ColorWpGreenDark"))
             .cornerRadius(15.0)
         }
         .padding()

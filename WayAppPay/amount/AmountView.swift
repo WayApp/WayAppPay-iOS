@@ -17,8 +17,9 @@ struct AmountView: View {
     @State private var cartDescription: String = ""
     @State private var wasPaymentSuccessful: Bool = false
     @State private var amount: Double = 0
-        
-
+    
+    let textFieldcornerRadius: CGFloat = 20.0
+    
     func handleScan() {
         processPayment()
     }
@@ -75,20 +76,25 @@ struct AmountView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("WAP-Blue").edgesIgnoringSafeArea(.all)
+                //Color("WAP-Blue").edgesIgnoringSafeArea(.all)
                 VStack(alignment: .center, spacing: 8.0) {
                     Spacer()
                     Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
                         .font(.largeTitle)
                         .foregroundColor(Color.primary)
                         .fontWeight(.bold)
+                        .padding(.bottom, 40)
                         .onTapGesture {
                             self.delete()
                         }
                     TextField("description", text: $cartDescription)
+                        .foregroundColor(.primary)
                         .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.bottom, 16.0)
+                        .background(Color("tertiarySystemBackgroundColor"))
+                            .cornerRadius(self.textFieldcornerRadius)
+                        .padding(.horizontal, 60)
+                        //.textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.bottom, 60)
                     VStack {
                         HStack(spacing: 0) {
                             NumberButtonView(number: 1, completion: numberEntered)
@@ -124,16 +130,20 @@ struct AmountView: View {
                 HStack {
                     Button(action: {
                         WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(name: "Amount", description: self.cartDescription, price: Int(self.amount * 100) / 100), isAmount: true)
-                    }, label: { Image(systemName: "cart.fill.badge.plus")
+                    }, label: {
+                    Image(systemName: "cart.fill.badge.plus")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center) })
+                        .foregroundColor(Color("ColorPrimaryWp"))
                         .aspectRatio(contentMode: .fit)
                         .padding(.trailing, 16)
                     Button(action: {
                         self.showScanner = true
                     }, label: { Image(systemName: "qrcode.viewfinder")
                         .resizable()
-                        .frame(width: 30, height: 30, alignment: .center) }
+                        .frame(width: 30, height: 30, alignment: .center)
+                        .foregroundColor(Color("ColorPrimaryWp"))
+                    }
                     )
                     .sheet(isPresented: $showScanner) {
                         VStack {

@@ -18,12 +18,12 @@ struct TransactionsView: View {
         NavigationView {
             Form {
                 Section(header: Text("This month")) {
-                    HStack {
+                    VStack {
                         Text("Sales: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalSales))")
-                        Text("Sales: \(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) }))")
+//                        Text("Sales: \(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) }))")
                         Text("Refunds: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalRefund))")
                     }
-                    Picker(selection: $monthSelection, label: Text("Select another month")) {
+                    Picker(selection: $monthSelection, label: Text("Select another month:")) {
                         ForEach(0..<months.count) {
                              Text(self.months[$0])
                          }
@@ -59,6 +59,12 @@ struct TransactionsView: View {
 
 struct TransactionsView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionsView()
+        //TransactionsView()
+        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
+            TransactionsView()
+                .previewDevice(PreviewDevice(rawValue: deviceName))
+                .previewDisplayName(deviceName)
+        }
+        .environmentObject(WayAppPay.session)
     }
 }
