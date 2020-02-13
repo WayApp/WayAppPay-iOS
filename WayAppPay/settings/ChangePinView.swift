@@ -29,7 +29,6 @@ struct ChangePinView: View {
                     .frame(minWidth: 120, idealWidth: 120, maxWidth: 120, minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .keyboardType(.numberPad)
-                .foregroundColor(.primary)
                 .background(Color("tertiarySystemBackgroundColor"))
                 .cornerRadius(self.textFieldcornerRadius)
             }
@@ -41,7 +40,6 @@ struct ChangePinView: View {
                     .frame(minWidth: 120, idealWidth: 120, maxWidth: 120, minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .keyboardType(.numberPad)
-                .foregroundColor(.primary)
                 .background(Color("tertiarySystemBackgroundColor"))
                 .cornerRadius(self.textFieldcornerRadius)
             }
@@ -52,7 +50,6 @@ struct ChangePinView: View {
                     .frame(minWidth: 120, idealWidth: 120, maxWidth: 120, minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .keyboardType(.numberPad)
-                .foregroundColor(.primary)
                 .background(Color("tertiarySystemBackgroundColor"))
                 .cornerRadius(self.textFieldcornerRadius)
             }
@@ -67,7 +64,7 @@ struct ChangePinView: View {
             .font(.headline)
             .foregroundColor(.white)
             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-            .background(Color("ColorWpGreenDark"))
+            .background(Color("WAP-GreenDark"))
             .cornerRadius(15.0)
         }
         .padding()

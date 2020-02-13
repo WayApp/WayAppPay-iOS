@@ -19,6 +19,10 @@ struct WayAppPay {
         static let shoppingCartRowImageSize: CGFloat = 36.0
     }
     
+    static func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+
     static let acceptedPaymentCodes: [AVMetadataObject.ObjectType] = [.qr, .code128]
 
     static let currencyFormatter: NumberFormatter = {

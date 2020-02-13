@@ -52,7 +52,6 @@ struct AuthenticationView: View {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .frame(width: 30, height: 30)
-                            .foregroundColor(Color("ColorDarkText"))
                         TextField(
                             WayAppPay.session.account?.email != nil ? WayAppPay.session.account!.email! : "email"
                             , text: self.$email)
@@ -61,7 +60,6 @@ struct AuthenticationView: View {
                             .keyboardType(.emailAddress)
                             .padding()
                             .background(Color("tertiarySystemBackgroundColor"))
-                            .foregroundColor(.primary)
                             .cornerRadius(self.textFieldcornerRadius)
                             .onTapGesture {
                                 if self.scrollOffset == CGSize.zero {
@@ -73,11 +71,10 @@ struct AuthenticationView: View {
                         Image(systemName: "lock.circle.fill")
                             .resizable()
                             .frame(width: 30, height: 30)
-                            .foregroundColor(Color("ColorDarkText"))
-                        SecureField("PIN", text: self.$pin).textContentType(.password)
+                        SecureField("PIN", text: self.$pin)
+                            .textContentType(.password)
                             .keyboardType(.numberPad)
                             .padding()
-                            .foregroundColor(.primary)
                             .background(Color("tertiarySystemBackgroundColor"))
                             .cornerRadius(self.textFieldcornerRadius)
                             .onTapGesture {
@@ -95,7 +92,6 @@ struct AuthenticationView: View {
                             self.forgotPIN = true
                         }) {
                             Text("Forgot your PIN?")
-                                .foregroundColor(Color("ColorPrimaryWp"))
                         }
                         .sheet(isPresented: self.$forgotPIN) {
                             EnterOTP()
@@ -109,15 +105,17 @@ struct AuthenticationView: View {
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-                    .background(Color("ColorWpGreenDark"))
+                    .background(Color("WAP-GreenDark"))
                     .cornerRadius(15.0)
                     Spacer()
-                }.padding()
-                    .onTapGesture {
-                        UIApplication.shared.keyWindow?.endEditing(true)
-                        self.scrollOffset = CGSize.zero
                 }
-            }.offset(self.scrollOffset)
+                .padding()
+            }
+            .onTapGesture {
+                WayAppPay.hideKeyboard()
+                self.scrollOffset = CGSize.zero
+            }
+            .offset(self.scrollOffset)
         }
     }
 }

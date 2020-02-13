@@ -49,7 +49,6 @@ struct SettingsView: View {
                             self.changePIN = true
                         }) {
                             Text("Change PIN")
-                            .foregroundColor(Color("ColorPrimaryWp"))
                         }
                         .sheet(isPresented: self.$changePIN) {
                             ChangePinView()
@@ -62,7 +61,6 @@ struct SettingsView: View {
                         }
                     }) {
                         Text("Logout")
-                        .foregroundColor(Color("ColorPrimaryWp"))
                     }
                 }
             }.navigationBarTitle("Settings", displayMode: .inline)

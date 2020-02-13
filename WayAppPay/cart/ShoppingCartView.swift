@@ -74,7 +74,7 @@ struct ShoppingCartView: View {
                         Image(systemName: "qrcode.viewfinder")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center) })
-                        .foregroundColor(Color("ColorPrimaryWp"))
+                        .foregroundColor(Color("WAP-Blue"))
                         .aspectRatio(contentMode: .fit)
                         .padding(.trailing, 16)
                 )

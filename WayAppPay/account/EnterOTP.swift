@@ -25,7 +25,6 @@ struct EnterOTP: View {
                     SecureField("PIN", text: self.$otp).textContentType(.password)
                         .keyboardType(.numberPad)
                         .padding()
-                        .foregroundColor(.primary)
                         .background(Color("tertiarySystemBackgroundColor"))
                         .cornerRadius(self.textFieldcornerRadius)
                     .padding(.bottom, 16)
@@ -45,7 +44,7 @@ struct EnterOTP: View {
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-                    .background(Color("ColorWpGreenDark"))
+                    .background(Color("WAP-GreenDark"))
                     .cornerRadius(self.textFieldcornerRadius)
             }
             .padding())
@@ -61,7 +60,6 @@ struct EnterOTP: View {
                         .autocapitalization(.none)
                         .keyboardType(.emailAddress)
                         .background(Color("tertiarySystemBackgroundColor"))
-                        .foregroundColor(.primary)
                         .cornerRadius(self.textFieldcornerRadius)
                     Text("Send pin to your email")
                     HStack(alignment: .center, spacing: 24) {
@@ -75,7 +73,7 @@ struct EnterOTP: View {
                         }) {
                             Text("Accept")
                                 .padding()
-                                .background(Color("ColorWpGreenDark"))
+                                .background(Color("WAP-GreenDark"))
                                 .foregroundColor(Color.white)
                                 .cornerRadius(self.textFieldcornerRadius)
                         }

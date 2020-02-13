@@ -81,14 +81,12 @@ struct AmountView: View {
                     Spacer()
                     Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
                         .font(.largeTitle)
-                        .foregroundColor(Color.primary)
                         .fontWeight(.bold)
                         .padding(.bottom, 40)
                         .onTapGesture {
                             self.delete()
                         }
                     TextField("description", text: $cartDescription)
-                        .foregroundColor(.primary)
                         .padding()
                         .background(Color("tertiarySystemBackgroundColor"))
                             .cornerRadius(self.textFieldcornerRadius)
@@ -134,7 +132,7 @@ struct AmountView: View {
                     Image(systemName: "cart.fill.badge.plus")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center) })
-                        .foregroundColor(Color("ColorPrimaryWp"))
+                        .foregroundColor(Color("WAP-Blue"))
                         .aspectRatio(contentMode: .fit)
                         .padding(.trailing, 16)
                     Button(action: {
@@ -142,7 +140,7 @@ struct AmountView: View {
                     }, label: { Image(systemName: "qrcode.viewfinder")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center)
-                        .foregroundColor(Color("ColorPrimaryWp"))
+                        .foregroundColor(Color("WAP-Blue"))
                     }
                     )
                     .sheet(isPresented: $showScanner) {
@@ -163,7 +161,9 @@ struct AmountView: View {
                 }
             )
         }
+        .onTapGesture { WayAppPay.hideKeyboard() }
     }
+    
 }
 
 struct AmountView_Previews: PreviewProvider {

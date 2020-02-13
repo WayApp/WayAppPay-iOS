@@ -30,7 +30,7 @@ struct ProductGalleryView: View {
                     Image(systemName: "plus.circle")
                     .resizable()
                     .frame(width: 30, height: 30, alignment: .center) })
-                    .foregroundColor(Color("ColorPrimaryWp"))
+                    .foregroundColor(Color("WAP-Blue"))
                     .aspectRatio(contentMode: .fit)
                     .padding(.trailing, 16)
             )

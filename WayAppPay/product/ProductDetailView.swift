@@ -38,8 +38,6 @@ struct ProductDetailView: View {
                 Image(systemName: "camera.fill")
                     .resizable()
                     .frame(width: 40, height: 30)
-                    .foregroundColor(Color("ColorDarkText"))
-                    
             })
             .padding(.bottom, 30)
             HStack(alignment: .center, spacing: 12) {
@@ -47,7 +45,6 @@ struct ProductDetailView: View {
                 TextField("\(product.name ?? WayAppPay.Product.defaultName)", text: $newName)
                     .padding()
                     .background(Color("tertiarySystemBackgroundColor"))
-                    .foregroundColor(.primary)
                     .cornerRadius(self.textFieldcornerRadius)
 
             }
@@ -56,7 +53,6 @@ struct ProductDetailView: View {
                 TextField("\(WayAppPay.priceFormatter(product.price))", text: $newPrice)
                 .padding()
                 .background(Color("tertiarySystemBackgroundColor"))
-                .foregroundColor(.primary)
                 .cornerRadius(self.textFieldcornerRadius)
                     .padding(.bottom, 20)
             }
@@ -67,7 +63,7 @@ struct ProductDetailView: View {
                       .font(.headline)
                       .foregroundColor(.white)
                       .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-                      .background(Color("ColorWpGreenDark"))
+                      .background(Color("WAP-GreenDark"))
                       .cornerRadius(15.0)
         }
         .padding()

@@ -74,18 +74,6 @@ extension WayAppPay {
             case .bankAccountIsAlreadyAssociated: return (NSLocalizedString("Cuenta asociada", comment: "User message: bankAccountIsAlreadyAssociated title"), NSLocalizedString("La cuenta ya se encuentra asociada", comment: "User message: bankAccountIsAlreadyAssociated"))
             case .ns_registrationNecessary: return (NSLocalizedString("Registro necesario", comment: "User message: ns_registration Necessary title"), NSLocalizedString("Inicia sesión y empieza a disfrutar de este servicio", comment: "User message: ns_registrationNecessary"))
             }
-        }
-        
-        static func alert(_ message: WayAppPay.UserMessage) -> UIAlertController {
-            let ac = UIAlertController(title: message.alert.title, message: message.alert.message, preferredStyle: .alert)
-            let action = UIAlertAction(title: WayAppPay.UserMessage.dismissButton, style: .cancel)
-            action.setValue(UIColor.wayAppPayBlue, forKey: "titleTextColor")
-            ac.addAction(action)
-            let customTitle = NSMutableAttributedString(string: message.alert.title, attributes: [ NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17, weight: .semibold), NSAttributedString.Key.foregroundColor : UIColor.primaryText])
-            ac.setValue(customTitle, forKey: "attributedTitle")
-            let customMessage = NSMutableAttributedString(string: message.alert.message, attributes: [ NSAttributedString.Key.font : UIFont.systemFont(ofSize: 13, weight: .regular), NSAttributedString.Key.foregroundColor : UIColor.secondaryText])
-            ac.setValue(customMessage, forKey: "attributedMessage")
-            return ac
-        }
+        }        
     }
 }
