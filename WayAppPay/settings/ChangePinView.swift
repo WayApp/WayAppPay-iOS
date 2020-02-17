@@ -10,65 +10,123 @@ import SwiftUI
 
 struct ChangePinView: View {
     @State private var currentPIN = String()
+    let savedPIN: String?
+    let email: String?
+    
     @State private var newPIN = String()
     @State private var confirmationPIN = String()
+    @State private var isAPICallOngoing = false
+
+    @State private var showChangeResultAlert = false
+
+    @SwiftUI.Environment(\.presentationMode) var presentationMode
+
+    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
     
-    let textFieldcornerRadius: CGFloat = 6.0
+    init() {
+        if let account = WayAppPay.session.account,
+            let email = account.email,
+            let savedPIN = WayAppPay.Account.retrievePassword(forEmail: email) {
+            self.email = email
+            self.savedPIN = savedPIN
+        } else {
+            self.savedPIN = nil
+            self.email = nil
+        }
+    }
+    
+    private func changeResult(_ error: Error?) {
+        DispatchQueue.main.async {
+            self.isAPICallOngoing = false
+            if error != nil {
+                self.showChangeResultAlert = true
+            } else {
+                self.presentationMode.wrappedValue.dismiss()
+            }
+        }
+    }
+    
+    private var isUserInputValid: Bool {
+        return isCurrentPINValid &&
+                (newPIN.count == WayAppPay.Account.PINLength) &&
+                (confirmationPIN.count == WayAppPay.Account.PINLength) &&
+                (newPIN == confirmationPIN) &&
+                (newPIN != currentPIN)
+    }
+    
+    var isCurrentPINValid: Bool {
+        if currentPIN.count == WayAppPay.Account.PINLength {
+            return savedPIN == currentPIN
+        } else  {
+            return false
+        }
+    }
+    
+    var shouldChangeButtonBeDisabled: Bool {
+        return isAPICallOngoing || !isUserInputValid
+    }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
             Text("Change PIN")
-                .font(.largeTitle)
-                .bold()
-                .padding(.bottom, 16)
-            Divider()
-            HStack {
-                Text("Current")
-                    .frame(width: 120)
-                TextField(" PIN", text: $currentPIN)
-                    .frame(minWidth: 120, idealWidth: 120, maxWidth: 120, minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
-                    .font(.system(size: 18, weight: .bold, design: .monospaced))
-                .keyboardType(.numberPad)
-                .background(Color("tertiarySystemBackgroundColor"))
-                .cornerRadius(self.textFieldcornerRadius)
+                .font(.title)
+                .padding(.bottom, 12)
+            VStack(alignment: .trailing, spacing: WayAppPay.UI.verticalSeparation) {
+                HStack(alignment: .center, spacing: 12) {
+                    Text("Current")
+                    TextField("4-digits", text: $currentPIN)
+                        .textContentType(.password)
+                        .frame(width: WayAppPay.UI.pinTextFieldWidth)
+                        .foregroundColor((currentPIN.count == WayAppPay.Account.PINLength && savedPIN != currentPIN) ||
+                        currentPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                }
+                HStack(alignment: .center, spacing: 12) {
+                    Text("New")
+                    TextField("4-digits", text: $newPIN)
+                        .textContentType(.newPassword)
+                        .frame(width: WayAppPay.UI.pinTextFieldWidth)
+                        .foregroundColor((newPIN.count == WayAppPay.Account.PINLength && newPIN == currentPIN) ||
+                        newPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                }
+                HStack(alignment: .center, spacing: 12) {
+                    Text("Re-enter")
+                    TextField("4-digits", text: $confirmationPIN)
+                        .textContentType(.newPassword)
+                        .frame(width: WayAppPay.UI.pinTextFieldWidth)
+                        .foregroundColor((confirmationPIN.count == WayAppPay.Account.PINLength && newPIN != confirmationPIN) ||
+                        confirmationPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                }
             }
-            Divider()
-            HStack {
-                Text("New")
-                    .frame(width: 120)
-                TextField(" PIN", text: $newPIN)
-                    .frame(minWidth: 120, idealWidth: 120, maxWidth: 120, minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
-                    .font(.system(size: 18, weight: .bold, design: .monospaced))
-                .keyboardType(.numberPad)
-                .background(Color("tertiarySystemBackgroundColor"))
-                .cornerRadius(self.textFieldcornerRadius)
-            }
-            HStack {
-                Text("Re-enter")
-                    .frame(width: 120)
-                TextField(" PIN", text: $confirmationPIN)
-                    .frame(minWidth: 120, idealWidth: 120, maxWidth: 120, minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
-                    .font(.system(size: 18, weight: .bold, design: .monospaced))
-                .keyboardType(.numberPad)
-                .background(Color("tertiarySystemBackgroundColor"))
-                .cornerRadius(self.textFieldcornerRadius)
-            }
-            Divider()
-                .padding(.bottom, 32)
-            Button(action: {
-                // WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
-            }) {
-                Text("Confirm")
-            }
-            .padding()
             .font(.headline)
-            .foregroundColor(.white)
-            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-            .background(Color("WAP-GreenDark"))
-            .cornerRadius(15.0)
+            .keyboardType(.numberPad)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding(.bottom, WayAppPay.UI.verticalSeparation)
+
+            Button(action: {
+                if let email = self.email {
+                    DispatchQueue.main.async {
+                        self.isAPICallOngoing = true
+                    }
+                    WayAppPay.Account.changePINforEmail(email, currentPIN: self.currentPIN, newPIN: self.newPIN, completion: self.changeResult(_:))
+                }
+            }) {
+                Text("Change")
+                    .font(.headline)
+                    .fontWeight(.heavy)
+                    .foregroundColor(.white)
+            }
+            .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+            .background(shouldChangeButtonBeDisabled ? .gray : Color("WAP-GreenDark"))
+            .cornerRadius(WayAppPay.UI.buttonCornerRadius)
+            .padding(.bottom, keyboardObserver.keyboardHeight)
+            .disabled(shouldChangeButtonBeDisabled)
+            .alert(isPresented: $showChangeResultAlert) {
+                Alert(title: Text("System error"),
+                      message: Text("PIN could not be changed. Try again later. If problem persists contact support@wayapp.com"),
+                      dismissButton: .default(Text("OK")))
+            }
         }
         .padding()
-        .foregroundColor(Color.black)
     }
 }
 

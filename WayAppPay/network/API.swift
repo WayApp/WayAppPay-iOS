@@ -33,6 +33,13 @@ extension WayAppPay {
             WayAppUtils.Log.message("Code=\(response.code ?? 0) , Status=\(response.status ?? "no status"), moreInfo=\(response.moreInfo ?? "no more info")")
         }
         
+        static func errorFromResponse<T: Decodable>(_ response: Response<T>) -> Swift.Error {
+            return NSError(domain: "WayAppPay.API", code: response.code ?? 0, userInfo:
+                ["moreInfo": response.moreInfo ?? "no moreInfo",
+                 "status" : response.status ?? "no status",
+                 "description": "no description"])
+        }
+        
         struct Response<T: Decodable>: Decodable {
             let input: String?
             let description: String?
@@ -48,7 +55,6 @@ extension WayAppPay {
         case getAccount(Email, PIN) // GET
         case forgotPIN(ChangePIN) // POST
         case changePIN(ChangePIN) // POST
-        case verifyOTP(OTP) // POST
         // Merchant
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
@@ -82,7 +88,6 @@ extension WayAppPay {
             case .getAccount(let email, let hashedPIN): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN)/"
             case .forgotPIN: return "/accounts/forgots/"
             case .changePIN: return "/accounts/passwords/"
-            case .verifyOTP: return "/accounts/otps/"
             // Merchants
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
@@ -117,7 +122,7 @@ extension WayAppPay {
             switch self {
             // Account
             case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
-            case .forgotPIN, .changePIN, .verifyOTP: return ""
+            case .forgotPIN, .changePIN: return ""
             // Merchant
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
@@ -177,7 +182,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .verifyOTP, .refundTransaction:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -273,12 +278,6 @@ extension WayAppPay {
                 return nil
             case .changePIN(let changePIN), .forgotPIN(let changePIN):
                 if let part = HTTPCall.BodyPart(changePIN, name: "account") {
-                    let multipart = HTTPCall.BodyPart.multipart([part])
-                    return (multipart.contentType, multipart.data)
-                }
-                return nil
-            case .verifyOTP(let otp):
-                if let part = HTTPCall.BodyPart(otp, name: "otp") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }

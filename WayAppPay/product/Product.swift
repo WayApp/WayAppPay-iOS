@@ -6,7 +6,7 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 extension WayAppPay {
     
@@ -80,20 +80,44 @@ extension WayAppPay {
             }
         }
 
-        func update() {
+        private func composeIntPriceFromString(_ price: String) -> Int {
+            var result: Int = 0
+            let splitIn2 = price.components(separatedBy: .punctuationCharacters)
+            if !splitIn2.isEmpty,
+                let whole = Int(splitIn2[0]) {
+                result = whole * 100
+            }
+            if splitIn2.count == 2,
+                let decimals = Int(splitIn2[1].prefix(2)) {
+                result += decimals
+            }
+            return result
+        }
+        
+        func update(name: String, price: String, image: UIImage?, completion: @escaping (Error?) -> Void) {
             guard let merchantUUID = session.merchantUUID else {
                 WayAppUtils.Log.message("missing Session.merchantUUID")
                 return
             }
-            WayAppPay.API.updateProduct(merchantUUID, self, nil).fetch(type: [WayAppPay.Product].self) { response in
+            var newProduct = self
+            
+            newProduct.name = name.isEmpty ? self.name : name
+            newProduct.price = price.isEmpty ? self.price : composeIntPriceFromString(price)
+            
+            WayAppPay.API.updateProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
                 if case .success(let response?) = response {
                     if let products = response.result,
                         let product = products.first {
-                        session.products[product.containerID] = product
+                        DispatchQueue.main.async {
+                            session.products[product.containerID] = product
+                        }
+                        completion(nil)
                     } else {
+                        completion(WayAppPay.API.errorFromResponse(response))
                         WayAppPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
+                    completion(error)
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
             }

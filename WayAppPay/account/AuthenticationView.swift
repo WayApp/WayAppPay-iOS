@@ -11,112 +11,78 @@ import SwiftUI
 struct AuthenticationView: View {
     @State private var email: String = UserDefaults.standard.string(forKey: WayAppPay.DefaultKey.EMAIL.rawValue) ?? "" {
         didSet {
-            print("SETTING REMEMBER")
             UserDefaults.standard.set(email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
             UserDefaults.standard.synchronize()
         }
     }
     @State private var pin: String = ""
-//    @State private var remember: Bool = UserDefaults.standard.bool(forKey:WayAppPay.DefaultKey.REMEMBER_EMAIL.rawValue) {
-//        didSet {
-//            print("SETTING REMEMBER")
-//            UserDefaults.standard.set(remember, forKey: WayAppPay.DefaultKey.REMEMBER_EMAIL.rawValue)
-//            UserDefaults.standard.synchronize()
-//        }
-//    }
-    @State private var scrollOffset: CGSize = CGSize.zero
     @State private var forgotPIN = false
+    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
 
     let imageSize: CGFloat = 120.0
     let textFieldcornerRadius: CGFloat = 20.0
     
-    private func keywordScrollCalculation(height: Int) -> Int {
-        switch height {
-        case 0..<600: return -200
-        case 600..<700: return -130
-        default: return 0
-        }
-    }
-    
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView(.vertical, showsIndicators: true) {
-                VStack(alignment: .center, spacing: 16.0) {
-                    Spacer()
-//                    Text("Geometry: width=\(Int(geometry.size.width)), height=\(Int(geometry.size.height))")
-                    Image("WAP-P")
-                        .resizable()
-                        .frame(width: self.imageSize, height: self.imageSize, alignment: .center)
-                        .scaledToFit()
-                    HStack {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                        TextField(
-                            WayAppPay.session.account?.email != nil ? WayAppPay.session.account!.email! : "email"
-                            , text: self.$email)
-                            .autocapitalization(.none)
-                            .textContentType(.emailAddress)
-                            .keyboardType(.emailAddress)
-                            .padding()
-                            .background(Color("tertiarySystemBackgroundColor"))
-                            .cornerRadius(self.textFieldcornerRadius)
-                            .onTapGesture {
-                                if self.scrollOffset == CGSize.zero {
-                                        self.scrollOffset = CGSize(width: 0, height: self.keywordScrollCalculation(height: Int(geometry.size.height)))
-                                    }
-                                }
-                    }
-                    HStack {
-                        Image(systemName: "lock.circle.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                        SecureField("PIN", text: self.$pin)
-                            .textContentType(.password)
-                            .keyboardType(.numberPad)
-                            .padding()
-                            .background(Color("tertiarySystemBackgroundColor"))
-                            .cornerRadius(self.textFieldcornerRadius)
-                            .onTapGesture {
-                                if self.scrollOffset == CGSize.zero {
-                                        self.scrollOffset = CGSize(width: 0, height: self.keywordScrollCalculation(height: Int(geometry.size.height)))
-                                    }
-                                }
-                    }
-//                    Toggle(isOn: self.$remember) {
-//                        Text("Remember email?")
-//                    }
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            self.forgotPIN = true
-                        }) {
-                            Text("Forgot your PIN?")
-                        }
-                        .sheet(isPresented: self.$forgotPIN) {
-                            EnterOTP()
-                        }
-                    }
-                    Button(action: {
-                        WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
-                    }) {
-                        Text("Sign in")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-                    .background(Color("WAP-GreenDark"))
-                    .cornerRadius(15.0)
-                    Spacer()
+        VStack(alignment: .center, spacing: 16.0) {
+            Image("WAP-P")
+                .resizable()
+                .frame(width: self.imageSize, height: self.imageSize, alignment: .center)
+                .scaledToFit()
+            HStack {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                TextField(
+                    WayAppPay.session.account?.email != nil ? WayAppPay.session.account!.email! : "email"
+                    , text: self.$email)
+                    .autocapitalization(.none)
+                    .textContentType(.emailAddress)
+                    .keyboardType(.emailAddress)
+                    .padding()
+                    .background(Color("tertiarySystemBackgroundColor"))
+                    .cornerRadius(self.textFieldcornerRadius)
+                    .modifier(WayAppPay.ClearButton(text: $email))
+            }
+            HStack {
+                Image(systemName: "lock.circle.fill")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                SecureField("PIN", text: self.$pin)
+                    .textContentType(.password)
+                    .keyboardType(.numberPad)
+                    .padding()
+                    .background(Color("tertiarySystemBackgroundColor"))
+                    .cornerRadius(self.textFieldcornerRadius)
+            }
+            HStack {
+                Spacer()
+                Button(action: {
+                    self.forgotPIN = true
+                }) {
+                    Text("Forgot your PIN?")
                 }
-                .padding()
+                .sheet(isPresented: self.$forgotPIN) {
+                    EnterOTP()
+                }
             }
-            .onTapGesture {
-                WayAppPay.hideKeyboard()
-                self.scrollOffset = CGSize.zero
+            Button(action: {
+                WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
+            }) {
+                Text("Sign in")
             }
-            .offset(self.scrollOffset)
+            .font(.headline)
+            .foregroundColor(.white)
+            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
+            .background(Color("WAP-GreenDark"))
+            .cornerRadius(15.0)
+            .padding(.bottom, keyboardObserver.keyboardHeight)
+            .animation(.easeInOut(duration: 0.3))
+            
         }
+        .onTapGesture {
+            WayAppPay.hideKeyboard()
+        }
+        .padding()
     }
 }
 

@@ -8,6 +8,7 @@
 
 import AVFoundation
 import SwiftUI
+import Combine
 
 struct WayAppPay {
     
@@ -17,10 +18,54 @@ struct WayAppPay {
         static let paymentResultImageSize: CGFloat = 220.0
         static let paymentResultDisplayDuration: TimeInterval = 1.5
         static let shoppingCartRowImageSize: CGFloat = 36.0
+        static let buttonCornerRadius: CGFloat = 10.0
+        static let buttonHeight: CGFloat = 50.0
+        static let verticalSeparation: CGFloat = 16
+        static let pinTextFieldWidth: CGFloat = 120
+    }
+    
+    class KeyboardObserver: ObservableObject {
+
+      private var cancellable: AnyCancellable?
+
+      @Published private(set) var keyboardHeight: CGFloat = 0
+
+      let keyboardWillShow = NotificationCenter.default
+        .publisher(for: UIResponder.keyboardWillShowNotification)
+        .compactMap { ($0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height }
+
+      let keyboardWillHide = NotificationCenter.default
+        .publisher(for: UIResponder.keyboardWillHideNotification)
+        .map { _ -> CGFloat in 0 }
+
+      init() {
+        cancellable = Publishers.Merge(keyboardWillShow, keyboardWillHide)
+          .subscribe(on: RunLoop.main)
+          .assign(to: \.keyboardHeight, on: self)
+      }
     }
     
     static func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+
+    struct ClearButton: ViewModifier {
+        @Binding var text: String
+         
+        public func body(content: Content) -> some View {
+            ZStack(alignment: .trailing) {
+                content
+                if !text.isEmpty {
+                    Button(action: {
+                        self.text = ""})
+                    {
+                        Image(systemName: "multiply.circle")
+                            .foregroundColor(Color(UIColor.opaqueSeparator))
+                    }
+                    .padding(.trailing, 8)
+                }
+            }
+        }
     }
 
     static let acceptedPaymentCodes: [AVMetadataObject.ObjectType] = [.qr, .code128]

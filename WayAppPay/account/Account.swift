@@ -110,52 +110,33 @@ extension WayAppPay {
             return password
         }
 
-        func changePIN(currentPIN: String, newPIN: String) {
-            guard let email = session.account?.email else {
-                WayAppUtils.Log.message("missing session account email")
-                return
-            }
+        static func changePINforEmail(_ email: String, currentPIN: String, newPIN: String, completion: @escaping (Error?) -> Void) {
             WayAppPay.API.changePIN(ChangePIN(email: email, oldPin: Account.hashedPIN(currentPIN), newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
                 WayAppUtils.Log.message("RESPONSE: \(response)")
                 if case .success(let response?) = response {
                     if let accounts = response.result,
                         let account = accounts.first {
+                        completion(nil)
                         print("success success success success success: \(account)")
                     }
                 } else if case .failure(let error) = response {
+                    completion(error)
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
             }
         }
         
-        func forgotPIN() {
-            guard let email = session.account?.email else {
-                WayAppUtils.Log.message("missing session account email")
-                return
-            }
+        static func forgotPINforEMAIL(_ email: String, completion: @escaping (String?, Error?) -> Void) {
             WayAppPay.API.forgotPIN(ChangePIN(email: email, oldPin: "", newPin: "")).fetch(type: [OTP].self) { response in
                 WayAppUtils.Log.message("RESPONSE: \(response)")
                 if case .success(let response?) = response {
                     if let otps = response.result,
                         let otp = otps.first {
+                        completion(otp.otp, nil)
                         print("OTP success success success success success: \(otp)")
-                        session.account?.verifyOTP(otp)
                     }
                 } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
-            }
-        }
-
-        func verifyOTP(_ otp: OTP) {
-            WayAppPay.API.verifyOTP(otp).fetch(type: [OTP].self) { response in
-                WayAppUtils.Log.message("RESPONSE: \(response)")
-                if case .success(let response?) = response {
-                    if let otps = response.result,
-                        let otp = otps.first {
-                        print("success success success success success: \(otp)")
-                    }
-                } else if case .failure(let error) = response {
+                    completion(nil, error)
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
             }

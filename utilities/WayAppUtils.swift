@@ -305,11 +305,4 @@ extension WayAppUtils {
         return false
     }
     
-    static func validatePassword(_ pwd: String?) -> Bool {
-        if let pwd = pwd {
-            return pwd.count == WayAppPay.Account.PINLength
-        }
-        return false
-    }
-
 }

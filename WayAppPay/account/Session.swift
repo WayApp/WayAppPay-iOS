@@ -15,6 +15,7 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
+                    showAuthenticationView = false
                     Merchant.loadMerchantsForAccount(account.accountUUID)
                 }
             }
@@ -71,7 +72,6 @@ extension WayAppPay {
                 
         func saveLoginData(password: String) {
             // Saves account
-            showAuthenticationView = false
             if let account = account,
                 let email = account.email {
                 account.save()

@@ -53,7 +53,6 @@ struct SettingsView: View {
                         .sheet(isPresented: self.$changePIN) {
                             ChangePinView()
                         }
-
                     }
                     Button(action: {
                         DispatchQueue.main.async {

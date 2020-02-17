@@ -18,8 +18,6 @@ struct AmountView: View {
     @State private var wasPaymentSuccessful: Bool = false
     @State private var amount: Double = 0
     
-    let textFieldcornerRadius: CGFloat = 20.0
-    
     func handleScan() {
         processPayment()
     }
@@ -76,23 +74,19 @@ struct AmountView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                //Color("WAP-Blue").edgesIgnoringSafeArea(.all)
-                VStack(alignment: .center, spacing: 8.0) {
+                VStack(alignment: .center, spacing: 0.0) {
                     Spacer()
                     Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .padding(.bottom, 40)
+                        .padding(.bottom, WayAppPay.UI.verticalSeparation)
                         .onTapGesture {
                             self.delete()
-                        }
-                    TextField("description", text: $cartDescription)
+                    }
+                    TextField("shopping cart description", text: $cartDescription)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
-                        .background(Color("tertiarySystemBackgroundColor"))
-                            .cornerRadius(self.textFieldcornerRadius)
-                        .padding(.horizontal, 60)
-                        //.textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.bottom, 60)
+                        .padding(.bottom, WayAppPay.UI.verticalSeparation * 3)
                     VStack {
                         HStack(spacing: 0) {
                             NumberButtonView(number: 1, completion: numberEntered)
@@ -129,36 +123,37 @@ struct AmountView: View {
                     Button(action: {
                         WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(name: "Amount", description: self.cartDescription, price: Int(self.amount * 100) / 100), isAmount: true)
                     }, label: {
-                    Image(systemName: "cart.fill.badge.plus")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center) })
-                        .foregroundColor(Color("WAP-Blue"))
-                        .aspectRatio(contentMode: .fit)
+                        Image(systemName: "cart.fill.badge.plus")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    })
                         .padding(.trailing, 16)
                     Button(action: {
                         self.showScanner = true
-                    }, label: { Image(systemName: "qrcode.viewfinder")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
-                        .foregroundColor(Color("WAP-Blue"))
+                    }, label: {
+                        Image(systemName: "qrcode.viewfinder")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                     }
                     )
-                    .sheet(isPresented: $showScanner) {
-                        VStack {
-                            CodeCaptureView(showCodePicker: self.$showScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
-                            HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.amount / 100))!)")
-                                    .foregroundColor(Color.black)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Button("Done") { self.showScanner = false }
+                        .sheet(isPresented: $showScanner) {
+                            VStack {
+                                CodeCaptureView(showCodePicker: self.$showScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
+                                HStack {
+                                    Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.amount / 100))!)")
+                                        .foregroundColor(Color.black)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Button("Done") { self.showScanner = false }
+                                }
+                                .frame(height: 44.0)
+                                .padding()
+                                .background(Color.white)
                             }
-                            .frame(height: 40.0)
-                            .padding()
-                            .background(Color.white)
-                        }
                     }
                 }
+                .foregroundColor(Color("WAP-Blue"))
+                .frame(height: 30)
             )
         }
         .onTapGesture { WayAppPay.hideKeyboard() }
