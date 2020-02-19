@@ -13,7 +13,7 @@ extension WayAppPay {
     struct Product: Codable, Identifiable, ContainerProtocol {
         
         static let defaultImageName = "questionmark.square"
-        static let defaultName = "missing name"
+        static let defaultName = "name"
 
         var productUUID: String
         var merchantUUID: String?
@@ -61,26 +61,8 @@ extension WayAppPay {
             }
         }
         
-        static func add(_ product: Product) {
-            guard let merchantUUID = session.merchantUUID else {
-                WayAppUtils.Log.message("missing Session.merchantUUID")
-                return
-            }
-            WayAppPay.API.addProduct(merchantUUID, product, nil).fetch(type: [WayAppPay.Product].self) { response in
-                if case .success(let response?) = response {
-                    if let products = response.result,
-                        let product = products.first {
-                        session.products.add(product)
-                    } else {
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
-            }
-        }
 
-        private func composeIntPriceFromString(_ price: String) -> Int {
+        static private func composeIntPriceFromString(_ price: String) -> Int {
             var result: Int = 0
             let splitIn2 = price.components(separatedBy: .punctuationCharacters)
             if !splitIn2.isEmpty,
@@ -93,7 +75,34 @@ extension WayAppPay {
             }
             return result
         }
-        
+
+        static func add(name: String, price: String, image: UIImage?, completion: @escaping (Error?) -> Void)  {
+            guard let merchantUUID = session.merchantUUID else {
+                WayAppUtils.Log.message("missing Session.merchantUUID")
+                return
+            }
+            
+            let newProduct = Product(name: name, price: Product.composeIntPriceFromString(price))
+            
+            WayAppPay.API.addProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
+                if case .success(let response?) = response {
+                    if let products = response.result,
+                        let product = products.first {
+                        DispatchQueue.main.async {
+                            session.products.add(product)
+                        }
+                        completion(nil)
+                    } else {
+                        completion(WayAppPay.API.errorFromResponse(response))
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    completion(error)
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
         func update(name: String, price: String, image: UIImage?, completion: @escaping (Error?) -> Void) {
             guard let merchantUUID = session.merchantUUID else {
                 WayAppUtils.Log.message("missing Session.merchantUUID")
@@ -102,7 +111,7 @@ extension WayAppPay {
             var newProduct = self
             
             newProduct.name = name.isEmpty ? self.name : name
-            newProduct.price = price.isEmpty ? self.price : composeIntPriceFromString(price)
+            newProduct.price = price.isEmpty ? self.price : Product.composeIntPriceFromString(price)
             
             WayAppPay.API.updateProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
                 if case .success(let response?) = response {

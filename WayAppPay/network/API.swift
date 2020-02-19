@@ -10,6 +10,14 @@ import UIKit
 
 extension WayAppPay {
     
+    /*
+     * Process to add any API method:
+     * 1) Add the case to the API enum
+     * 2) Add the path
+     * 3) Add signature
+     * 4) Add it to the switch on httpCall (GET, PATCH ...)
+     * 5) Only if it PATCH, PUT or POST add the body
+     */
     enum API: HTTPCallEndpoint {
         static var jsonEncoder: JSONEncoder {
             return WayAppPay.jsonEncoder

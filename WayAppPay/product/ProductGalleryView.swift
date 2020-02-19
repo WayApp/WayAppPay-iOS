@@ -26,13 +26,13 @@ struct ProductGalleryView: View {
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Products")
             .navigationBarItems(trailing:
-                Button(action: { }, label: {
-                    Image(systemName: "plus.circle")
-                    .resizable()
-                    .frame(width: 30, height: 30, alignment: .center) })
-                    .foregroundColor(Color("WAP-Blue"))
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.trailing, 16)
+                NavigationLink(destination: ProductDetailView(product: nil)) {   Image(systemName: "plus.circle")
+                        .resizable()
+                    .frame(width: 30, height: 30, alignment: .center)
+                }
+                .foregroundColor(Color("WAP-Blue"))
+                .aspectRatio(contentMode: .fit)
+                .padding(.trailing, 16)
             )
         }
     }

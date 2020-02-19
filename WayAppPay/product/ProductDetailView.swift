@@ -16,7 +16,7 @@ struct ProductDetailView: View {
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
 
-    var product: WayAppPay.Product
+    var product: WayAppPay.Product?
     
     @State var newName: String = ""
     @State var newPrice: String = ""
@@ -27,10 +27,16 @@ struct ProductDetailView: View {
     let imageSize: CGFloat = 180.0
 
     var shouldSaveButtonBeDisabled: Bool {
-        return newName.isEmpty && newPrice.isEmpty && newImage == nil
+        if product == nil {
+            // creation
+            return newName.isEmpty || newPrice.isEmpty || newImage == nil
+        } else {
+            // update
+            return newName.isEmpty && newPrice.isEmpty && newImage == nil
+        }
     }
-    
-    private func updateCompleted(_ error: Error?) {
+        
+    private func apiCallCompleted(_ error: Error?) {
         DispatchQueue.main.async {
             self.isAPICallOngoing = false
             if error != nil {
@@ -44,7 +50,7 @@ struct ProductDetailView: View {
     var body: some View {
         VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
             if newImage == nil {
-                ImageView(withURL: product.image, size: imageSize)
+                ImageView(withURL: product?.image, size: imageSize)
             } else {
                 Image(uiImage:newImage!)
                     .resizable()
@@ -62,14 +68,14 @@ struct ProductDetailView: View {
             VStack(alignment: .trailing, spacing: WayAppPay.UI.verticalSeparation) {
                 HStack(alignment: .center, spacing: 12) {
                     Text("Name")
-                    TextField("\(product.name ?? WayAppPay.Product.defaultName)", text: $newName)
+                    TextField("\(product?.name ?? WayAppPay.Product.defaultName)", text: $newName)
                         .textContentType(.none)
                         .keyboardType(.default)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
                 HStack(alignment: .center, spacing: 12) {
                     Text("Price")
-                    TextField("\(WayAppPay.priceFormatter(product.price))", text: $newPrice)
+                    TextField("\(WayAppPay.priceFormatter(product?.price))", text: $newPrice)
                         .keyboardType(.decimalPad)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
@@ -81,13 +87,21 @@ struct ProductDetailView: View {
         .gesture(DragGesture().onChanged({ _ in WayAppPay.hideKeyboard() }))
         .font(.headline)
         .padding()
-        .navigationBarTitle(product.name ?? WayAppPay.Product.defaultName)
+        .navigationBarTitle(
+            newName.isEmpty ? (product?.name ?? "") : newName
+        )
         .navigationBarItems(trailing:
             Button(action: {
                 DispatchQueue.main.async {
                     self.isAPICallOngoing = true
                 }
-                self.product.update(name: self.newName, price: self.newPrice, image: self.newImage, completion: self.updateCompleted(_:))
+                if self.product == nil {
+                    // creation
+                    WayAppPay.Product.add(name: self.newName, price: self.newPrice, image: self.newImage, completion: self.apiCallCompleted(_:))
+                } else {
+                    // update
+                    self.product?.update(name: self.newName, price: self.newPrice, image: self.newImage, completion: self.apiCallCompleted(_:))
+                }
             }, label: { Text("Save") })
             .alert(isPresented: $showUpdateResultAlert) {
                 Alert(title: Text("System error"),

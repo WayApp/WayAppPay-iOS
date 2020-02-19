@@ -57,8 +57,8 @@ extension WayAppPay {
                         DispatchQueue.main.async {
                             session.accounts.setTo(accounts)
                         }
-                        // Francesita "199c742b-4f85-4d1e-a949-785701bdbb30"
-                        // Óscar "a2d4e263-06f7-4653-8118-0e1c50300662"
+                        // Francesita "199c742b-4f85-4d1e-a949-785701bdbb30"  [francesitapl@hotmail.com / 1234]
+                        // Óscar "a2d4e263-06f7-4653-8118-0e1c50300662" [oscar@wayapp.com / 1234]
                         // Alejo "a0e59068-0e6b-40e8-b2c9-94532553eee3"
                         // Julio "be0d9293-3902-4970-acb9-40b72c1c33ae"
                         // Café merchantUUID "53259c1c-bf1b-4298-af69-ae84052819dc"
