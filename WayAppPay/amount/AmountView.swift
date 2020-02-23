@@ -49,9 +49,9 @@ struct AmountView: View {
                     let transaction = transactions.first {
                     DispatchQueue.main.async {
                         self.session.transactions.addAsFirst(transaction)
+                        self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
+                        self.showAlert = true
                     }
-                    self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
-                    self.showAlert = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
                         self.showAlert = false
                     }

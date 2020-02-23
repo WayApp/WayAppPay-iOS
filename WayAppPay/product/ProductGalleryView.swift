@@ -32,7 +32,6 @@ struct ProductGalleryView: View {
                 }
                 .foregroundColor(Color("WAP-Blue"))
                 .aspectRatio(contentMode: .fit)
-                .padding(.trailing, 16)
             )
         }
     }

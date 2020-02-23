@@ -43,6 +43,8 @@ extension WayAppPay {
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
         
+        static var nfcPayment: nfcPaymentHandler?
+
         init() {
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
