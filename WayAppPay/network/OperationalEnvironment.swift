@@ -8,13 +8,13 @@
 
 import Foundation
 
-var environment: Environment = Environment.production
-
-enum Environment {
+enum OperationalEnvironment {
     case production, staging
     
-    var wayappPayAPIBaseURL: String {
-        switch self {
+    static var current: OperationalEnvironment = .production
+    
+    static var wayappPayAPIBaseURL: String {
+        switch OperationalEnvironment.current {
         case .production:
             return "https://api.staging.wayapp.com/pay/v1"
         case .staging:
@@ -22,8 +22,8 @@ enum Environment {
         }
     }
         
-    var wayAppPayPublicKey: String {
-        switch self {
+    static var wayAppPayPublicKey: String {
+        switch OperationalEnvironment.current  {
         case .production:
             return "8e261776487e170a545e2d97e3c4018321d6e116"
         case .staging:
@@ -31,8 +31,8 @@ enum Environment {
         }
     }
 
-    var wayAppPayPrivateKey: String {
-        switch self {
+    static var wayAppPayPrivateKey: String {
+        switch OperationalEnvironment.current  {
         case .production:
             return "748e93458e818fe76e3fd7c9741f5699c6603217"
         case .staging:
@@ -40,8 +40,8 @@ enum Environment {
         }
     }
 
-    var deepLinkBaseURL: String {
-        switch self {
+    static var deepLinkBaseURL: String {
+        switch OperationalEnvironment.current  {
         case .production:
             return "https://api.abanca.com/e/alavuelta/wc/links?deeplink="
         case .staging:
@@ -49,4 +49,3 @@ enum Environment {
         }
     }
 }
-

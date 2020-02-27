@@ -19,8 +19,12 @@ struct AuthenticationView: View {
     @State private var forgotPIN = false
     @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
 
-    let imageSize: CGFloat = 120.0
-    let textFieldcornerRadius: CGFloat = 20.0
+    private let imageSize: CGFloat = 120.0
+    private let textFieldcornerRadius: CGFloat = 20.0
+    
+    private var shouldSigninButtonBeDisabled: Bool {
+      return (!WayAppUtils.validateEmail(email) || pin.count != WayAppPay.Account.PINLength)
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 16.0) {
@@ -72,16 +76,14 @@ struct AuthenticationView: View {
             }
             .font(.headline)
             .foregroundColor(.white)
-            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 44)
-            .background(Color("WAP-GreenDark"))
-            .cornerRadius(15.0)
+            .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+            .background(shouldSigninButtonBeDisabled ? .gray : Color("WAP-GreenDark"))
+            .cornerRadius(WayAppPay.UI.buttonCornerRadius)
             .padding(.bottom, keyboardObserver.keyboardHeight)
             .animation(.easeInOut(duration: 0.3))
-            
+            .disabled(shouldSigninButtonBeDisabled)
         }
-        .onTapGesture {
-            WayAppPay.hideKeyboard()
-        }
+        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
         .padding()
     }
 }

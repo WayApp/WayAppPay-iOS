@@ -26,61 +26,100 @@ struct PaymentOptionsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
+                VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
                     Button(action: {
                         self.showQRScannerForPayment = true
                     }, label: {
                         HStack {
                             Image(systemName: "qrcode.viewfinder")
-                            .resizable()
-                            .frame(width: rowHeight, height: rowHeight, alignment: .center)
-                            .aspectRatio(contentMode: .fit)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: rowHeight, alignment: .center)
                             Text("QR")
                         }
                     })
-                    .sheet(isPresented: $showQRScannerForPayment) {
-                        VStack {
-                            CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleQRScanPayment)
-                            HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
-                                    .foregroundColor(Color.black)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Button("Done") { self.showQRScannerForPayment = false }
+                        .sheet(isPresented: $showQRScannerForPayment) {
+                            VStack {
+                                CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleQRScanPayment)
+                                HStack {
+                                    Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
+                                        .foregroundColor(Color.black)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Button("Done") { self.showQRScannerForPayment = false }
+                                }
+                                .frame(height: 40.0)
+                                .padding()
+                                .background(Color.white)
                             }
-                            .frame(height: 40.0)
-                            .padding()
-                            .background(Color.white)
-                        }
-                    }
-                    
+                    } // sheet
+                    Divider()
                     Button(action: {
                         self.showNFCScannerForPayment = true
                     }, label: {
                         HStack {
                             Image(systemName: "dot.radiowaves.right")
-                            .resizable()
-                            .frame(width: rowHeight, height: rowHeight, alignment: .center)
-                            .aspectRatio(contentMode: .fit)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: rowHeight, alignment: .center)
                             Text("NFC")
                         }
                     })
-                    .sheet(isPresented: $showNFCScannerForPayment) {
-                        VStack {
-                            NFCCodeCaptureView(showCodePicker: self.$showNFCScannerForPayment, code: self.$scannedCode, tagUpdate: nil, completion: self.handleNFCScan)
-                            HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
-                                    .foregroundColor(Color.black)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Button("Done") { self.showNFCScannerForPayment = false }
+                        .sheet(isPresented: $showNFCScannerForPayment) {
+                            VStack {
+                                NFCCodeCaptureView(showCodePicker: self.$showNFCScannerForPayment, code: self.$scannedCode, tagUpdate: nil, completion: self.handleNFCScan)
+                                HStack {
+                                    Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
+                                        .foregroundColor(Color.black)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Button("Done") { self.showNFCScannerForPayment = false }
+                                }
+                                .frame(height: 40.0)
+                                .padding()
+                                .background(Color.white)
                             }
-                            .frame(height: 40.0)
-                            .padding()
-                            .background(Color.white)
+                    } // sheet
+                    Divider()
+                    Button(action: {
+                        self.showNFCScannerForUpdate = false
+                    }, label: {
+                        HStack {
+                            Image(systemName: "creditcard")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: rowHeight, alignment: .center)
+                            Text("Credit card")
                         }
-                    }
-
+                    }) // button
+                    Divider()
+                    Button(action: {
+                        self.showQRScannerForUpdate = true
+                    }, label: {
+                        HStack {
+                            Image(systemName: "camera.on.rectangle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: rowHeight, alignment: .center)
+                            Text("Read card")
+                        }
+                    })
+                        .sheet(isPresented: $showQRScannerForUpdate) {
+                            VStack {
+                                CodeCaptureView(showCodePicker: self.$showQRScannerForUpdate, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleQRScanUpdate)
+                                HStack {
+                                    Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
+                                        .foregroundColor(Color.black)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Button("Done") { self.showQRScannerForUpdate = false }
+                                }
+                                .frame(height: 40.0)
+                                .padding()
+                                .background(Color.white)
+                            }
+                    } // sheet
+                    Divider()
                     Button(action: {
                         if self.scannedCode != nil {
                             self.showNFCScannerForUpdate = true
@@ -88,67 +127,30 @@ struct PaymentOptionsView: View {
                     }, label: {
                         HStack {
                             Image(systemName: "tag")
-                            .resizable()
-                            .frame(width: rowHeight, height: rowHeight, alignment: .center)
-                            .aspectRatio(contentMode: .fit)
-                            Text("Load wearable")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: rowHeight, alignment: .center)
+                            Text("Tag link")
                         }
                     })
-                    .sheet(isPresented: $showNFCScannerForUpdate) {
-                        VStack {
-                            NFCCodeCaptureView(showCodePicker: self.$showNFCScannerForUpdate, code: self.$scannedCode, tagUpdate: String(self.scannedCode!.prefix(3)), completion: self.handleNFCScan)
-                            HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
-                                    .foregroundColor(Color.black)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Button("Done") { self.showNFCScannerForUpdate = false }
-                            }
-                            .frame(height: 40.0)
-                            .padding()
-                            .background(Color.white)
-                        }
-                    }
-
-                    Button(action: {
-                        self.showQRScannerForUpdate = true
-                    }, label: {
-                        HStack {
-                            Image(systemName: "qrcode.viewfinder")
-                            .resizable()
-                            .frame(width: rowHeight, height: rowHeight, alignment: .center)
-                            .aspectRatio(contentMode: .fit)
-                            Text("QR")
-                        }
-                    })
-                    .sheet(isPresented: $showQRScannerForUpdate) {
-                        VStack {
-                            CodeCaptureView(showCodePicker: self.$showQRScannerForUpdate, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleQRScanUpdate)
-                            HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
-                                    .foregroundColor(Color.black)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Button("Done") { self.showQRScannerForUpdate = false }
-                            }
-                            .frame(height: 40.0)
-                            .padding()
-                            .background(Color.white)
-                        }
-                    }
-
-                    Button(action: {
-                        self.showNFCScannerForUpdate = false
-                    }, label: {
-                        HStack {
-                            Image(systemName: "creditcard")
-                            .resizable()
-                            .frame(width: rowHeight, height: rowHeight, alignment: .center)
-                            .aspectRatio(contentMode: .fit)
-                            Text("Credit card")
-                        }
-                    })
-                } // VStack
+                        .sheet(isPresented: $showNFCScannerForUpdate) {
+                            VStack {
+                                NFCCodeCaptureView(showCodePicker: self.$showNFCScannerForUpdate, code: self.$scannedCode, tagUpdate: self.scannedCode!, completion: self.handleQRScanUpdate)
+                                HStack {
+                                    Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
+                                        .foregroundColor(Color.black)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Button("Done") { self.showNFCScannerForUpdate = false }
+                                }
+                                .frame(height: 40.0)
+                                .padding()
+                                .background(Color.white)
+                            } // vstack
+                    } // sheet
+                } // vstack
+                    .foregroundColor(.primary)
+                    .navigationBarTitle("Operation")
                 if showAlert {
                     Image(systemName: wasPaymentSuccessful ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
                         .resizable()
@@ -170,22 +172,15 @@ struct PaymentOptionsView_Previews: PreviewProvider {
 // NFC Payment
 extension PaymentOptionsView {
     func handleNFCScan() {
-        DispatchQueue.main.async {
-            self.wasPaymentSuccessful = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
-            self.presentationMode.wrappedValue.dismiss()
-        }
-
+        handleQRScanPayment()
+        WayAppUtils.Log.message("Scanned NFC Tag: \(scannedCode ?? "no scaneed code")")
     }
 }
 
 // QR Payment
 extension PaymentOptionsView {
     func handleQRScanUpdate() {
-        if let scannedCode = scannedCode {
-            print("Scanned Code: \(scannedCode)")
-        }
+        WayAppUtils.Log.message("Scanned NFC Tag: \(scannedCode ?? "no scaneed code")")
     }
     
     func handleQRScanPayment() {

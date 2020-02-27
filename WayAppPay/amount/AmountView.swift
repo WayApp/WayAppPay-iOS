@@ -34,6 +34,11 @@ struct AmountView: View {
         amount = 0
     }
     
+    private func resetAmountAndDescription() {
+        amount = 0
+        cartDescription = ""
+    }
+    
     func processPayment() {
         guard let merchantUUID = WayAppPay.session.merchantUUID,
             let accountUUID = WayAppPay.session.accountUUID,
@@ -48,6 +53,7 @@ struct AmountView: View {
                 if let transactions = response.result,
                     let transaction = transactions.first {
                     DispatchQueue.main.async {
+                        self.resetAmountAndDescription()
                         self.session.transactions.addAsFirst(transaction)
                         self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
                         self.showAlert = true
@@ -122,6 +128,7 @@ struct AmountView: View {
                 HStack {
                     Button(action: {
                         WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(name: "Amount", description: self.cartDescription, price: Int(self.amount * 100) / 100), isAmount: true)
+                        self.resetAmountAndDescription()
                     }, label: {
                         Image(systemName: "cart.fill.badge.plus")
                             .resizable()
@@ -134,29 +141,30 @@ struct AmountView: View {
                         Image(systemName: "qrcode.viewfinder")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                    }
-                    )
-                        .sheet(isPresented: $showScanner) {
-                            VStack {
-                                CodeCaptureView(showCodePicker: self.$showScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
-                                HStack {
-                                    Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.amount / 100))!)")
-                                        .foregroundColor(Color.black)
-                                        .fontWeight(.medium)
-                                    Spacer()
-                                    Button("Done") { self.showScanner = false }
-                                }
-                                .frame(height: 44.0)
-                                .padding()
-                                .background(Color.white)
+                        }
+                    ) // button
+                    .disabled(!UIImagePickerController.isSourceTypeAvailable(.camera))
+                    .sheet(isPresented: $showScanner) {
+                        VStack {
+                            CodeCaptureView(showCodePicker: self.$showScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
+                            HStack {
+                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.amount / 100))!)")
+                                    .foregroundColor(Color.black)
+                                    .fontWeight(.medium)
+                                Spacer()
+                                Button("Done") { self.showScanner = false }
                             }
-                    }
+                            .frame(height: 44.0)
+                            .padding()
+                            .background(Color.white)
+                        }
+                    } // sheet
                 }
                 .foregroundColor(Color("WAP-Blue"))
                 .frame(height: 30)
             )
         }
-        .onTapGesture { WayAppPay.hideKeyboard() }
+        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
     }
     
 }

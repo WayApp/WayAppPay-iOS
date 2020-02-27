@@ -41,9 +41,8 @@
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
 		B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */; };
 		B1A19AC2240251FA0070E5FF /* PaymentOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A19AC1240251FA0070E5FF /* PaymentOptionsView.swift */; };
-		B1A19AC9240268580070E5FF /* PaymentNFC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A19AC8240268580070E5FF /* PaymentNFC.swift */; };
 		B1A19ACB24026C490070E5FF /* NFCScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A19ACA24026C490070E5FF /* NFCScannerView.swift */; };
-		B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D6990523EA22A40049E1D8 /* ScannerView.swift */; };
+		B1D6990623EA22A40049E1D8 /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D6990523EA22A40049E1D8 /* QRScannerView.swift */; };
 		B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750123ED8CA000A1967F /* ChangePinView.swift */; };
 		B1D8750623EEDC1700A1967F /* NumberButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750523EEDC1700A1967F /* NumberButtonView.swift */; };
 		B1D8750823EEDF6600A1967F /* OperationButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750723EEDF6500A1967F /* OperationButtonView.swift */; };
@@ -60,6 +59,7 @@
 		B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58C23E5860100CC2E04 /* Merchant.swift */; };
 		B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58E23E617ED00CC2E04 /* Container.swift */; };
 		B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */; };
+		B1E84ACA24038A6B0093F9EC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1E84AC824038A6B0093F9EC /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,9 +100,8 @@
 		B19ACCC6238B092C009FF084 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1A19AC1240251FA0070E5FF /* PaymentOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionsView.swift; sourceTree = "<group>"; };
 		B1A19AC7240264970070E5FF /* WayApp Pay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "WayApp Pay.entitlements"; sourceTree = "<group>"; };
-		B1A19AC8240268580070E5FF /* PaymentNFC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentNFC.swift; sourceTree = "<group>"; };
 		B1A19ACA24026C490070E5FF /* NFCScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCScannerView.swift; sourceTree = "<group>"; };
-		B1D6990523EA22A40049E1D8 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
+		B1D6990523EA22A40049E1D8 /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		B1D8750123ED8CA000A1967F /* ChangePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePinView.swift; sourceTree = "<group>"; };
 		B1D8750523EEDC1700A1967F /* NumberButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberButtonView.swift; sourceTree = "<group>"; };
 		B1D8750723EEDF6500A1967F /* OperationButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationButtonView.swift; sourceTree = "<group>"; };
@@ -119,6 +118,8 @@
 		B1E7A58C23E5860100CC2E04 /* Merchant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merchant.swift; sourceTree = "<group>"; };
 		B1E7A58E23E617ED00CC2E04 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		B1E84AC7240388130093F9EC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		B1E84AC924038A6B0093F9EC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,10 +205,10 @@
 		B12DE96323AA6D4600C02657 /* network */ = {
 			isa = PBXGroup;
 			children = (
+				B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */,
 				B12DE96423AA6E2B00C02657 /* SecurityUtilities.swift */,
 				B12DE96823AA6FAE00C02657 /* HTTPNetworkAccess.swift */,
 				B12DE97F23AA7B9400C02657 /* API.swift */,
-				B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */,
 				B12DE95F23AA6C5900C02657 /* JsonCoding.swift */,
 			);
 			path = network;
@@ -222,7 +223,6 @@
 				B1D8750923EF2F3B00A1967F /* ReportID.swift */,
 				B1D8750B23EF47C800A1967F /* BarView.swift */,
 				B1A19AC1240251FA0070E5FF /* PaymentOptionsView.swift */,
-				B1A19AC8240268580070E5FF /* PaymentNFC.swift */,
 			);
 			path = transaction;
 			sourceTree = "<group>";
@@ -239,7 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				B12DE97323AA718300C02657 /* Card.swift */,
-				B1D6990523EA22A40049E1D8 /* ScannerView.swift */,
+				B1D6990523EA22A40049E1D8 /* QRScannerView.swift */,
 				B1A19ACA24026C490070E5FF /* NFCScannerView.swift */,
 			);
 			path = card;
@@ -281,6 +281,7 @@
 				B19ACCBE238B092C009FF084 /* Assets.xcassets */,
 				B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */,
 				B19ACCC6238B092C009FF084 /* Info.plist */,
+				B1E84AC824038A6B0093F9EC /* Localizable.strings */,
 				B19ACCC0238B092C009FF084 /* Preview Content */,
 			);
 			path = WayAppPay;
@@ -365,6 +366,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = B19ACCAC238B092A009FF084;
 			productRefGroup = B19ACCB6238B092A009FF084 /* Products */;
@@ -382,6 +384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */,
+				B1E84ACA24038A6B0093F9EC /* Localizable.strings in Resources */,
 				B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */,
 				B19ACCBF238B092C009FF084 /* Assets.xcassets in Resources */,
 			);
@@ -403,7 +406,7 @@
 				B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */,
 				B1E7A57B23E4470E00CC2E04 /* ProductGalleryView.swift in Sources */,
 				B1A19AC2240251FA0070E5FF /* PaymentOptionsView.swift in Sources */,
-				B1D6990623EA22A40049E1D8 /* ScannerView.swift in Sources */,
+				B1D6990623EA22A40049E1D8 /* QRScannerView.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
 				B1D8750823EEDF6600A1967F /* OperationButtonView.swift in Sources */,
@@ -442,7 +445,6 @@
 				B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */,
 				AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */,
 				B12DE96023AA6C5900C02657 /* JsonCoding.swift in Sources */,
-				B1A19AC9240268580070E5FF /* PaymentNFC.swift in Sources */,
 				AF3A375A23E8233C00E437CA /* TransactionsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,8 +456,17 @@
 			isa = PBXVariantGroup;
 			children = (
 				B19ACCC4238B092C009FF084 /* Base */,
+				B1E84AC7240388130093F9EC /* es */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B1E84AC824038A6B0093F9EC /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B1E84AC924038A6B0093F9EC /* es */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -465,6 +476,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -525,6 +537,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

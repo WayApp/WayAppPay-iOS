@@ -32,7 +32,7 @@ struct EnterOTP: View {
             (otp.count == WayAppPay.Account.PINLength && otp != otpReceived)
     }
 
-    private func resetResult(_ otp: String?, _ error: Error?) {
+    private func resetResult(_ otp: String?, _ error: Error?) -> Void {
         DispatchQueue.main.async {
              self.isAPICallOngoing = false
             if error != nil {
@@ -65,23 +65,7 @@ struct EnterOTP: View {
     }
 
     var body: some View {
-        if otpReceived != nil && shouldChangePINbuttonBeDisabled {
-            return AnyView(
-                VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
-                    Text("Enter OTP received on email:")
-                        .font(.headline)
-                    TextField("PIN", text: self.$otp)
-                        .font(.headline)
-                        .textContentType(.oneTimeCode)
-                        .keyboardType(.numberPad)
-                        .frame(width: WayAppPay.UI.pinTextFieldWidth)
-                        .foregroundColor((otp.count == WayAppPay.Account.PINLength && otpReceived != otp) ||
-                            otp.count > WayAppPay.Account.PINLength ? .red : .primary)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.bottom, WayAppPay.UI.verticalSeparation)
-            }
-            .padding())
-        } else if otpReceived == nil {
+         if otpReceived == nil {
             return AnyView(
                 VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
                     Text("Email new PIN to:")
@@ -112,6 +96,22 @@ struct EnterOTP: View {
                     .disabled(shouldSendEmailButtonBeDisabled)
                 }.padding()
             )
+        } else if otpReceived != nil && shouldChangePINbuttonBeDisabled {
+            return AnyView(
+                VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
+                    Text("Enter OTP received on email:")
+                        .font(.headline)
+                    TextField("PIN", text: self.$otp)
+                        .font(.headline)
+                        .textContentType(.oneTimeCode)
+                        .keyboardType(.numberPad)
+                        .frame(width: WayAppPay.UI.pinTextFieldWidth)
+                        .foregroundColor((otp.count == WayAppPay.Account.PINLength && otpReceived != otp) ||
+                            otp.count > WayAppPay.Account.PINLength ? .red : .primary)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.bottom, WayAppPay.UI.verticalSeparation)
+            }
+            .padding())
         } else {
             return AnyView(
                 VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {

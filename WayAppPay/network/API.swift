@@ -176,6 +176,7 @@ extension WayAppPay {
         }
         
         func fetch<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
+            // Need this function for future support of distinct APIs
             httpCall(type: decodingType, completionHandler: result)
         }
         
@@ -232,8 +233,8 @@ extension WayAppPay {
         var url: URL? {
             let timestamp = Date().timeIntervalSince1970
             let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
-            let baseURL = environment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
-            return URL(string: baseURL + environment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: environment.wayAppPayPrivateKey))
+            let baseURL = OperationalEnvironment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
+            return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey))
         }
                 
         var body: (String, Data)? {
@@ -296,13 +297,15 @@ extension WayAppPay {
         }
         
         var headers: [String: String]? {
+            // Here for potential future support of methods that require header
             return nil
         }
         
         func isUnauthorizedStatusCode(_ code: Int) -> Bool {
             if code == 401 || code == 403 {
                 DispatchQueue.main.async {
-                    //                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: AppDelegate.logoutRequest), object: nil, userInfo: nil)
+                    // FIXME
+                    // NotificationCenter.default.post(name: NSNotification.Name(rawValue: AppDelegate.logoutRequest), object: nil, userInfo: nil)
                 }
                 return true
             }
