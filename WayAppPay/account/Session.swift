@@ -16,7 +16,7 @@ extension WayAppPay {
             didSet {
                 if let account = account {
                     showAuthenticationView = false
-                    Merchant.loadMerchantsForAccount(account.accountUUID)
+                    Merchant.getMerchantsForAccount(account.accountUUID)
                 }
             }
         }

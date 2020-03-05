@@ -167,9 +167,8 @@ enum HTTPCall {
                     result(nil, nil)
                 } else if self.endpoint.isSuccessStatusCodeWithJSONResponse(httpResponse.statusCode),
                     let data = data {
-                    if WayAppUtils.Log.isOn,
-                        let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? JSON {
-                        WayAppUtils.Log.message("\nRequest: \(urlRequest.url!.absoluteString)\nJSON: " + String(describing: json))
+                    if WayAppUtils.Log.isOn {
+                        WayAppUtils.Log.message("\nRequest: \(urlRequest.url!.absoluteString)\nJSON: " + (String(bytes: data, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) ?? ""))
                     }
                     if let response = try? WayAppPay.jsonDecoder.decode(decodingType, from: data) {
                         result(response, nil)

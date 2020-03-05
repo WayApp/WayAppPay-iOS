@@ -177,7 +177,7 @@ extension WayAppPay {
             }
         }
 
-        static func loadMerchantsForAccount(_ accountUUID: String) {
+        static func getMerchantsForAccount(_ accountUUID: String) {
             WayAppPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
                 if case .success(let response?) = response {
                     if let merchants = response.result {
