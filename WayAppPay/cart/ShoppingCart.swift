@@ -12,7 +12,7 @@ extension WayAppPay {
     
     // Used in this format by API
     struct CartItem: Codable {
-        var name: String
+        var name: String?
         var price: Int // defined as Int in API
         var quantity: Int // defined as Int in API
     }

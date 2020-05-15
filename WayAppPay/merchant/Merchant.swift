@@ -47,23 +47,12 @@ extension WayAppPay {
         }
 
         func getAccounts() {
-//            session.account!.changePIN(currentPIN: "4321", newPIN: "1234")
-//            session.account!.forgotPIN()
-            
-            
             WayAppPay.API.getMerchantAccounts(merchantUUID).fetch(type: [Account].self) { response in
                 if case .success(let response?) = response {
                     if let accounts = response.result {
                         DispatchQueue.main.async {
                             session.accounts.setTo(accounts)
                         }
-                        // Francesita "199c742b-4f85-4d1e-a949-785701bdbb30"  [francesitapl@hotmail.com / 1234]
-                        // Óscar "a2d4e263-06f7-4653-8118-0e1c50300662" [oscar@wayapp.com / 1234]
-                        // Alejo "a0e59068-0e6b-40e8-b2c9-94532553eee3"
-                        // Julio "be0d9293-3902-4970-acb9-40b72c1c33ae"
-                        // Café merchantUUID "53259c1c-bf1b-4298-af69-ae84052819dc"
-                        // Mario "36a0d688-2bf0-465d-adba-a17a703ffd3c"
-                        // Óscar NEW pan = "0E166208-803B-4CE8-8B39-9BE7A4BEFFDA"
                         if let accountUUID = session.accountUUID {
                             self.getTransactionsForAccount(accountUUID)
                         } else {
@@ -84,16 +73,20 @@ extension WayAppPay {
 
         func getTransactionsForAccount(_ accountUUID: String) {
             WayAppPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [PaymentTransaction].self) { response in
+                WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount")
                 if case .success(let response?) = response {
+                    WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount success")
                     if let transactions = response.result {
                         DispatchQueue.main.async {
                             session.transactions.setToInOrder(transactions, by:
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                         }
                     } else {
+                        WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount EMPTY")
                         WayAppPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount failure")
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
             }
@@ -126,10 +119,10 @@ extension WayAppPay {
             WayAppPay.API.getMerchantAccountTransactionsForDay(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: day)).fetch(type: [PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result {
-//                        DispatchQueue.main.async {
-//                            session.transactions.setToInOrder(transactions, by:
-//                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
-//                        }
+                        DispatchQueue.main.async {
+                            session.transactions.setToInOrder(transactions, by:
+                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
+                        }
                         print("TRANSACTIONS=\(transactions)")
                     } else {
                         WayAppPay.API.reportError(response)

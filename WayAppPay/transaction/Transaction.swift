@@ -62,11 +62,11 @@ extension WayAppPay {
             self.accountUUID = session.accountUUID
             self.merchantUUID = session.merchantUUID
             self.amount = amount
-            self.authorizationCode = token
-            self.paymentMethod = .WALLET
-            self.type = .SALE
-            self.currency = session.merchants.isEmpty ?  PaymentTransaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
-            self.readingType = .STANDARD
+//            self.authorizationCode = token
+//            self.paymentMethod = .WALLET
+//            self.type = .SALE
+//            self.currency = session.merchants.isEmpty ?  PaymentTransaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
+//            self.readingType = .STANDARD
         }
         
         func walletPayment() {

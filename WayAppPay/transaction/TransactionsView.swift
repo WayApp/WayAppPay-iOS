@@ -20,7 +20,7 @@ struct TransactionsView: View {
                 Section(header: Text("This month")) {
                     VStack {
                         Text("Sales: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalSales))")
-//                        Text("Sales: \(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) }))")
+                        Text("Sales: \(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) }))")
                         Text("Refunds: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalRefund))")
                     }
                     Picker(selection: $monthSelection, label: Text("Select another month:")) {
