@@ -143,6 +143,7 @@ extension WayAppPay {
         }
 
         static func load(email: String, pin: String) {
+            WayAppUtils.Log.message("**************HASHED 1234 ===\(Account.hashedPIN(pin))")
             WayAppPay.API.getAccount(email, Account.hashedPIN(pin)).fetch(type: [WayAppPay.Account].self) { response in
                 if case .success(let response?) = response {
                     if let accounts = response.result,

@@ -286,6 +286,7 @@ extension WayAppPay {
                 }
                 return nil
             case .changePIN(let changePIN), .forgotPIN(let changePIN):
+                WayAppUtils.Log.message("BODY: changePIN: \(changePIN)")
                 if let part = HTTPCall.BodyPart(changePIN, name: "account") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
