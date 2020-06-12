@@ -9,7 +9,6 @@
 import UIKit
 
 extension WayAppPay {
-    
     /*
      * Process to add any API method:
      * 1) Add the case to the API enum
@@ -31,6 +30,10 @@ extension WayAppPay {
         typealias PIN = String
         typealias PAN = String
         typealias Day = String
+
+        public enum ResponseError {
+             case INVALID_SERVER_DATA, MALFORMED_URL, NETWORK_UNAVAILABLE, INVALID_JSON, FORBIDDEN, NOT_FOUND, INTERNAL_ERROR
+         }
 
         enum Result<T: Decodable, U> where U: Swift.Error {
             case success(Response<T>?)
