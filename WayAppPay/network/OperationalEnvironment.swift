@@ -11,23 +11,41 @@ import Foundation
 enum OperationalEnvironment {
     case production, staging
     
-    static var current: OperationalEnvironment = .production
+    static var current: OperationalEnvironment = .staging
     
     static var wayappPayAPIBaseURL: String {
         switch OperationalEnvironment.current {
         case .production:
-            return "https://api.staging.wayapp.com/pay/v1"
+            return "https://api.wayapp.com/pay/v1"
         case .staging:
-            return ""
+            return "https://api.staging.wayapp.com/pay/v1"
         }
     }
-        
+    
+    static var walletAPIBaseURL: String {
+        switch OperationalEnvironment.current {
+        case .production:
+            return "https://api.wayapp.com/wallet/v1"
+        case .staging:
+            return "https://api.wayapp.com/wallet/v1"
+        }
+    }
+
     static var wayAppPayPublicKey: String {
         switch OperationalEnvironment.current  {
         case .production:
             return "8e261776487e170a545e2d97e3c4018321d6e116"
         case .staging:
             return "8e261776487e170a545e2d97e3c4018321d6e116"
+        }
+    }
+
+    static var walletPublicKey: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "ed97b9fa56b248ba8fa8c1df245bc332f7657593"
+        case .staging:
+            return "ed97b9fa56b248ba8fa8c1df245bc332f7657593"
         }
     }
 
@@ -40,12 +58,12 @@ enum OperationalEnvironment {
         }
     }
 
-    static var deepLinkBaseURL: String {
+    static var walletPrivateKey: String {
         switch OperationalEnvironment.current  {
         case .production:
-            return "https://api.abanca.com/e/alavuelta/wc/links?deeplink="
+            return "be5d8786bcc34c55933869df022f0d0ca9c3f30a"
         case .staging:
-            return ""
+            return "be5d8786bcc34c55933869df022f0d0ca9c3f30a"
         }
     }
 }
