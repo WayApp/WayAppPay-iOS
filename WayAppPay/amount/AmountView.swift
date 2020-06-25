@@ -135,30 +135,14 @@ struct AmountView: View {
                             .aspectRatio(contentMode: .fit)
                     })
                         .padding(.trailing, 16)
-                    Button(action: {
-                        self.showScanner = true
-                    }, label: {
+                    NavigationLink(destination: PaymentOptionsView()) {
                         Image(systemName: "qrcode.viewfinder")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                        }
-                    ) // button
-                    .disabled(!UIImagePickerController.isSourceTypeAvailable(.camera))
-                    .sheet(isPresented: $showScanner) {
-                        VStack {
-                            CodeCaptureView(showCodePicker: self.$showScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
-                            HStack {
-                                Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.amount / 100))!)")
-                                    .foregroundColor(Color.black)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Button("Done") { self.showScanner = false }
-                            }
-                            .frame(height: 44.0)
-                            .padding()
-                            .background(Color.white)
-                        }
-                    } // sheet
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center)
+                    }
+                    .foregroundColor(Color("WAP-Blue"))
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.trailing, 16)
                 }
                 .foregroundColor(Color("WAP-Blue"))
                 .frame(height: 30)

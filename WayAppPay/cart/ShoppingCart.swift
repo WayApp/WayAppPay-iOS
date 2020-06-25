@@ -49,6 +49,10 @@ extension WayAppPay {
             return total
         }
         
+        var isEmpty: Bool {
+            return items.isEmpty
+        }
+        
         mutating func addProduct(_ product: Product, isAmount: Bool = false) {
             if let index = items.index(forID: product.productUUID) {
                 items[index].cartItem.quantity += 1
@@ -72,6 +76,11 @@ extension WayAppPay {
                 items.remove(at: index)
             }
         }
+        
+        mutating func empty() {
+            items.empty()
+        }
+
     }
 
 }

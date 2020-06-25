@@ -36,6 +36,7 @@
 		B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */; };
 		B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */; };
 		B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12F17FA23EBD1530012890E /* TransactionRowView.swift */; };
+		B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B164A70C24A4C13B0020ACAB /* PassKit.framework */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
 		B19ACCB9238B092A009FF084 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCB8238B092A009FF084 /* AppDelegate.swift */; };
 		B19ACCBB238B092A009FF084 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBA238B092A009FF084 /* SceneDelegate.swift */; };
@@ -95,6 +96,7 @@
 		B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordSecurePersistance.swift; sourceTree = "<group>"; };
 		B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationalEnvironment.swift; sourceTree = "<group>"; };
 		B12F17FA23EBD1530012890E /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
+		B164A70C24A4C13B0020ACAB /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayApp Pay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WayApp Pay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCB8238B092A009FF084 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,12 +264,21 @@
 			path = card;
 			sourceTree = "<group>";
 		};
+		B164A70B24A4C13B0020ACAB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B164A70C24A4C13B0020ACAB /* PassKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B19ACCAC238B092A009FF084 = {
 			isa = PBXGroup;
 			children = (
 				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB7238B092A009FF084 /* WayAppPay */,
 				B19ACCB6238B092A009FF084 /* Products */,
+				B164A70B24A4C13B0020ACAB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -615,11 +627,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "WayAppPay/WayApp Pay.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"WayAppPay/Preview Content\"";
 				DEVELOPMENT_TEAM = KY762H7M37;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = WayAppPay/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -640,11 +653,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "WayAppPay/WayApp Pay.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"WayAppPay/Preview Content\"";
 				DEVELOPMENT_TEAM = KY762H7M37;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = WayAppPay/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

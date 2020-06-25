@@ -63,7 +63,7 @@ class NFCScannerViewController: UIViewController {
 
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        
     }
 
     override public var prefersStatusBarHidden: Bool {
@@ -135,7 +135,11 @@ struct NFCCodeCaptureView_Previews: PreviewProvider {
 extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
     
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
+        WayAppUtils.Log.message("****** CANCEL: didInvalidateWithError")
+        didFail()
+
                 // Check the invalidation reason from the returned error.
+        /*
         if let readerError = error as? NFCReaderError {
             // Show an alert when the invalidation reason is not because of a success read
             // during a single tag read mode, or user canceled a multi-tag read mode session
@@ -145,6 +149,8 @@ extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
                 didFail()
             }
         }
+ */
+
     }
     
     func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
