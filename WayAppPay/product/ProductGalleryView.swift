@@ -15,11 +15,15 @@ struct ProductGalleryView: View {
         NavigationView {
             List {
                 ForEach(session.products) { product in
+                    /*
                     NavigationLink(
                         destination: ProductDetailView(product: product)
                     ) {
                         ProductRowView(product: product)
                     }
+                    */
+                   ProductRowView(product: product)
+
                 }
                 .onDelete(perform: delete)
             }

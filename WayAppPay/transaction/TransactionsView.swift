@@ -20,7 +20,7 @@ struct TransactionsView: View {
                 Section(header: Text("This month")) {
                     VStack {
                         Text("Sales: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalSales))")
-                        Text("Sales: \(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) }))")
+//                        Text("Sales: \(WayAppPay.priceFormatter(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) })))")
                         Text("Refunds: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalRefund))")
                     }
                     Picker(selection: $monthSelection, label: Text("Select another month:")) {
@@ -30,15 +30,17 @@ struct TransactionsView: View {
                     }
                 }
                 Section(header: Text("Transactions")) {
-                    if session.thisMonthReportID?.totalPerDay != nil {
-                        HStack(alignment: .center, spacing: CGFloat(10))
-                        {
-                            ForEach(0..<(session.thisMonthReportID?.totalPerDay?.count)!) { index in
-                                BarView(value: CGFloat(self.session.thisMonthReportID!.totalPerDay![index] / 100), cornerRadius: 2.0)
-                            }
-                        }.padding(.top, 24).animation(.default)
-                        
-                    }
+//                    if session.thisMonthReportID?.totalPerDay != nil {
+//                        HStack(alignment: .center, spacing: CGFloat(10))
+//                        {
+//                            ForEach(0..<(session.thisMonthReportID?.totalPerDay?.count)!) { index in
+//                                if self.session.thisMonthReportID!.totalPerDay![index] > 0 {
+//                                    BarView(value: CGFloat(self.session.thisMonthReportID!.totalPerDay![index] / 100), cornerRadius: 2.0)
+//                                }
+//                            }
+//                        }.padding(.top, 24).animation(.default)
+//
+//                    }
                     List {
                         ForEach(session.transactions.filter(satisfying: {
                             if let transactiondate = $0.creationDate {

@@ -92,6 +92,7 @@ extension WayAppPay {
         case deleteAccount(String) // DELETE
         case account(Account) // POST
         case editAccount(Account, UIImage?) // PATCH
+        case sendEmail(String, String, SendEmail) // POST
 
         private var path: String {
             switch self {
@@ -122,6 +123,7 @@ extension WayAppPay {
             case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/reports/\(reportID)/"
             case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/refunds/"
+            case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
             // TRASH
             case .account: return "/accounts/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
@@ -157,6 +159,7 @@ extension WayAppPay {
             case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return merchantUUID + "/" + accountUUID + "/" + reportID
             case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
             case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
+            case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
             default: return ""
             }
         }
@@ -194,7 +197,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -295,11 +298,18 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
+            case .sendEmail(_, _, let sendEmail):
+                WayAppUtils.Log.message("BODY: sendEmail: \(sendEmail)")
+                if let part = HTTPCall.BodyPart(sendEmail, name: "email") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
             default:
                 return nil
             }
         }
-        
+  
         var headers: [String: String]? {
             // Here for potential future support of methods that require header
             return nil

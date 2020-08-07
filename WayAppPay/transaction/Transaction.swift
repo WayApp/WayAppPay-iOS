@@ -56,6 +56,10 @@ extension WayAppPay {
         var containerID: String {
             return transactionUUID ?? UUID().uuidString
         }
+        
+        var isRefund: Bool {
+            return refund ?? false
+        }
                 
         // Payment with Wallet card
         init(amount: Int, token: String = String()) {
@@ -104,6 +108,7 @@ extension WayAppPay {
                     if let transactions = response.result,
                         let transaction = transactions.first {
                         WayAppUtils.Log.message("REFUND HECHO!!!!=\(transaction)")
+                
                     } else {
                         WayAppPay.API.reportError(response)
                     }
@@ -112,6 +117,6 @@ extension WayAppPay {
                 }
             }
         }
-
+    
     }
 }

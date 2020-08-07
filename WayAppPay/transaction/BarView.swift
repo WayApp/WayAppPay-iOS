@@ -12,17 +12,17 @@ struct BarView: View {
     var value: CGFloat
     var cornerRadius: CGFloat
     
-    let barMaxheight: CGFloat = 200.0
+    let barMaxheight: CGFloat = 8.0
     
     var body: some View {
         VStack {
             ZStack (alignment: .bottom) {
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .frame(width: 2, height: barMaxheight)
+                    .frame(width: 10, height: barMaxheight)
                     .foregroundColor(.white)
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .frame(width: 2, height: value == 0 ? 1 : min(value, barMaxheight))
-                    .foregroundColor(value == 0 ? .black : .green)
+                    .frame(width: 10, height: value == 0 ? 1 : min(value, barMaxheight))
+                    .foregroundColor(value == 0.0 ? .black : .green)
             }.padding(.bottom, 8)
         }
     }

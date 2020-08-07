@@ -9,7 +9,9 @@
 import SwiftUI
 
 struct ProductRowView: View {
+    
     var product: WayAppPay.Product
+    //var productIndex: Int
 
     var body: some View {
         HStack {
@@ -19,12 +21,19 @@ struct ProductRowView: View {
                 Text("\(WayAppPay.priceFormatter(product.price))")
             }
         }
-        .contextMenu {
-            Button("Add to cart ➕") {
-                WayAppPay.session.shoppingCart.addProduct(self.product)
-            }
+        .onTapGesture {
+            WayAppPay.session.shoppingCart.addProduct(self.product)
         }
+        .contextMenu {
+            NavigationLink(destination: ProductDetailView(product: self.product)) {
+                Text("Detail Product")
+            }
+            Button("Delete Product") {
+                self.product.delete()
+            }
+        
     }
+}
 }
 
 struct ProductRowView_Previews: PreviewProvider {
