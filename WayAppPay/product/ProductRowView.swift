@@ -15,25 +15,25 @@ struct ProductRowView: View {
 
     var body: some View {
         HStack {
-            ImageView(withURL: product.image)
-            VStack(alignment: .leading, spacing: 1.0) {
-                Text(product.name ?? WayAppPay.Product.defaultName)
-                Text("\(WayAppPay.priceFormatter(product.price))")
+            HStack(alignment: .center, spacing: 3.0) {
+                ImageView(withURL: product.image)
+                VStack(alignment: .leading, spacing: 1.0) {
+                    Text(product.name ?? WayAppPay.Product.defaultName)
+                    Text("\(WayAppPay.priceFormatter(product.price))")
+                }
             }
+            Spacer()
         }
+        .contentShape(Rectangle())
         .onTapGesture {
             WayAppPay.session.shoppingCart.addProduct(self.product)
         }
         .contextMenu {
             NavigationLink(destination: ProductDetailView(product: self.product)) {
-                Text("Detail Product")
+                Text("Detail")
             }
-            Button("Delete Product") {
-                self.product.delete()
-            }
-        
+        }
     }
-}
 }
 
 struct ProductRowView_Previews: PreviewProvider {

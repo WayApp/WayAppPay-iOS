@@ -30,6 +30,11 @@ extension WayAppPay {
             }
         }
         
+        enum RefundState {
+            case none, success, failure
+        }
+              
+        @Published var refundState: RefundState = .none
         @Published var products = Container<Product>()
         @Published var selectedAccount: Int = 0
         @Published var accounts = Container<Account>()
@@ -65,7 +70,7 @@ extension WayAppPay {
         var merchantUUID: String? {
             return merchants.isEmpty ? nil : merchants[seletectedMerchant].merchantUUID
         }
-                
+        
         func saveLoginData(password: String) {
             // Saves account
             if let account = account,

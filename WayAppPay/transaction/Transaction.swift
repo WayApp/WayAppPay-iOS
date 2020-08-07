@@ -107,13 +107,25 @@ extension WayAppPay {
                 if case .success(let response?) = response {
                     if let transactions = response.result,
                         let transaction = transactions.first {
+                        DispatchQueue.main.async {
+                            WayAppPay.session.transactions.addAsFirst(transaction)
+                            WayAppPay.session.refundState = .success
+                        }
                         WayAppUtils.Log.message("REFUND HECHO!!!!=\(transaction)")
-                
                     } else {
+                        DispatchQueue.main.async {
+                            WayAppPay.session.refundState = .failure
+                        }
                         WayAppPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
+                    DispatchQueue.main.async {
+                        WayAppPay.session.refundState = .failure
+                    }
                     WayAppUtils.Log.message(error.localizedDescription)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                    WayAppPay.session.refundState = .none
                 }
             }
         }
