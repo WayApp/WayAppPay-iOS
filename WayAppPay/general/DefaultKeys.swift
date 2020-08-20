@@ -11,7 +11,6 @@ import Foundation
 extension WayAppPay {
     public enum DefaultKey: String {
         // Not session related
-        case REMEMBER_EMAIL // Stores the email for biometrics login
         case EMAIL // Stores the email for biometrics login
         // Session related
         case ACCOUNT // Stores the user account while in session

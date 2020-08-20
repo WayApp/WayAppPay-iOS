@@ -15,6 +15,7 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
+                    WayAppUtils.Log.message("********************** Session: didSet")
                     showAuthenticationView = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
                 }
@@ -43,6 +44,7 @@ extension WayAppPay {
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
+        @Published var loginError: Bool = false
         
         init() {
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
@@ -96,7 +98,14 @@ extension WayAppPay {
                     return
             }
             showAuthenticationView = true
-            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.ACCOUNT.rawValue)
+            WayAppPay.DefaultKey.resetSessionKeys()
+            /*
+            session.merchants.empty()
+            session.transactions.empty()
+            session.products.empty()
+            session.seletectedMerchant = 0
+            session.shoppingCart.empty()
+            */
             do {
                 try Account.deletePassword(password, forEmail: email)
             } catch {

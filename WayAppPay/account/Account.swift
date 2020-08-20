@@ -153,6 +153,9 @@ extension WayAppPay {
                             session.saveLoginData(password: pin)
                         }
                     } else {
+                        DispatchQueue.main.async {
+                            session.loginError = true
+                        }
                         WayAppPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {

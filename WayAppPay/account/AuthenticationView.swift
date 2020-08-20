@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct AuthenticationView: View {
+    @EnvironmentObject private var session: WayAppPay.Session
     @State private var email: String = UserDefaults.standard.string(forKey: WayAppPay.DefaultKey.EMAIL.rawValue) ?? "" {
         didSet {
             UserDefaults.standard.set(email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
@@ -17,6 +18,7 @@ struct AuthenticationView: View {
     }
     @State private var pin: String = ""
     @State private var forgotPIN = false
+
     @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
 
     private let imageSize: CGFloat = 120.0
@@ -82,6 +84,12 @@ struct AuthenticationView: View {
             .padding(.bottom, keyboardObserver.keyboardHeight)
             .animation(.easeInOut(duration: 0.3))
             .disabled(shouldSigninButtonBeDisabled)
+            .alert(isPresented: $session.loginError) {
+                Alert(title: Text("Login error"),
+                      message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
+                      dismissButton: .default(Text("OK")))
+            }
+
         }
         .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
         .padding()
