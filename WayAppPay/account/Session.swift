@@ -6,21 +6,27 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import Combine
+import Network
 import SwiftUI
 
 extension WayAppPay {
     
     final class Session: ObservableObject {
+        @Published var afterBanks = AfterBanks()
+        
         @Published var account: Account? {
             didSet {
                 if let account = account {
                     WayAppUtils.Log.message("********************** Session: didSet")
+                    account.getCards()
                     showAuthenticationView = false
+                    doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
                 }
             }
         }
+        @Published var cards = Container<Card>()
+        @Published var issuers = Container<Issuer>()
         @Published var merchants = Container<Merchant>()
         @Published var seletectedMerchant: Int = 0 {
             didSet {
@@ -35,6 +41,7 @@ extension WayAppPay {
             case none, success, failure
         }
               
+        //TODO: review the need to use @Published for these variables
         @Published var refundState: RefundState = .none
         @Published var products = Container<Product>()
         @Published var selectedAccount: Int = 0
@@ -45,8 +52,17 @@ extension WayAppPay {
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
         @Published var loginError: Bool = false
+        var doesUserHasMerchantAccount: Bool = false
+
+        private var networkMonitor = NWPathMonitor()
+        var isNetworkAvailable = false
         
         init() {
+            self.networkMonitor.pathUpdateHandler = { path in
+                self.isNetworkAvailable = (path.status == .satisfied)
+                WayAppUtils.Log.message("********************** Network connection status CHANGED")
+
+            }
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
                 self.showAuthenticationView = false

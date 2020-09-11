@@ -48,7 +48,9 @@ extension WayAppPay {
         var refund: Bool?
         var creationDate: Date?
         var lastUpdateDate: Date?
-        
+        var paymentId: String?
+        var follow: String?
+
         var id: String {
             return transactionUUID ?? UUID().uuidString
         }

@@ -17,6 +17,8 @@ extension String: ContainerProtocol {
 struct SettingsView: View {
     @EnvironmentObject var session: WayAppPay.Session
     @State private var changePIN = false
+    @State private var showBankAuthenticationView = false
+    @State private var authURL: String? = nil
 
     var body: some View {
         NavigationView {
@@ -27,7 +29,7 @@ struct SettingsView: View {
                     } else {
                         Picker(selection: $session.seletectedMerchant, label: Text("Merchant")) {
                             ForEach(0..<session.merchants.count) {
-                                Text(self.session.merchants[$0].name ?? "SILVANA")
+                                Text(self.session.merchants[$0].name ?? "NAME")
                             }
                         }
                     }
@@ -44,6 +46,13 @@ struct SettingsView: View {
                     }
                 }
                 Section(header: Text("Account: \(session.account?.email ?? "no email")")) {
+                    if session.doesUserHasMerchantAccount {
+                        NavigationLink(
+                            destination: CardsView()
+                        ) {
+                            Text("Payment token")
+                        }
+                    }
                     VStack {
                         Button(action: {
                             self.changePIN = true

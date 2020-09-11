@@ -98,5 +98,4 @@ struct WayAppPay {
 
     struct Constant {
     }
-
 }

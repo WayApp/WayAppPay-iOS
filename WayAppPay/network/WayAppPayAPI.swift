@@ -6,7 +6,7 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 
 extension WayAppPay {
     /*
@@ -18,6 +18,7 @@ extension WayAppPay {
      * 5) Only if it PATCH, PUT or POST add the body
      */
     enum API: HTTPCallEndpoint {
+        
         static var jsonEncoder: JSONEncoder {
             return WayAppPay.jsonEncoder
         }
@@ -30,7 +31,7 @@ extension WayAppPay {
         typealias PIN = String
         typealias PAN = String
         typealias Day = String
-
+        
         public enum ResponseError {
              case INVALID_SERVER_DATA, MALFORMED_URL, NETWORK_UNAVAILABLE, INVALID_JSON, FORBIDDEN, NOT_FOUND, INTERNAL_ERROR
          }
@@ -85,6 +86,8 @@ extension WayAppPay {
         case getCardTransactions(String, PAN) // GET
         case getTransactionPayer(String, String, String) // GET
         case walletPayment(String, String, PaymentTransaction) // POST
+        case createCard(String, Card) // POST
+        case editCard(String, Card) // PATCH
         //Report
         case getTransaction(String, String, String) // GET
         case refundTransaction(String, String, String, PaymentTransaction) // POST
@@ -93,6 +96,12 @@ extension WayAppPay {
         case account(Account) // POST
         case editAccount(Account, UIImage?) // PATCH
         case sendEmail(String, String, SendEmail) // POST
+        // Issuers
+        case getIssuers // GET
+        // Banks
+        case getBanks(String) // GET
+        case getConsentDetail(String) // GET
+        case getConsent(String, AfterBanks.ConsentRequest) // POST
 
         private var path: String {
             switch self {
@@ -117,6 +126,8 @@ extension WayAppPay {
             case .getCards(let accountUUID): return "/accounts/\(accountUUID)/cards/"
             case .getCardDetail(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/"
             case .getCardTransactions(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/transactions/"
+            case .createCard(let accountUUID, _): return "/accounts/\(accountUUID)/cards/"
+            case .editCard(let accountUUID, let card): return "/accounts/\(accountUUID)/cards/\(card.pan)/"
             // Transactions
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .walletPayment(let merchantUUID, let accountUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
@@ -124,6 +135,12 @@ extension WayAppPay {
             case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/refunds/"
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
+            // Issuers
+            case .getIssuers: return "/issuers/"
+            // Banks
+            case .getBanks: return "/banks/lists/"
+            case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
+            case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
             // TRASH
             case .account: return "/accounts/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
@@ -152,6 +169,8 @@ extension WayAppPay {
             // Card
             case .getCards(let accountUUID): return accountUUID
             case .getCardDetail(let accountUUID, let pan): return accountUUID + "/" + pan
+            case .createCard(let accountUUID, _): return accountUUID
+            case .editCard(let accountUUID, let card): return accountUUID + "/" + card.pan
             // PaymentTransaction
             case .getCardTransactions(let accountUUID, let pan): return accountUUID + "/" + pan
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
@@ -160,24 +179,12 @@ extension WayAppPay {
             case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
             case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
             case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
+            case .getIssuers: return ""
+            // Banks
+            case .getBanks: return ""
+            case .getConsentDetail(let consentId): return consentId
+            case .getConsent(let accountUUID, _): return accountUUID
             default: return ""
-            }
-        }
-        static func checkForNetworkError(_ error: HTTPCall.Error, view: UIViewController) {
-            DispatchQueue.main.async {
-                if error == .noNetwork {
-                    let oopsVC = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "OopsVC")
-                    view.present(oopsVC, animated: true, completion: nil)
-                } else {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
-            }
-        }
-        
-        static func checkNetwokAndDisplayOops(from view: UIViewController) {
-            if !HTTPCall.isNetworkReachable() {
-                let oopsVC = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "OopsVC")
-                view.present(oopsVC, animated: true, completion: nil)
             }
         }
         
@@ -185,11 +192,10 @@ extension WayAppPay {
             // Need this function for future support of distinct APIs
             httpCall(type: decodingType, completionHandler: result)
         }
-        
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -197,7 +203,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -206,7 +212,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .updateProduct, .editAccount:
+            case .updateProduct, .editAccount, .editCard:
                 // Response with data
                 HTTPCall.PATCH(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -235,12 +241,21 @@ extension WayAppPay {
                 }
             }
         }
+        
+        var queryParameters: String {
+            switch self {
+            case.getBanks(let countryCode):
+                return "?countryCode=\(countryCode)"
+            default:
+                return ""
+            }
+        }
 
         var url: URL? {
             let timestamp = Date().timeIntervalSince1970
             let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
             let baseURL = OperationalEnvironment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
-            return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey))
+            return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey) + queryParameters)
         }
                 
         var body: (String, Data)? {
@@ -301,6 +316,18 @@ extension WayAppPay {
             case .sendEmail(_, _, let sendEmail):
                 WayAppUtils.Log.message("BODY: sendEmail: \(sendEmail)")
                 if let part = HTTPCall.BodyPart(sendEmail, name: "email") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createCard(_, let card), .editCard(_, let card):
+                if let part = HTTPCall.BodyPart(card, name: "card") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .getConsent(_, let consentRequest):
+                if let part = HTTPCall.BodyPart(consentRequest, name: "consentRequest") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }

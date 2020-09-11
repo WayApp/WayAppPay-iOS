@@ -6,7 +6,7 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 
 extension WayAppPay {
     /*
@@ -78,17 +78,6 @@ extension WayAppPay {
             switch self {
                 case .postCheckin(let token): return WalletAPI.customerUUID + "/" + token
                 case .getCheckins(let token): return WalletAPI.customerUUID + "/" + token
-            }
-        }
-        
-        static func checkForNetworkError(_ error: HTTPCall.Error, view: UIViewController) {
-            DispatchQueue.main.async {
-                if error == .noNetwork {
-                    let oopsVC = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "OopsVC")
-                    view.present(oopsVC, animated: true, completion: nil)
-                } else {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
             }
         }
         

@@ -180,6 +180,7 @@ extension WayAppPay {
                                 // Display settings Tab so user can select merchant
                                 session.selectedTab = .settings
                             } else {
+                                session.doesUserHasMerchantAccount = true
                                 session.merchants.setTo(merchants)
                                 if count == 1 {
                                     session.seletectedMerchant = 0

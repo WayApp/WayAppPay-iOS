@@ -66,4 +66,35 @@ enum OperationalEnvironment {
             return "be5d8786bcc34c55933869df022f0d0ca9c3f30a"
         }
     }
+    
+    // AfterBanks
+    
+    static var afterBanksConsentCallback = "https://api.staging.wayapp.com/pay/v1/afterbanks/consentCallback"
+    static var afterBanksPaymentCallback = "https://api.staging.wayapp.com/pay/v1/afterbanks/paymentCallback"
+
+    static var afterBanksBaseURL: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "https://apipsd2.afterbanks.com"
+        case .staging:
+            return "https://apipsd2.afterbanks.com"
+        }
+    }
+    
+    static var afterBanksServiceKey: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "x7zm3tzvemfecakd"
+        case .staging:
+            return "s2be1zyaihpmhgzy"
+        }
+    }
+
+    static var afterBanksToken: String {
+        return "sandbox.8wdg03rh"
+    }
+    
+    static var afterBanksIBANs: [String] {
+        return["ES8401826450000201500191", "ES1801822200120201933578", "ES2501822200160201933547", "ES4901822200110201933554", "ES7301826208302012068108"]
+    }
 }

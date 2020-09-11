@@ -162,6 +162,24 @@ extension WayAppPay {
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
             }
+        } // load
+        
+        func getCards() {
+            WayAppPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
+                if case .success(let response?) = response {
+                    if let cards = response.result {
+                        DispatchQueue.main.async {
+                            session.cards.setTo(cards)
+                            WayAppPay.session.afterBanks.getBanks()
+                            WayAppPay.Issuer.get()
+                        }
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
         }
         
     }

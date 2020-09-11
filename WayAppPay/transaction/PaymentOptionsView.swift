@@ -86,7 +86,7 @@ struct PaymentOptionsView: View {
                                     .background(Color.white)
                                 } // vstack
                         } // sheet
-
+                        
                     } // Grou
                     Divider()
                     Text("NFC").font(.headline)
@@ -158,20 +158,20 @@ struct PaymentOptionsView: View {
                                 Text("Write token")
                             }
                         })
-                        .sheet(isPresented: $showNFCScannerForUpdate) {
-                            VStack {
-                                NFCCodeCaptureView(showCodePicker: self.$showNFCScannerForUpdate, code: self.$scannedCode, tagUpdate: self.scannedCode!, completion: self.handleQRScanUpdate)
-                                HStack {
-                                    Text("Write token")
-                                        .foregroundColor(Color.black)
-                                        .fontWeight(.medium)
-                                    Spacer()
-                                    Button("Done") { self.showNFCScannerForUpdate = false }
-                                }
-                                .frame(height: 40.0)
-                                .padding()
-                                .background(Color.white)
-                            } // vstack
+                            .sheet(isPresented: $showNFCScannerForUpdate) {
+                                VStack {
+                                    NFCCodeCaptureView(showCodePicker: self.$showNFCScannerForUpdate, code: self.$scannedCode, tagUpdate: self.scannedCode!, completion: self.handleQRScanUpdate)
+                                    HStack {
+                                        Text("Write token")
+                                            .foregroundColor(Color.black)
+                                            .fontWeight(.medium)
+                                        Spacer()
+                                        Button("Done") { self.showNFCScannerForUpdate = false }
+                                    }
+                                    .frame(height: 40.0)
+                                    .padding()
+                                    .background(Color.white)
+                                } // vstack
                         } // sheet
                     } // Group
                 } // vstack
