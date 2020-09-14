@@ -14,25 +14,40 @@ class AuthenticationViewModel: NSObject, ObservableObject, ASWebAuthenticationPr
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return ASPresentationAnchor()
     }
-    
+        
     func signIn(consent: AfterBanks.ConsentResponse) {
+        WayAppUtils.Log.message("********************** CARD SIGNIN")
         guard let authURL = URL(string: consent.follow) else { return }
         let scheme = "WAP"
         
         // Initialize the session.
         let session = ASWebAuthenticationSession(url: authURL, callbackURLScheme: scheme) { callbackURL, error in
-            WayAppUtils.Log.message("COMPLETION:")
+            WayAppUtils.Log.message("COMPLETION: START")
             if let error = error {
+                WayAppUtils.Log.message("COMPLETION: ERROR")
                 WayAppUtils.Log.message(error.localizedDescription)
             }
             guard let callbackURL = callbackURL else {
                 WayAppUtils.Log.message(error?.localizedDescription ?? "Missing callbackURL")
                 return
             }
+            WayAppUtils.Log.message("COMPLETION: OKAY")
             WayAppUtils.Log.message("callbackURL=\(callbackURL.absoluteString)")
             let queryItems = URLComponents(string: callbackURL.absoluteString)?.queryItems
             WayAppUtils.Log.message("queryItems=\(queryItems?.description ?? "NO QUERY ITEMS")")
             //  let token = queryItems?.filter({ $0.name == "token" }).first?.value
+            WayAppPay.API.getConsentDetail(consent.consentId).fetch(type: [AfterBanks.Consent].self) { response in
+                if case .success(let response?) = response {
+                    if let consents = response.result,
+                        let consent = consents.first {
+                        WayAppUtils.Log.message("******** CONSENT=\(consent)")
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
             
         }
         session.presentationContextProvider = self
@@ -94,7 +109,7 @@ struct NewCardView: View {
     }
     
     private func postpaidOptions() -> some View {
-        return VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
+        return Section(header: Text("Bank account")) {
             DatePicker(selection: $validUntil, displayedComponents: .date) {
                 Text("Consent valid until")
             }
@@ -111,11 +126,9 @@ struct NewCardView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             Button(action: {
-                DispatchQueue.main.async {
-                    self.isAPICallOngoing = true
-                }
+                self.createCard()
             }, label: { Text("Grant consent") })
-        } // VStack
+        } // Section
     } // func
     
     /*
@@ -176,10 +189,12 @@ struct NewCardView: View {
             }
         case .POSTPAID:
             WayAppPay.Card.create(alias: self.alias, type: .POSTPAID) { error, card in
+                DispatchQueue.main.async {
+                    self.isAPICallOngoing = false
+                }
                 if error != nil {
                     DispatchQueue.main.async {
                         self.showUpdateResultAlert = true
-                        self.isAPICallOngoing = false
                         WayAppUtils.Log.message("********************** \(error!.localizedDescription)")
                     }
                 } else if let card = card, let accountUUID = self.session.accountUUID {
@@ -189,15 +204,32 @@ struct NewCardView: View {
                                                        service: "sandbox",
                                                        validUntil: self.dateFormatter.string(from: self.validUntil)) {error, consent in
                                                         if let error = error {
+                                                            WayAppUtils.Log.message("********************** CARD CONSENT ERROR")
                                                             WayAppUtils.Log.message("********************** \(error.localizedDescription)")
                                                         } else if let consent = consent {
-                                                            self.authenticationViewModel.signIn(consent: consent)
+                                                            WayAppUtils.Log.message("********************** CARD CONSENT SUCCESSFULLY")
+                                                            DispatchQueue.main.async {
+                                                                self.authenticationViewModel.signIn(consent: consent)
+                                                            }
                                                         }
                     }
                 }
             }
         case .CREDIT:
             break;
+        }
+    }
+    
+    struct ActivityIndicator: UIViewRepresentable {
+        
+        typealias UIView = UIActivityIndicatorView
+        var isAnimating: Bool
+        fileprivate var configuration = { (indicator: UIView) in }
+
+        func makeUIView(context: UIViewRepresentableContext<Self>) -> UIView { UIView() }
+        func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<Self>) {
+            isAnimating ? uiView.startAnimating() : uiView.stopAnimating()
+            configuration(uiView)
         }
     }
     
@@ -221,7 +253,10 @@ struct NewCardView: View {
                         ForEach(0..<WayAppPay.Card.PaymentFormat.allCases.count, id: \.self) {
                             Text(WayAppPay.Card.PaymentFormat.allCases[$0].rawValue)
                         }
-                    }.pickerStyle(SegmentedPickerStyle())
+                    }.pickerStyle(SegmentedPickerStyle())                    
+                }
+                if isAPICallOngoing {
+                    ActivityIndicator(isAnimating: true)
                 }
                 if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
                     Section(header: Text("Prepaid")) {
@@ -229,9 +264,7 @@ struct NewCardView: View {
                     }
                 }
                 if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID {
-                    Section(header: Text("Bank account")) {
-                        postpaidOptions()
-                    }
+                    postpaidOptions()
                 }
             }
             .navigationBarTitle(Text("New card"), displayMode: .inline)
@@ -246,7 +279,6 @@ struct NewCardView: View {
                 }
             .disabled(shouldSaveButtonBeDisabled)
             ) // navigationBarItems
-
         }
     }
 }
