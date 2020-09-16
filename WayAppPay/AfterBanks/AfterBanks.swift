@@ -10,10 +10,6 @@ import Foundation
 import AuthenticationServices
 
 final class AfterBanks: ObservableObject {
-    @Published var banks = Container<SupportedBank>()
-    var follow: String?
-    var consentId: String?
-    
     struct ConsentResponse: Codable {
         var follow: String
         var consentId: String
@@ -49,14 +45,14 @@ final class AfterBanks: ObservableObject {
         }
     } // SupportedBank
     
-    func getBanks(forCountryCode: String = "ES") {
+    static func getBanks(forCountryCode: String = "ES") {
         WayAppUtils.Log.message("******** STARTING getBanks")
         WayAppPay.API.getBanks(forCountryCode).fetch(type: [[SupportedBank]].self) { response in
             if case .success(let response?) = response {
                 if let banks = response.result?.first {
                     WayAppUtils.Log.message("******** BANKS=\(banks)")
                     DispatchQueue.main.async {
-                        self.banks.setTo(banks)
+                        WayAppPay.session.banks.setTo(banks)
                     }
                 } else {
                     WayAppPay.API.reportError(response)
@@ -67,13 +63,11 @@ final class AfterBanks: ObservableObject {
         }
     }
 
-    func getConsentFor(service: String = "sandbox") {
+    static func getConsentFor(service: String = "sandbox") {
         API.getUserAccountConsent(service).fetch(type: ConsentResponse.self) { response in
             if case .success(let response?) = response {
                 WayAppUtils.Log.message("******** CONSENT=\(response.consentId)")
                 WayAppUtils.Log.message("******** FOLLOW=\(response.follow)")
-                self.follow = response.follow
-                self.consentId = response.consentId
                 DispatchQueue.main.async {
                     //self.bankAuthentication(authURL: response.follow)
                 }
@@ -83,7 +77,7 @@ final class AfterBanks: ObservableObject {
         }
     }
 
-    func getConsent(id: String) {
+    static func getConsent(id: String) {
         WayAppPay.API.getConsentDetail(id).fetch(type: [Consent].self) { response in
             if case .success(let response?) = response {
                 if let consents = response.result,
@@ -98,9 +92,9 @@ final class AfterBanks: ObservableObject {
         }
     }
 
-    func getConsent(accountUUID: String, pan: String, service: String, validUntil: String, completion: @escaping (Error?, ConsentResponse?) -> Void) {
+    static func getConsent(accountUUID: String, service: String, validUntil: String, completion: @escaping (Error?, ConsentResponse?) -> Void) {
         WayAppUtils.Log.message("********************** GET CONSENT")
-        let consentRequest = ConsentRequest(service: service, validUntil: validUntil, urlRedirect: "WAP://pay.wayapp.com", pan: pan)
+        let consentRequest = ConsentRequest(service: service, validUntil: validUntil, urlRedirect: "WAP://pay.wayapp.com", pan: "pan")
         
         WayAppPay.API.getConsent(accountUUID, consentRequest).fetch(type: [ConsentResponse].self) { response in
             if case .success(let response?) = response {
@@ -126,8 +120,6 @@ final class AfterBanks: ObservableObject {
             if case .success(let response?) = response {
                 WayAppUtils.Log.message("******** CONSENT=\(response.paymentId)")
                 WayAppUtils.Log.message("******** FOLLOW=\(response.follow)")
-                self.follow = response.follow
-                self.consentId = response.paymentId
                 DispatchQueue.main.async {
                     //self.bankAuthentication(authURL: response.follow)
                 }

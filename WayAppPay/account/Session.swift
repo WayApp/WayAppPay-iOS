@@ -12,8 +12,7 @@ import SwiftUI
 extension WayAppPay {
     
     final class Session: ObservableObject {
-        @Published var afterBanks = AfterBanks()
-        
+        @Published var banks = Container<AfterBanks.SupportedBank>()
         @Published var account: Account? {
             didSet {
                 if let account = account {

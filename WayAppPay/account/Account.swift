@@ -170,7 +170,7 @@ extension WayAppPay {
                     if let cards = response.result {
                         DispatchQueue.main.async {
                             session.cards.setTo(cards)
-                            WayAppPay.session.afterBanks.getBanks()
+                            AfterBanks.getBanks()
                             WayAppPay.Issuer.get()
                         }
                     } else {

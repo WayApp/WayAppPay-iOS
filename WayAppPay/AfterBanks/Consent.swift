@@ -9,6 +9,7 @@
 import Foundation
 
 extension AfterBanks {
+    
     struct GlobalPosition: Codable {
         var product: String?
         var type: String?

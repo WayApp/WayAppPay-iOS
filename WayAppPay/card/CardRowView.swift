@@ -29,6 +29,6 @@ struct CardRowView: View {
 
 struct CardRowView_Previews: PreviewProvider {
     static var previews: some View {
-        CardRowView(card: WayAppPay.Card(issuerUUID: "1234", type: .PREPAID, limitPerOperation: 100000))
+        CardRowView(card: WayAppPay.Card(issuerUUID: "1234", type: .POSTPAID, consent: nil, selectedIBAN: 0, limitPerOperation: 100000))
     }
 }

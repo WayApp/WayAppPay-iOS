@@ -7,55 +7,6 @@
 //
 
 import SwiftUI
-import AuthenticationServices
-
-class AuthenticationViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
-
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return ASPresentationAnchor()
-    }
-        
-    func signIn(consent: AfterBanks.ConsentResponse) {
-        WayAppUtils.Log.message("********************** CARD SIGNIN")
-        guard let authURL = URL(string: consent.follow) else { return }
-        let scheme = "WAP"
-        
-        // Initialize the session.
-        let session = ASWebAuthenticationSession(url: authURL, callbackURLScheme: scheme) { callbackURL, error in
-            WayAppUtils.Log.message("COMPLETION: START")
-            if let error = error {
-                WayAppUtils.Log.message("COMPLETION: ERROR")
-                WayAppUtils.Log.message(error.localizedDescription)
-            }
-            guard let callbackURL = callbackURL else {
-                WayAppUtils.Log.message(error?.localizedDescription ?? "Missing callbackURL")
-                return
-            }
-            WayAppUtils.Log.message("COMPLETION: OKAY")
-            WayAppUtils.Log.message("callbackURL=\(callbackURL.absoluteString)")
-            let queryItems = URLComponents(string: callbackURL.absoluteString)?.queryItems
-            WayAppUtils.Log.message("queryItems=\(queryItems?.description ?? "NO QUERY ITEMS")")
-            //  let token = queryItems?.filter({ $0.name == "token" }).first?.value
-            WayAppPay.API.getConsentDetail(consent.consentId).fetch(type: [AfterBanks.Consent].self) { response in
-                if case .success(let response?) = response {
-                    if let consents = response.result,
-                        let consent = consents.first {
-                        WayAppUtils.Log.message("******** CONSENT=\(consent)")
-                    } else {
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
-            }
-            
-        }
-        session.presentationContextProvider = self
-        session.prefersEphemeralWebBrowserSession = true
-        session.start()
-    }
-
-}
 
 struct NewCardView: View {
     @EnvironmentObject private var session: WayAppPay.Session
@@ -65,7 +16,8 @@ struct NewCardView: View {
     @State private var showUpdateResultAlert = false
     @State private var action: Int? = 10
     @State private var selectedCardType = 0
-    @State var authenticationViewModel = AuthenticationViewModel()
+    @State private var consent: AfterBanks.Consent?
+    @State var authenticationViewModel = WayAppPay.AuthenticationViewModel()
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -89,12 +41,19 @@ struct NewCardView: View {
     let currencies = ["EUR", "USD", "VEF"]
     @State var selectedCurrency: Int = 0
     @State var alias: String = ""
-    @State var iban: String = ""
     @State var selectedIssuer: Int = 0
     @State var selectedBank: Int = 0
+    @State private var selectedIBAN = 0
 
     var shouldSaveButtonBeDisabled: Bool {
-        return alias.isEmpty
+        if session.accountUUID == nil {
+            return true
+        }
+        switch WayAppPay.Card.PaymentFormat.allCases[selectedCardType] {
+        case .PREPAID: return alias.isEmpty
+        case .POSTPAID: return alias.isEmpty || consent == nil
+        case .CREDIT: return true
+        }
     }
         
     private func apiCallCompleted(_ error: Error?) {
@@ -113,53 +72,25 @@ struct NewCardView: View {
             DatePicker(selection: $validUntil, displayedComponents: .date) {
                 Text("Consent valid until")
             }
-            Picker(selection: $selectedBank, label: Text("Bank")) {
-                ForEach(0..<session.afterBanks.banks.count) {
-                    Text(self.session.afterBanks.banks[$0].fullname ?? self.session.afterBanks.banks[$0].service)
+            if !session.banks.isEmpty {
+                Picker(selection: $selectedBank, label: Text("Bank")) {
+                    ForEach(0..<session.banks.count) {
+                        Text(self.session.banks[$0].fullname ?? self.session.banks[$0].service)
+                    }
                 }
             }
-            HStack(alignment: .center, spacing: 12) {
-                Text("IBAN")
-                TextField("account IBAN", text: $iban)
-                    .textContentType(.none)
-                    .keyboardType(.default)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-            }
+            if consent != nil {
+                Picker(selection: $selectedIBAN, label: Text("IBAN")) {
+                    ForEach(0..<consent!.globalPosition.count) {
+                        Text((self.consent!.globalPosition[$0].description ?? "missing description") + "\n" + (self.consent!.globalPosition[$0].iban ?? "missing IBAN"))
+                    }
+                }            }
             Button(action: {
-                self.createCard()
+                self.grantConsent(accountUUID: self.session.accountUUID!)
             }, label: { Text("Grant consent") })
+            .disabled(session.banks.isEmpty || (session.accountUUID == nil))
         } // Section
     } // func
-    
-    /*
-    private func postpaidOptions() -> some View {
-        return VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
-            VStack(alignment: .trailing, spacing: WayAppPay.UI.verticalSeparation) {
-                DatePicker(selection: $validUntil, in: ...Date(), displayedComponents: .date) {
-                    Text("Consent valid until")
-                }
-                Text("Date is \(validUntil, formatter: dateFormatter)")
-                Button(action: {
-                    WayAppPay.session.afterBanks.getConsent(pan: "43ECC228-F99E-4DEB-A16F-E0B7E09A7A36", service: "sandbox", validUntil: "30-09-2020")
-                    
-                }) {
-                    Text("Test get consent")
-                }
-                Picker(selection: $action, label: Text("What is your favorite color?")) {
-                    Text("Grant").tag(0)
-                    Text("Renew").tag(1)
-                    Text("Cancel").tag(2)
-                }.pickerStyle(SegmentedPickerStyle())
-            } // VStack 2
-            .padding(.bottom, keyboardObserver.keyboardHeight)
-            .animation(.easeInOut(duration: 0.3))
-        } // VStack 1
-        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
-        .font(.headline)
-        .padding()
-
-    }
-    */
     
     private func prepaidOptions() -> some View {
         return Picker(selection: $selectedCurrency, label: Text("Currency")) {
@@ -169,70 +100,47 @@ struct NewCardView: View {
         }
     }
     
-    private func createCard() {
+    private func grantConsent(accountUUID: String) {
+        AfterBanks.getConsent(accountUUID: accountUUID,
+            //  service: self.session.afterBanks.banks[self.selectedBank].service,
+            service: "sandbox",
+            validUntil: self.dateFormatter.string(from: self.validUntil)) { error, consent in
+                if let error = error {
+                    WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
+                } else if let consent = consent {
+                    WayAppUtils.Log.message("********************** CARD CONSENT SUCCESS")
+                    DispatchQueue.main.async {
+                        self.authenticationViewModel.signIn(consent: consent) { error, consent in
+                            if let error = error {
+                                // Alert user
+                                WayAppUtils.Log.message(error.localizedDescription)
+                            } else if let consent = consent {
+                                self.consent = consent
+                                WayAppUtils.Log.message("SHOW IBANS .....FOR CONSENT=\(consent)")
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    
+    private func createCard(accountUUID: String) {
         DispatchQueue.main.async {
             self.isAPICallOngoing = true
         }
-        switch WayAppPay.Card.PaymentFormat.allCases[selectedCardType] {
-        case .PREPAID:
-            WayAppPay.Card.create(alias: self.alias, type: .POSTPAID) { error, card in
+        WayAppPay.Card.create(alias: self.alias, type: WayAppPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
+            DispatchQueue.main.async {
+                self.isAPICallOngoing = false
+            }
+            if error != nil {
                 DispatchQueue.main.async {
-                    if let error = error {
-                        self.showUpdateResultAlert = true
-                        self.isAPICallOngoing = false
-                        WayAppUtils.Log.message("********************** \(error.localizedDescription)")
-                    } else {
-                        self.presentationMode.wrappedValue.dismiss()
-                        WayAppUtils.Log.message("********************** CARD CREATION SUCCESSFULLY")
-                    }
+                    self.showUpdateResultAlert = true
+                    WayAppUtils.Log.message("********************** \(error!.localizedDescription)")
                 }
             }
-        case .POSTPAID:
-            WayAppPay.Card.create(alias: self.alias, type: .POSTPAID) { error, card in
-                DispatchQueue.main.async {
-                    self.isAPICallOngoing = false
-                }
-                if error != nil {
-                    DispatchQueue.main.async {
-                        self.showUpdateResultAlert = true
-                        WayAppUtils.Log.message("********************** \(error!.localizedDescription)")
-                    }
-                } else if let card = card, let accountUUID = self.session.accountUUID {
-                    WayAppUtils.Log.message("********************** CARD CREATION SUCCESSFULLY")
-                    self.session.afterBanks.getConsent(accountUUID: accountUUID, pan: card.pan,
-                                                     //  service: self.session.afterBanks.banks[self.selectedBank].service,
-                                                       service: "sandbox",
-                                                       validUntil: self.dateFormatter.string(from: self.validUntil)) {error, consent in
-                                                        if let error = error {
-                                                            WayAppUtils.Log.message("********************** CARD CONSENT ERROR")
-                                                            WayAppUtils.Log.message("********************** \(error.localizedDescription)")
-                                                        } else if let consent = consent {
-                                                            WayAppUtils.Log.message("********************** CARD CONSENT SUCCESSFULLY")
-                                                            DispatchQueue.main.async {
-                                                                self.authenticationViewModel.signIn(consent: consent)
-                                                            }
-                                                        }
-                    }
-                }
-            }
-        case .CREDIT:
-            break;
         }
     }
-    
-    struct ActivityIndicator: UIViewRepresentable {
         
-        typealias UIView = UIActivityIndicatorView
-        var isAnimating: Bool
-        fileprivate var configuration = { (indicator: UIView) in }
-
-        func makeUIView(context: UIViewRepresentableContext<Self>) -> UIView { UIView() }
-        func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<Self>) {
-            isAnimating ? uiView.startAnimating() : uiView.stopAnimating()
-            configuration(uiView)
-        }
-    }
-    
     var body: some View {
         NavigationView {
             Form {
@@ -256,7 +164,7 @@ struct NewCardView: View {
                     }.pickerStyle(SegmentedPickerStyle())                    
                 }
                 if isAPICallOngoing {
-                    ActivityIndicator(isAnimating: true)
+                    WayAppPay.ActivityIndicator(isAnimating: true)
                 }
                 if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
                     Section(header: Text("Prepaid")) {
@@ -270,7 +178,7 @@ struct NewCardView: View {
             .navigationBarTitle(Text("New card"), displayMode: .inline)
             .navigationBarItems(trailing:
                 Button(action: {
-                    self.createCard()
+                    self.createCard(accountUUID: self.session.accountUUID!)
                 }, label: { Text("Save") })
                 .alert(isPresented: $showUpdateResultAlert) {
                     Alert(title: Text("System error"),

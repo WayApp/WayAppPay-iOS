@@ -145,7 +145,7 @@ struct CardDetailView: View {
             .padding(.bottom, keyboardObserver.keyboardHeight)
             .animation(.easeInOut(duration: 0.3))
             .onAppear(perform: {
-                WayAppUtils.Log.message("********************** CardDetailView onAppear: WayAppPay.session.afterBanks.banks count=\(WayAppPay.session.afterBanks.banks.count)")
+                WayAppUtils.Log.message("********************** CardDetailView onAppear: WayAppPay.session.afterBanks.banks count=\(WayAppPay.session.banks.count)")
             })
             Spacer()
         }

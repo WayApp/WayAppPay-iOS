@@ -24,6 +24,20 @@ struct WayAppPay {
         static let pinTextFieldWidth: CGFloat = 120
     }
     
+    struct ActivityIndicator: UIViewRepresentable {
+        var isAnimating: Bool
+        var configuration = { (indicator: UIActivityIndicatorView) in }
+
+        func makeUIView(context: UIViewRepresentableContext<Self>) -> UIActivityIndicatorView {
+            UIActivityIndicatorView(style: .large)
+        }
+        
+        func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<Self>) {
+            isAnimating ? uiView.startAnimating() : uiView.stopAnimating()
+            configuration(uiView)
+        }
+    }
+
     class KeyboardObserver: ObservableObject {
 
       private var cancellable: AnyCancellable?
