@@ -68,7 +68,6 @@ enum OperationalEnvironment {
     }
     
     // AfterBanks
-    
     static var afterBanksConsentCallback = "https://api.staging.wayapp.com/pay/v1/afterbanks/consentCallback"
     static var afterBanksPaymentCallback = "https://api.staging.wayapp.com/pay/v1/afterbanks/paymentCallback"
 

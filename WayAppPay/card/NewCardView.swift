@@ -87,8 +87,16 @@ struct NewCardView: View {
                 }            }
             Button(action: {
                 self.grantConsent(accountUUID: self.session.accountUUID!)
-            }, label: { Text("Grant consent") })
+            }, label: {
+                Text("Grant consent")
+                    .foregroundColor(.black)
+                    .padding(.vertical)
+                    .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+            })
             .disabled(session.banks.isEmpty || (session.accountUUID == nil))
+            .background((session.banks.isEmpty || (session.accountUUID == nil)) ? Color.gray : Color.green)
+            .cornerRadius(15)
+            .animation(.easeInOut(duration: 0.3))
         } // Section
     } // func
     
@@ -143,51 +151,56 @@ struct NewCardView: View {
         
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("General")) {
-                    HStack(alignment: .center, spacing: 12) {
-                        Text("Alias")
-                        TextField("alias", text: $alias)
-                            .textContentType(.none)
-                            .keyboardType(.default)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+            ZStack {
+                Color.offWhite
+                Form {
+                    Section(header: Text("")) {
+                        HStack(spacing: 15) {
+                            Text("Alias")
+                            TextField("alias", text: $alias)
+                                .textContentType(.nickname)
+                                .keyboardType(.default)
+                        }
+                        .modifier(WayAppPay.TextFieldModifier())
+                        Picker(selection: $selectedIssuer, label: Text("Issuer")) {
+                            ForEach(0..<session.issuers.count, id: \.self) {
+                                Text(self.session.issuers[$0].name)
+                            }
+                        }
+                        Picker(selection: $selectedCardType, label: Text("Type")) {
+                            ForEach(0..<WayAppPay.Card.PaymentFormat.allCases.count, id: \.self) {
+                                Text(WayAppPay.Card.PaymentFormat.allCases[$0].rawValue)
+                            }
+                        }.pickerStyle(SegmentedPickerStyle())
                     }
-                    Picker(selection: $selectedIssuer, label: Text("Issuer")) {
-                        ForEach(0..<session.issuers.count, id: \.self) {
-                            Text(self.session.issuers[$0].name)
+                    if isAPICallOngoing {
+                        WayAppPay.ActivityIndicator(isAnimating: true)
+                    }
+                    if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
+                        Section(header: Text("Prepaid")) {
+                            prepaidOptions()
                         }
                     }
-                    Picker(selection: $selectedCardType, label: Text("Type")) {
-                        ForEach(0..<WayAppPay.Card.PaymentFormat.allCases.count, id: \.self) {
-                            Text(WayAppPay.Card.PaymentFormat.allCases[$0].rawValue)
-                        }
-                    }.pickerStyle(SegmentedPickerStyle())                    
-                }
-                if isAPICallOngoing {
-                    WayAppPay.ActivityIndicator(isAnimating: true)
-                }
-                if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
-                    Section(header: Text("Prepaid")) {
-                        prepaidOptions()
+                    if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID {
+                        postpaidOptions()
                     }
                 }
-                if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID {
-                    postpaidOptions()
-                }
-            }
-            .navigationBarTitle(Text("New card"), displayMode: .inline)
-            .navigationBarItems(trailing:
-                Button(action: {
-                    self.createCard(accountUUID: self.session.accountUUID!)
-                }, label: { Text("Save") })
-                .alert(isPresented: $showUpdateResultAlert) {
-                    Alert(title: Text("System error"),
-                          message: Text("Card could not be created. Try again later. If problem persists contact support@wayapp.com"),
-                          dismissButton: .default(Text("OK")))
-                }
-            .disabled(shouldSaveButtonBeDisabled)
-            ) // navigationBarItems
+                .background(Color.offWhite)
+                .navigationBarTitle(Text("New card"), displayMode: .inline)
+                .navigationBarItems(trailing:
+                                        Button(action: {
+                                            self.createCard(accountUUID: self.session.accountUUID!)
+                                        }, label: { Text("Save") })
+                                        .alert(isPresented: $showUpdateResultAlert) {
+                                            Alert(title: Text("System error"),
+                                                  message: Text("Card could not be created. Try again later. If problem persists contact support@wayapp.com"),
+                                                  dismissButton: .default(Text("OK")))
+                                        }
+                                        .disabled(shouldSaveButtonBeDisabled)
+                ) // navigationBarItems
+            } // Form
         }
+        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
     }
 }
 

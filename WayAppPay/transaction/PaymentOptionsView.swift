@@ -28,7 +28,7 @@ struct PaymentOptionsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
+                VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
                     Group {
                         //Divider()
                         Text("QR").font(.headline)

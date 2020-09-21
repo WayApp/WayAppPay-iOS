@@ -8,19 +8,22 @@
 
 import Network
 import SwiftUI
+import PassKit
 
 extension WayAppPay {
+    
+    static var session = Session()
     
     final class Session: ObservableObject {
         @Published var banks = Container<AfterBanks.SupportedBank>()
         @Published var account: Account? {
             didSet {
                 if let account = account {
-                    WayAppUtils.Log.message("********************** Session: didSet")
-                    account.getCards()
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
+                    WayAppUtils.Log.message("********************** Session: didSet account")
                     Merchant.getMerchantsForAccount(account.accountUUID)
+                    Card.getCards(for: account.accountUUID)
                 }
             }
         }
@@ -46,7 +49,7 @@ extension WayAppPay {
         @Published var selectedAccount: Int = 0
         @Published var accounts = Container<Account>()
         @Published var showAuthenticationView: Bool = true
-        @Published var selectedTab: MainView.Tab = .amount
+        @Published var selectedTab: MainView.Tab = .cards
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
@@ -56,15 +59,29 @@ extension WayAppPay {
         private var networkMonitor = NWPathMonitor()
         var isNetworkAvailable = false
         
+        let pkLibrary = PKPassLibrary()
+        var passes = [PKPass]()
+
         init() {
             self.networkMonitor.pathUpdateHandler = { path in
                 self.isNetworkAvailable = (path.status == .satisfied)
-                WayAppUtils.Log.message("********************** Network connection status CHANGED")
-
             }
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
                 self.showAuthenticationView = false
+            }
+            if let data = UserDefaults.standard.data(forKey: WayAppPay.DefaultKey.CARDS.rawValue),
+               let cards = try? WayAppPay.jsonDecoder.decode(Container<Card>.self, from: data) {
+                self.cards.setTo(cards)
+            } else {
+                WayAppUtils.Log.message("********************** ERROR  Loading cards from WayAppPay.DefaultKey.CARDS.rawValue")
+            }
+            if PKPassLibrary.isPassLibraryAvailable() {
+                passes = pkLibrary.passes()
+                passes = passes.filter({
+                    $0.passTypeIdentifier == "pass.com.wayapp.pay"
+                })
+                WayAppUtils.Log.message("++++++++ PASSES count=\(passes.count), passes=\(passes)")
             }
         }
         
@@ -120,7 +137,8 @@ extension WayAppPay {
             session.products.empty()
             session.seletectedMerchant = 0
             session.shoppingCart.empty()
-            */
+ */
+            session.cards.empty()
             do {
                 try Account.deletePassword(password, forEmail: email)
             } catch {
@@ -128,7 +146,4 @@ extension WayAppPay {
             }
         }
     }
-
-    static var session = Session()
-
 }

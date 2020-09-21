@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct CardDetailView: View {
     @EnvironmentObject private var session: WayAppPay.Session

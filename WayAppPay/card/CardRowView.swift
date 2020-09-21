@@ -7,18 +7,21 @@
 //
 
 import SwiftUI
+import PassKit
 
 struct CardRowView: View {
-        var card: WayAppPay.Card
+        var pass: PKPass
         //var productIndex: Int
 
         var body: some View {
             HStack {
-                HStack(alignment: .center, spacing: 3.0) {
-                    Image(systemName: "creditcard")
+                HStack(spacing: 8.0) {
+                    Image(uiImage: pass.icon)
+                        .resizable()
+                        .frame(width: 30, height: 30)
                     VStack(alignment: .leading, spacing: 1.0) {
-                        Text(card.alias ?? WayAppPay.Card.defaultName)
-                        Text("\(WayAppPay.priceFormatter(card.balance?.balance ?? 0))")
+                        Text(pass.alias ?? WayAppPay.Card.defaultName)
+                        //Text("\(WayAppPay.priceFormatter(card.balance?.balance ?? 0))")
                     }
                 }
                 Spacer()
@@ -29,6 +32,6 @@ struct CardRowView: View {
 
 struct CardRowView_Previews: PreviewProvider {
     static var previews: some View {
-        CardRowView(card: WayAppPay.Card(issuerUUID: "1234", type: .POSTPAID, consent: nil, selectedIBAN: 0, limitPerOperation: 100000))
+        CardRowView(pass: PKPass())
     }
 }

@@ -9,9 +9,90 @@
 import AVFoundation
 import SwiftUI
 import Combine
+import PassKit
+extension Color {
+    static let offWhite = Color(red: 233 / 255, green: 242 / 255, blue: 252 / 255)
+}
+
+extension PKPass {
+    var alias: String? {
+        if let userInfo = self.userInfo as? [String : String],
+        let alias = userInfo["alias"] {
+            return alias
+        }
+        return nil
+    }
+    
+    var pan: String? {
+        if let userInfo = self.userInfo as? [String : String],
+        let pan = userInfo["pan"] {
+            return pan
+        }
+        return nil
+    }
+}
 
 struct WayAppPay {
+    struct LazyView<Content: View>: View {
+        let build: () -> Content
+        init(_ build: @autoclosure @escaping () -> Content) {
+            self.build = build
+        }
+        var body: Content {
+            build()
+        }
+    }
+
+    struct TextFieldModifier: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .padding()
+                .background(Color.offWhite)
+                .cornerRadius(15)
+                .foregroundColor(.black)
+                .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color.black.opacity(0.05),lineWidth: 4)
+                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: 5, y: 5)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: -5, y: -5)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                )
+        }
+    }
     
+    struct ButtonModifier: ButtonStyle {
+        func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+            MyButton(configuration: configuration)
+        }
+
+        struct MyButton: View {
+            let configuration: ButtonStyle.Configuration
+            @Environment(\.isEnabled) private var isEnabled: Bool
+            
+            var body: some View {
+                configuration.label
+                    .font(.headline)
+                    .background(isEnabled ? Color.green : Color.gray)
+                    .cornerRadius(15)
+                    .overlay(
+                        VStack {
+                            if configuration.isPressed {
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.black.opacity(0.05),lineWidth: 4)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: -5, y: -5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: -5, y: -5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+
+                            }
+                        }
+                    )
+                    .shadow(color: Color.black.opacity(configuration.isPressed ? 0 : 0.2), radius: 5, x: -5, y: -5)
+                    .shadow(color: Color.white.opacity(configuration.isPressed ? 0 : 0.6), radius: 5, x: -5, y: -5)
+            }
+        }
+    }
     struct UI {
         static let paymentResultSuccessImage = "checkmark.circle.fill"
         static let paymentResultFailureImage = "x.circle.fill"
@@ -112,4 +193,5 @@ struct WayAppPay {
 
     struct Constant {
     }
+    
 }

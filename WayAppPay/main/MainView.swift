@@ -25,12 +25,11 @@ struct MainView: View {
     
     func merchantTabView() -> AnyView {
         let displayMerchantOption = session.doesUserHasMerchantAccount
-        
         return AnyView(
             GeometryReader { geometry in
                 ZStack(alignment: .bottomLeading) {
                     // TabView
-                    TabView(selection: self.$session.selectedTab) {
+                    TabView(selection: $session.selectedTab) {
                         if !displayMerchantOption {
                             CardsView()
                                 .tabItem {
@@ -84,7 +83,7 @@ struct MainView: View {
                                 }
                         }
                         .tag(Tab.settings)
-                    }
+                    } // TabView
                     // Badge View
                     if displayMerchantOption {
                         ZStack {

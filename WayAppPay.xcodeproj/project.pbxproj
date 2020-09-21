@@ -111,6 +111,7 @@
 		B15800F32507CA380022A687 /* CardDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = WayAppPay/product/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
 		B15800F525093B610022A687 /* NewCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCardView.swift; sourceTree = "<group>"; };
 		B164A70C24A4C13B0020ACAB /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
+		B174BAF62517489D00F51525 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayApp Pay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WayApp Pay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCB8238B092A009FF084 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -270,9 +271,9 @@
 		B12DE97223AA716D00C02657 /* card */ = {
 			isa = PBXGroup;
 			children = (
+				B1B381792505031D0008BC78 /* CardsView.swift */,
 				B15800F32507CA380022A687 /* CardDetailView.swift */,
 				B15800F525093B610022A687 /* NewCardView.swift */,
-				B1B381792505031D0008BC78 /* CardsView.swift */,
 				B1B3817B25050D350008BC78 /* CardRowView.swift */,
 				B12DE97323AA718300C02657 /* Card.swift */,
 				B1D6990523EA22A40049E1D8 /* QRScannerView.swift */,
@@ -287,9 +288,11 @@
 		B164A70B24A4C13B0020ACAB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B174BAF62517489D00F51525 /* CoreNFC.framework */,
 				B164A70C24A4C13B0020ACAB /* PassKit.framework */,
 			);
 			name = Frameworks;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		B19ACCAC238B092A009FF084 = {
@@ -298,7 +301,6 @@
 				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB7238B092A009FF084 /* WayAppPay */,
 				B19ACCB6238B092A009FF084 /* Products */,
-				B164A70B24A4C13B0020ACAB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -331,6 +333,7 @@
 				B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */,
 				B19ACCC6238B092C009FF084 /* Info.plist */,
 				B1E84AC824038A6B0093F9EC /* Localizable.strings */,
+				B164A70B24A4C13B0020ACAB /* Frameworks */,
 				B19ACCC0238B092C009FF084 /* Preview Content */,
 			);
 			path = WayAppPay;
@@ -409,7 +412,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1120;
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = WayApp;
 				TargetAttributes = {
 					B19ACCB4238B092A009FF084 = {
@@ -571,6 +574,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -632,6 +636,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

@@ -83,6 +83,7 @@ extension WayAppPay {
         // Card
         case getCards(String) // GET
         case getCardDetail(String, PAN) // GET
+        case deleteCard(String, PAN) // DELETE
         case getCardTransactions(String, PAN) // GET
         case getTransactionPayer(String, String, String) // GET
         case walletPayment(String, String, PaymentTransaction) // POST
@@ -125,6 +126,7 @@ extension WayAppPay {
             // Cards
             case .getCards(let accountUUID): return "/accounts/\(accountUUID)/cards/"
             case .getCardDetail(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/"
+            case .deleteCard(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/"
             case .getCardTransactions(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/transactions/"
             case .createCard(let accountUUID, _): return "/accounts/\(accountUUID)/cards/"
             case .editCard(let accountUUID, let card): return "/accounts/\(accountUUID)/cards/\(card.pan)/"
@@ -169,6 +171,7 @@ extension WayAppPay {
             // Card
             case .getCards(let accountUUID): return accountUUID
             case .getCardDetail(let accountUUID, let pan): return accountUUID + "/" + pan
+            case .deleteCard(let accountUUID, let pan): return accountUUID + "/" + pan
             case .createCard(let accountUUID, _): return accountUUID
             case .editCard(let accountUUID, let card): return accountUUID + "/" + card.pan
             // PaymentTransaction
@@ -230,7 +233,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .deleteAccount:
+            case .deleteAccount, .deleteCard:
                 // Response with no data
                 HTTPCall.DELETE(self).task(type: Response<T>.self) { response, error in
                     if let error = error {

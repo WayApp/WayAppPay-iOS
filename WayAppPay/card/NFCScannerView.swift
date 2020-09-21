@@ -7,7 +7,9 @@
 //
 
 import SwiftUI
+#if canImport(CoreNFC)
 import CoreNFC
+#endif
 import AVFoundation
 
 class NFCScannerCoordinator: NSObject  {
@@ -44,6 +46,7 @@ class NFCScannerCoordinator: NSObject  {
     }
 }
 
+#if canImport(CoreNFC)
 class NFCScannerViewController: UIViewController {
     var message: NFCNDEFMessage = .init(records: [])
     var session: NFCNDEFReaderSession?
@@ -132,6 +135,7 @@ struct NFCCodeCaptureView_Previews: PreviewProvider {
         NFCCodeCaptureView(showCodePicker: .constant(false), code: .constant(""), tagUpdate: nil, completion: { })
     }
 }
+
 extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
     
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
@@ -265,3 +269,4 @@ extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
     }
 
 }
+#endif

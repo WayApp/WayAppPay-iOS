@@ -18,81 +18,86 @@ struct AuthenticationView: View {
     }
     @State private var pin: String = ""
     @State private var forgotPIN = false
-
+    
     @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
-
+    
     private let imageSize: CGFloat = 120.0
     private let textFieldcornerRadius: CGFloat = 20.0
     
     private var shouldSigninButtonBeDisabled: Bool {
-      return (!WayAppUtils.validateEmail(email) || pin.count != WayAppPay.Account.PINLength)
+        return (!WayAppUtils.validateEmail(email) || pin.count != WayAppPay.Account.PINLength)
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 16.0) {
-            Image("WAP-P")
-                .resizable()
-                .frame(width: self.imageSize, height: self.imageSize, alignment: .center)
-                .scaledToFit()
-            HStack {
-                Image(systemName: "person.circle.fill")
+        ZStack {
+            Color.offWhite
+            VStack(alignment: .center, spacing: 16.0) {
+                Image("WAP-Logo")
                     .resizable()
-                    .frame(width: 30, height: 30)
-                TextField(
-                    WayAppPay.session.account?.email != nil ? WayAppPay.session.account!.email! : "email"
-                    , text: self.$email)
-                    .autocapitalization(.none)
-                    .textContentType(.emailAddress)
-                    .keyboardType(.emailAddress)
-                    .padding()
-                    .background(Color("tertiarySystemBackgroundColor"))
-                    .cornerRadius(self.textFieldcornerRadius)
-                    .modifier(WayAppPay.ClearButton(text: $email))
-            }
-            HStack {
-                Image(systemName: "lock.circle.fill")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                SecureField("PIN", text: self.$pin)
-                    .textContentType(.password)
-                    .keyboardType(.numberPad)
-                    .padding()
-                    .background(Color("tertiarySystemBackgroundColor"))
-                    .cornerRadius(self.textFieldcornerRadius)
-            }
-            HStack {
-                Spacer()
+                    .scaledToFit()
+                HStack(spacing: 15) {
+                    Image(systemName: "envelope.circle.fill")
+                        .resizable()
+                        .foregroundColor(.gray)
+                        .frame(width: 30, height: 30)
+                    TextField("email", text: self.$email)
+                        .autocapitalization(.none)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                }
+                .modifier(WayAppPay.TextFieldModifier())
+                .modifier(WayAppPay.ClearButton(text: $email))
+                HStack(spacing: 15) {
+                    Image(systemName: "lock.circle.fill")
+                        .resizable()
+                        .foregroundColor(.gray)
+                        .frame(width: 30, height: 30)
+                    SecureField("PIN", text: self.$pin)
+                        .textContentType(.password)
+                        .keyboardType(.numberPad)
+                }
+                .modifier(WayAppPay.TextFieldModifier())
+                .modifier(WayAppPay.ClearButton(text: $pin))
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        self.forgotPIN = true
+                    }) {
+                        Text("Forgot PIN?")
+                    }
+                    .sheet(isPresented: self.$forgotPIN) {
+                        EnterOTP()
+                    }
+                }
                 Button(action: {
-                    self.forgotPIN = true
+                    WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
                 }) {
-                    Text("Forgot your PIN?")
+                    Text("Sign in")
+                        .foregroundColor(.black)
+                        .padding(.vertical)
+                        .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
                 }
-                .sheet(isPresented: self.$forgotPIN) {
-                    EnterOTP()
+                /*
+                .foregroundColor(.white)
+                 .background(shouldSigninButtonBeDisabled ? Color.gray : Color.green)
+                .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+                .cornerRadius(WayAppPay.UI.buttonCornerRadius)
+    */
+                .disabled(shouldSigninButtonBeDisabled)
+                .buttonStyle(WayAppPay.ButtonModifier())
+                .padding(.bottom, keyboardObserver.keyboardHeight - 100)
+                .animation(.easeInOut(duration: 0.3))
+                .alert(isPresented: $session.loginError) {
+                    Alert(title: Text("Login error"),
+                          message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
+                          dismissButton: .default(Text("OK")))
                 }
-            }
-            Button(action: {
-                WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
-            }) {
-                Text("Sign in")
-            }
-            .font(.headline)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
-            .background(shouldSigninButtonBeDisabled ? .gray : Color("WAP-GreenDark"))
-            .cornerRadius(WayAppPay.UI.buttonCornerRadius)
-            .padding(.bottom, keyboardObserver.keyboardHeight)
-            .animation(.easeInOut(duration: 0.3))
-            .disabled(shouldSigninButtonBeDisabled)
-            .alert(isPresented: $session.loginError) {
-                Alert(title: Text("Login error"),
-                      message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
-                      dismissButton: .default(Text("OK")))
-            }
+            } // VStack
+            .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
+            .padding()
 
         }
-        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
-        .padding()
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
