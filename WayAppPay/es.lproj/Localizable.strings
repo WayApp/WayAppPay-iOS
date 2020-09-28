@@ -13,3 +13,26 @@
 /* No comment provided by engineer. */
 "Credit card" = "Tarjeta de crédito";
 
+"Products" = "Productos";
+"Reports" = "Reportes";
+"Settings" = "Ajustes";
+"Transactions" = "Transacciones";
+"Scanning" = "Escaneo";
+"Credit card" = "Tarjeta de crédito";
+"Logout" = "Cerrar sesión";
+"Change PIN" = "Cambiar PIN";
+"Merchant" = "Comercio";
+"Operating merchant" = "Comercio Operativo";
+"This month" = "Este mes";
+"Sales" = "Ventas";
+"Refunds" = "Devoluciones";
+"Select another month" = "Selecciona otro mes";
+"shopping cart description" = "descripción";
+"Name" = "Nombre";
+"Price" = "Precio";
+"Save" = "Guardar";
+"Current" = "Actual";
+"New" = "Nuevo";
+"Re-enter" = "Repetir";
+"Change" = "Cambiar";
+"Payment token" = "Token de pago";

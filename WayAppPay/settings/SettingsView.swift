@@ -71,7 +71,7 @@ struct SettingsView: View {
                         Text("Logout")
                     }
                 }
-            }.navigationBarTitle("Settings", displayMode: .inline)
+            }.navigationBarTitle("Settings")
         }
     }
 }

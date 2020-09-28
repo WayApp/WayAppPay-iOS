@@ -24,15 +24,13 @@ struct PaymentOptionsView: View {
     
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    let rowHeight: CGFloat = 40.0
+    let rowHeight: CGFloat = 60.0
     
     var body: some View {
         NavigationView {
             ZStack {
-                VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
-                    Group {
-                        //Divider()
-                        Text("QR").font(.headline)
+                Form {
+                    Section(header: Text("QR").font(.headline)) {
                         if !WayAppPay.session.shoppingCart.isEmpty {
                             Button(action: {
                                 self.showQRScannerForPayment = true
@@ -41,7 +39,7 @@ struct PaymentOptionsView: View {
                                     Image(systemName: "qrcode.viewfinder")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .frame(height: rowHeight, alignment: .center)
+                                        .frame(width: 30, height: 30, alignment: .leading)
                                     Text("Payment")
                                 }
                             })
@@ -69,7 +67,7 @@ struct PaymentOptionsView: View {
                                     Image(systemName: "plus.square")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .frame(height: rowHeight, alignment: .center)
+                                        .frame(width: 30, height: 30, alignment: .leading)
                                     Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount)!)")
                                 }
                             })
@@ -96,7 +94,7 @@ struct PaymentOptionsView: View {
                                 Image(systemName: "checkmark.rectangle")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: rowHeight, alignment: .center)
+                                    .frame(width: 30, height: 30, alignment: .leading)
                                 Text("Checkin")
                             }
                         })
@@ -115,11 +113,8 @@ struct PaymentOptionsView: View {
                                 .background(Color.white)
                             } // vstack
                         } // sheet
-                        
-                    } // Grou
-                    Divider()
-                    Text("NFC").font(.headline)
-                    Group {
+                    } // Section
+                    Section(header: Text("NFC").font(.headline)) {
                         if !WayAppPay.session.shoppingCart.isEmpty {
                             Button(action: {
                                 self.showNFCScannerForPayment = true
@@ -128,7 +123,7 @@ struct PaymentOptionsView: View {
                                     Image(systemName: "dot.radiowaves.right")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .frame(height: rowHeight, alignment: .center)
+                                        .frame(width: 30, height: 30, alignment: .leading)
                                     Text("Payment")
                                 }
                             })
@@ -155,7 +150,7 @@ struct PaymentOptionsView: View {
                                 Image(systemName: "camera")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: rowHeight, alignment: .center)
+                                    .frame(width: 30, height: 30, alignment: .leading)
                                 Text("Read token")
                             }
                         })
@@ -183,7 +178,7 @@ struct PaymentOptionsView: View {
                                 Image(systemName: "square.and.pencil")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: rowHeight, alignment: .center)
+                                    .frame(width: 30, height: 30, alignment: .leading)
                                 Text("Write token")
                             }
                         })
@@ -202,9 +197,8 @@ struct PaymentOptionsView: View {
                                 .background(Color.white)
                             } // vstack
                         } // sheet
-                    } // Group
-                } // vstack
-                .padding()
+                    } // Section
+                } // Form
                 if showAlert {
                     Image(systemName: wasPaymentSuccessful ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
                         .resizable()
