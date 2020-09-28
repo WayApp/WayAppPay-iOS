@@ -89,9 +89,9 @@ extension WayAppPay {
         case walletPayment(String, String, PaymentTransaction) // POST
         case createCard(String, Card) // POST
         case editCard(String, Card) // PATCH
+        case refundTransaction(String, String, String, PaymentTransaction) // POST
         //Report
         case getTransaction(String, String, String) // GET
-        case refundTransaction(String, String, String, PaymentTransaction) // POST
         case getMonthReportID(String, String, String) // GET
         case deleteAccount(String) // DELETE
         case account(Account) // POST
