@@ -135,7 +135,7 @@ struct AmountView: View {
                             .aspectRatio(contentMode: .fit)
                     })
                         .padding(.trailing, 16)
-                    NavigationLink(destination: PaymentOptionsView(topupAmount: amount / 100)) {
+                    NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
                         Image(systemName: "qrcode.viewfinder")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center)

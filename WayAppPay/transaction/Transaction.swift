@@ -64,15 +64,17 @@ extension WayAppPay {
         }
                 
         // Payment with Wallet card
-        init(amount: Int, token: String = String()) {
+        init(amount: Int, token: String = String(), type: TransactionType = .SALE) {
             self.accountUUID = session.accountUUID
             self.merchantUUID = session.merchantUUID
             self.amount = amount
             self.authorizationCode = token
             self.paymentMethod = .WALLET
-            self.type = .SALE
+            self.type = type
             self.currency = session.merchants.isEmpty ?  PaymentTransaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
             self.readingType = .STANDARD
+            self.merchantUUID = session.merchantUUID
+            self.accountUUID = session.accountUUID
         }
         
         func walletPayment() {

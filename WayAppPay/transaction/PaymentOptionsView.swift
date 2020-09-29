@@ -68,14 +68,14 @@ struct PaymentOptionsView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30, alignment: .leading)
-                                    Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount)!)")
+                                    Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount / 100)!)")
                                 }
                             })
                             .sheet(isPresented: $showQRScannerForPayment) {
                                 VStack {
                                     CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleTopup)
                                     HStack {
-                                        Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount)!)")
+                                        Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount / 100)!)")
                                             .foregroundColor(Color.black)
                                             .fontWeight(.medium)
                                         Spacer()
@@ -223,6 +223,40 @@ struct PaymentOptionsView_Previews: PreviewProvider {
 extension PaymentOptionsView {
     func handleTopup() {
         WayAppUtils.Log.message("Topping up: \(topupAmount)")
+        guard let code = scannedCode else {
+            WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
+            return
+        }
+        let topup = WayAppPay.PaymentTransaction(amount: Int(topupAmount), token: code, type: .ADD)
+        WayAppPay.API.topup(topup).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
+            self.scannedCode = nil
+            if case .success(let response?) = response {
+                if let transactions = response.result,
+                   let transaction = transactions.first {
+                    DispatchQueue.main.async {
+                        self.scannedCode = nil
+                        self.session.transactions.addAsFirst(transaction)
+                        self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
+                        self.showAlert = true
+                        WayAppPay.session.shoppingCart.empty()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                        self.showAlert = false
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                } else {
+                    self.wasPaymentSuccessful = false
+                    self.showAlert = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                        self.showAlert = false
+                    }
+                    WayAppPay.API.reportError(response)
+                }
+            } else if case .failure(let error) = response {
+                WayAppUtils.Log.message(error.localizedDescription)
+            }
+        }
+
 
     }
     

@@ -90,6 +90,7 @@ extension WayAppPay {
         case createCard(String, Card) // POST
         case editCard(String, Card) // PATCH
         case refundTransaction(String, String, String, PaymentTransaction) // POST
+        case topup(PaymentTransaction) // POST
         //Report
         case getTransaction(String, String, String) // GET
         case getMonthReportID(String, String, String) // GET
@@ -130,6 +131,7 @@ extension WayAppPay {
             case .getCardTransactions(let accountUUID, let pan): return "/accounts/\(accountUUID)/cards/\(pan)/transactions/"
             case .createCard(let accountUUID, _): return "/accounts/\(accountUUID)/cards/"
             case .editCard(let accountUUID, let card): return "/accounts/\(accountUUID)/cards/\(card.pan)/"
+            case .topup: return "/topups/"
             // Transactions
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .walletPayment(let merchantUUID, let accountUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/wallets/"
@@ -174,6 +176,7 @@ extension WayAppPay {
             case .deleteCard(let accountUUID, let pan): return accountUUID + "/" + pan
             case .createCard(let accountUUID, _): return accountUUID
             case .editCard(let accountUUID, let card): return accountUUID + "/" + card.pan
+            case .topup: return ""
             // PaymentTransaction
             case .getCardTransactions(let accountUUID, let pan): return accountUUID + "/" + pan
             case .getTransactionPayer(let accountUUID, let merchantUUID, let transactionUUID): return accountUUID + "/" + merchantUUID + "/" + transactionUUID
@@ -206,7 +209,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup:
                 // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
@@ -286,7 +289,7 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .walletPayment(_, _, let transaction):
+            case .walletPayment(_, _, let transaction), .topup(let transaction):
                 var parts: [HTTPCall.BodyPart]?
                 if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
                     parts = [part]
