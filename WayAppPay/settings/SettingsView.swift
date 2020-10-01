@@ -35,17 +35,21 @@ struct SettingsView: View {
                     }
                 }
                 Section(header: Text("Accounts")) {
-                    if session.accounts.isEmpty {
+                    if WayAppPay.session.accounts.isEmpty {
                         Text("There are no accounts")
                     } else {
                         Picker(selection: $session.selectedAccount, label: Text("Account")) {
-                            ForEach(0..<session.accounts.count) {
-                                Text(self.session.accounts[$0].email ?? "no email")
+                            ForEach(0..<WayAppPay.session.accounts.count) {
+                                Text(WayAppPay.session.accounts[$0].email ?? "no email")
                             }
                         }
                     }
                 }
-                Section(header: Text("Account: \(session.account?.email ?? "no email")")) {
+                .onAppear(perform:
+                            {
+                                WayAppUtils.Log.message("+++++++++++ ACCOUNTS COUNT=\(WayAppPay.session.accounts.count)")
+                            })
+                Section(header: Text("Account: \(WayAppPay.session.account?.email ?? "no email")")) {
                     if session.doesUserHasMerchantAccount {
                         NavigationLink(
                             destination: CardsView()
@@ -66,6 +70,8 @@ struct SettingsView: View {
                     Button(action: {
                         DispatchQueue.main.async {
                             self.session.logout()
+                            WayAppPay.session.accounts.empty()
+                            WayAppPay.session.account?.email = ""
                         }
                     }) {
                         Text("Logout")

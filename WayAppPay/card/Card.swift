@@ -51,13 +51,13 @@ extension WayAppPay {
                 let userInfo = pass.userInfo as? [String : String]
                 let passPAN = userInfo?["pan"]
                 if passPAN == self.pan {
-                    WayAppUtils.Log.message("+ FOUND MATCHING PAN FOR CARD: \(alias ?? "NO ALIAS"), \(passPAN)")
+                    WayAppUtils.Log.message("+ FOUND MATCHING PAN FOR CARD: \(alias ?? "NO ALIAS"), \(passPAN ?? "NO PAN")")
                     return pass
                 } else {
-                    WayAppUtils.Log.message("+ NO MATCH: \(alias ?? "NO ALIAS"), \(passPAN), and \(self.pan)")
+                    WayAppUtils.Log.message("+ NO MATCH: \(alias ?? "NO ALIAS"), \(passPAN ?? "NO PAN"), and \(self.pan)")
                 }
             }
-            WayAppUtils.Log.message("+ DID NOT FIND MATCHING PAN FOR CARD: \(alias ?? "MNO ALIAS"), \(self.pan)")
+            WayAppUtils.Log.message("+ DID NOT FIND MATCHING PAN FOR CARD: \(alias ?? "NO ALIAS"), \(self.pan)")
             return nil
         }
 

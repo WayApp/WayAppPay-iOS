@@ -82,7 +82,7 @@ struct NewCardView: View {
             if consent != nil {
                 Picker(selection: $selectedIBAN, label: Text("IBAN")) {
                     ForEach(0..<consent!.globalPosition.count) {
-                        Text((self.consent!.globalPosition[$0].description ?? "missing description") + "\n" + (self.consent!.globalPosition[$0].iban ?? "missing IBAN"))
+                        Text((self.consent!.globalPosition[$0].iban ?? "missing IBAN"))
                     }
                 }            }
             Button(action: {

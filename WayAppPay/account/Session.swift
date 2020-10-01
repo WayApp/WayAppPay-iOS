@@ -19,9 +19,9 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
+                    WayAppUtils.Log.message("********************** Session: didSet account")
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
-                    WayAppUtils.Log.message("********************** Session: didSet account")
                     Merchant.getMerchantsForAccount(account.accountUUID)
                     Card.getCards(for: account.accountUUID)
                 }
@@ -32,10 +32,12 @@ extension WayAppPay {
         @Published var merchants = Container<Merchant>()
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
-                merchants[seletectedMerchant].getAccounts()
-                merchants[seletectedMerchant].getReportID(for: session.accountUUID, month: ReportID.idReportForMonth(Date()))
-                merchants[seletectedMerchant].getTransactionsForAccountForDay(session.accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
+                if !merchants.isEmpty && doesUserHasMerchantAccount {
+                    Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
+                    merchants[seletectedMerchant].getAccounts()
+                    merchants[seletectedMerchant].getReportID(for: session.accountUUID, month: ReportID.idReportForMonth(Date()))
+                    merchants[seletectedMerchant].getTransactionsForAccountForDay(session.accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
+                }
             }
         }
         
@@ -105,7 +107,7 @@ extension WayAppPay {
             return merchants.isEmpty ? nil : merchants[seletectedMerchant].merchantUUID
         }
         
-        func saveLoginData(password: String) {
+        func saveLoginData(pin: String) {
             // Saves account
             if let account = account,
                 let email = account.email {
@@ -114,12 +116,27 @@ extension WayAppPay {
                 UserDefaults.standard.set(account.email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
                 // Saves password
                 do {
-                    try Account.savePassword(password, forEmail: email)
+                    WayAppUtils.Log.message("*********SAVING PIN=\(pin)")
+                    try Account.savePassword(pin, forEmail: email)
                 } catch {
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
                 UserDefaults.standard.synchronize()
             }
+        }
+        
+        private func reset() {
+            showAuthenticationView = true
+            doesUserHasMerchantAccount = false
+            selectedAccount = 0
+            account = nil
+            accounts.empty()
+            seletectedMerchant = 0
+            merchants.empty()
+            transactions.empty()
+            products.empty()
+            shoppingCart.empty()
+            cards.empty()
         }
         
         func logout() {
@@ -129,16 +146,8 @@ extension WayAppPay {
                     WayAppUtils.Log.message("Cannot retrieve saved email or password")
                     return
             }
-            showAuthenticationView = true
             WayAppPay.DefaultKey.resetSessionKeys()
-            /*
-            session.merchants.empty()
-            session.transactions.empty()
-            session.products.empty()
-            session.seletectedMerchant = 0
-            session.shoppingCart.empty()
- */
-            session.cards.empty()
+            session.reset()
             do {
                 try Account.deletePassword(password, forEmail: email)
             } catch {

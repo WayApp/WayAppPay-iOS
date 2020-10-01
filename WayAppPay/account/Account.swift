@@ -150,7 +150,7 @@ extension WayAppPay {
                         let account = accounts.first {
                         DispatchQueue.main.async {
                             session.account = account
-                            session.saveLoginData(password: pin)
+                            session.saveLoginData(pin: pin)
                         }
                     } else {
                         DispatchQueue.main.async {
