@@ -136,7 +136,7 @@ struct NewCardView: View {
         DispatchQueue.main.async {
             self.isAPICallOngoing = true
         }
-        WayAppPay.Card.create(alias: self.alias, type: WayAppPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
+        WayAppPay.Card.create(alias: self.alias, issuerUUID: session.issuers[selectedIssuer].issuerUUID, type: WayAppPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
             DispatchQueue.main.async {
                 self.isAPICallOngoing = false
             }
