@@ -160,14 +160,7 @@ struct CardDetailView: View {
                     self.isAPICallOngoing = true
                 }
                 if self.card == nil {
-                    // creation
-                    WayAppPay.Card.create(alias: self.newAlias, type: .POSTPAID) { error, card in
-                        if error != nil {
-                            WayAppUtils.Log.message("********************** \(error!.localizedDescription)")
-                        } else {
-                            WayAppUtils.Log.message("********************** CARD CREATION SUCCESSFULLY")
-                        }
-                    }
+                    WayAppUtils.Log.message("********************** CRAD IS NIL")
                 } else {
                     // update
                     self.card?.edit(iban: "123456") { error in

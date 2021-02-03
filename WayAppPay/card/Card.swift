@@ -113,7 +113,7 @@ extension WayAppPay {
             }
         }
 
-        static func create(alias: String = String(), issuerUUID: String = "f01ffb3f-5b16-4238-abf0-215c2c2c4c74", type: PaymentFormat, consent: AfterBanks.Consent? = nil, selectedIBAN: Int = 0, limitPerOperation: Int = Card.limitPerOperation, completion: @escaping (Error?, Card?) -> Void)  {
+        static func create(alias: String = String(), issuerUUID: String, type: PaymentFormat, consent: AfterBanks.Consent? = nil, selectedIBAN: Int = 0, limitPerOperation: Int = Card.limitPerOperation, completion: @escaping (Error?, Card?) -> Void)  {
             WayAppUtils.Log.message("********************** CARD CREATION WITH CONSENT=\(consent.debugDescription)")
             guard let accountUUID = session.accountUUID else {
                 WayAppUtils.Log.message("missing Session.accountUUID")
