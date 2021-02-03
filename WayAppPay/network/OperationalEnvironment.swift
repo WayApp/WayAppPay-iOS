@@ -11,12 +11,12 @@ import Foundation
 enum OperationalEnvironment {
     case production, staging
     
-    static var current: OperationalEnvironment = .staging
+    static var current: OperationalEnvironment = .production
     
     static var wayappPayAPIBaseURL: String {
         switch OperationalEnvironment.current {
         case .production:
-            return "https://api.wayapp.com/pay/v1"
+            return "https://pay.api.wayapp.com/pay/v1"
         case .staging:
             return "https://api.staging.wayapp.com/pay/v1"
         }
@@ -34,7 +34,7 @@ enum OperationalEnvironment {
     static var wayAppPayPublicKey: String {
         switch OperationalEnvironment.current  {
         case .production:
-            return "8e261776487e170a545e2d97e3c4018321d6e116"
+            return "776487e170a268e261d97e3c40d6e11545e18321"
         case .staging:
             return "8e261776487e170a545e2d97e3c4018321d6e116"
         }
@@ -52,7 +52,7 @@ enum OperationalEnvironment {
     static var wayAppPayPrivateKey: String {
         switch OperationalEnvironment.current  {
         case .production:
-            return "748e93458e818fe76e3fd7c9741f5699c6603217"
+            return "41f5681ec660748e9832177993fd7c9fe763458e"
         case .staging:
             return "748e93458e818fe76e3fd7c9741f5699c6603217"
         }

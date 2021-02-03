@@ -24,7 +24,8 @@ struct MainView: View {
     }
     
     func merchantTabView() -> AnyView {
-        let displayMerchantOption = session.doesUserHasMerchantAccount
+//        let displayMerchantOption = session.doesUserHasMerchantAccount
+        let displayMerchantOption = true
         return AnyView(
             GeometryReader { geometry in
                 ZStack(alignment: .bottomLeading) {

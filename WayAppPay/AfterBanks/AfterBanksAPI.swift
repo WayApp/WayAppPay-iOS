@@ -8,6 +8,7 @@
 
 import Foundation
 
+/*
 extension AfterBanks {
     /*
      * Process to add any API method:
@@ -142,3 +143,4 @@ extension AfterBanks {
         }
     }
 }
+*/

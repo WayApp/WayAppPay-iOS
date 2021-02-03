@@ -59,7 +59,9 @@ struct PaymentOptionsView: View {
                                 }
                             } // sheet
                         }
-                        if (topupAmount > 0) {
+                        //if (topupAmount > 0) {
+                        /*
+                        if (false) {
                             Button(action: {
                                 self.showQRScannerForPayment = true
                             }, label: {
@@ -87,6 +89,8 @@ struct PaymentOptionsView: View {
                                 }
                             } // sheet
                         }
+ */
+                        /*
                         Button(action: {
                             self.showCheckinScanner = true
                         }, label: {
@@ -113,6 +117,7 @@ struct PaymentOptionsView: View {
                                 .background(Color.white)
                             } // vstack
                         } // sheet
+ */
                     } // Section
                     Section(header: Text("NFC").font(.headline)) {
                         if !WayAppPay.session.shoppingCart.isEmpty {

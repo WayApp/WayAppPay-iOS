@@ -50,6 +50,7 @@ struct SettingsView: View {
                                 WayAppUtils.Log.message("+++++++++++ ACCOUNTS COUNT=\(WayAppPay.session.accounts.count)")
                             })
                 Section(header: Text("Account: \(WayAppPay.session.account?.email ?? "no email")")) {
+                    /*
                     if session.doesUserHasMerchantAccount {
                         NavigationLink(
                             destination: CardsView()
@@ -57,6 +58,7 @@ struct SettingsView: View {
                             Text("Payment token")
                         }
                     }
+ */
                     VStack {
                         Button(action: {
                             self.changePIN = true

@@ -63,6 +63,7 @@ final class AfterBanks: ObservableObject {
         }
     }
 
+    /*
     static func getConsentFor(service: String = "sandbox") {
         API.getUserAccountConsent(service).fetch(type: ConsentResponse.self) { response in
             if case .success(let response?) = response {
@@ -76,7 +77,7 @@ final class AfterBanks: ObservableObject {
             }
         }
     }
-
+*/
     static func getConsent(id: String) {
         WayAppPay.API.getConsentDetail(id).fetch(type: [Consent].self) { response in
             if case .success(let response?) = response {
@@ -114,7 +115,7 @@ final class AfterBanks: ObservableObject {
         }
     }
 
-
+/*
     func initiatePayment(token: String, amount: String, sourceIBAN: String, destinationIBAN: String, destinationCreditorName: String, paymentDescription: String) {
         API.paymentInitiate(token, amount, sourceIBAN, destinationIBAN, destinationCreditorName, paymentDescription).fetch(type: PaymentResponse.self) { response in
             if case .success(let response?) = response {
@@ -128,5 +129,5 @@ final class AfterBanks: ObservableObject {
             }
         }
     }
-
+*/
 }
