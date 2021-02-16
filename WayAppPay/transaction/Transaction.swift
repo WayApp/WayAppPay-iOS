@@ -8,6 +8,7 @@
 
 import Foundation
 
+/* test commit push */
 extension WayAppPay {
     struct PaymentTransaction: Codable, ContainerProtocol, Identifiable {
         
@@ -100,7 +101,7 @@ extension WayAppPay {
             }
         }
 
-        func processRefund() {
+        func processRefund() -> Void {
             guard let merchantUUID = self.merchantUUID,
                 let accountUUID = self.accountUUID,
                 let transactionUUID = self.transactionUUID else {

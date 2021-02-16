@@ -29,7 +29,7 @@ struct SettingsView: View {
                     } else {
                         Picker(selection: $session.seletectedMerchant, label: Text("Merchant")) {
                             ForEach(0..<session.merchants.count) {
-                                Text(self.session.merchants[$0].name ?? "NAME")
+                                Text(self.session.merchants[$0].name ?? "Name")
                             }
                         }
                     }

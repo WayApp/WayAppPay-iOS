@@ -13,7 +13,7 @@ extension WayAppPay {
     struct Product: Codable, Identifiable, ContainerProtocol {
         
         static let defaultImageName = "questionmark.square"
-        static let defaultName = "name"
+        static let defaultName = NSLocalizedString("name", comment: "Placeholder name for new product")
 
         var productUUID: String
         var merchantUUID: String?

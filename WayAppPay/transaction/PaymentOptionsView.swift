@@ -99,7 +99,7 @@ struct PaymentOptionsView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 30, height: 30, alignment: .leading)
-                                Text("Checkin")
+                                Text("Check-in")
                             }
                         })
                         .sheet(isPresented: $showCheckinScanner) {
@@ -119,6 +119,8 @@ struct PaymentOptionsView: View {
                         } // sheet
  */
                     } // Section
+                    /*
+                    /* testing Commit/Push */
                     Section(header: Text("NFC").font(.headline)) {
                         if !WayAppPay.session.shoppingCart.isEmpty {
                             Button(action: {
@@ -203,6 +205,7 @@ struct PaymentOptionsView: View {
                             } // vstack
                         } // sheet
                     } // Section
+ */
                 } // Form
                 if showAlert {
                     Image(systemName: wasPaymentSuccessful ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
@@ -266,7 +269,7 @@ extension PaymentOptionsView {
     }
     
     func handleNFCScan() {
-        WayAppUtils.Log.message("Scanned NFC Tag: \(scannedCode ?? "no scaneed code")")
+        WayAppUtils.Log.message("Scanned NFC Tag: \(scannedCode ?? "no scanned code")")
         handleQRScanPayment()
     }
     

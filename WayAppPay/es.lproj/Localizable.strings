@@ -1,38 +1,333 @@
 /* No comment provided by engineer. */
-"4-digits" = "4-dígitos";
+"%@" = "%@";
+
+/* No comment provided by engineer. */
+"+" = "+";
+
+/* No comment provided by engineer. */
+"⌫" = "⌫";
+
+/* No comment provided by engineer. */
+"00" = "00";
+
+/* No comment provided by engineer. */
+"4-digits" = "4 dígitos";
 
 /* No comment provided by engineer. */
 "Account" = "Cuenta";
 
 /* No comment provided by engineer. */
+"Account: %@" = "Cuenta: %@";
+
+/* No comment provided by engineer. */
+"Accounts" = "Cuentas";
+
+/* No comment provided by engineer. */
+"alias" = "alias";
+
+/* No comment provided by engineer. */
+"Alias" = "Alias";
+
+/* No comment provided by engineer. */
 "Amount" = "Importe";
+
+/* No comment provided by engineer. */
+"Bank" = "Banco";
+
+/* No comment provided by engineer. */
+"Bank account" = "Cuenta bancaria";
+
+/* User message: passwords do not match */
+"Both entered PINs must match" = "Ambos PINes deben ser idénticos";
+
+/* No comment provided by engineer. */
+"Cancel" = "Cancelar";
+
+/* No comment provided by engineer. */
+"Card" = "Token de pago";
+
+/* No comment provided by engineer. */
+"Card could not be created. Try again later. If problem persists contact support@wayapp.com" = "Token de pago no se pudo crear. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* No comment provided by engineer. */
+"Card could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Token de pago no se pudo actualizar. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
 
 /* No comment provided by engineer. */
 "Cart" = "Cesta";
 
 /* No comment provided by engineer. */
-"Credit card" = "Tarjeta de crédito";
-
-"Products" = "Productos";
-"Reports" = "Reportes";
-"Settings" = "Ajustes";
-"Transactions" = "Transacciones";
-"Scanning" = "Escaneo";
-"Credit card" = "Tarjeta de crédito";
-"Logout" = "Cerrar sesión";
-"Change PIN" = "Cambiar PIN";
-"Merchant" = "Comercio";
-"Operating merchant" = "Comercio Operativo";
-"This month" = "Este mes";
-"Sales" = "Ventas";
-"Refunds" = "Devoluciones";
-"Select another month" = "Selecciona otro mes";
-"shopping cart description" = "descripción";
-"Name" = "Nombre";
-"Price" = "Precio";
-"Save" = "Guardar";
-"Current" = "Actual";
-"New" = "Nuevo";
-"Re-enter" = "Repetir";
 "Change" = "Cambiar";
+
+/* No comment provided by engineer. */
+"Change PIN" = "Cambiar PIN";
+
+/* No comment provided by engineer. */
+"Charge: %@" = "Cobrar: %@";
+
+/* No comment provided by engineer. */
+"Check-in" = "Check-in";
+
+/* User message: confirmationEmailHelpTitle */
+"Confirmation code" = "Código de confirmación";
+
+/* No comment provided by engineer. */
+"Consent valid until" = "Consentimiento válido hasta";
+
+/* No comment provided by engineer. */
+"Currency" = "Moneda";
+
+/* No comment provided by engineer. */
+"Current" = "Actual";
+
+/* No comment provided by engineer. */
+"Destination_1" = "Destination_1";
+
+/* No comment provided by engineer. */
+"Destination_2" = "Destination_2";
+
+/* No comment provided by engineer. */
+"Detail" = "Detalle";
+
+/* No comment provided by engineer. */
+"email" = "email";
+
+/* No comment provided by engineer. */
+"Email" = "Correo electrónico";
+
+/* User message: forgotPasswordError */
+"Email address (email) is not registered" = "Correo electrónico (email) no registrado";
+
+/* User message: forgotPasswordError title */
+"Email address not valid" = "Correo electrónico no válido";
+
+/* No comment provided by engineer. */
+"Email new PIN to:" = "Enviar nuevo PIN a:";
+
+/* No comment provided by engineer. */
+"Email or PIN invalid. Try again. If problem persists contact support@wayapp.com" = "Correo electrónico o PIN inválido. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* No comment provided by engineer. */
+"Email receipt to:" = "Enviar recibo a:";
+
+/* User message: invalidEmail message */
+"Enter a valid email address for this account" = "Entre una dirección de correo válida para esta cuenta";
+
+/* No comment provided by engineer. */
+"Enter OTP received on email:" = "Entre clave recibida en:";
+
+/* User message: forgotPassword */
+"Follow instructions emailed to: " = "Sigue las instrucciones enviadas a: ";
+
+/* No comment provided by engineer. */
+"Forgot PIN?" = "¿Olvidaste PIN?";
+
+/* No comment provided by engineer. */
+"Grant" = "Conceder";
+
+/* No comment provided by engineer. */
+"Grant consent" = "Conceder consentimiento";
+
+/* No comment provided by engineer. */
+"IBAN" = "IBAN";
+
+/* HTTPCall: Error: invalidRequest */
+"Invalid API request. Check URL" = "Llamada API inválida. Revisa el URL";
+
+/* User message: invalidEmail title */
+"Invalid email address" = "Dirección de correo electrónico inválida";
+
+/* HTTPCall: Error: invalidServerResponse */
+"Invalid server response" = "Respuesta del servidor inválida";
+
+/* No comment provided by engineer. */
+"Issuer" = "Emisor";
+
+/* HTTPCall: Error: jsonConversion */
+"JSON conversion error" = "Error en el JSON";
+
+/* User message: loginFailed title */
+"Login attempt failed" = "Intento de iniciar sesión falló";
+
+/* No comment provided by engineer. */
+"Login error" = "Error de iniciar sesión";
+
+/* No comment provided by engineer. */
+"Logout" = "Salir";
+
+/* No comment provided by engineer. */
+"Merchant" = "Entidad";
+
+/* No comment provided by engineer. */
+"missing IBAN" = "falta IBAN";
+
+/* Placeholder name for new product */
+"name" = "nombre";
+
+/* No comment provided by engineer. */
+"Name" = "Nombre";
+
+/* No comment provided by engineer. */
+"New" = "Nuevo";
+
+/* No comment provided by engineer. */
+"New card" = "Nuevo token de pago";
+
+/* No comment provided by engineer. */
+"New PIN" = "Nuevo PIN";
+
+/* No comment provided by engineer. */
+"NFC" = "NFC";
+
+/* No comment provided by engineer. */
+"no email" = "no email";
+
+/* HTTPCall: Error: noNetwork */
+"No network" = "No hay red";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* No comment provided by engineer. */
+"Operating merchant" = "Entidad operativa";
+
+/* No comment provided by engineer. */
+"Payment" = "Pago";
+
+/* No comment provided by engineer. */
 "Payment token" = "Token de pago";
+
+/* No comment provided by engineer. */
+"PIN" = "PIN";
+
+/* No comment provided by engineer. */
+"PIN could not be changed. Try again later. If problem persists contact support@wayapp.com" = "PIN no se pudo cambiar. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* User message: passwordsDoNotMatch title */
+"PIN does not match" = "PIN no es igual";
+
+/* User message: password minimum length requirement */
+"PIN must have (WayAppPay.Account.PINLength) digits" = "PIN debe tener (WayAppPay.Account.PINLength) dígitos";
+
+/* User message: invalidPassword title */
+"PIN not valid" = "PIN no válido";
+
+/* User message: passwordChangeFailed title */
+"PIN was not changed" = "PIN no fue cambiado";
+
+/* No comment provided by engineer. */
+"Prepaid" = "Prepago";
+
+/* No comment provided by engineer. */
+"Price" = "Precio";
+
+/* No comment provided by engineer. */
+"Product could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Producto no pudo ser actualizado. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* No comment provided by engineer. */
+"Products" = "Productos";
+
+/* No comment provided by engineer. */
+"QR" = "Código QR";
+
+/* No comment provided by engineer. */
+"Re-enter" = "Re-escribir";
+
+/* No comment provided by engineer. */
+"Read token" = "Leer token de pago";
+
+/* No comment provided by engineer. */
+"Refunds: %@" = "Reembolso: %@";
+
+/* User message: registrationFailed title */
+"Registration attempt failed" = "Intento de registro falló";
+
+/* No comment provided by engineer. */
+"Renew" = "Renovar";
+
+/* No comment provided by engineer. */
+"Reports" = "Reportes";
+
+/* No comment provided by engineer. */
+"S1" = "S1";
+
+/* No comment provided by engineer. */
+"S2" = "S2";
+
+/* No comment provided by engineer. */
+"Sales: %@" = "Ventas: %@";
+
+/* No comment provided by engineer. */
+"Save" = "Guardar";
+
+/* No comment provided by engineer. */
+"Select another month:" = "Selecciona otro mes:";
+
+/* No comment provided by engineer. */
+"Send" = "Enviar";
+
+/* No comment provided by engineer. */
+"Send email" = "Enviar email";
+
+/* No comment provided by engineer. */
+"Settings" = "Configuración";
+
+/* No comment provided by engineer. */
+"shopping cart description" = "descripción en la cesta de compras";
+
+/* No comment provided by engineer. */
+"Sign in" = "Iniciar sesión";
+
+/* No comment provided by engineer. */
+"System error" = "Error del sistema";
+
+/* No comment provided by engineer. */
+"Test get consent" = "Probar obtener consentimiento";
+
+/* User message: confirmationEmailHelpMessage */
+"The 4-digit confirmation code was emailed to: (email). Please enter it here" = "Código de confirmación fue enviado a: (email). Por favor escríbelo aquí";
+
+/* No comment provided by engineer. */
+"There are no accounts" = "No hay cuentas";
+
+/* No comment provided by engineer. */
+"There are no merchants" = "No hay entidades";
+
+/* No comment provided by engineer. */
+"This month" = "Este mes";
+
+/* User message: forgotPassword title */
+"To finish the PIN change" = "Para finalizar el cambio de PIN";
+
+/* No comment provided by engineer. */
+"Top-up: %@" = "Recarga: %@";
+
+/* No comment provided by engineer. */
+"Transactions" = "Movimientos";
+
+/* User message: Login error during authentication */
+"Try again, if problem persists contact us at support@wayapp.com" = "Intenta otra vez. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* User message: registrationFailed: registration error during registration */
+"Try another email address, if problem persists contact us at support@wayapp.com" = "Intenta otro correo electrónico. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* User message: passwordChangeFailed: registration error during registration */
+"Try your current PIN again, if problem persists contact us at support@wayapp.com" = "Intenta tu PIN otra vez. Si no se soliciona el problema contáctanos a support@wayapp.com";
+
+/* No comment provided by engineer. */
+"Type" = "Tipo";
+
+/* HTTPCall: Error: invalidData */
+"Unexpected server data" = "Formato de datos inesperado del servidor";
+
+/* No comment provided by engineer. */
+"What is your favorite color?" = "¿Cuál es tu color favorito?";
+
+/* No comment provided by engineer. */
+"Write token" = "Grabar token de pago";
+
+/* No comment provided by engineer. */
+"Your Custom View 1" = "Your Custom View 1";
+
+/* No comment provided by engineer. */
+"Your Custom View 2" = "Your Custom View 2";
+

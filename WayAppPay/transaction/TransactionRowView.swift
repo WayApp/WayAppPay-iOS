@@ -46,59 +46,50 @@ struct TransactionRowView: View {
             }
             VStack(alignment: .leading, spacing: 8) {
                 Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
-                Text((transaction.type == WayAppPay.PaymentTransaction.TransactionType.REFUND) ? "Refund" : "Sale")
+                (transaction.type == WayAppPay.PaymentTransaction.TransactionType.REFUND) ? Text("Refund") : Text("Sale")
                 Text((transaction.accountUUID != nil && session.accounts[transaction.accountUUID!] != nil) ?
                     session.accounts[transaction.accountUUID!]!.email ?? "no email" :
                     "no account")
             }.contextMenu {
                 if transaction.type == WayAppPay.PaymentTransaction.TransactionType.SALE && !transaction.isRefund {
-                    Button("Refund") {
-                        self.transaction.processRefund()
-                    }
+                    Button("Refund", action: { transaction.processRefund() })
                 }
-
-                Button(action: {
-                    self.send = true
-                }) {
-                    Text("Send email")
-                    }
-                .sheet(isPresented: self.$send) {
-                    VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
-                        Text("Email receipt to:")
-                            .font(.title)
-                        TextField("Email", text: self.$email)
-                            .padding()
-                            .textContentType(.emailAddress)
-                            .autocapitalization(.none)
-                            .keyboardType(.emailAddress)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.bottom, WayAppPay.UI.verticalSeparation)
-                        Button(action: {
-                            WayAppPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
-                            DispatchQueue.main.async {
-                                self.send = false
-                            }
-                         }) {
-                             Text("Send")
-                                 .font(.headline)
-                                 .fontWeight(.heavy)
-                                 .foregroundColor(.white)
-                         }
-                        .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
-                        .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color("WAP-GreenDark"))
-                        .cornerRadius(WayAppPay.UI.buttonCornerRadius)
-                        .padding(.bottom, self.keyboardObserver.keyboardHeight)
-                        .disabled(self.shouldSendEmailButtonBeDisabled)
-                    }.padding()
-                }
-                
+                Button("Send email", action: { self.send = true })
             }
             Spacer()
             Text(WayAppPay.priceFormatter(transaction.amount))
                 .fontWeight(.medium)
         }
         .padding()
-
+        .sheet(isPresented: self.$send) {
+            VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
+                Text("Email receipt to:")
+                    .font(.title)
+                TextField("Email", text: self.$email)
+                    .padding()
+                    .textContentType(.emailAddress)
+                    .autocapitalization(.none)
+                    .keyboardType(.emailAddress)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.bottom, WayAppPay.UI.verticalSeparation)
+                Button(action: {
+                    WayAppPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
+                    DispatchQueue.main.async {
+                        self.send = false
+                    }
+                 }) {
+                     Text("Send")
+                         .font(.headline)
+                         .fontWeight(.heavy)
+                         .foregroundColor(.white)
+                 }
+                .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+                .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color("WAP-GreenDark"))
+                .cornerRadius(WayAppPay.UI.buttonCornerRadius)
+                .padding(.bottom, self.keyboardObserver.keyboardHeight)
+                .disabled(self.shouldSendEmailButtonBeDisabled)
+            }.padding()
+        }
     }
 }
 
