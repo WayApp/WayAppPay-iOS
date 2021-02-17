@@ -19,7 +19,6 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
-                    WayAppUtils.Log.message("********************** Session: didSet account")
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
@@ -29,14 +28,21 @@ extension WayAppPay {
         }
         @Published var cards = Container<Card>()
         @Published var issuers = Container<Issuer>()
-        @Published var merchants = Container<Merchant>()
+        @Published var merchants = Container<Merchant>() {
+            didSet {
+                DispatchQueue.main.async {
+                    self.doesUserHasMerchantAccount = (self.merchants.count > 0)
+                    self.seletectedMerchant = 0
+                }
+            }
+        }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
                     Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                     merchants[seletectedMerchant].getAccounts()
-                    merchants[seletectedMerchant].getReportID(for: session.accountUUID, month: ReportID.idReportForMonth(Date()))
-                    merchants[seletectedMerchant].getTransactionsForAccountForDay(session.accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
+                    merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
+                   // merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
                 }
             }
         }
@@ -51,7 +57,6 @@ extension WayAppPay {
         @Published var selectedAccount: Int = 0
         @Published var accounts = Container<Account>()
         @Published var showAuthenticationView: Bool = true
-        @Published var selectedTab: MainView.Tab = .cards
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
@@ -70,7 +75,6 @@ extension WayAppPay {
             }
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
-                self.showAuthenticationView = false
             }
             if let data = UserDefaults.standard.data(forKey: WayAppPay.DefaultKey.CARDS.rawValue),
                let cards = try? WayAppPay.jsonDecoder.decode(Container<Card>.self, from: data) {
@@ -147,7 +151,7 @@ extension WayAppPay {
                     return
             }
             WayAppPay.DefaultKey.resetSessionKeys()
-            session.reset()
+            reset()
             do {
                 try Account.deletePassword(password, forEmail: email)
             } catch {

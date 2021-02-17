@@ -8,7 +8,7 @@
 
 import Foundation
 
-/* test commit push */
+
 extension WayAppPay {
     struct PaymentTransaction: Codable, ContainerProtocol, Identifiable {
         

@@ -54,7 +54,7 @@ extension WayAppPay {
                             session.accounts.setTo(accounts)
                         }
                         if let accountUUID = session.accountUUID {
-                            self.getTransactionsForAccount(accountUUID)
+                            // self.getTransactionsForAccount(accountUUID)
                         } else {
                             WayAppUtils.Log.message("Missing session.accountUUID")
                         }
@@ -138,6 +138,7 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing accountUUID")
                 return
             }
+            WayAppUtils.Log.message("accountUUID: \(accountUUID), month: \(month)")
             WayAppPay.API.getMonthReportID(merchantUUID, accountUUID, month).fetch(type: [ReportID].self) { response in
                 if case .success(let response?) = response {
                     if let reportIDs = response.result,
@@ -174,18 +175,8 @@ extension WayAppPay {
             WayAppPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
                 if case .success(let response?) = response {
                     if let merchants = response.result {
-                        let count = merchants.count
                         DispatchQueue.main.async {
-                            if count == 0 {
-                                // Display settings Tab so user can select merchant
-                                session.selectedTab = .settings
-                            } else {
-                                session.doesUserHasMerchantAccount = true
-                                session.merchants.setTo(merchants)
-                                if count == 1 {
-                                    session.seletectedMerchant = 0
-                                }
-                            }
+                            session.merchants.setTo(merchants)
                         }
                     } else {
                         WayAppPay.API.reportError(response)

@@ -12,7 +12,6 @@ struct TransactionsView: View {
     @EnvironmentObject var session: WayAppPay.Session
     @State var monthSelection = Calendar.current.component(.month, from: Date()) - 1
     
-
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     var body: some View {
         NavigationView {
@@ -20,9 +19,8 @@ struct TransactionsView: View {
                             Form {
                                 Section(header: Text("This month")) {
                                     VStack {
-                                        Text("Sales: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalSales))")
-                //                        Text("Sales: \(WayAppPay.priceFormatter(session.transactions.filter(satisfying: { ($0.amount ?? 0) > 0 }).reduce(0, {$0 + ($1.amount ?? 0) })))")
-                                        Text("Refunds: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalRefund))")
+                                        Text("Sales: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalSales ?? 0))")
+                                        Text("Refunds: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalRefund ?? 0))")
                                     }
                                     Picker(selection: $monthSelection, label: Text("Select another month:")) {
                                         ForEach(0..<months.count) {
@@ -67,12 +65,6 @@ struct TransactionsView: View {
         }
     }
 }
-
-/*
- 
-
- 
- */
 
 struct TransactionsView_Previews: PreviewProvider {
     static var previews: some View {

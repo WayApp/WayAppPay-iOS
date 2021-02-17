@@ -109,27 +109,6 @@ struct NewCardView: View {
     }
     
     private func grantConsent(accountUUID: String) {
-        AfterBanks.getConsent(accountUUID: accountUUID,
-            //  service: self.session.afterBanks.banks[self.selectedBank].service,
-            service: "sandbox",
-            validUntil: self.dateFormatter.string(from: self.validUntil)) { error, consent in
-                if let error = error {
-                    WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
-                } else if let consent = consent {
-                    WayAppUtils.Log.message("********************** CARD CONSENT SUCCESS")
-                    DispatchQueue.main.async {
-                        self.authenticationViewModel.signIn(consent: consent) { error, consent in
-                            if let error = error {
-                                // Alert user
-                                WayAppUtils.Log.message(error.localizedDescription)
-                            } else if let consent = consent {
-                                self.consent = consent
-                                WayAppUtils.Log.message("SHOW IBANS .....FOR CONSENT=\(consent)")
-                            }
-                        }
-                    }
-                }
-        }
     }
     
     private func createCard(accountUUID: String) {

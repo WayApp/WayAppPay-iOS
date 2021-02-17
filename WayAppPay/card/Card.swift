@@ -100,8 +100,6 @@ extension WayAppPay {
                     if let cards = response.result {
                         DispatchQueue.main.async {
                             session.cards.setTo(cards)
-                            AfterBanks.getBanks()
-                            WayAppPay.Issuer.get()
                             persistCards(session.cards)
                         }
                     } else {

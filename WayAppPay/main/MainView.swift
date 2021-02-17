@@ -11,6 +11,8 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject private var session: WayAppPay.Session
     @State private var badgeNumber: Int = 3
+    @State private var selection: MainView.Tab = .amount
+
     private var badgePosition: CGFloat = 1
     private var tabsCount: CGFloat = CGFloat(Tab.allCases.count)
 
@@ -30,58 +32,46 @@ struct MainView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .bottomLeading) {
                     // TabView
-                    TabView(selection: $session.selectedTab) {
+                    TabView(selection: $selection) {
                         if !displayMerchantOption {
                             CardsView()
                                 .tabItem {
-                                    VStack {
-                                        Image(systemName: "creditcard")
-                                        Text("Card")
-                                    }
+                                    Label("Card", systemImage: "creditcard")
+                                        .accessibility(label: Text("Card"))
                             }
                             .tag(Tab.cards)
                         }
                         if displayMerchantOption {
                             ShoppingCartView()
                                 .tabItem {
-                                    VStack {
-                                        Image(systemName: "cart")
-                                        Text("Cart")
-                                    }
+                                    Label("Cart", systemImage: "cart")
+                                        .accessibility(label: Text("Cart"))
                             }
                             .tag(Tab.cart)
                             ProductGalleryView().environmentObject(self.session)
                                 .tabItem {
-                                    VStack {
-                                        Image(systemName: "tag")
-                                        Text("Products")
-                                    }
+                                    Label("Catalogue", systemImage: "list.bullet")
+                                        .accessibility(label: Text("Catalogue"))
                             }
                             .tag(Tab.products)
                             AmountView().environmentObject(self.session)
                                 .tabItem {
-                                    VStack {
-                                        Image(systemName: "eurosign.circle")
-                                        Text("Amount")
-                                    }
+                                    Label("Amount", systemImage: "eurosign.circle")
+                                        .accessibility(label: Text("Amount"))
                             }
                             .tag(Tab.amount)
                         }
                         
                         TransactionsView()
                             .tabItem {
-                                VStack {
-                                    Image(systemName: "chart.bar")
-                                    Text("Reports")
-                                }
+                                Label("Reports", systemImage: "chart.bar")
+                                    .accessibility(label: Text("Reports"))
                         }
                         .tag(Tab.reports)
                         SettingsView().environmentObject(self.session)
                             .tabItem {
-                                VStack {
-                                    Image(systemName: "gear")
-                                    Text("Settings")
-                                }
+                                Label("Settings", systemImage: "gear")
+                                    .accessibility(label: Text("Settings"))
                         }
                         .tag(Tab.settings)
                     } // TabView
