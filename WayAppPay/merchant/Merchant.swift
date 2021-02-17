@@ -116,6 +116,7 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing accountUUID")
                 return
             }
+            WayAppUtils.Log.message("DATE: \(day), DAY: \(WayAppPay.reportDateFormatter.string(from: day))")
             WayAppPay.API.getMerchantAccountTransactionsForDay(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: day)).fetch(type: [PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result {
@@ -124,6 +125,29 @@ extension WayAppPay {
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                         }
                         print("TRANSACTIONS=\(transactions)")
+                    } else {
+                        WayAppPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
+        func getTransactionsForAccountByDates(_ accountUUID: String?, initialDate: Date, finalDate: Date) {
+            guard let accountUUID = accountUUID else {
+                WayAppUtils.Log.message("missing accountUUID")
+                return
+            }
+            WayAppUtils.Log.message("initialDate: \(initialDate), DAY: \(WayAppPay.reportDateFormatter.string(from: initialDate)), finalDate: \(finalDate), DAY: \(WayAppPay.reportDateFormatter.string(from: finalDate))")
+            WayAppPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: initialDate), WayAppPay.reportDateFormatter.string(from: finalDate)).fetch(type: [PaymentTransaction].self) { response in
+                if case .success(let response?) = response {
+                    if let transactions = response.result {
+                        DispatchQueue.main.async {
+                            session.transactions.setToInOrder(transactions, by:
+                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
+                        }
+                        WayAppUtils.Log.message("TRANSACTIONS=\(transactions)")
                     } else {
                         WayAppPay.API.reportError(response)
                     }

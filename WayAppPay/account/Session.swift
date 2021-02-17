@@ -22,7 +22,8 @@ extension WayAppPay {
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
-                    Card.getCards(for: account.accountUUID)
+                    // TODO:
+                    //Card.getCards(for: account.accountUUID)
                 }
             }
         }
@@ -38,11 +39,18 @@ extension WayAppPay {
         }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
+                let today = Date()
+                let components = Calendar.current.dateComponents([.year, .month], from: today)
+                let firstDayOfMonth = Calendar.current.date(from: components)!
+                
+                WayAppUtils.Log.message("firstDayOfMonth: \(firstDayOfMonth), today: \(today)")
+                
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
                     Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                     merchants[seletectedMerchant].getAccounts()
-                    merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
-                   // merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
+                    //merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
+                    //merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
+                    merchants[seletectedMerchant].getTransactionsForAccountByDates(accountUUID, initialDate: firstDayOfMonth, finalDate: today)
                 }
             }
         }

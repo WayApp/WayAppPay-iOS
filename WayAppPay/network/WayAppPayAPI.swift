@@ -72,8 +72,6 @@ extension WayAppPay {
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
         case getMerchantAccountDetail(String, String) // GET
-        case getMerchantAccountTransactions(String, String) // GET
-        case getMerchantAccountTransactionsForDay(String, String, Day) // GET
         // Product
         case getProducts(String) // GET
         case addProduct(String, Product, UIImage?) // POST
@@ -98,6 +96,9 @@ extension WayAppPay {
         case account(Account) // POST
         case editAccount(Account, UIImage?) // PATCH
         case sendEmail(String, String, SendEmail) // POST
+        case getMerchantAccountTransactions(String, String) // GET
+        case getMerchantAccountTransactionsForDay(String, String, Day) // GET
+        case getMerchantAccountTransactionsByDates(String, String, Day, Day) // GET
         // Issuers
         case getIssuers // GET
         // Banks
@@ -116,8 +117,6 @@ extension WayAppPay {
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/"
-            case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
-            case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/dates/\(day)/"
             // Products
             case .getProducts(let merchantUUID): return "/merchants/\(merchantUUID)/products/"
             case .addProduct(let merchantUUID, _, _): return "/merchants/\(merchantUUID)/products/"
@@ -138,6 +137,9 @@ extension WayAppPay {
             case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/reports/\(reportID)/"
             case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/"
             case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/\(transactionUUID)/refunds/"
+            case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
+            case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/dates/\(day)/"
+            case .getMerchantAccountTransactionsByDates(let merchantUUID, let accountUUID, _, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
             // Issuers
             case .getIssuers: return "/issuers/"
@@ -162,8 +164,6 @@ extension WayAppPay {
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
-            case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
-            case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return merchantUUID + "/" + accountUUID + "/" + day
             // Product
             case .getProducts(let merchantUUID): return merchantUUID
             case .addProduct(let merchantUUID, _, _): return merchantUUID
@@ -184,7 +184,11 @@ extension WayAppPay {
             case .getMonthReportID(let merchantUUID, let accountUUID, let reportID): return merchantUUID + "/" + accountUUID + "/" + reportID
             case .getTransaction(let merchantUUID, let accountUUID, let transactionUUID): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
             case .refundTransaction(let merchantUUID, let accountUUID, let transactionUUID, _): return merchantUUID + "/" + accountUUID + "/" + transactionUUID
+            case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
+            case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return merchantUUID + "/" + accountUUID + "/" + day
+            case .getMerchantAccountTransactionsByDates(let merchantUUID, let accountUUID, _, _): return merchantUUID + "/" + accountUUID
             case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
+            // Issuers
             case .getIssuers: return ""
             // Banks
             case .getBanks: return ""
@@ -201,7 +205,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -250,8 +254,10 @@ extension WayAppPay {
         
         var queryParameters: String {
             switch self {
-            case.getBanks(let countryCode):
+            case .getBanks(let countryCode):
                 return "?countryCode=\(countryCode)"
+            case .getMerchantAccountTransactionsByDates( _, _, let initialDate, let finalDate):
+                return "?initialDate=\(initialDate)&finalDate=\(finalDate)"
             default:
                 return ""
             }
