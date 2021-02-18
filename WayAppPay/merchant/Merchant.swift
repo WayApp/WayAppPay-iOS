@@ -133,6 +133,24 @@ extension WayAppPay {
                 }
             }
         }
+        
+        private func fillReportID() {
+            var reportID = ReportID()
+            
+            for transaction in session.transactions where transaction.result == .ACCEPTED {
+                switch transaction.type {
+                case .SALE:
+                    reportID.totalSales! += (transaction.amount ?? 0)
+                case .REFUND:
+                    reportID.totalRefund! += (transaction.amount ?? 0)
+                default:
+                    break
+                }
+            }
+            DispatchQueue.main.async {
+                session.thisMonthReportID = reportID
+            }
+        }
 
         func getTransactionsForAccountByDates(_ accountUUID: String?, initialDate: Date, finalDate: Date) {
             guard let accountUUID = accountUUID else {
@@ -146,6 +164,7 @@ extension WayAppPay {
                         DispatchQueue.main.async {
                             session.transactions.setToInOrder(transactions, by:
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
+                            fillReportID()
                         }
                         WayAppUtils.Log.message("TRANSACTIONS=\(transactions)")
                     } else {

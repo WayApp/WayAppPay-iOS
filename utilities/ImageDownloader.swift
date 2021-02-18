@@ -67,12 +67,9 @@ struct ImageView: View {
     }
 
     var body: some View {
-        VStack {
-            Image(uiImage: imageLoader.image != nil ? imageLoader.image! : UIImage())
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: size, height: size)
-        }
+        Image(uiImage: imageLoader.image != nil ? imageLoader.image! : UIImage())
+            .resizable()
+            .aspectRatio(contentMode: .fill)
     }
 }
 

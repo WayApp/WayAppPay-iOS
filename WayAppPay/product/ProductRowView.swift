@@ -10,21 +10,43 @@ import SwiftUI
 
 struct ProductRowView: View {
     
+    struct Metrics {
+        var thumbnailSize: CGFloat
+        var cornerRadius: CGFloat
+        var rowPadding: CGFloat
+        var textPadding: CGFloat
+    }
+
+    var metrics: Metrics {
+        #if os(iOS)
+        return Metrics(thumbnailSize: 96, cornerRadius: 16, rowPadding: 0, textPadding: 8)
+        #else
+        return Metrics(thumbnailSize: 60, cornerRadius: 4, rowPadding: 2, textPadding: 0)
+        #endif
+    }
+
     var product: WayAppPay.Product
     //var productIndex: Int
 
     var body: some View {
         HStack {
-            HStack(alignment: .center, spacing: 3.0) {
+            HStack(alignment: .top) {
                 ImageView(withURL: product.image)
+                    .frame(width: metrics.thumbnailSize, height: metrics.thumbnailSize)
+                    .clipShape(RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous))
+                    .accessibility(hidden: true)
                 VStack(alignment: .leading, spacing: 1.0) {
                     Text(product.name ?? WayAppPay.Product.defaultName)
                     Text("\(WayAppPay.priceFormatter(product.price))")
+                        .foregroundColor(.secondary)
                 }
+                .padding(.vertical, metrics.textPadding)
+                Spacer(minLength: 0)
             }
-            Spacer()
+            .font(.headline)
+            .padding(.vertical, metrics.rowPadding)
+            .accessibilityElement(children: .combine)
         }
-        .contentShape(Rectangle())
         .onTapGesture {
             WayAppPay.session.shoppingCart.addProduct(self.product)
         }

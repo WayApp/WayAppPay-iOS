@@ -14,6 +14,7 @@ struct WayAppApp: App {
         WindowGroup {
             MainView()
                 .environmentObject(WayAppPay.session)
+                .accentColor(Color("WAP-Blue"))
         }
         .commands {
             SidebarCommands()

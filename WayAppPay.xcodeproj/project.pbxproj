@@ -42,8 +42,8 @@
 		B15800F625093B610022A687 /* NewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F525093B610022A687 /* NewCardView.swift */; };
 		B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B164A70C24A4C13B0020ACAB /* PassKit.framework */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
+		B187D57625DE67640065CAEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B187D57525DE67640065CAEA /* Assets.xcassets */; };
 		B19ACCBD238B092A009FF084 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBC238B092A009FF084 /* MainView.swift */; };
-		B19ACCBF238B092C009FF084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCBE238B092C009FF084 /* Assets.xcassets */; };
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
 		B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */; };
 		B1A19AC2240251FA0070E5FF /* PaymentOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A19AC1240251FA0070E5FF /* PaymentOptionsView.swift */; };
@@ -110,9 +110,9 @@
 		B164A70C24A4C13B0020ACAB /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		B174BAF62517489D00F51525 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
+		B187D57525DE67640065CAEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayApp Pay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WayApp Pay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCBC238B092A009FF084 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		B19ACCBE238B092C009FF084 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B19ACCC4238B092C009FF084 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B19ACCC6238B092C009FF084 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -287,11 +287,20 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		B187D53825DE661A0065CAEA /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B187D57525DE67640065CAEA /* Assets.xcassets */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		B19ACCAC238B092A009FF084 = {
 			isa = PBXGroup;
 			children = (
-				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB7238B092A009FF084 /* WayAppPay */,
+				B187D53825DE661A0065CAEA /* Shared */,
+				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB6238B092A009FF084 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -322,7 +331,6 @@
 				B12DE95123AA641000C02657 /* general */,
 				B12DE94E23AA636800C02657 /* cart */,
 				B12DE94D23AA634600C02657 /* product */,
-				B19ACCBE238B092C009FF084 /* Assets.xcassets */,
 				B19ACCC3238B092C009FF084 /* LaunchScreen.storyboard */,
 				B19ACCC6238B092C009FF084 /* Info.plist */,
 				B1E84AC824038A6B0093F9EC /* Localizable.strings */,
@@ -438,8 +446,8 @@
 			files = (
 				B19ACCC5238B092C009FF084 /* LaunchScreen.storyboard in Resources */,
 				B1E84ACA24038A6B0093F9EC /* Localizable.strings in Resources */,
+				B187D57625DE67640065CAEA /* Assets.xcassets in Resources */,
 				B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */,
-				B19ACCBF238B092C009FF084 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

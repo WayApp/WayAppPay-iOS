@@ -20,6 +20,18 @@ extension WayAppPay {
         var totalPerDay: [Int]?
         var refundPerDay: [Int]?
         
+        
+        init() {
+            idReport = UUID().uuidString
+            merchantUUID = session.merchantUUID
+            totalSales = 0
+            totalRefund = 0
+            sales = [:]
+            refund = [:]
+            totalPerDay = []
+            refundPerDay = []
+        }
+        
         var id: String {
             return idReport
         }
