@@ -13,16 +13,18 @@ struct TransactionsView: View {
     @State var monthSelection = Calendar.current.component(.month, from: Date()) - 1
 
     private func reportByDates(newMonthSelection: Int) -> (Date, Date) {
-        var day: Date
+        var day = Date()
         var initialComponents = DateComponents()
         var initialDate: Date
         var endDate: Date
         var endComponents = DateComponents()
+        let currentMonth = Calendar.current.component(.month, from: day) - 1
 
-        if newMonthSelection < monthSelection {
-            day = Calendar.current.date(byAdding: .month, value: (monthSelection - newMonthSelection), to: Date())!
+        WayAppUtils.Log.message("currentMonth=\(currentMonth), newMonthSelection=\(newMonthSelection)")
+        if newMonthSelection <= currentMonth {
+            day = Calendar.current.date(byAdding: .month, value: (newMonthSelection - currentMonth), to: day)!
             initialComponents = Calendar.current.dateComponents([.year, .month], from: day)
-        } else if newMonthSelection > monthSelection {
+        } else if newMonthSelection > currentMonth {
             day = Calendar.current.date(byAdding: .month, value: (newMonthSelection - monthSelection), to: Date())!
             day = Calendar.current.date(byAdding: .year, value: -1, to: day)!
         }
@@ -30,6 +32,7 @@ struct TransactionsView: View {
         endComponents.month = 1
         endComponents.second = -1
         endDate = Calendar.current.date(byAdding: endComponents, to: initialDate)!
+        WayAppUtils.Log.message("day=\(day), initialDate=\(initialDate), endDate=\(endDate)")
         return((initialDate, endDate))
     }
     
@@ -52,9 +55,15 @@ struct TransactionsView: View {
             ZStack {
                 Form {
                     Section(header: Text("This month")) {
-                        VStack {
-                            Text("Sales: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalSales ?? 0))")
-                            Text("Refunds: \(WayAppPay.priceFormatter(session.thisMonthReportID?.totalRefund ?? 0))")
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Label("Sales", systemImage: "arrow.up.square")
+                                Text("\(WayAppPay.formatPrice(session.thisMonthReportID?.totalSales ?? 0))")
+                            }
+                            HStack {
+                                Label("Refunds", systemImage: "arrow.down.square")
+                                Text("\(WayAppPay.formatPrice(session.thisMonthReportID?.totalRefund ?? 0))")
+                            }
                         }
                         Picker(selection: $monthSelection, label: Text("Select another month:")) {
                             ForEach(0..<months.count) {
@@ -89,7 +98,6 @@ struct TransactionsView: View {
                         .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
                 }
             }
-            
         }
     }
 }

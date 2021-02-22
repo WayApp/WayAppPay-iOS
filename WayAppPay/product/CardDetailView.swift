@@ -16,22 +16,10 @@ struct CardDetailView: View {
     @State private var showUpdateResultAlert = false
     @State private var action: Int? = 10
 
-    let colors = ["amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde", "amarillo", "azul", "rojo", "verde"]
-    
     var card: WayAppPay.Card?
     
     @State var newAlias: String = ""
     @State var newPrice: String = ""
-    
-    init(card: WayAppPay.Card?) {
-        self.card = card
-        WayAppUtils.Log.message("********************** CardDetailView INIT")
-        //WayAppPay.session.afterBanks.getBanks()
-        //afterBanks.getConsentFor()
-        //afterBanks.getConsent(id: "d42b1f2f-94fb-4a34-9eeb-ed2230e5cfcc")
-        //afterBanks.initiatePayment(token: "sandbox.41tfgg34", amount: "1.60", sourceIBAN: "ES8401826450000201500191", destinationIBAN: "ES1801822200120201933578", destinationCreditorName: "Alejo3", paymentDescription: "test Alejo payment 3")
-    }
-    
     
     var shouldSaveButtonBeDisabled: Bool {
         if card == nil {
@@ -53,37 +41,7 @@ struct CardDetailView: View {
             }
         }
     }
-    
-    /*
-     NavigationView {
-         Form {
-             Section(header: Text("S1")) {
-                 if session.merchants.isEmpty {
-                     Text("There are no merchants")
-                 } else {
-                     Picker(selection: $session.seletectedMerchant, label: Text("Merchant")) {
-                         ForEach(0..<session.merchants.count) {
-                             Text(self.session.merchants[$0].name ?? "NAME")
-                         }
-                     }
-                 }
-             }
-             Section(header: Text("S2")) {
-                 if session.merchants.isEmpty {
-                     Text("There are no merchants")
-                 } else {
-                     Picker(selection: $session.seletectedMerchant, label: Text("Merchant")) {
-                         ForEach(0..<session.merchants.count) {
-                             Text(self.session.merchants[$0].name ?? "NAME")
-                         }
-                     }
-                 }
-             }
 
-         }
-     }
-
-     */
     var body: some View {
         VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
             VStack(alignment: .trailing, spacing: WayAppPay.UI.verticalSeparation) {
@@ -113,33 +71,6 @@ struct CardDetailView: View {
                     Text("Cancel").tag(2)
                 }.pickerStyle(SegmentedPickerStyle())
                 
-                if action == 0 {
-                    Picker(selection: $action, label: Text("Bank")) {
-                        ForEach(0..<colors.count, id: \.self) {
-                            Text(self.colors[$0])
-                        }
-                    }
-                }
-
-                /*
-                NavigationLink(destination: Text("Destination_1"), tag: 1, selection: $action) {
-                    EmptyView()
-                }
-                NavigationLink(destination: Text("Destination_2"), tag: 2, selection: $action) {
-                    EmptyView()
-                }
-                
-                Text("Your Custom View 1")
-                    .onTapGesture {
-                        //perform some tasks if needed before opening Destination view
-                        self.action = 1
-                }
-                Text("Your Custom View 2")
-                    .onTapGesture {
-                        //perform some tasks if needed before opening Destination view
-                        self.action = 2
-                }
- */
             } // VStack
             .padding(.bottom, keyboardObserver.keyboardHeight)
             .animation(.easeInOut(duration: 0.3))
@@ -160,7 +91,7 @@ struct CardDetailView: View {
                     self.isAPICallOngoing = true
                 }
                 if self.card == nil {
-                    WayAppUtils.Log.message("********************** CRAD IS NIL")
+                    WayAppUtils.Log.message("********************** CARD IS NIL")
                 } else {
                     // update
                     self.card?.edit(iban: "123456") { error in

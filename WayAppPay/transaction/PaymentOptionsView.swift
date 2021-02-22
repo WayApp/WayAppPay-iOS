@@ -47,7 +47,7 @@ struct PaymentOptionsView: View {
                                 VStack {
                                     CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleQRScanPayment)
                                     HStack {
-                                        Text("Charge: \(WayAppPay.currencyFormatter.string(for: (self.session.amount))!)")
+                                        Text("Charge: \(WayAppPay.formatPrice(self.session.amount))")
                                             .foregroundColor(Color.black)
                                             .fontWeight(.medium)
                                         Spacer()
@@ -319,8 +319,8 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
-        let payment = WayAppPay.PaymentTransaction(amount: Int(session.amount * 100), token: code)
-        WayAppUtils.Log.message("WayAppPay.PaymentTransaction: \(payment)")
+        let payment = WayAppPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, token: code)
+        WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: \(payment)")
         WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
             if case .success(let response?) = response {

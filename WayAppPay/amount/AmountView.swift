@@ -90,7 +90,8 @@ struct AmountView: View {
                             self.delete()
                     }
                     TextField("shopping cart description", text: $cartDescription)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .modifier(WayAppPay.TextFieldModifier())
+                        .modifier(WayAppPay.ClearButton(text: $cartDescription))
                         .padding()
                         .padding(.bottom, WayAppPay.UI.verticalSeparation * 3)
                     VStack {
@@ -123,6 +124,12 @@ struct AmountView: View {
                         .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
                 }
             }
+            .background(
+                Image("WAP-Background")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+            )
             .navigationBarTitle("Amount")
             .navigationBarItems(trailing:
                 HStack {

@@ -21,7 +21,7 @@ struct ShoppingCartView: View {
                     .onDelete(perform: delete)
                 }
                 .listStyle(GroupedListStyle())
-                .navigationBarTitle(WayAppPay.currencyFormatter.string(for: session.amount)!)
+                .navigationBarTitle(WayAppPay.formatPrice(session.amount))
                 .navigationBarItems(trailing:
                     NavigationLink(destination: PaymentOptionsView()) {
                         Image(systemName: "qrcode.viewfinder")

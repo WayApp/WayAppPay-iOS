@@ -30,7 +30,6 @@ struct AuthenticationView: View {
     
     var body: some View {
         ZStack {
-            Color.offWhite
             VStack(alignment: .center, spacing: 16.0) {
                 Image("WAP-Logo")
                     .resizable()
@@ -38,10 +37,11 @@ struct AuthenticationView: View {
                 HStack(spacing: 15) {
                     Image(systemName: "envelope.circle.fill")
                         .resizable()
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("WAP-Blue"))
                         .frame(width: 30, height: 30)
                     TextField("email", text: self.$email)
                         .autocapitalization(.none)
+                        .disableAutocorrection(true)
                         .textContentType(.emailAddress)
                         .keyboardType(.emailAddress)
                 }
@@ -50,7 +50,7 @@ struct AuthenticationView: View {
                 HStack(spacing: 15) {
                     Image(systemName: "lock.circle.fill")
                         .resizable()
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("WAP-Blue"))
                         .frame(width: 30, height: 30)
                     SecureField("PIN", text: self.$pin)
                         .textContentType(.password)
@@ -73,16 +73,11 @@ struct AuthenticationView: View {
                     WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
                 }) {
                     Text("Sign in")
-                        .foregroundColor(.black)
                         .padding(.vertical)
+                        .foregroundColor(Color.white)
+                        .font(.title2)
                         .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
                 }
-                /*
-                .foregroundColor(.white)
-                 .background(shouldSigninButtonBeDisabled ? Color.gray : Color.green)
-                .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
-                .cornerRadius(WayAppPay.UI.buttonCornerRadius)
-    */
                 .disabled(shouldSigninButtonBeDisabled)
                 .buttonStyle(WayAppPay.ButtonModifier())
                 .padding(.bottom, keyboardObserver.keyboardHeight - 100)
@@ -95,9 +90,13 @@ struct AuthenticationView: View {
             } // VStack
             .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
             .padding()
-
         }
-        .edgesIgnoringSafeArea(.all)
+        .background(
+            Image("WAP-Background")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        )
     }
 }
 

@@ -131,20 +131,25 @@ extension WayAppPay {
                 }
             }
         }
-        
-        func delete() {
+                
+        static func delete(at offsets: IndexSet) {
             guard let merchantUUID = session.merchantUUID else {
                 WayAppUtils.Log.message("missing Session.merchantUUID")
                 return
             }
-            WayAppPay.API.deleteProduct(merchantUUID, self.productUUID).fetch(type: String.self) { response in
-                if case .success(_) = response {
-                    session.products.remove(self)
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+            for offset in offsets {
+                WayAppPay.API.deleteProduct(merchantUUID, session.products[offset].productUUID).fetch(type: [String].self) { response in
+                    if case .success(_) = response {
+                        DispatchQueue.main.async {
+                            session.products.remove(session.products[offset])
+                        }
+                    } else if case .failure(let error) = response {
+                        WayAppUtils.Log.message(error.localizedDescription)
+                    }
                 }
             }
         }
+
         
     }
 }

@@ -10,28 +10,21 @@ import SwiftUI
 import PassKit
 
 struct CardRowView: View {
-        var pass: PKPass
-        //var productIndex: Int
-
-        var body: some View {
-            HStack {
-                HStack(spacing: 8.0) {
-                    Image(uiImage: pass.icon)
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                    VStack(alignment: .leading, spacing: 1.0) {
-                        Text(pass.alias ?? WayAppPay.Card.defaultName)
-                        //Text("\(WayAppPay.priceFormatter(card.balance?.balance ?? 0))")
-                    }
-                }
-                Spacer()
-            }
-            .contentShape(Rectangle())
+    var card: WayAppPay.Card
+    
+    var body: some View {
+        Label {
+            Text(card.alias ?? WayAppPay.Card.defaultName)
+        }
+        icon: {
+            card.pkPass?.icon != nil ? Image(uiImage: card.pkPass!.icon) : Image(systemName: "qrcode")
+        }
+        .frame(height: 60)
     }
 }
 
 struct CardRowView_Previews: PreviewProvider {
     static var previews: some View {
-        CardRowView(pass: PKPass())
+        CardRowView(card: WayAppPay.Card())
     }
 }

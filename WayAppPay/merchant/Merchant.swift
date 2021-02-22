@@ -147,9 +147,7 @@ extension WayAppPay {
                     break
                 }
             }
-            DispatchQueue.main.async {
-                session.thisMonthReportID = reportID
-            }
+            session.thisMonthReportID = reportID
         }
 
         func getTransactionsForAccountByDates(_ accountUUID: String?, initialDate: Date, finalDate: Date) {

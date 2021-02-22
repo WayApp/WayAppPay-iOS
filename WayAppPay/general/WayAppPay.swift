@@ -33,6 +33,8 @@ extension PKPass {
 }
 
 struct WayAppPay {
+    static let cornerRadius: CGFloat = 12
+    
     struct LazyView<Content: View>: View {
         let build: () -> Content
         init(_ build: @autoclosure @escaping () -> Content) {
@@ -47,16 +49,14 @@ struct WayAppPay {
         func body(content: Content) -> some View {
             content
                 .padding()
-                .background(Color.offWhite)
                 .cornerRadius(15)
-                .foregroundColor(.black)
                 .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.black.opacity(0.05),lineWidth: 4)
-                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: 5, y: 5)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: -5, y: -5)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color.black.opacity(0.05),lineWidth: 1)
+                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: 1, y: 1)
+                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: -1, y: -1)
+                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                 )
         }
     }
@@ -78,18 +78,18 @@ struct WayAppPay {
                     .overlay(
                         VStack {
                             if configuration.isPressed {
-                                RoundedRectangle(cornerRadius: 15)
+                                RoundedRectangle(cornerRadius: WayAppPay.cornerRadius)
                                     .stroke(Color.black.opacity(0.05),lineWidth: 4)
-                                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: -5, y: -5)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                                    .shadow(color: Color.black.opacity(0.2), radius: 3, x: -5, y: -5)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: -1, y: -1)
+                                    .clipShape(RoundedRectangle(cornerRadius: WayAppPay.cornerRadius))
+                                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: -1, y: -1)
+                                    .clipShape(RoundedRectangle(cornerRadius: WayAppPay.cornerRadius))
 
                             }
                         }
                     )
-                    .shadow(color: Color.black.opacity(configuration.isPressed ? 0 : 0.2), radius: 5, x: -5, y: -5)
-                    .shadow(color: Color.white.opacity(configuration.isPressed ? 0 : 0.6), radius: 5, x: -5, y: -5)
+                    .shadow(color: Color.black.opacity(configuration.isPressed ? 0 : 0.2), radius: 1, x: -1, y: -1)
+                    .shadow(color: Color.white.opacity(configuration.isPressed ? 0 : 0.6), radius: 1, x: -1, y: -1)
             }
         }
     }
@@ -173,10 +173,27 @@ struct WayAppPay {
         formatter.minimumFractionDigits = 2
         return formatter
     }()
-    
-    static func priceFormatter(_ price: Int?) -> String {
+
+    static let amountFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.usesGroupingSeparator = true
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        return formatter
+    }()
+
+    static func formatPrice(_ price: Int?) -> String {
         if let price = price,
             let formatted = WayAppPay.currencyFormatter.string(for: Double(price) / 100) {
+            return formatted
+        }
+        return ""
+    }
+
+    static func formatAmount(_ price: Int?) -> String {
+        if let price = price,
+            let formatted = WayAppPay.amountFormatter.string(for: Double(price) / 100) {
             return formatted
         }
         return ""

@@ -19,7 +19,7 @@ struct MainView: View {
     enum Tab: Hashable, CaseIterable {
         case cards
         case cart
-        case products
+        case order
         case amount
         case reports
         case settings
@@ -48,12 +48,12 @@ struct MainView: View {
                                         .accessibility(label: Text("Cart"))
                             }
                             .tag(Tab.cart)
-                            ProductGalleryView().environmentObject(self.session)
+                            OrderView().environmentObject(self.session)
                                 .tabItem {
-                                    Label("Catalogue", systemImage: "list.bullet")
-                                        .accessibility(label: Text("Catalogue"))
+                                    Label("Order", systemImage: "square.and.pencil")
+                                        .accessibility(label: Text("Order"))
                             }
-                            .tag(Tab.products)
+                            .tag(Tab.order)
                             AmountView().environmentObject(self.session)
                                 .tabItem {
                                     Label("Amount", systemImage: "eurosign.circle")
@@ -61,7 +61,6 @@ struct MainView: View {
                             }
                             .tag(Tab.amount)
                         }
-                        
                         TransactionsView()
                             .tabItem {
                                 Label("Reports", systemImage: "chart.bar")

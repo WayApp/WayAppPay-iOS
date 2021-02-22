@@ -50,14 +50,26 @@ struct TransactionRowView: View {
                 Text((transaction.accountUUID != nil && session.accounts[transaction.accountUUID!] != nil) ?
                     session.accounts[transaction.accountUUID!]!.email ?? "no email" :
                     "no account")
+                    .font(.subheadline)
             }.contextMenu {
                 if transaction.type == WayAppPay.PaymentTransaction.TransactionType.SALE && !transaction.isRefund {
-                    Button("Refund", action: { transaction.processRefund() })
+                    Button {
+                        transaction.processRefund()
+                    } label: {
+                        Label("Refund", systemImage: "arrowshape.turn.up.left")
+                            .accessibility(label: Text("Refund"))
+                    }
                 }
-                Button("Send email", action: { self.send = true })
+                Button {
+                    self.send = true
+                } label: {
+                    Label("Email receipt", systemImage: "envelope")
+                        .accessibility(label: Text("Email receipt"))
+                }
+
             }
             Spacer()
-            Text(WayAppPay.priceFormatter(transaction.amount))
+            Text(WayAppPay.formatPrice(transaction.amount))
                 .fontWeight(.medium)
         }
         .padding()
@@ -66,12 +78,12 @@ struct TransactionRowView: View {
                 Text("Email receipt to:")
                     .font(.title)
                 TextField("Email", text: self.$email)
-                    .padding()
                     .textContentType(.emailAddress)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.bottom, WayAppPay.UI.verticalSeparation)
+                    .modifier(WayAppPay.TextFieldModifier())
+                    .modifier(WayAppPay.ClearButton(text: $email))
                 Button(action: {
                     WayAppPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
                     DispatchQueue.main.async {

@@ -49,6 +49,8 @@ extension WayAppPay {
         var pkPass: PKPass? {
             for pass in session.passes {
                 let userInfo = pass.userInfo as? [String : String]
+                WayAppUtils.Log.message("+ userInfo: \(userInfo.debugDescription)")
+
                 let passPAN = userInfo?["pan"]
                 if passPAN == self.pan {
                     WayAppUtils.Log.message("+ FOUND MATCHING PAN FOR CARD: \(alias ?? "NO ALIAS"), \(passPAN ?? "NO PAN")")
@@ -70,6 +72,13 @@ extension WayAppPay {
             return pan
         }
         
+        init() {
+            self.alias = "Sample card"
+            self.pan = UUID().uuidString
+            self.issuerUUID = UUID().uuidString
+            self.accountUUID = UUID().uuidString
+        }
+        
         init(alias: String = String(), issuerUUID: String, type: PaymentFormat, consent: AfterBanks.Consent?, selectedIBAN: Int, limitPerOperation: Int) {
             self.pan = ""
             self.issuerUUID = issuerUUID
@@ -83,24 +92,13 @@ extension WayAppPay {
             self.limitPerOperation = limitPerOperation
             self.dailyLimit = limitPerOperation * 4
         }
-                
-        static private func persistCards(_ cards: Container<Card>) {
-            do {
-                let data = try WayAppPay.jsonEncoder.encode(cards)
-                UserDefaults.standard.set(data, forKey: WayAppPay.DefaultKey.CARDS.rawValue)
-                UserDefaults.standard.synchronize()
-            } catch {
-                WayAppUtils.Log.message("Error: \(error.localizedDescription)")
-            }
-        }
-        
+                        
         static func getCards(for accountUUID: String) {
             WayAppPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
                 if case .success(let response?) = response {
                     if let cards = response.result {
                         DispatchQueue.main.async {
                             session.cards.setTo(cards)
-                            persistCards(session.cards)
                         }
                     } else {
                         WayAppPay.API.reportError(response)
@@ -127,7 +125,6 @@ extension WayAppPay {
                         WayAppUtils.Log.message("****** DOWNLOADED CARD=\(card)")
                         DispatchQueue.main.async {
                             session.cards.add(card)
-                            Card.persistCards(session.cards)
                         }
                         
                         completion(nil, card)
@@ -157,7 +154,6 @@ extension WayAppPay {
                         DispatchQueue.main.async {
                             session.cards.remove(self)
                             session.cards.add(card)
-                            Card.persistCards(session.cards)
                         }
                         completion(nil)
                     } else {
@@ -181,7 +177,6 @@ extension WayAppPay {
                     if case .success(_) = response {
                         DispatchQueue.main.async {
                             session.cards.remove(session.cards[offset])
-                            Card.persistCards(session.cards)
                         }
                     } else if case .failure(let error) = response {
                         WayAppUtils.Log.message(error.localizedDescription)

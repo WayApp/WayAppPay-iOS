@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ProductRowView: View {
+struct OrderRowView: View {
     
     struct Metrics {
         var thumbnailSize: CGFloat
@@ -26,7 +26,6 @@ struct ProductRowView: View {
     }
 
     var product: WayAppPay.Product
-    //var productIndex: Int
 
     var body: some View {
         HStack {
@@ -37,20 +36,23 @@ struct ProductRowView: View {
                     .accessibility(hidden: true)
                 VStack(alignment: .leading, spacing: 1.0) {
                     Text(product.name ?? WayAppPay.Product.defaultName)
+                        .font(Font.title3)
                     Text("\(WayAppPay.formatPrice(product.price))")
-                        .foregroundColor(.secondary)
+                        .font(Font.callout)
                 }
                 .padding(.vertical, metrics.textPadding)
                 Spacer(minLength: 0)
             }
-            .font(.headline)
             .padding(.vertical, metrics.rowPadding)
             .accessibilityElement(children: .combine)
+        }
+        .onTapGesture {
+            WayAppPay.session.shoppingCart.addProduct(self.product)
         }
     }
 }
 
-struct ProductRowView_Previews: PreviewProvider {
+struct OrderRowView_Previews: PreviewProvider {
     static var previews: some View {
         ProductRowView(product: WayAppPay.Product(name: "no name", price: 100))
     }

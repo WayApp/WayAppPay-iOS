@@ -18,6 +18,7 @@ extension WayAppPay {
             case SALE
             case REFUND
             case ADD
+            case TOPUP
         }
 
         enum TransactionResult: String, Codable {
@@ -65,7 +66,7 @@ extension WayAppPay {
         }
                 
         // Payment with Wallet card
-        init(amount: Int, token: String = String(), type: TransactionType = .SALE) {
+        init(amount: Int, purchaseDetail: [CartItem]? = nil, token: String = String(), type: TransactionType = .SALE) {
             self.accountUUID = session.accountUUID
             self.merchantUUID = session.merchantUUID
             self.amount = amount
@@ -76,6 +77,7 @@ extension WayAppPay {
             self.readingType = .STANDARD
             self.merchantUUID = session.merchantUUID
             self.accountUUID = session.accountUUID
+            self.purchaseDetail = purchaseDetail
         }
         
         func walletPayment() {

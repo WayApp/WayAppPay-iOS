@@ -53,6 +53,14 @@ extension WayAppPay {
             return items.isEmpty
         }
         
+        var arrayOfCartItems: [CartItem] {
+            var cartItems: [CartItem] = []
+            for shoppingCartItem in items {
+                cartItems.append(shoppingCartItem.cartItem)
+            }
+            return cartItems
+        }
+        
         mutating func addProduct(_ product: Product, isAmount: Bool = false) {
             if let index = items.index(forID: product.productUUID) {
                 items[index].cartItem.quantity += 1

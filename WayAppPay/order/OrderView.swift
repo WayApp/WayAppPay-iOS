@@ -8,28 +8,18 @@
 
 import SwiftUI
 
-struct ProductGalleryView: View {
+struct OrderView: View {
     @EnvironmentObject private var session: WayAppPay.Session
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(session.products) { product in
-                    NavigationLink(destination: ProductDetailView(product: product)) {
-                        ProductRowView(product: product)
-                    }
+                    OrderRowView(product: product)
                 }
-                .onDelete(perform: delete)
             }
             .listStyle(GroupedListStyle())
-            .navigationBarTitle("Products", displayMode: .inline)
-            .navigationBarItems(trailing:
-                NavigationLink(destination: ProductDetailView(product: nil)) {   Image(systemName: "plus.circle")
-                        .resizable()
-                    .frame(width: 30, height: 30, alignment: .center)
-                }
-                .aspectRatio(contentMode: .fit)
-            )
+            .navigationBarTitle("Order")
         }
     }
     
@@ -39,10 +29,10 @@ struct ProductGalleryView: View {
 
 }
 
-struct ProductGalleryView_Previews: PreviewProvider {
+struct OrderView_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
-            ProductGalleryView()
+            OrderView()
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }

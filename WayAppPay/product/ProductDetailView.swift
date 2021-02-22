@@ -24,8 +24,6 @@ struct ProductDetailView: View {
     @State private var showImagePicker: Bool = false
     @State private var newImage: UIImage? = nil
     
-    let imageSize: CGFloat = 180.0
-
     var shouldSaveButtonBeDisabled: Bool {
         if product == nil {
             // creation
@@ -50,12 +48,11 @@ struct ProductDetailView: View {
     var body: some View {
         VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
             if newImage == nil {
-                ImageView(withURL: product?.image, size: imageSize)
+                ImageView(withURL: product?.image)
             } else {
                 Image(uiImage:newImage!)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: imageSize, height: imageSize)
             }
             Button(action: {
                 self.showImagePicker = true
@@ -64,29 +61,31 @@ struct ProductDetailView: View {
                     .resizable()
                     .frame(width: 40, height: 30)
             })
-            .padding(.bottom, 30)
-            VStack(alignment: .trailing, spacing: WayAppPay.UI.verticalSeparation) {
-                HStack(alignment: .center, spacing: 12) {
+            if isAPICallOngoing {
+                ProgressView("Please wait…")
+            }
+            VStack(alignment: .trailing) {
+                HStack(alignment: .center, spacing: 6) {
                     Text("Name")
                     TextField("\(product?.name ?? WayAppPay.Product.defaultName)", text: $newName)
-                        .textContentType(.none)
+                        .textContentType(.name)
                         .keyboardType(.default)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
-                HStack(alignment: .center, spacing: 12) {
+                HStack(alignment: .center, spacing: 6) {
                     Text("Price")
-                    TextField("\(WayAppPay.priceFormatter(product?.price))", text: $newPrice)
+                    TextField("\(WayAppPay.formatAmount(product?.price ?? 0))", text: $newPrice)
                         .keyboardType(.decimalPad)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
             }
+            .padding()
             .padding(.bottom, keyboardObserver.keyboardHeight)
             .animation(.easeInOut(duration: 0.3))
             Spacer()
         }
         .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
         .font(.headline)
-        .padding()
         .navigationBarTitle(
             newName.isEmpty ? (product?.name ?? "") : newName
         )

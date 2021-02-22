@@ -14,13 +14,13 @@ extension WayAppPay {
         case EMAIL // Stores the email for biometrics login
         // Session related
         case ACCOUNT // Stores the user account while in session
-        case CARDS // Stores the user cards while in session
+        case MERCHANT // Stores selected merchant
 
         static func resetSessionKeys() {
             // Only session keys
             UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
             UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.ACCOUNT.rawValue)
-            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.CARDS.rawValue)
+            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
             UserDefaults.standard.synchronize()
         }
         

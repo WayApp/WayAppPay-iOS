@@ -50,42 +50,25 @@ struct CardsView: View {
     var body: some View {
         NavigationView {
             List {
-                /*
                 ForEach(session.cards) { card in
-                    //NavigationLink(destination: WayAppPay.LazyView(CardDetailView(card: card))) {
-                    if let pkPass = card.pkPass {
-                        NavigationLink(destination: PassViewer(pass: pkPass)) {
-                            CardRowView(card: card)
-                        }
-                    }
+                    NavigationLink(destination: CardDetailView(card: card)) {
+                        CardRowView(card: card)}
                 }
-                .onDelete(perform: delete)
-                */
-                ForEach(session.passes, id: \.self.serialNumber) { pass in
-                    NavigationLink(destination: PassViewer(pass: pass)) {
-                        CardRowView(pass: pass)
-                    }
-                }
-                .onDelete(perform: delete)
-
-            }
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle("Cards")
-            .navigationBarItems(trailing:
-                NavigationLink(destination: NewCardView()) {   Image(systemName: "plus.circle")
-                        .resizable()
-                    .frame(width: 30, height: 30, alignment: .center)
-                }
-                .foregroundColor(Color("WAP-Blue"))
-                .aspectRatio(contentMode: .fit)
-            )
+                .navigationBarTitle("Payment tokens", displayMode: .inline)
+                .navigationBarItems(trailing:
+                                        NavigationLink(destination: NewCardView()) {   Image(systemName: "plus.circle")
+                                            .resizable()
+                                            .frame(width: 30, height: 30, alignment: .center)
+                                        }
+                                        .foregroundColor(Color("WAP-Blue"))
+                                        .aspectRatio(contentMode: .fit))
+            } // List
         }
-    }
+    } // Body
     
     func delete(at offsets: IndexSet) {
         WayAppPay.Card.delete(at: offsets)
     }
-
 }
 
 struct CardsView_Previews: PreviewProvider {

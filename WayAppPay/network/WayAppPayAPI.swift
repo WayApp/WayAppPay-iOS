@@ -284,7 +284,6 @@ extension WayAppPay {
                 return nil
             case .addProduct(_, let product, let picture):
                 var parts: [HTTPCall.BodyPart]?
-                WayAppUtils.Log.message("Product Json: \(product)")
                 if let part = HTTPCall.BodyPart(product, name: "product") {
                     parts = [part]
                     if let picture = picture {

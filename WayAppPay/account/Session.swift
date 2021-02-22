@@ -23,7 +23,7 @@ extension WayAppPay {
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
-                    //Card.getCards(for: account.accountUUID)
+                    Card.getCards(for: account.accountUUID)
                 }
             }
         }
@@ -33,7 +33,7 @@ extension WayAppPay {
             didSet {
                 DispatchQueue.main.async {
                     self.doesUserHasMerchantAccount = (self.merchants.count > 0)
-                    self.seletectedMerchant = 0
+                    self.seletectedMerchant = UserDefaults.standard.integer(forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
                 }
             }
         }
@@ -42,8 +42,6 @@ extension WayAppPay {
                 let today = Date()
                 let components = Calendar.current.dateComponents([.year, .month], from: today)
                 let firstDayOfMonth = Calendar.current.date(from: components)!
-                
-                WayAppUtils.Log.message("firstDayOfMonth: \(firstDayOfMonth), today: \(today)")
                 
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
                     Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
@@ -84,12 +82,6 @@ extension WayAppPay {
             if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
             }
-            if let data = UserDefaults.standard.data(forKey: WayAppPay.DefaultKey.CARDS.rawValue),
-               let cards = try? WayAppPay.jsonDecoder.decode(Container<Card>.self, from: data) {
-                self.cards.setTo(cards)
-            } else {
-                WayAppUtils.Log.message("********************** ERROR  Loading cards from WayAppPay.DefaultKey.CARDS.rawValue")
-            }
             if PKPassLibrary.isPassLibraryAvailable() {
                 passes = pkLibrary.passes()
                 passes = passes.filter({
@@ -99,10 +91,10 @@ extension WayAppPay {
             }
         }
         
-        var amount: Double {
-            var total: Double = 0
+        var amount: Int {
+            var total: Int = 0
             for item in shoppingCart.items {
-                total += Double(item.cartItem.quantity) * (Double(item.cartItem.price) / 100)
+                total += item.cartItem.quantity * item.cartItem.price
             }
             return total
         }
@@ -137,13 +129,18 @@ extension WayAppPay {
             }
         }
         
+        func saveSelectedMerchant() {
+            UserDefaults.standard.set(seletectedMerchant, forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
+            UserDefaults.standard.synchronize()
+        }
+        
         private func reset() {
             showAuthenticationView = true
             doesUserHasMerchantAccount = false
             selectedAccount = 0
             account = nil
-            accounts.empty()
             seletectedMerchant = 0
+            accounts.empty()
             merchants.empty()
             transactions.empty()
             products.empty()

@@ -23,63 +23,71 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Operating merchant")) {
+                Section(header:
+                            Label("Merchants", systemImage: "building.2.crop.circle")
+                                .font(.callout)) {
                     if session.merchants.isEmpty {
                         Text("There are no merchants")
                     } else {
-                        Picker(selection: $session.seletectedMerchant, label: Text("Merchant")) {
+                        Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")) {
                             ForEach(0..<session.merchants.count) {
                                 Text(self.session.merchants[$0].name ?? "Name")
+                                    .font(Font.caption)
+                                    .fontWeight(.light)
                             }
                         }
+                        .onChange(of: session.seletectedMerchant, perform: { merchant in
+                            session.saveSelectedMerchant()
+                        })
+                    }
+                    NavigationLink(destination: ProductGalleryView()) {
+                        Label("Product catalogue", systemImage: "list.bullet.rectangle")
                     }
                 }
-                Section(header: Text("Accounts")) {
+                Section(header: Label("Accounts", systemImage: "person.2.circle")
+                                .font(.callout)) {
                     if WayAppPay.session.accounts.isEmpty {
                         Text("There are no accounts")
                     } else {
-                        Picker(selection: $session.selectedAccount, label: Text("Account")) {
+                        Picker(selection: $session.selectedAccount, label: Label("Account", systemImage: "person.fill.checkmark")) {
                             ForEach(0..<WayAppPay.session.accounts.count) {
                                 Text(WayAppPay.session.accounts[$0].email ?? "no email")
+                                    .font(.caption)
+                                    .fontWeight(.light)
                             }
                         }
                     }
-                }
-                .onAppear(perform:
-                            {
-                                WayAppUtils.Log.message("+++++++++++ ACCOUNTS COUNT=\(WayAppPay.session.accounts.count)")
-                            })
-                Section(header: Text("Account: \(WayAppPay.session.account?.email ?? "no email")")) {
-                    /*
-                    if session.doesUserHasMerchantAccount {
-                        NavigationLink(
-                            destination: CardsView()
-                        ) {
-                            Text("Payment token")
-                        }
+                    NavigationLink(destination: CardsView()) {
+                        Label("Payment tokens", systemImage: "qrcode")
                     }
- */
-                    VStack {
-                        Button(action: {
-                            self.changePIN = true
-                        }) {
-                            Text("Change PIN")
-                        }
-                        .sheet(isPresented: self.$changePIN) {
-                            ChangePinView()
-                        }
+                    Button {
+                        self.changePIN = true
+                    } label: {
+                        Label("Change PIN", systemImage: "lock.rotation.open")
+                            .accessibility(label: Text("Change PIN"))
                     }
-                    Button(action: {
+                    .sheet(isPresented: self.$changePIN) {
+                        ChangePinView()
+                    }
+                    Button {
                         DispatchQueue.main.async {
                             self.session.logout()
                             WayAppPay.session.accounts.empty()
                             WayAppPay.session.account?.email = ""
                         }
-                    }) {
-                        Text("Logout")
+                    } label: {
+                        Label("Logout", systemImage: "chevron.left.square")
+                            .accessibility(label: Text("Logout"))
                     }
+
                 }
-            }.navigationBarTitle("Settings")
+                .onAppear(perform:{
+                    WayAppUtils.Log.message("+++++++++++ ACCOUNTS COUNT=\(WayAppPay.session.accounts.count)") })
+                .accentColor(.primary)
+                .listItemTint(Color("WAP-GreenDark"))
+
+            }
+            .navigationBarTitle("Settings", displayMode: .inline)
         }
     }
 }
