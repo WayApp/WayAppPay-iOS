@@ -72,6 +72,7 @@ extension WayAppPay {
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
         case getMerchantAccountDetail(String, String) // GET
+        case deleteMerchant(String) // GET
         // Product
         case getProducts(String) // GET
         case addProduct(String, Product, UIImage?) // POST
@@ -117,6 +118,7 @@ extension WayAppPay {
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/"
+            case .deleteMerchant(let merchantUUID): return "/merchants/\(merchantUUID)/"
             // Products
             case .getProducts(let merchantUUID): return "/merchants/\(merchantUUID)/products/"
             case .addProduct(let merchantUUID, _, _): return "/merchants/\(merchantUUID)/products/"
@@ -164,6 +166,7 @@ extension WayAppPay {
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
+            case .deleteMerchant(let merchantUUID): return merchantUUID
             // Product
             case .getProducts(let merchantUUID): return merchantUUID
             case .addProduct(let merchantUUID, _, _): return merchantUUID
@@ -231,16 +234,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .deleteProduct:
-                // Response with data
-                HTTPCall.DELETE(self).task(type: Response<T>.self) { response, error in
-                    if let error = error {
-                        result(.failure(error))
-                    } else if let response = response as? Response<T> {
-                        result(.success(response))
-                    }
-                }
-            case .deleteAccount, .deleteCard:
+            case .deleteAccount, .deleteCard, .deleteProduct, .deleteMerchant:
                 // Response with no data
                 HTTPCall.DELETE(self).task(type: Response<T>.self) { response, error in
                     if let error = error {

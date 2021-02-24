@@ -227,5 +227,20 @@ extension WayAppPay {
                 }
             }
         }
+        
+        static func delete(_ merchantUUID: String) {
+            WayAppPay.API.deleteMerchant(merchantUUID).fetch(type: [String].self) { response in
+                if case .success(_) = response {
+                    WayAppUtils.Log.message("Merchant with UUID=\(merchantUUID) successfully deleted")
+                    DispatchQueue.main.async {
+                        if let merchant = session.merchants[merchantUUID] {
+                            session.merchants.remove(merchant)
+                        }
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
     }
 }

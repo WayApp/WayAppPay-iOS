@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct AfterBanks {
+extension AfterBanks {
     
     struct GlobalPosition: Codable {
         var product: String?
@@ -40,35 +40,4 @@ struct AfterBanks {
             return consentId
         }
     }
-    
-    struct ConsentResponse: Codable {
-        var follow: String
-        var consentId: String
-    } // ConsentResponse
-
-    struct SupportedBank: Codable, Identifiable, ContainerProtocol {
-        var service: String // key
-        var countryCode: String?
-        var swift: String?
-        var fullname: String?
-        var image: String?
-        var imageSVG: String?
-        var paymentsSupported: String?
-        
-        // Protocol Identifiable
-        var id: String {
-            return service
-        }
-
-        var containerID: String {
-            return service
-        }
-        
-        init(countryCode: String = "ES", paymentsSupported: String = "1") {
-            self.service = UUID().uuidString
-            self.countryCode = countryCode
-            self.paymentsSupported = paymentsSupported
-        }
-    } // SupportedBank
-
 }

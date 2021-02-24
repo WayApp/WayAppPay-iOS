@@ -54,15 +54,15 @@ struct CardsView: View {
                     NavigationLink(destination: CardDetailView(card: card)) {
                         CardRowView(card: card)}
                 }
-                .navigationBarTitle("Payment tokens", displayMode: .inline)
-                .navigationBarItems(trailing:
-                                        NavigationLink(destination: NewCardView()) {   Image(systemName: "plus.circle")
-                                            .resizable()
-                                            .frame(width: 30, height: 30, alignment: .center)
-                                        }
-                                        .foregroundColor(Color("WAP-Blue"))
-                                        .aspectRatio(contentMode: .fit))
             } // List
+            .navigationBarTitle("Payment tokens", displayMode: .inline)
+            .navigationBarItems(trailing:
+                                    NavigationLink(destination: NewCardView()) {   Image(systemName: "plus.circle")
+                                        .resizable()
+                                        .frame(width: 30, height: 30, alignment: .center)
+                                    }
+                                    .foregroundColor(Color("WAP-Blue"))
+                                    .aspectRatio(contentMode: .fit))
         }
     } // Body
     

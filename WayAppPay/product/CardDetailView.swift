@@ -15,7 +15,10 @@ struct CardDetailView: View {
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
     @State private var action: Int? = 10
-
+    @State private var validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
+    @State private var consent: AfterBanks.Consent?
+    @State var authenticationViewModel = WayAppPay.AuthenticationViewModel()
+    
     var card: WayAppPay.Card?
     
     @State var newAlias: String = ""
@@ -59,7 +62,7 @@ struct CardDetailView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
                 Button(action: {
-                   // WayAppPay.session.afterBanks.getConsent(pan: "43ECC228-F99E-4DEB-A16F-E0B7E09A7A36", service: "sandbox", validUntil: "30-09-2020")
+                    grantConsent(accountUUID: session.accountUUID!)
                     
                 }) {
                     Text("Test get consent")
@@ -111,6 +114,31 @@ struct CardDetailView: View {
         .disabled(shouldSaveButtonBeDisabled)
         )
     }
+    
+    private func grantConsent(accountUUID: String) {
+            let validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
+            AfterBanks.getConsent(accountUUID: accountUUID,
+                //  service: self.session.afterBanks.banks[self.selectedBank].service,
+                service: "sandbox",
+                validUntil: AfterBanks.dateFormatter.string(from: validUntil)) { error, consent in
+                    if let error = error {
+                        WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
+                    } else if let consent = consent {
+                        WayAppUtils.Log.message("********************** CARD CONSENT SUCCESS")
+                        DispatchQueue.main.async {
+                            self.authenticationViewModel.signIn(consent: consent) { error, consent in
+                                if let error = error {
+                                    // Alert user
+                                    WayAppUtils.Log.message(error.localizedDescription)
+                                } else if let consent = consent {
+                                    self.consent = consent
+                                    WayAppUtils.Log.message("SHOW IBANS .....FOR CONSENT=\(consent)")
+                                }
+                            }
+                        }
+                    }
+            }
+        }
 }
 
 struct CardDetailView_Previews: PreviewProvider {

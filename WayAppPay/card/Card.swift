@@ -32,8 +32,7 @@ extension WayAppPay {
         var issuerUUID: String
         var accountUUID: String
         var alias: String?
-        //TODO: fix date format on API
-//        var expirationDate: Date?
+        var expirationDate: Date?
         var dailyLimit: Int?
         var limitPerOperation: Int?
         var currency: Currency?

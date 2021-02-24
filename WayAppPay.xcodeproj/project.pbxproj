@@ -41,6 +41,7 @@
 		B15800F42507CA380022A687 /* CardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F32507CA380022A687 /* CardDetailView.swift */; };
 		B15800F625093B610022A687 /* NewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F525093B610022A687 /* NewCardView.swift */; };
 		B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B164A70C24A4C13B0020ACAB /* PassKit.framework */; };
+		B16ECCC225E66D5D007A9115 /* AfterBanks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16ECCC125E66D5D007A9115 /* AfterBanks.swift */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
 		B187D57625DE67640065CAEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B187D57525DE67640065CAEA /* Assets.xcassets */; };
 		B19ACCBD238B092A009FF084 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBC238B092A009FF084 /* MainView.swift */; };
@@ -110,6 +111,7 @@
 		B15800F32507CA380022A687 /* CardDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = WayAppPay/product/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
 		B15800F525093B610022A687 /* NewCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCardView.swift; sourceTree = "<group>"; };
 		B164A70C24A4C13B0020ACAB /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
+		B16ECCC125E66D5D007A9115 /* AfterBanks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterBanks.swift; sourceTree = "<group>"; };
 		B174BAF62517489D00F51525 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
 		B187D57525DE67640065CAEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				B1B3818825066D8D0008BC78 /* Consent.swift */,
+				B16ECCC125E66D5D007A9115 /* AfterBanks.swift */,
 			);
 			path = AfterBanks;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 				B1B3817A2505031D0008BC78 /* CardsView.swift in Sources */,
 				B1D8750823EEDF6600A1967F /* OperationButtonView.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
+				B16ECCC225E66D5D007A9115 /* AfterBanks.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
 				B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */,
 				B12DE96B23AA701E00C02657 /* Product.swift in Sources */,
