@@ -32,7 +32,7 @@ extension WayAppPay {
         var issuerUUID: String
         var accountUUID: String
         var alias: String?
-        var expirationDate: Date?
+//        var expirationDate: Date?
         var dailyLimit: Int?
         var limitPerOperation: Int?
         var currency: Currency?
@@ -45,6 +45,9 @@ extension WayAppPay {
         var iban: String?
         var issuer: Issuer?
         var balance: Balance?
+        var followLink: String?
+        var paymentId: String?
+        var wallet: Balance?
         var pkPass: PKPass? {
             for pass in session.passes {
                 let userInfo = pass.userInfo as? [String : String]
