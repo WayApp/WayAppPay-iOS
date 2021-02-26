@@ -44,6 +44,7 @@ struct AuthenticationView: View {
                         .disableAutocorrection(true)
                         .textContentType(.emailAddress)
                         .keyboardType(.emailAddress)
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
                 }
                 .modifier(WayAppPay.TextFieldModifier())
                 .modifier(WayAppPay.ClearButton(text: $email))
@@ -55,6 +56,7 @@ struct AuthenticationView: View {
                     SecureField("PIN", text: self.$pin)
                         .textContentType(.password)
                         .keyboardType(.numberPad)
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
                 }
                 .modifier(WayAppPay.TextFieldModifier())
                 .modifier(WayAppPay.ClearButton(text: $pin))
@@ -80,7 +82,7 @@ struct AuthenticationView: View {
                 }
                 .disabled(shouldSigninButtonBeDisabled)
                 .buttonStyle(WayAppPay.ButtonModifier())
-                .padding(.bottom, keyboardObserver.keyboardHeight - 100)
+//                .padding(.bottom, keyboardObserver.keyboardHeight - 100)
                 .animation(.easeInOut(duration: 0.3))
                 .alert(isPresented: $session.loginError) {
                     Alert(title: Text("Login error"),
@@ -88,7 +90,7 @@ struct AuthenticationView: View {
                           dismissButton: .default(Text("OK")))
                 }
             } // VStack
-            .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
+            .gesture(DragGesture().onChanged { _ in hideKeyboard() })
             .padding()
         }
         .background(

@@ -10,9 +10,18 @@ import AVFoundation
 import SwiftUI
 import Combine
 import PassKit
+
 extension Color {
     static let offWhite = Color(red: 233 / 255, green: 242 / 255, blue: 252 / 255)
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
 
 extension PKPass {
     var alias: String? {
@@ -139,11 +148,7 @@ struct WayAppPay {
           .assign(to: \.keyboardHeight, on: self)
       }
     }
-    
-    static func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-
+       
     struct ClearButton: ViewModifier {
         @Binding var text: String
          

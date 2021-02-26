@@ -155,7 +155,7 @@ struct AmountView: View {
                 .frame(height: 30)
             )
         }
-        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
+        .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     }
     
 }
