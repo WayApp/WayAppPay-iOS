@@ -84,7 +84,7 @@ struct ProductDetailView: View {
             .animation(.easeInOut(duration: 0.3))
             Spacer()
         }
-        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
+        .gesture(DragGesture().onChanged { _ in hideKeyboard() })
         .font(.headline)
         .navigationBarTitle(
             newName.isEmpty ? (product?.name ?? "") : newName

@@ -82,7 +82,7 @@ struct CardDetailView: View {
             })
             Spacer()
         }
-        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
+        .gesture(DragGesture().onChanged { _ in hideKeyboard() })
         .font(.headline)
         .padding()
         .navigationBarTitle(

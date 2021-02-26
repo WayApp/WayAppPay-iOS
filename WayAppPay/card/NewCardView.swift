@@ -179,7 +179,7 @@ struct NewCardView: View {
                 ) // navigationBarItems
             } // Form
         }
-        .gesture(DragGesture().onChanged { _ in WayAppPay.hideKeyboard() })
+        .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     }
 }
 
