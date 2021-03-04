@@ -30,11 +30,11 @@ struct AuthenticationView: View {
     
     var body: some View {
         ZStack {
-            VStack(alignment: .center, spacing: 16.0) {
+            VStack(alignment: .center) {
                 Image("WAP-Logo")
                     .resizable()
                     .scaledToFit()
-                HStack(spacing: 15) {
+                HStack() {
                     Image(systemName: "envelope.circle.fill")
                         .resizable()
                         .foregroundColor(Color("WAP-Blue"))
@@ -48,7 +48,7 @@ struct AuthenticationView: View {
                 }
                 .modifier(WayAppPay.TextFieldModifier())
                 .modifier(WayAppPay.ClearButton(text: $email))
-                HStack(spacing: 15) {
+                HStack() {
                     Image(systemName: "lock.circle.fill")
                         .resizable()
                         .foregroundColor(Color("WAP-Blue"))
@@ -82,7 +82,6 @@ struct AuthenticationView: View {
                 }
                 .disabled(shouldSigninButtonBeDisabled)
                 .buttonStyle(WayAppPay.ButtonModifier())
-//                .padding(.bottom, keyboardObserver.keyboardHeight - 100)
                 .animation(.easeInOut(duration: 0.3))
                 .alert(isPresented: $session.loginError) {
                     Alert(title: Text("Login error"),
@@ -90,9 +89,9 @@ struct AuthenticationView: View {
                           dismissButton: .default(Text("OK")))
                 }
             } // VStack
-            .gesture(DragGesture().onChanged { _ in hideKeyboard() })
             .padding()
         }
+        .onTapGesture { hideKeyboard() }
         .background(
             Image("WAP-Background")
                 .resizable()

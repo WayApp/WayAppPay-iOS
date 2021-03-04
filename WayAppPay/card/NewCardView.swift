@@ -51,7 +51,7 @@ struct NewCardView: View {
         }
         switch WayAppPay.Card.PaymentFormat.allCases[selectedCardType] {
         case .PREPAID: return alias.isEmpty
-        case .POSTPAID: return alias.isEmpty || consent == nil
+        case .POSTPAID: return alias.isEmpty
         case .CREDIT: return true
         }
     }

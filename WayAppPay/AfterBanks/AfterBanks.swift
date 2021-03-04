@@ -100,9 +100,10 @@ final class AfterBanks: ObservableObject {
         }
     }
 
-    static func getConsent(accountUUID: String, service: String, validUntil: String, completion: @escaping (Error?, ConsentResponse?) -> Void) {
+    static func getConsent(accountUUID: String, service: String, validUntil: String, pan: String, completion: @escaping (Error?, ConsentResponse?) -> Void) {
+        let actualService = OperationalEnvironment.current == .staging ? "sandbox" : service
         WayAppUtils.Log.message("********************** GET CONSENT")
-        let consentRequest = ConsentRequest(service: service, validUntil: validUntil, urlRedirect: "WAP://pay.wayapp.com", pan: "AE00CDCE-42CA-43CB-854B-C93D719AA988")
+        let consentRequest = ConsentRequest(service: actualService, validUntil: validUntil, urlRedirect: "WAP://pay.wayapp.com", pan: pan)
         
         WayAppPay.API.getConsent(accountUUID, consentRequest).fetch(type: [ConsentResponse].self) { response in
             if case .success(let response?) = response {
