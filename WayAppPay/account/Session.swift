@@ -24,6 +24,8 @@ extension WayAppPay {
                     Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
                     Card.getCards(for: account.accountUUID)
+                    Issuer.get()
+                    AfterBanks.getBanks()
                 }
             }
         }

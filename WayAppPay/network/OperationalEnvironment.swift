@@ -11,7 +11,7 @@ import Foundation
 enum OperationalEnvironment {
     case production, staging
     
-    static var current: OperationalEnvironment = .production
+    static var current: OperationalEnvironment = .production    
     
     static var wayappPayAPIBaseURL: String {
         switch OperationalEnvironment.current {
@@ -22,21 +22,30 @@ enum OperationalEnvironment {
         }
     }
     
-    static var walletAPIBaseURL: String {
-        switch OperationalEnvironment.current {
-        case .production:
-            return "https://api.wayapp.com/wallet/v1"
-        case .staging:
-            return "https://api.wayapp.com/wallet/v1"
-        }
-    }
-
     static var wayAppPayPublicKey: String {
         switch OperationalEnvironment.current  {
         case .production:
             return "776487e170a268e261d97e3c40d6e11545e18321"
         case .staging:
             return "8e261776487e170a545e2d97e3c4018321d6e116"
+        }
+    }
+
+    static var wayAppPayPrivateKey: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "41f5681ec660748e9832177993fd7c9fe763458e"
+        case .staging:
+            return "748e93458e818fe76e3fd7c9741f5699c6603217"
+        }
+    }
+
+    static var walletAPIBaseURL: String {
+        switch OperationalEnvironment.current {
+        case .production:
+            return "https://api.wayapp.com/wallet/v1"
+        case .staging:
+            return "https://api.wayapp.com/wallet/v1"
         }
     }
 
@@ -49,14 +58,6 @@ enum OperationalEnvironment {
         }
     }
 
-    static var wayAppPayPrivateKey: String {
-        switch OperationalEnvironment.current  {
-        case .production:
-            return "41f5681ec660748e9832177993fd7c9fe763458e"
-        case .staging:
-            return "748e93458e818fe76e3fd7c9741f5699c6603217"
-        }
-    }
 
     static var walletPrivateKey: String {
         switch OperationalEnvironment.current  {

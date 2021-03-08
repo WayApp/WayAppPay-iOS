@@ -62,7 +62,7 @@ struct CardDetailView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
                 Button(action: {
-                    grantConsent(accountUUID: session.accountUUID!)
+                    getConsent(accountUUID: session.accountUUID!)
                     
                 }) {
                     Text("Test get consent")
@@ -115,30 +115,34 @@ struct CardDetailView: View {
         )
     }
     
-    private func grantConsent(accountUUID: String) {
-            let validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
-            AfterBanks.getConsent(accountUUID: accountUUID,
-                //  service: self.session.afterBanks.banks[self.selectedBank].service,
-                service: "bbva",
-                validUntil: AfterBanks.dateFormatter.string(from: validUntil)) { error, consent in
-                    if let error = error {
-                        WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
-                    } else if let consent = consent {
-                        WayAppUtils.Log.message("********************** CARD CONSENT SUCCESS")
-                        DispatchQueue.main.async {
-                            self.authenticationViewModel.signIn(consent: consent) { error, consent in
-                                if let error = error {
-                                    // Alert user
-                                    WayAppUtils.Log.message(error.localizedDescription)
-                                } else if let consent = consent {
-                                    self.consent = consent
-                                    WayAppUtils.Log.message("SHOW IBANS .....FOR CONSENT=\(consent)")
-                                }
-                            }
+    private func getConsent(accountUUID: String) {
+        guard let card = card else {
+            WayAppUtils.Log.message("Missing Card")
+            return
+        }
+        let validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
+        AfterBanks.getConsent(accountUUID: accountUUID,
+                              //  service: self.session.afterBanks.banks[self.selectedBank].service,
+                              service: "bbva",
+                              validUntil: AfterBanks.dateFormatter.string(from: validUntil), pan: card.pan) { error, consent in
+            if let error = error {
+                WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
+            } else if let consent = consent {
+                WayAppUtils.Log.message("********************** CARD CONSENT SUCCESS")
+                DispatchQueue.main.async {
+                    self.authenticationViewModel.signIn(consent: consent) { error, consent in
+                        if let error = error {
+                            // Alert user
+                            WayAppUtils.Log.message(error.localizedDescription)
+                        } else if let consent = consent {
+                            self.consent = consent
+                            WayAppUtils.Log.message("SHOW IBANS .....FOR CONSENT=\(consent)")
                         }
                     }
+                }
             }
         }
+    }
 }
 
 struct CardDetailView_Previews: PreviewProvider {
