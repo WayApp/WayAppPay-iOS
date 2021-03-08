@@ -40,7 +40,7 @@ struct PaymentOptionsView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30, alignment: .leading)
-                                    Text("Payment")
+                                    Text("Charge")
                                 }
                             })
                             .sheet(isPresented: $showQRScannerForPayment) {
