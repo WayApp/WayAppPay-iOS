@@ -31,22 +31,10 @@ struct TransactionRowView: View {
 
     var body: some View {
         HStack {
-            if transaction.result == .ACCEPTED {
-                Image(systemName: "checkmark.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(Color.green)
-            } else {
-                Image(systemName: "x.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(Color.red)
-            }
+            transaction.result?.image
             VStack(alignment: .leading, spacing: 8) {
                 Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
-                (transaction.type == WayAppPay.PaymentTransaction.TransactionType.REFUND) ? Text("Refund") : Text("Sale")
+                Text(transaction.type?.title ?? WayAppPay.PaymentTransaction.TransactionType.defaultTitle)
                 Text((transaction.accountUUID != nil && session.accounts[transaction.accountUUID!] != nil) ?
                     session.accounts[transaction.accountUUID!]!.email ?? "no email" :
                     "no account")

@@ -6,8 +6,7 @@
 //  Copyright © 2019 WayApp. All rights reserved.
 //
 
-import Foundation
-
+import SwiftUI
 
 extension WayAppPay {
     struct PaymentTransaction: Codable, ContainerProtocol, Identifiable {
@@ -15,14 +14,48 @@ extension WayAppPay {
         static let defaultCurrency = Currency.EUR
         
         enum TransactionType: String, Codable {
+            static let defaultTitle = NSLocalizedString("Unspecified", comment: "Default PaymentTransaction.TransactionType")
+            
             case SALE
             case REFUND
             case ADD
             case TOPUP
+            
+            var title: String {
+                switch self {
+                case .SALE: return NSLocalizedString("Sale", comment: "PaymentTransaction.TransactionType")
+                case .REFUND: return NSLocalizedString("Refund", comment: "PaymentTransaction.TransactionType")
+                case .ADD: return NSLocalizedString("Add", comment: "PaymentTransaction.TransactionType")
+                case .TOPUP: return NSLocalizedString("Top-up", comment: "PaymentTransaction.TransactionType")
+                }
+            }
         }
 
         enum TransactionResult: String, Codable {
             case DENIED, ACCEPTED, PROCESSING
+            
+            var image: some View {
+                switch self {
+                case .DENIED:
+                    return Image(systemName: "x.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(Color.red)
+                case .ACCEPTED:
+                    return Image(systemName: "checkmark.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(Color.green)
+                case .PROCESSING:
+                    return Image(systemName: "questionmark.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(Color.yellow)
+                }
+            }
         }
         
         enum ReadingType: String, Codable {

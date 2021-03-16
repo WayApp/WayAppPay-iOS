@@ -163,7 +163,23 @@ extension WayAppPay {
                 }
             }
         } // load
-                
+            
+        static func delete(_ accountUUID: String) {
+            WayAppPay.API.deleteAccount(accountUUID).fetch(type: [String].self) { response in
+                WayAppUtils.Log.message("DELETE Response")
+                if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                } else if case .success(let response?) = response {
+                    WayAppUtils.Log.message("DELETE Response: \(response.debugOutput())")
+
+                    if response.code == 204 {
+                        WayAppUtils.Log.message("Account: \(accountUUID). DELETED.")
+                    } else {
+                        WayAppUtils.Log.message("Response: \(response.debugOutput())")
+                    }
+                }
+            }
+        }
     }
 }
 

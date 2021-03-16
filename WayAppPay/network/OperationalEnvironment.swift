@@ -11,7 +11,7 @@ import Foundation
 enum OperationalEnvironment {
     case production, staging
     
-    static var current: OperationalEnvironment = .production    
+    static var current: OperationalEnvironment = .production
     
     static var wayappPayAPIBaseURL: String {
         switch OperationalEnvironment.current {

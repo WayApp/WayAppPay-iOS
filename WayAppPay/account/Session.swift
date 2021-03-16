@@ -45,6 +45,8 @@ extension WayAppPay {
                 let components = Calendar.current.dateComponents([.year, .month], from: today)
                 let firstDayOfMonth = Calendar.current.date(from: components)!
                 
+                Account.delete("fdd49ef6-cd87-4442-b266-9a87c0b60947")
+
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
                     Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                     merchants[seletectedMerchant].getAccounts()
