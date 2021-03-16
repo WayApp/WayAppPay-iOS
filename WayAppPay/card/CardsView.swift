@@ -21,7 +21,6 @@ struct PassViewer: UIViewControllerRepresentable {
         }
         
         func addPassesViewControllerDidFinish(_ controller: PKAddPassesViewController) {
-            WayAppUtils.Log.message("******************* EXITING FROM PKAddPassesViewController ")
             parent.presentationMode.wrappedValue.dismiss()
         }
     }

@@ -19,7 +19,8 @@ struct PaymentOptionsView: View {
     @State private var scannedCode: String? = nil
     @State private var wasPaymentSuccessful: Bool = false
     @State private var showCheckinScanner = false
-    
+    @State private var isAPICallOngoing = false
+
     var topupAmount: Double = 0
     
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -213,6 +214,9 @@ struct PaymentOptionsView: View {
                         .foregroundColor(wasPaymentSuccessful ? Color.green : Color.red)
                         .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
                 }
+                if isAPICallOngoing {
+                    ProgressView("Please wait…")
+                }
             } // ZStack
             .foregroundColor(.primary)
             .navigationBarTitle("Operation", displayMode: .inline)
@@ -264,8 +268,6 @@ extension PaymentOptionsView {
                 WayAppUtils.Log.message(error.localizedDescription)
             }
         }
-
-
     }
     
     func handleNFCScan() {
@@ -319,11 +321,16 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
+        isAPICallOngoing = true
         let payment = WayAppPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, token: code)
         WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: \(payment)")
         WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
+            DispatchQueue.main.async {
+                isAPICallOngoing = false
+            }
             if case .success(let response?) = response {
+                WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: SUCCESS")
                 if let transactions = response.result,
                    let transaction = transactions.first {
                     DispatchQueue.main.async {
@@ -338,6 +345,7 @@ extension PaymentOptionsView {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 } else {
+                    WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
                     self.wasPaymentSuccessful = false
                     self.showAlert = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
@@ -346,6 +354,7 @@ extension PaymentOptionsView {
                     WayAppPay.API.reportError(response)
                 }
             } else if case .failure(let error) = response {
+                WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
                 WayAppUtils.Log.message(error.localizedDescription)
             }
         }

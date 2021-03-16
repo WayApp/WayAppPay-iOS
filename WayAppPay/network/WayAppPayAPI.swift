@@ -61,12 +61,17 @@ extension WayAppPay {
             let moreInfo: String?
             let moreInfoCode: String?
             let result: T?
+            
+            func debugOutput() -> String {
+                return "Status: \(status ?? "No status"), Code: \(code ?? Int.zero), moreInfo: \(moreInfo ?? "No moreInfo")"
+            }
         }
         
         // Account
         case getAccount(Email, PIN) // GET
         case forgotPIN(ChangePIN) // POST
         case changePIN(ChangePIN) // POST
+        case deleteAccount(String) // DELETE
         // Merchant
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
@@ -93,7 +98,6 @@ extension WayAppPay {
         //Report
         case getTransaction(String, String, String) // GET
         case getMonthReportID(String, String, String) // GET
-        case deleteAccount(String) // DELETE
         case account(Account) // POST
         case editAccount(Account, UIImage?) // PATCH
         case sendEmail(String, String, SendEmail) // POST
@@ -113,6 +117,7 @@ extension WayAppPay {
             case .getAccount(let email, let hashedPIN): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN)/"
             case .forgotPIN: return "/accounts/forgots/"
             case .changePIN: return "/accounts/passwords/"
+            case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
             // Merchants
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
@@ -151,7 +156,6 @@ extension WayAppPay {
             case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
             // TRASH
             case .account: return "/accounts/"
-            case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
             case .editAccount: return "/accounts/\(WayAppPay.session.accountUUID!)/"
             }
         }
@@ -161,6 +165,7 @@ extension WayAppPay {
             // Account
             case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
             case .forgotPIN, .changePIN: return ""
+//            case .deleteAccount(let accountUUID): return accountUUID
             // Merchant
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
@@ -217,7 +222,6 @@ extension WayAppPay {
                     }
                 }
             case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup:
-                // Response with data
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -226,7 +230,6 @@ extension WayAppPay {
                     }
                 }
             case .updateProduct, .editAccount, .editCard:
-                // Response with data
                 HTTPCall.PATCH(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -235,12 +238,11 @@ extension WayAppPay {
                     }
                 }
             case .deleteAccount, .deleteCard, .deleteProduct, .deleteMerchant:
-                // Response with no data
                 HTTPCall.DELETE(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
-                    } else {
-                        result(.success(nil))
+                    } else if let response = response as? Response<T> {
+                        result(.success(response))
                     }
                 }
             }
@@ -350,14 +352,7 @@ extension WayAppPay {
         }
         
         func isUnauthorizedStatusCode(_ code: Int) -> Bool {
-            if code == 401 || code == 403 {
-                DispatchQueue.main.async {
-                    // FIXME
-                    // NotificationCenter.default.post(name: NSNotification.Name(rawValue: AppDelegate.logoutRequest), object: nil, userInfo: nil)
-                }
-                return true
-            }
-            return false
+            return code == 401 || code == 403
         }
 
 

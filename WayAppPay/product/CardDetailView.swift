@@ -123,7 +123,7 @@ struct CardDetailView: View {
         let validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
         AfterBanks.getConsent(accountUUID: accountUUID,
                               //  service: self.session.afterBanks.banks[self.selectedBank].service,
-                              service: "bbva",
+                              service: "santander",
                               validUntil: AfterBanks.dateFormatter.string(from: validUntil), pan: card.pan) { error, consent in
             if let error = error {
                 WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
