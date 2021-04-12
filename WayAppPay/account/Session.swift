@@ -26,8 +26,8 @@ extension WayAppPay {
                     // TODO:
 //                    Account.delete("f05249fd-4d0e-455b-a89d-8c245e1d4a88")
 //                    Account.delete("e57d740d-b914-4fbd-b49f-e91efa4caafa")
-                    Card.getCards(for: account.accountUUID)
-                    Issuer.get()
+                    //Card.getCards(for: account.accountUUID)
+                    //Issuer.get()
 //                    AfterBanks.getBanks()
                 }
             }
@@ -44,16 +44,19 @@ extension WayAppPay {
         }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                let today = Date()
-                let components = Calendar.current.dateComponents([.year, .month], from: today)
-                let firstDayOfMonth = Calendar.current.date(from: components)!
-                
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
-                    Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
+                    Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
+                        if let products = products {
+                            DispatchQueue.main.async {
+                                session.products.setTo(products)
+                            }
+                        } else {
+                            WayAppUtils.Log.message("Could not fetch products")
+                        }
+                    }
                     merchants[seletectedMerchant].getAccounts()
                     //merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
                     //merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
-                    merchants[seletectedMerchant].getTransactionsForAccountByDates(accountUUID, initialDate: firstDayOfMonth, finalDate: today)
                 }
             }
         }

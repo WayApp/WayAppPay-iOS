@@ -29,7 +29,8 @@ struct SettingsView: View {
                     if session.merchants.isEmpty {
                         Text("There are no merchants")
                     } else {
-                        Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")) {
+                        Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")
+                                .accessibility(label: Text("Merchant"))) {
                             ForEach(0..<session.merchants.count) {
                                 Text(self.session.merchants[$0].name ?? "Name")
                                     .font(Font.caption)
@@ -45,11 +46,13 @@ struct SettingsView: View {
                     }
                 }
                 Section(header: Label("Accounts", systemImage: "person.2.circle")
-                                .font(.callout)) {
+                            .accessibility(label: Text("Accounts"))
+                            .font(.callout)) {
                     if WayAppPay.session.accounts.isEmpty {
                         Text("There are no accounts")
                     } else {
-                        Picker(selection: $session.selectedAccount, label: Label("Account", systemImage: "person.fill.checkmark")) {
+                        Picker(selection: $session.selectedAccount, label: Label("Account", systemImage: "person.fill.checkmark")
+                                .accessibility(label: Text("Account"))) {
                             ForEach(0..<WayAppPay.session.accounts.count) {
                                 Text(WayAppPay.session.accounts[$0].email ?? "no email")
                                     .font(.caption)
@@ -83,8 +86,6 @@ struct SettingsView: View {
                     }
 
                 }
-                .onAppear(perform:{
-                    WayAppUtils.Log.message("+++++++++++ ACCOUNTS COUNT=\(WayAppPay.session.accounts.count)") })
                 .accentColor(.primary)
                 .listItemTint(Color("WAP-GreenDark"))
 

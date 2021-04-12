@@ -13,6 +13,12 @@
 /* No comment provided by engineer. */
 "4-digits" = "4 dígitos";
 
+/* No comment provided by engineer. */
+"Account" = "Cuenta";
+
+/* No comment provided by engineer. */
+"Accounts" = "Cuentas";
+
 /* PaymentTransaction.TransactionType */
 "Add" = "Recarga";
 
@@ -175,6 +181,9 @@
 /* month of the year */
 "May" = "Mayo";
 
+/* No comment provided by engineer. */
+"Merchant" = "Entidad";
+
 /* SettingsView: section title */
 "Merchants" = "Entidades";
 
@@ -214,6 +223,9 @@
 /* No comment provided by engineer. */
 "OK" = "OK";
 
+/* Scanning transaction type */
+"Operation" = "Operación";
+
 /* No comment provided by engineer. */
 "Order" = "Pedido";
 
@@ -238,6 +250,9 @@
 /* User message: passwordChangeFailed title */
 "PIN was not changed" = "PIN no fue cambiado";
 
+/* Activity indicator */
+"Please wait…" = "Por favor espere...";
+
 /* No comment provided by engineer. */
 "Prepaid" = "Prepago";
 
@@ -251,6 +266,9 @@
 "Product could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Producto no pudo ser actualizado. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
 
 /* No comment provided by engineer. */
+"Products" = "Productos";
+
+/* No comment provided by engineer. */
 "QR" = "Código QR";
 
 /* No comment provided by engineer. */
@@ -261,6 +279,9 @@
 
 /* PaymentTransaction.TransactionType */
 "Refund" = "Devolución";
+
+/* No comment provided by engineer. */
+"Refunds" = "Devoluciones";
 
 /* User message: registrationFailed title */
 "Registration attempt failed" = "Intento de registro falló";
@@ -279,6 +300,9 @@
 
 /* PaymentTransaction.TransactionType */
 "Sale" = "Venta";
+
+/* No comment provided by engineer. */
+"Sales" = "Ventas";
 
 /* No comment provided by engineer. */
 "Save" = "Guardar";

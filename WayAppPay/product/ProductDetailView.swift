@@ -94,9 +94,20 @@ struct ProductDetailView: View {
                 DispatchQueue.main.async {
                     self.isAPICallOngoing = true
                 }
-                if self.product == nil {
+                if self.product == nil,
+                   let merchantUUID = session.merchantUUID {
                     // creation
-                    WayAppPay.Product.add(name: self.newName, price: self.newPrice, image: self.newImage, completion: self.apiCallCompleted(_:))
+                    let newProduct = WayAppPay.Product(merchantUUID: merchantUUID, name: self.newName, price: self.newPrice)
+                    WayAppPay.Product.add(merchantUUID: merchantUUID, product: newProduct, image: self.newImage) { product, error in
+                        if let product = product {
+                            DispatchQueue.main.async {
+                                session.products.add(product)
+                                self.apiCallCompleted(nil)
+                            }
+                        } else {
+                            WayAppUtils.Log.message("Did not get product")
+                        }
+                    }
                 } else {
                     // update
                     self.product?.update(name: self.newName, price: self.newPrice, image: self.newImage, completion: self.apiCallCompleted(_:))
@@ -117,6 +128,6 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product(name: "no name", price: 100))
+        ProductDetailView(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100"))
     }
 }

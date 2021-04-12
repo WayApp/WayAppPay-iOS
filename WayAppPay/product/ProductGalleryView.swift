@@ -22,7 +22,7 @@ struct ProductGalleryView: View {
                 .onDelete(perform: delete)
             }
             .listStyle(GroupedListStyle())
-            .navigationBarTitle("Products", displayMode: .inline)
+            .navigationBarTitle(Text("Products"), displayMode: .inline)
             .navigationBarItems(trailing:
                 NavigationLink(destination: ProductDetailView(product: nil)) {   Image(systemName: "plus.circle")
                         .resizable()

@@ -32,7 +32,7 @@ extension WayAppPay {
         typealias PAN = String
         typealias Day = String
         
-        public enum ResponseError {
+        public enum ResponseError: Swift.Error {
              case INVALID_SERVER_DATA, MALFORMED_URL, NETWORK_UNAVAILABLE, INVALID_JSON, FORBIDDEN, NOT_FOUND, INTERNAL_ERROR
          }
 

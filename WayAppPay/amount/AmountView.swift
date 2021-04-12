@@ -130,18 +130,20 @@ struct AmountView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
             )
-            .navigationBarTitle("Amount")
+            .navigationBarTitle("Amount", displayMode: .inline)
             .navigationBarItems(trailing:
                 HStack {
                     Button(action: {
-                        WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(name: "Amount", description: self.cartDescription, price: Int(self.amount * 100) / 100), isAmount: true)
-                        self.resetAmountAndDescription()
+                        if let merchantUUID = session.merchantUUID {
+                            WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: String(self.amount / 100)), isAmount: true)
+                            self.resetAmountAndDescription()
+                        }
                     }, label: {
                         Image(systemName: "cart.fill.badge.plus")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                     })
-                        .padding(.trailing, 16)
+                    .padding(.trailing, 16)
                     NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
                         Image(systemName: "qrcode.viewfinder")
                         .resizable()
@@ -150,6 +152,7 @@ struct AmountView: View {
                     .foregroundColor(Color("WAP-Blue"))
                     .aspectRatio(contentMode: .fit)
                     .padding(.trailing, 16)
+                    .disabled(amount == 0 && session.shoppingCart.isEmpty)
                 }
                 .foregroundColor(Color("WAP-Blue"))
                 .frame(height: 30)

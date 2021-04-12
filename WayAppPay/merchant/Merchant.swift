@@ -134,43 +134,17 @@ extension WayAppPay {
             }
         }
         
-        private func fillReportID() {
-            var reportID = ReportID()
-            
-            for transaction in session.transactions where transaction.result == .ACCEPTED {
-                switch transaction.type {
-                case .SALE:
-                    reportID.totalSales! += (transaction.amount ?? 0)
-                case .REFUND:
-                    reportID.totalRefund! += (transaction.amount ?? 0)
-                default:
-                    break
-                }
-            }
-            session.thisMonthReportID = reportID
-        }
-
-        func getTransactionsForAccountByDates(_ accountUUID: String?, initialDate: Date, finalDate: Date) {
-            guard let accountUUID = accountUUID else {
-                WayAppUtils.Log.message("missing accountUUID")
-                return
-            }
-            WayAppUtils.Log.message("initialDate: \(initialDate), DAY: \(WayAppPay.reportDateFormatter.string(from: initialDate)), finalDate: \(finalDate), DAY: \(WayAppPay.reportDateFormatter.string(from: finalDate))")
-            WayAppPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: initialDate), WayAppPay.reportDateFormatter.string(from: finalDate)).fetch(type: [PaymentTransaction].self) { response in
-                if case .success(let response?) = response {
-                    if let transactions = response.result {
-                        DispatchQueue.main.async {
-                            session.transactions.setToInOrder(transactions, by:
-                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
-                            fillReportID()
-                        }
-                        WayAppUtils.Log.message("TRANSACTIONS=\(transactions)")
-                    } else {
-                        WayAppPay.API.reportError(response)
+        func getTransactionsForAccountByDates(accountUUID: String, initialDate: Date, finalDate: Date, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
+            WayAppPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: initialDate), WayAppPay.reportDateFormatter.string(from: finalDate))
+                .fetch(type: [PaymentTransaction].self) { response in
+                    switch response {
+                    case .success(let response?):
+                        completion(response.result, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    default:
+                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
             }
         }
 

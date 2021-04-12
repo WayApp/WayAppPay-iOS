@@ -11,7 +11,7 @@ import UIKit
 struct WayAppUtils {
     
     struct Log {
-        static let isOn = true
+        static let isOn = false
         
         static func message(fileName: String = #file, functionName: String = #function, _ message: String = "") {
             if (isOn) {

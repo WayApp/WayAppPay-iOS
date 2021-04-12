@@ -36,33 +36,29 @@ extension WayAppPay {
             return productUUID
         }
 
-        init(name: String, description: String = String(), price: Int) {
+        init(merchantUUID: String, name: String, description: String = String(), price: String) {
             self.productUUID = UUID().uuidString
-            self.merchantUUID = WayAppPay.session.merchantUUID
+            self.merchantUUID = merchantUUID
             self.name = name
             self.description = description
             self.iva = 0
-            self.price = price
+            self.price = composeIntPriceFromString(price)
         }
         
-        static func loadForMerchant(_ merchantUUID: String) {
+        static func get(_ merchantUUID: String , completion: @escaping ([Product]?, Error?) -> Void) {
             WayAppPay.API.getProducts(merchantUUID).fetch(type: [Product].self) { response in
-                if case .success(let response?) = response {
-                    if let products = response.result {
-                        DispatchQueue.main.async {
-                            session.products.setTo(products)
-                        }
-                    } else {
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
-        
 
-        static private func composeIntPriceFromString(_ price: String) -> Int {
+        private func composeIntPriceFromString(_ price: String) -> Int {
             var result: Int = 0
             let splitIn2 = price.components(separatedBy: .punctuationCharacters)
             if !splitIn2.isEmpty,
@@ -76,29 +72,15 @@ extension WayAppPay {
             return result
         }
 
-        static func add(name: String, price: String, image: UIImage?, completion: @escaping (Error?) -> Void)  {
-            guard let merchantUUID = session.merchantUUID else {
-                WayAppUtils.Log.message("missing Session.merchantUUID")
-                return
-            }
-            
-            let newProduct = Product(name: name, price: Product.composeIntPriceFromString(price))
-            
-            WayAppPay.API.addProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
-                if case .success(let response?) = response {
-                    if let products = response.result,
-                        let product = products.first {
-                        DispatchQueue.main.async {
-                            session.products.add(product)
-                        }
-                        completion(nil)
-                    } else {
-                        completion(WayAppPay.API.errorFromResponse(response))
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    completion(error)
-                    WayAppUtils.Log.message(error.localizedDescription)
+        static func add(merchantUUID: String, product: Product, image: UIImage?, completion: @escaping (Product?, Error?) -> Void)  {
+            WayAppPay.API.addProduct(merchantUUID, product, image).fetch(type: [Product].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result?.first, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
@@ -111,7 +93,7 @@ extension WayAppPay {
             var newProduct = self
             
             newProduct.name = name.isEmpty ? self.name : name
-            newProduct.price = price.isEmpty ? self.price : Product.composeIntPriceFromString(price)
+            newProduct.price = price.isEmpty ? self.price : composeIntPriceFromString(price)
             
             WayAppPay.API.updateProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
                 if case .success(let response?) = response {
