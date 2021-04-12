@@ -19,13 +19,16 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
+//                    Account.registerAccount(registration: Registration(email: "agagagag@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
-                    Card.getCards(for: account.accountUUID)
-                    Issuer.get()
-                    AfterBanks.getBanks()
+//                    Account.delete("f05249fd-4d0e-455b-a89d-8c245e1d4a88")
+//                    Account.delete("e57d740d-b914-4fbd-b49f-e91efa4caafa")
+                    //Card.getCards(for: account.accountUUID)
+                    //Issuer.get()
+//                    AfterBanks.getBanks()
                 }
             }
         }
@@ -41,18 +44,19 @@ extension WayAppPay {
         }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                let today = Date()
-                let components = Calendar.current.dateComponents([.year, .month], from: today)
-                let firstDayOfMonth = Calendar.current.date(from: components)!
-                
-                Account.delete("fdd49ef6-cd87-4442-b266-9a87c0b60947")
-
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
-                    Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
+                    Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
+                        if let products = products {
+                            DispatchQueue.main.async {
+                                session.products.setTo(products)
+                            }
+                        } else {
+                            WayAppUtils.Log.message("Could not fetch products")
+                        }
+                    }
                     merchants[seletectedMerchant].getAccounts()
                     //merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
                     //merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
-                    merchants[seletectedMerchant].getTransactionsForAccountByDates(accountUUID, initialDate: firstDayOfMonth, finalDate: today)
                 }
             }
         }

@@ -31,9 +31,6 @@ extension HTTPCallEndpoint {
     }
     
     func isSuccessStatusCodeWithJSONResponse(_ code: Int) -> Bool {
-        if isSuccessStatusCodeWithNoDataResponse(code) {
-            return false
-        }
         return code >= 200 && code < 300
     }
 }
@@ -143,7 +140,6 @@ enum HTTPCall {
     }
     
     func task<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Decodable? ,Error?) -> Void) {
-        
         // Check Internet access
         guard HTTPCall.isNetworkReachable() else {
             result(nil, .noNetwork)
@@ -154,34 +150,21 @@ enum HTTPCall {
             result(nil, .invalidRequest)
             return
         }
-        WayAppUtils.Log.message("**** TASK: url=\(urlRequest)")
         URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) -> Void in
             // First check needs to be with error (not data), as data can be nil in successful responses
             if let error = error {
+                WayAppUtils.Log.message("HTTP_response: \(response.debugDescription)")
                 result(nil, .unhandled(error))
-            } else if let httpResponse = response as? HTTPURLResponse {
-                guard !self.endpoint.isUnauthorizedStatusCode(httpResponse.statusCode) else {
-                    result(nil, .http(statusCode: httpResponse.statusCode, description: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), data: data))
-                    return
-                }
-                if self.endpoint.isSuccessStatusCodeWithNoDataResponse(httpResponse.statusCode) {
-                    result(nil, nil)
-                } else if self.endpoint.isSuccessStatusCodeWithJSONResponse(httpResponse.statusCode),
-                    let data = data {
-                    // Only for debugging
-                    if WayAppUtils.Log.isOn,
-                        let object = try? JSONSerialization.jsonObject(with: data, options: []),
-                        let newData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]) {
-                        WayAppUtils.Log.message("\nRequest URL: \(urlRequest.url!.absoluteString)\nJSON: " + (String(bytes: newData, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) ?? ""))
-                    }
-                    // end of debugging helper
-                    if let response = try? WayAppPay.jsonDecoder.decode(decodingType, from: data) {
-                        result(response, nil)
-                    } else {
-                        result(nil, .invalidData)
-                    }
+            } else if let data = data,
+                      let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                      let objectResponse = try? WayAppPay.jsonDecoder.decode(decodingType, from: data),
+                      let code = jsonResponse["code"] as? Int {
+                WayAppUtils.Log.message("\nurlRequest: \(urlRequest)\nData: \(objectResponse)")
+                
+                if self.endpoint.isSuccessStatusCodeWithJSONResponse(code) {
+                    result(objectResponse, nil)
                 } else {
-                    result(nil, .http(statusCode: httpResponse.statusCode, description: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), data: data))
+                    result(nil, .http(statusCode: code, description: HTTPURLResponse.localizedString(forStatusCode: code), data: data))
                 }
             } else {
                 result(nil, .invalidServerResponse)

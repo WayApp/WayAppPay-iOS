@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProductGalleryView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @ObservedObject var session = WayAppPay.session
     
     var body: some View {
         NavigationView {
@@ -22,7 +22,7 @@ struct ProductGalleryView: View {
                 .onDelete(perform: delete)
             }
             .listStyle(GroupedListStyle())
-            .navigationBarTitle("Products", displayMode: .inline)
+            .navigationBarTitle(Text("Products"), displayMode: .inline)
             .navigationBarItems(trailing:
                 NavigationLink(destination: ProductDetailView(product: nil)) {   Image(systemName: "plus.circle")
                         .resizable()

@@ -17,10 +17,13 @@
 "Account" = "Cuenta";
 
 /* No comment provided by engineer. */
-"Account: %@" = "Cuenta: %@";
+"Accounts" = "Cuentas";
+
+/* PaymentTransaction.TransactionType */
+"Add" = "Recarga";
 
 /* No comment provided by engineer. */
-"Accounts" = "Cuentas";
+"Add one" = "Añadir uno";
 
 /* No comment provided by engineer. */
 "alias" = "alias";
@@ -30,6 +33,12 @@
 
 /* No comment provided by engineer. */
 "Amount" = "Importe";
+
+/* month of the year */
+"April" = "Abril";
+
+/* month of the year */
+"August" = "Agosto";
 
 /* No comment provided by engineer. */
 "Bank" = "Banco";
@@ -44,7 +53,7 @@
 "Cancel" = "Cancelar";
 
 /* No comment provided by engineer. */
-"Card" = "Token de pago";
+"Card" = "QR";
 
 /* No comment provided by engineer. */
 "Card could not be created. Try again later. If problem persists contact support@wayapp.com" = "Token de pago no se pudo crear. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
@@ -60,6 +69,9 @@
 
 /* No comment provided by engineer. */
 "Change PIN" = "Cambiar PIN";
+
+/* No comment provided by engineer. */
+"Charge" = "Cobrar";
 
 /* No comment provided by engineer. */
 "Charge: %@" = "Cobrar: %@";
@@ -79,14 +91,8 @@
 /* No comment provided by engineer. */
 "Current" = "Actual";
 
-/* No comment provided by engineer. */
-"Destination_1" = "Destination_1";
-
-/* No comment provided by engineer. */
-"Destination_2" = "Destination_2";
-
-/* No comment provided by engineer. */
-"Detail" = "Detalle";
+/* month of the year */
+"December" = "Diciembre";
 
 /* No comment provided by engineer. */
 "email" = "email";
@@ -107,6 +113,9 @@
 "Email or PIN invalid. Try again. If problem persists contact support@wayapp.com" = "Correo electrónico o PIN inválido. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
 
 /* No comment provided by engineer. */
+"Email receipt" = "Enviar recibo";
+
+/* No comment provided by engineer. */
 "Email receipt to:" = "Enviar recibo a:";
 
 /* User message: invalidEmail message */
@@ -114,6 +123,9 @@
 
 /* No comment provided by engineer. */
 "Enter OTP received on email:" = "Entre clave recibida en:";
+
+/* month of the year */
+"February" = "Febrero";
 
 /* User message: forgotPassword */
 "Follow instructions emailed to: " = "Sigue las instrucciones enviadas a: ";
@@ -142,8 +154,17 @@
 /* No comment provided by engineer. */
 "Issuer" = "Emisor";
 
+/* month of the year */
+"January" = "Enero";
+
 /* HTTPCall: Error: jsonConversion */
 "JSON conversion error" = "Error en el JSON";
+
+/* month of the year */
+"July" = "Julio";
+
+/* month of the year */
+"June" = "Junio";
 
 /* User message: loginFailed title */
 "Login attempt failed" = "Intento de iniciar sesión falló";
@@ -154,8 +175,17 @@
 /* No comment provided by engineer. */
 "Logout" = "Salir";
 
+/* month of the year */
+"March" = "Marzo";
+
+/* month of the year */
+"May" = "Mayo";
+
 /* No comment provided by engineer. */
 "Merchant" = "Entidad";
+
+/* SettingsView: section title */
+"Merchants" = "Entidades";
 
 /* No comment provided by engineer. */
 "missing IBAN" = "falta IBAN";
@@ -184,17 +214,23 @@
 /* HTTPCall: Error: noNetwork */
 "No network" = "No hay red";
 
+/* month of the year */
+"November" = "Noviembre";
+
+/* month of the year */
+"October" = "Octubre";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
+/* Scanning transaction type */
+"Operation" = "Operación";
+
 /* No comment provided by engineer. */
-"Operating merchant" = "Entidad operativa";
+"Order" = "Pedido";
 
 /* No comment provided by engineer. */
 "Payment" = "Pago";
-
-/* No comment provided by engineer. */
-"Payment token" = "Token de pago";
 
 /* No comment provided by engineer. */
 "PIN" = "PIN";
@@ -214,11 +250,17 @@
 /* User message: passwordChangeFailed title */
 "PIN was not changed" = "PIN no fue cambiado";
 
+/* Activity indicator */
+"Please wait…" = "Por favor espere...";
+
 /* No comment provided by engineer. */
 "Prepaid" = "Prepago";
 
 /* No comment provided by engineer. */
 "Price" = "Precio";
+
+/* SettingsView: merchants products */
+"Product catalogue" = "Catálogo de productos";
 
 /* No comment provided by engineer. */
 "Product could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Producto no pudo ser actualizado. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
@@ -235,11 +277,20 @@
 /* No comment provided by engineer. */
 "Read token" = "Leer token de pago";
 
+/* PaymentTransaction.TransactionType */
+"Refund" = "Devolución";
+
 /* No comment provided by engineer. */
-"Refunds: %@" = "Reembolso: %@";
+"Refunds" = "Devoluciones";
 
 /* User message: registrationFailed title */
 "Registration attempt failed" = "Intento de registro falló";
+
+/* No comment provided by engineer. */
+"Remove all" = "Eliminar todos";
+
+/* No comment provided by engineer. */
+"Remove one" = "Eliminar uno";
 
 /* No comment provided by engineer. */
 "Renew" = "Renovar";
@@ -247,14 +298,11 @@
 /* No comment provided by engineer. */
 "Reports" = "Reportes";
 
-/* No comment provided by engineer. */
-"S1" = "S1";
+/* PaymentTransaction.TransactionType */
+"Sale" = "Venta";
 
 /* No comment provided by engineer. */
-"S2" = "S2";
-
-/* No comment provided by engineer. */
-"Sales: %@" = "Ventas: %@";
+"Sales" = "Ventas";
 
 /* No comment provided by engineer. */
 "Save" = "Guardar";
@@ -265,8 +313,8 @@
 /* No comment provided by engineer. */
 "Send" = "Enviar";
 
-/* No comment provided by engineer. */
-"Send email" = "Enviar email";
+/* month of the year */
+"September" = "Septiembre";
 
 /* No comment provided by engineer. */
 "Settings" = "Configuración";
@@ -298,6 +346,9 @@
 /* User message: forgotPassword title */
 "To finish the PIN change" = "Para finalizar el cambio de PIN";
 
+/* PaymentTransaction.TransactionType */
+"Top-up" = "Recarga";
+
 /* No comment provided by engineer. */
 "Top-up: %@" = "Recarga: %@";
 
@@ -319,15 +370,12 @@
 /* HTTPCall: Error: invalidData */
 "Unexpected server data" = "Formato de datos inesperado del servidor";
 
+/* Default PaymentTransaction.TransactionType */
+"Unspecified" = "Desconocido";
+
 /* No comment provided by engineer. */
 "What is your favorite color?" = "¿Cuál es tu color favorito?";
 
 /* No comment provided by engineer. */
 "Write token" = "Grabar token de pago";
-
-/* No comment provided by engineer. */
-"Your Custom View 1" = "Your Custom View 1";
-
-/* No comment provided by engineer. */
-"Your Custom View 2" = "Your Custom View 2";
 

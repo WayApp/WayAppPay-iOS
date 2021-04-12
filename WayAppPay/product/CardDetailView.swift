@@ -123,7 +123,7 @@ struct CardDetailView: View {
         let validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
         AfterBanks.getConsent(accountUUID: accountUUID,
                               //  service: self.session.afterBanks.banks[self.selectedBank].service,
-                              service: "santander",
+                              service: "abanca",
                               validUntil: AfterBanks.dateFormatter.string(from: validUntil), pan: card.pan) { error, consent in
             if let error = error {
                 WayAppUtils.Log.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
@@ -147,6 +147,6 @@ struct CardDetailView: View {
 
 struct CardDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product(name: "no name", price: 100))
+        ProductDetailView(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100"))
     }
 }

@@ -110,6 +110,20 @@ extension WayAppPay {
             return password
         }
 
+        static func registerAccount(registration: Registration) {
+            WayAppPay.API.registrationAccount(registration).fetch(type: [Registration].self) { response in
+                WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
+                if case .success(let response?) = response {
+                    if let registrations = response.result,
+                        let registration = registrations.first {
+                        print("success success success success success: \(registration)")
+                    }
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
+                }
+            }
+        }
+
         static func changePINforEmail(_ email: String, currentPIN: String, newPIN: String, completion: @escaping (Error?) -> Void) {
             WayAppPay.API.changePIN(ChangePIN(email: email, oldPin: Account.hashedPIN(currentPIN), newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
                 WayAppUtils.Log.message("RESPONSE: \(response)")
@@ -126,7 +140,7 @@ extension WayAppPay {
             }
         }
         
-        static func forgotPINforEMAIL(_ email: String, completion: @escaping (String?, Error?) -> Void) {
+        static func forgotPINforEmail(_ email: String, completion: @escaping (String?, Error?) -> Void) {
             WayAppPay.API.forgotPIN(ChangePIN(email: email, oldPin: "", newPin: "")).fetch(type: [OTP].self) { response in
                 WayAppUtils.Log.message("RESPONSE: \(response)")
                 if case .success(let response?) = response {

@@ -40,7 +40,7 @@ struct TransactionRowView: View {
                     "no account")
                     .font(.subheadline)
             }.contextMenu {
-                if transaction.type == WayAppPay.PaymentTransaction.TransactionType.SALE && !transaction.isRefund {
+                if ((transaction.type == WayAppPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
                     Button {
                         transaction.processRefund()
                     } label: {

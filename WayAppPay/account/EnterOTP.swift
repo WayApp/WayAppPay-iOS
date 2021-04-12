@@ -82,7 +82,7 @@ struct EnterOTP: View {
                         DispatchQueue.main.async {
                             self.isAPICallOngoing = true
                         }
-                        WayAppPay.Account.forgotPINforEMAIL(self.email, completion: self.resetResult(_:_:))
+                        WayAppPay.Account.forgotPINforEmail(self.email, completion: self.resetResult(_:_:))
                      }) {
                          Text("Send")
                              .font(.headline)

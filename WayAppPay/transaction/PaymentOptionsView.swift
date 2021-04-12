@@ -60,9 +60,7 @@ struct PaymentOptionsView: View {
                                 }
                             } // sheet
                         }
-                        //if (topupAmount > 0) {
-                        /*
-                        if (false) {
+                        if (topupAmount > 0) {
                             Button(action: {
                                 self.showQRScannerForPayment = true
                             }, label: {
@@ -90,7 +88,6 @@ struct PaymentOptionsView: View {
                                 }
                             } // sheet
                         }
- */
                         /*
                         Button(action: {
                             self.showCheckinScanner = true
@@ -215,11 +212,11 @@ struct PaymentOptionsView: View {
                         .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
                 }
                 if isAPICallOngoing {
-                    ProgressView("Please wait…")
+                    ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
                 }
             } // ZStack
             .foregroundColor(.primary)
-            .navigationBarTitle("Operation", displayMode: .inline)
+            .navigationBarTitle(NSLocalizedString("Operation", comment: "Scanning transaction type"), displayMode: .inline)
         } // NavigationView
     } // Body
     
@@ -239,33 +236,31 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
-        let topup = WayAppPay.PaymentTransaction(amount: Int(topupAmount), token: code, type: .ADD)
+        let topup = WayAppPay.PaymentTransaction(amount: Int(topupAmount), token: code, type: .TOPUP)
         WayAppPay.API.topup(topup).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
-            if case .success(let response?) = response {
-                if let transactions = response.result,
-                   let transaction = transactions.first {
-                    DispatchQueue.main.async {
-                        self.scannedCode = nil
-                        self.session.transactions.addAsFirst(transaction)
-                        self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
-                        self.showAlert = true
-                        WayAppPay.session.shoppingCart.empty()
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
-                        self.showAlert = false
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                } else {
-                    self.wasPaymentSuccessful = false
+            if case .success(let response?) = response,
+               let transactions = response.result,
+               let transaction = transactions.first {
+                DispatchQueue.main.async {
+                    self.scannedCode = nil
+                    self.session.transactions.addAsFirst(transaction)
+                    self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
                     self.showAlert = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
-                        self.showAlert = false
-                    }
-                    WayAppPay.API.reportError(response)
+                    WayAppPay.session.shoppingCart.empty()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                    self.showAlert = false
+                    self.presentationMode.wrappedValue.dismiss()
                 }
             } else if case .failure(let error) = response {
                 WayAppUtils.Log.message(error.localizedDescription)
+                WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
+                self.wasPaymentSuccessful = false
+                self.showAlert = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                    self.showAlert = false
+                }
             }
         }
     }
@@ -309,6 +304,18 @@ extension PaymentOptionsView {
 
 // QR Payment
 extension PaymentOptionsView {
+    private func apiCallResult(accepted: Bool) {
+        DispatchQueue.main.async {
+            self.scannedCode = nil
+            self.wasPaymentSuccessful = accepted
+            self.showAlert = true
+            WayAppPay.session.shoppingCart.empty()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+            self.showAlert = false
+            self.presentationMode.wrappedValue.dismiss()
+        }
+    }
     
     func handleQRScanUpdate() {
         WayAppUtils.Log.message("Scanned NFC Tag: \(scannedCode ?? "no scaneed code")")
@@ -321,43 +328,35 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
-        isAPICallOngoing = true
         let payment = WayAppPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, token: code)
         WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: \(payment)")
+        isAPICallOngoing = true
         WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
             DispatchQueue.main.async {
                 isAPICallOngoing = false
             }
-            if case .success(let response?) = response {
+            switch response {
+            case .success(let response?):
                 WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: SUCCESS")
                 if let transactions = response.result,
                    let transaction = transactions.first {
                     DispatchQueue.main.async {
-                        self.scannedCode = nil
+                        self.apiCallResult(accepted: transaction.result == .ACCEPTED)
                         self.session.transactions.addAsFirst(transaction)
-                        self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
-                        self.showAlert = true
-                        WayAppPay.session.shoppingCart.empty()
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
-                        self.showAlert = false
-                        self.presentationMode.wrappedValue.dismiss()
                     }
                 } else {
-                    WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
-                    self.wasPaymentSuccessful = false
-                    self.showAlert = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
-                        self.showAlert = false
-                    }
-                    WayAppPay.API.reportError(response)
+                    WayAppUtils.Log.message("INVALID_SERVER_DATA")
+                    self.apiCallResult(accepted: false)
                 }
-            } else if case .failure(let error) = response {
+            case .failure(let error):
                 WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
                 WayAppUtils.Log.message(error.localizedDescription)
+                self.apiCallResult(accepted: false)
+            default:
+                self.apiCallResult(accepted: false)
+                WayAppUtils.Log.message("INVALID_SERVER_DATA")
             }
         }
-        
     }
 }

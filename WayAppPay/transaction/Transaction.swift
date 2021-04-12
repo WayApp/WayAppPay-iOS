@@ -113,6 +113,10 @@ extension WayAppPay {
             self.purchaseDetail = purchaseDetail
         }
         
+        var isPOSTPAID: Bool {
+            return paymentId != nil && follow != nil
+        }
+        
         func walletPayment() {
             guard let merchantUUID = self.merchantUUID,
                 let accountUUID = self.accountUUID else {

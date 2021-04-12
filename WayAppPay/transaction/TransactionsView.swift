@@ -11,6 +11,7 @@ import SwiftUI
 struct TransactionsView: View {
     @EnvironmentObject var session: WayAppPay.Session
     @State var monthSelection = Calendar.current.component(.month, from: Date()) - 1
+    @State private var isAPICallOngoing = false
 
     private func reportByDates(newMonthSelection: Int) -> (Date, Date) {
         var day = Date()
@@ -50,6 +51,22 @@ struct TransactionsView: View {
                                       (NSLocalizedString("December", comment: "month of the year"), "12"),
     ]
 
+    private func fillReportID() {
+        var reportID = WayAppPay.ReportID()
+        
+        for transaction in session.transactions where transaction.result == .ACCEPTED {
+            switch transaction.type {
+            case .SALE:
+                reportID.totalSales! += (transaction.amount ?? 0)
+            case .REFUND:
+                reportID.totalRefund! += (transaction.amount ?? 0)
+            default:
+                break
+            }
+        }
+        session.thisMonthReportID = reportID
+    }
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -58,10 +75,12 @@ struct TransactionsView: View {
                         VStack(alignment: .leading) {
                             HStack {
                                 Label("Sales", systemImage: "arrow.up.square")
+                                    .accessibility(label: Text("Sales"))
                                 Text("\(WayAppPay.formatPrice(session.thisMonthReportID?.totalSales ?? 0))")
                             }
                             HStack {
                                 Label("Refunds", systemImage: "arrow.down.square")
+                                    .accessibility(label: Text("Refunds"))
                                 Text("\(WayAppPay.formatPrice(session.thisMonthReportID?.totalRefund ?? 0))")
                             }
                         }
@@ -73,7 +92,18 @@ struct TransactionsView: View {
                         .onChange(of: monthSelection, perform: { month in
                             let dates: (Date, Date) = reportByDates(newMonthSelection: monthSelection)
                             WayAppUtils.Log.message("initialDate=\(dates.0), finalDate=\(dates.1), monthSelection=\(monthSelection)")
-                            session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(session.accountUUID, initialDate: dates.0, finalDate: dates.1)
+                            if let accountUUID = session.accountUUID {
+                                session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: dates.0, finalDate: dates.1) { transactions, error in
+                                    if let transactions = transactions {
+                                        DispatchQueue.main.async {
+                                            session.transactions.setToInOrder(transactions, by:
+                                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
+                                            fillReportID()
+                                        }
+                                    }
+                                }
+
+                            }
                         })
                     }
                     Section(header: Text("Transactions")) {
@@ -90,12 +120,35 @@ struct TransactionsView: View {
                         }
                     } // Section
                 } // Form
+                .onAppear(perform: {
+                    let today = Date()
+                    let components = Calendar.current.dateComponents([.year, .month], from: today)
+                    let firstDayOfMonth = Calendar.current.date(from: components)!
+                    DispatchQueue.main.async {
+                        isAPICallOngoing = false
+                    }
+                    if let accountUUID = session.accountUUID {
+                        session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID,
+                                                                                                       initialDate: firstDayOfMonth, finalDate: today) { transactions, error in
+                            if let transactions = transactions {
+                                DispatchQueue.main.async {
+                                    session.transactions.setToInOrder(transactions, by:
+                                        { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
+                                    fillReportID()
+                                }
+                            }
+                        }
+                    }
+                })
                 .navigationBarTitle("Transactions")
                 if session.refundState != .none {
                     Image(systemName: session.refundState == .success ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
                         .resizable()
                         .foregroundColor(session.refundState == .success ? Color.green : Color.red)
                         .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
+                }
+                if isAPICallOngoing {
+                    ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
                 }
             }
         }
