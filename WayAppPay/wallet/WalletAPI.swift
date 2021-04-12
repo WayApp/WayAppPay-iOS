@@ -47,7 +47,7 @@ extension WayAppPay {
         }
         
         static func errorFromResponse<T: Decodable>(_ response: Response<T>) -> Swift.Error {
-            return NSError(domain: "WayAppPay.API", code: response.code ?? 0, userInfo:
+            return NSError(domain: "WayPayAPI", code: response.code ?? 0, userInfo:
                 ["moreInfo": response.moreInfo ?? "no moreInfo",
                  "status" : response.status ?? "no status",
                  "description": "no description"])

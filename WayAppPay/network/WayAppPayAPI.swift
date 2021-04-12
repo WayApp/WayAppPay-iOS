@@ -68,6 +68,7 @@ extension WayAppPay {
         }
         
         // Account
+        case registrationAccount(Registration) // POST
         case getAccount(Email, PIN) // GET
         case forgotPIN(ChangePIN) // POST
         case changePIN(ChangePIN) // POST
@@ -114,6 +115,7 @@ extension WayAppPay {
         private var path: String {
             switch self {
             // Account
+            case .registrationAccount: return "/accounts/registrations/"
             case .getAccount(let email, let hashedPIN): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN)/"
             case .forgotPIN: return "/accounts/forgots/"
             case .changePIN: return "/accounts/passwords/"
@@ -163,9 +165,10 @@ extension WayAppPay {
         private var signature: String {
             switch self {
             // Account
+            case .registrationAccount: return ""
             case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
             case .forgotPIN, .changePIN: return ""
-//            case .deleteAccount(let accountUUID): return accountUUID
+            case .deleteAccount(let accountUUID): return accountUUID
             // Merchant
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
@@ -221,7 +224,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -264,6 +267,10 @@ extension WayAppPay {
             let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
             let baseURL = OperationalEnvironment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
             return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey) + queryParameters)
+            // Las Rozas STAGING
+//            return URL(string: baseURL + "f9a9b822-867c-11eb-8dcd-0242ac130003" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "dde980f4-867c-11eb-8dcd-0242ac130003") + queryParameters)
+            // Las Rozas PRODUCTION
+//            return URL(string: baseURL + "f96879eb-17a2-48de-8cee-3c2123bfe9b2" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "cd03e6be-7cfe-48a9-924f-703556e12e84") + queryParameters)
         }
                 
         var body: (String, Data)? {
@@ -316,14 +323,18 @@ extension WayAppPay {
                 }
                 return nil
             case .changePIN(let changePIN), .forgotPIN(let changePIN):
-                WayAppUtils.Log.message("BODY: changePIN: \(changePIN)")
                 if let part = HTTPCall.BodyPart(changePIN, name: "account") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
+            case .registrationAccount(let registration):
+                if let part = HTTPCall.BodyPart(registration, name: "registration") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
             case .sendEmail(_, _, let sendEmail):
-                WayAppUtils.Log.message("BODY: sendEmail: \(sendEmail)")
                 if let part = HTTPCall.BodyPart(sendEmail, name: "email") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
@@ -348,7 +359,12 @@ extension WayAppPay {
   
         var headers: [String: String]? {
             // Here for potential future support of methods that require header
-            return nil
+            switch self {
+            case .registrationAccount:
+                return ["User-Agent": "138e3a2d-7666-4ac8-a0e0-145953ce8cab"]
+            default:
+                return nil
+            }
         }
         
         func isUnauthorizedStatusCode(_ code: Int) -> Bool {

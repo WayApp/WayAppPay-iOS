@@ -9,7 +9,7 @@
 import SwiftUI
 
 @main
-struct WayAppApp: App {
+struct WayPayApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()

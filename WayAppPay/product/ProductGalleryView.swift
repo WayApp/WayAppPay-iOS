@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProductGalleryView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @ObservedObject var session = WayAppPay.session
     
     var body: some View {
         NavigationView {

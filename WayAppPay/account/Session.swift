@@ -19,13 +19,16 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
+//                    Account.registerAccount(registration: Registration(email: "agagagag@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
+//                    Account.delete("f05249fd-4d0e-455b-a89d-8c245e1d4a88")
+//                    Account.delete("e57d740d-b914-4fbd-b49f-e91efa4caafa")
                     Card.getCards(for: account.accountUUID)
                     Issuer.get()
-                    AfterBanks.getBanks()
+//                    AfterBanks.getBanks()
                 }
             }
         }
@@ -45,8 +48,6 @@ extension WayAppPay {
                 let components = Calendar.current.dateComponents([.year, .month], from: today)
                 let firstDayOfMonth = Calendar.current.date(from: components)!
                 
-                Account.delete("fdd49ef6-cd87-4442-b266-9a87c0b60947")
-
                 if !merchants.isEmpty && doesUserHasMerchantAccount {
                     Product.loadForMerchant(merchants[seletectedMerchant].merchantUUID)
                     merchants[seletectedMerchant].getAccounts()

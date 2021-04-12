@@ -140,8 +140,11 @@ extension WayAppPay {
             for offset in offsets {
                 WayAppPay.API.deleteProduct(merchantUUID, session.products[offset].productUUID).fetch(type: [String].self) { response in
                     if case .success(_) = response {
+                        WayAppUtils.Log.message("DELETED SUCCESSFULLY")
                         DispatchQueue.main.async {
+                            WayAppUtils.Log.message("Before total products: \(session.products.count)")
                             session.products.remove(session.products[offset])
+                            WayAppUtils.Log.message("After total products: \(session.products.count)")
                         }
                     } else if case .failure(let error) = response {
                         WayAppUtils.Log.message(error.localizedDescription)
