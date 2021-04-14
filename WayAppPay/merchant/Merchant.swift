@@ -147,6 +147,25 @@ extension WayAppPay {
                     }
             }
         }
+        
+        // Las Rozas f157c0c5-49b4-445a-ad06-70727030b38a
+        // WayApp Pay 1338193f-c6d9-4c19-a7d8-1c80fe9f017f
+        // Super papeleria c35ce2ba-fb70-4d10-bd9b-d7407de77f97
+
+        static func newSEPAS(initialDate: String, finalDate: String, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
+            WayAppPay.API.getSEPA(initialDate, finalDate,
+                                  "issuerUUID", "1338193f-c6d9-4c19-a7d8-1c80fe9f017f")
+                .fetch(type: [PaymentTransaction].self) { response in
+                    switch response {
+                    case .success(let response?):
+                        completion(response.result, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    default:
+                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    }
+            }
+        }
 
         func getReportID(for accountUUID: String?, month: String) {
             guard let accountUUID = accountUUID else {

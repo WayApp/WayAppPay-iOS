@@ -22,13 +22,25 @@ extension WayAppPay {
 //                    Account.registerAccount(registration: Registration(email: "agagagag@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
-                    Merchant.getMerchantsForAccount(account.accountUUID)
+                    //Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
 //                    Account.delete("f05249fd-4d0e-455b-a89d-8c245e1d4a88")
 //                    Account.delete("e57d740d-b914-4fbd-b49f-e91efa4caafa")
                     //Card.getCards(for: account.accountUUID)
                     //Issuer.get()
 //                    AfterBanks.getBanks()
+                    Merchant.newSEPAS(initialDate: "2021-03-01", finalDate: "2021-04-14") { transactions, error in
+                        if let transactions = transactions {
+                            WayAppUtils.Log.message("Transactions count: \(transactions.count)")
+                            for transaction in transactions {
+                                WayAppUtils.Log.message("Transaction: \(transaction)")
+                            }
+                        } else if let error = error  {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: \(error.localizedDescription)")
+                        } else {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
+                        }
+                    }
                 }
             }
         }
