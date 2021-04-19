@@ -105,6 +105,7 @@ extension WayAppPay {
         case getMerchantAccountTransactions(String, String) // GET
         case getMerchantAccountTransactionsForDay(String, String, Day) // GET
         case getMerchantAccountTransactionsByDates(String, String, Day, Day) // GET
+        case getSEPA(Day, Day, String, String) // GET
         // Issuers
         case getIssuers // GET
         // Banks
@@ -149,6 +150,7 @@ extension WayAppPay {
             case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
             case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/dates/\(day)/"
             case .getMerchantAccountTransactionsByDates(let merchantUUID, let accountUUID, _, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
+            case .getSEPA( _, _, _, _): return "/merchants/newSEPAs/"
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
             // Issuers
             case .getIssuers: return "/issuers/"
@@ -198,6 +200,7 @@ extension WayAppPay {
             case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
             case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return merchantUUID + "/" + accountUUID + "/" + day
             case .getMerchantAccountTransactionsByDates(let merchantUUID, let accountUUID, _, _): return merchantUUID + "/" + accountUUID
+            case .getSEPA: return ""
             case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
             // Issuers
             case .getIssuers: return ""
@@ -216,7 +219,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -257,6 +260,8 @@ extension WayAppPay {
                 return "?countryCode=\(countryCode)"
             case .getMerchantAccountTransactionsByDates( _, _, let initialDate, let finalDate):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)"
+            case .getSEPA(let initialDate, let finalDate, let fieldName, let fieldValue):
+                return "?initialDate=\(initialDate)&finalDate=\(finalDate)&fieldName=\(fieldName)&fieldValue=\(fieldValue)"
             default:
                 return ""
             }

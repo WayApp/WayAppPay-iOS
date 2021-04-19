@@ -25,7 +25,7 @@ extension WayAppPay {
         }
 
         public enum PaymentFormat: String, Codable, CaseIterable {
-            case PREPAID, POSTPAID, CREDIT
+            case PREPAID, POSTPAID, CREDIT, DIRECT, VOUCHER, GIFTCARD
         }
         
         var pan: String
