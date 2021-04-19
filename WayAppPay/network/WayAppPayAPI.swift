@@ -150,7 +150,7 @@ extension WayAppPay {
             case .getMerchantAccountTransactions(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
             case .getMerchantAccountTransactionsForDay(let merchantUUID, let accountUUID, let day): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/dates/\(day)/"
             case .getMerchantAccountTransactionsByDates(let merchantUUID, let accountUUID, _, _): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/transactions/"
-            case .getSEPA( _, _, _, _): return "/merchants/newSEPAS/"
+            case .getSEPA( _, _, _, _): return "/merchants/newSEPAs/"
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
             // Issuers
             case .getIssuers: return "/issuers/"

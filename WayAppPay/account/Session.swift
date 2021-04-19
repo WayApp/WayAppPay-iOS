@@ -29,7 +29,7 @@ extension WayAppPay {
                     //Card.getCards(for: account.accountUUID)
                     //Issuer.get()
 //                    AfterBanks.getBanks()
-                    Merchant.newSEPAS(initialDate: "2021-03-01", finalDate: "2021-04-14") { transactions, error in
+                    Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-16") { transactions, error in
                         if let transactions = transactions {
                             WayAppUtils.Log.message("Transactions count: \(transactions.count)")
                             for transaction in transactions {
