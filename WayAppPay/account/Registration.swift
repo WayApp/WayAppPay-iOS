@@ -15,6 +15,7 @@ extension WayAppPay {
         var firstName: String?
         var lastName: String?
         var email: String?
+        var balance: Int?
         var issuerUUID: String?
         var issuerCode: String?
         var currency: Currency?
@@ -23,9 +24,10 @@ extension WayAppPay {
         var creationDate: Date?
         var lastUpdateDate: Date?
         
-        init(email: String, issuerUUID: String) {
+        init(email: String, issuerUUID: String, balance: Int = 0) {
             self.email = email
             self.issuerUUID = issuerUUID
+            self.balance = balance
         }
     }
 }

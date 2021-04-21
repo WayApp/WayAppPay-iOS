@@ -19,7 +19,7 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
-//                    Account.registerAccount(registration: Registration(email: "agagagag@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
+//                    Account.registerAccount(registration: Registration(email: "wayapp.sbc@gmail.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a", balance: 1000))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     //Merchant.getMerchantsForAccount(account.accountUUID)
@@ -29,7 +29,8 @@ extension WayAppPay {
                     //Card.getCards(for: account.accountUUID)
                     //Issuer.get()
 //                    AfterBanks.getBanks()
-                    Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-16") { transactions, error in
+                    
+                    Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
                         if let transactions = transactions {
                             WayAppUtils.Log.message("Transactions count: \(transactions.count)")
                             for transaction in transactions {
