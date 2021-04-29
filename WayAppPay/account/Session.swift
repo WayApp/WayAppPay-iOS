@@ -19,17 +19,19 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
-//                    Account.registerAccount(registration: Registration(email: "wayapp.sbc@gmail.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a", balance: 1000))
+                    // Las Rozas issuerUUID: f157c0c5-49b4-445a-ad06-70727030b38a
+                    // Parquesur issuerUUID staging: 6fae922e-9a08-48a8-859d-d9e8a0d54f21
+//                    Account.registerAccount(registration: Registration(email: "o2@wayapp.com", issuerUUID: "6fae922e-9a08-48a8-859d-d9e8a0d54f21"))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     //Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
-//                    Account.delete("f05249fd-4d0e-455b-a89d-8c245e1d4a88")
-//                    Account.delete("e57d740d-b914-4fbd-b49f-e91efa4caafa")
+//                    Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
                     //Card.getCards(for: account.accountUUID)
                     //Issuer.get()
 //                    AfterBanks.getBanks()
                     
+                    /*
                     Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
                         if let transactions = transactions {
                             WayAppUtils.Log.message("Transactions count: \(transactions.count)")
@@ -42,6 +44,20 @@ extension WayAppPay {
                             WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
                         }
                     }
+ */
+                    Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
+                        if let transactions = transactions {
+                            WayAppUtils.Log.message("Transactions count: \(transactions.count)")
+                            for transaction in transactions {
+                                WayAppUtils.Log.message("Transaction: \(transaction)")
+                            }
+                        } else if let error = error  {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: \(error.localizedDescription)")
+                        } else {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
+                        }
+                    }
+
                 }
             }
         }

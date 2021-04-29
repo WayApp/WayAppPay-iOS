@@ -108,6 +108,7 @@ extension WayAppPay {
         case getSEPA(Day, Day, String, String) // GET
         // Issuers
         case getIssuers // GET
+        case getIssuerTransactions(String, Day, Day) // GET
         // Banks
         case getBanks(String) // GET
         case getConsentDetail(String) // GET
@@ -154,6 +155,7 @@ extension WayAppPay {
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
             // Issuers
             case .getIssuers: return "/issuers/"
+            case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
             // Banks
             case .getBanks: return "/banks/lists/"
             case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
@@ -204,6 +206,7 @@ extension WayAppPay {
             case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
             // Issuers
             case .getIssuers: return ""
+            case .getIssuerTransactions(let issuerUUID, _, _): return issuerUUID
             // Banks
             case .getBanks: return ""
             case .getConsentDetail(let consentId): return consentId
@@ -219,7 +222,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -260,6 +263,8 @@ extension WayAppPay {
                 return "?countryCode=\(countryCode)"
             case .getMerchantAccountTransactionsByDates( _, _, let initialDate, let finalDate):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)"
+            case .getIssuerTransactions( _, let initialDate, let finalDate):
+                return "?initialDate=\(initialDate)&finalDate=\(finalDate)"
             case .getSEPA(let initialDate, let finalDate, let fieldName, let fieldValue):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)&fieldName=\(fieldName)&fieldValue=\(fieldValue)"
             default:
@@ -272,6 +277,8 @@ extension WayAppPay {
             let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
             let baseURL = OperationalEnvironment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
             return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey) + queryParameters)
+            // Parquesur STAGING
+//            return URL(string: baseURL + "fd09220a-3a69-4dc5-afd9-19e0e6d1c747" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "c739a79b-8f73-4b7d-aca2-adad51ffa9bd") + queryParameters)
             // Las Rozas STAGING
 //            return URL(string: baseURL + "f9a9b822-867c-11eb-8dcd-0242ac130003" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "dde980f4-867c-11eb-8dcd-0242ac130003") + queryParameters)
             // Las Rozas PRODUCTION
@@ -366,7 +373,10 @@ extension WayAppPay {
             // Here for potential future support of methods that require header
             switch self {
             case .registrationAccount:
-                return ["User-Agent": "138e3a2d-7666-4ac8-a0e0-145953ce8cab"]
+                // Parquesur
+                return ["User-Agent": "9062358b-c0b3-45ff-84db-b452c9ac1289"]
+                // Las Rozas
+//                return ["User-Agent": "138e3a2d-7666-4ac8-a0e0-145953ce8cab"]
             default:
                 return nil
             }

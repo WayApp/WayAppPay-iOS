@@ -51,5 +51,20 @@ extension WayAppPay {
                 }
             }
         }
+        
+        static func getTransactions(issuerUUID: String, initialDate: String, finalDate: String, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
+            WayAppPay.API.getIssuerTransactions(issuerUUID,initialDate, finalDate)
+                .fetch(type: [PaymentTransaction].self) { response in
+                    switch response {
+                    case .success(let response?):
+                        completion(response.result, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    default:
+                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    }
+            }
+        }
+
     }
 }
