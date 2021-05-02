@@ -113,6 +113,10 @@ extension WayAppPay {
         case getBanks(String) // GET
         case getConsentDetail(String) // GET
         case getConsent(String, AfterBanks.ConsentRequest) // POST
+        // Campaign
+        case createCampaign(Campaign)
+        case getCampaigns(String, String) // GET
+        case getCampaign(String, String) // GET
 
         private var path: String {
             switch self {
@@ -160,6 +164,10 @@ extension WayAppPay {
             case .getBanks: return "/banks/lists/"
             case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
             case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
+            // Campaign
+            case .createCampaign: return "/campaigns/"
+            case .getCampaigns: return "/campaigns/"
+            case .getCampaign(let campaignID, let sponsorUUID): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
             // TRASH
             case .account: return "/accounts/"
             case .editAccount: return "/accounts/\(WayAppPay.session.accountUUID!)/"
@@ -211,6 +219,10 @@ extension WayAppPay {
             case .getBanks: return ""
             case .getConsentDetail(let consentId): return consentId
             case .getConsent(let accountUUID, _): return accountUUID
+            // Campaign
+            case .createCampaign: return ""
+            case .getCampaigns: return ""
+            case .getCampaign(let campaignID, let sponsorUUID): return campaignID + "/" + sponsorUUID
             default: return ""
             }
         }
@@ -222,7 +234,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -230,7 +242,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createCampaign:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -267,6 +279,8 @@ extension WayAppPay {
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)"
             case .getSEPA(let initialDate, let finalDate, let fieldName, let fieldValue):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)&fieldName=\(fieldName)&fieldValue=\(fieldValue)"
+            case .getCampaigns(let merchantUUID, let issuerUUID):
+                return "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID)"
             default:
                 return ""
             }
@@ -360,6 +374,12 @@ extension WayAppPay {
                 return nil
             case .getConsent(_, let consentRequest):
                 if let part = HTTPCall.BodyPart(consentRequest, name: "consentRequest") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createCampaign(let campaign):
+                if let part = HTTPCall.BodyPart(campaign, name: "campaign") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }

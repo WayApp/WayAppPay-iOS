@@ -45,6 +45,7 @@ extension WayAppPay {
                         }
                     }
  */
+                    /*
                     Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
                         if let transactions = transactions {
                             WayAppUtils.Log.message("Transactions count: \(transactions.count)")
@@ -57,7 +58,46 @@ extension WayAppPay {
                             WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
                         }
                     }
-
+*/
+                    /*
+                    Campaign.get(merchantUUID: "", issuerUUID: "100") { campaigns, error in
+                        if let campaigns = campaigns {
+                            WayAppUtils.Log.message("Campaigns count: \(campaigns.count)")
+                            for campaign in campaigns {
+                                WayAppUtils.Log.message("Campaign: \(campaign)")
+                            }
+                        } else if let error = error  {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+                        } else {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+                        }
+                    }
+ */
+                    Campaign.get(campaignID: "c040399e-ab0b-4b25-ae55-cc12f9bb3c18", sponsorUUID: "100") { campaigns, error in
+                        if let campaigns = campaigns {
+                            for campaign in campaigns {
+                                WayAppUtils.Log.message("Campaign: \(campaign)")
+                            }
+                        } else if let error = error  {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+                        } else {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+                        }
+                    }
+                    /*
+                    let campaign: Campaign = Campaign(name: "C10", sponsorUUID: "100", format: .POINT)
+                    Campaign.create(campaign) { campaigns, error in
+                        if let campaigns = campaigns {
+                            for campaign in campaigns {
+                                WayAppUtils.Log.message("Campaign: \(campaign)")
+                            }
+                        } else if let error = error  {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+                        } else {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+                        }
+                    }
+                    */
                 }
             }
         }
