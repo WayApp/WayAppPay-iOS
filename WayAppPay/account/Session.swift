@@ -21,10 +21,11 @@ extension WayAppPay {
                 if let account = account {
                     // Las Rozas issuerUUID: f157c0c5-49b4-445a-ad06-70727030b38a
                     // Parquesur issuerUUID staging: 6fae922e-9a08-48a8-859d-d9e8a0d54f21
-//                    Account.registerAccount(registration: Registration(email: "o2@wayapp.com", issuerUUID: "6fae922e-9a08-48a8-859d-d9e8a0d54f21"))
+                    // As Cancelas issuerUUID staging: dd5ed363-88ce-4308-9cf2-20f3930d7cfd
+//                    Account.registerAccount(registration: Registration(email: "m3@wayapp.com", issuerUUID: "dd5ed363-88ce-4308-9cf2-20f3930d7cfd"))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
-                    //Merchant.getMerchantsForAccount(account.accountUUID)
+                    Merchant.getMerchantsForAccount(account.accountUUID)
                     // TODO:
 //                    Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
                     //Card.getCards(for: account.accountUUID)
@@ -73,6 +74,7 @@ extension WayAppPay {
                         }
                     }
  */
+                    /*
                     Campaign.get(campaignID: "c040399e-ab0b-4b25-ae55-cc12f9bb3c18", sponsorUUID: "100") { campaigns, error in
                         if let campaigns = campaigns {
                             for campaign in campaigns {
@@ -84,6 +86,7 @@ extension WayAppPay {
                             WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
                         }
                     }
+ */
                     /*
                     let campaign: Campaign = Campaign(name: "C10", sponsorUUID: "100", format: .POINT)
                     Campaign.create(campaign) { campaigns, error in

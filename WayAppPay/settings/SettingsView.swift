@@ -84,6 +84,24 @@ struct SettingsView: View {
                         Label("Logout", systemImage: "chevron.left.square")
                             .accessibility(label: Text("Logout"))
                     }
+                    if (OperationalEnvironment.current == .staging) {
+                        Button {
+                            DispatchQueue.main.async {
+                                self.reward()
+                            }
+                        } label: {
+                            Label("Reward", systemImage: "plus.viewfinder")
+                                .accessibility(label: Text("Reward"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.redeem()
+                            }
+                        } label: {
+                            Label("Redeem", systemImage: "minus.square")
+                                .accessibility(label: Text("Redeem"))
+                        }
+                    }
 
                 }
                 .accentColor(.primary)
@@ -93,6 +111,43 @@ struct SettingsView: View {
             .navigationBarTitle("Settings", displayMode: .inline)
         }
     }
+    
+    private func reward() {
+        // PAN Marzo31Superpapelería: 2CCFDE3A-10BC-40C5-AEAC-A7E74557F9BF
+        let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
+        let C10 =  "c040399e-ab0b-4b25-ae55-cc12f9bb3c18"
+        let C1 = "e5154471-ca71-448a-82d2-7b28712b88aa"
+        let transaction = WayAppPay.PaymentTransaction(amount: 1000, token: activeToken)
+        let campaignIDs = [C1, C10]
+        WayAppPay.Campaign.reward(transaction: transaction, campaignIDs: campaignIDs) { campaigns, error in
+            if let campaigns = campaigns {
+                WayAppUtils.Log.message("Campaigns: \(campaigns)")
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Reward ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Reward ERROR: -------------")
+            }
+        }
+    }
+    
+    private func redeem() {
+        // PAN Marzo31Superpapelería: 2CCFDE3A-10BC-40C5-AEAC-A7E74557F9BF
+        let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
+        let C10 =  "c040399e-ab0b-4b25-ae55-cc12f9bb3c18"
+        let C1 = "e5154471-ca71-448a-82d2-7b28712b88aa"
+        let transaction = WayAppPay.PaymentTransaction(amount: 100, token: activeToken)
+        let campaignIDs = [C1]
+        WayAppPay.Campaign.redeem(transaction: transaction, campaignIDs: campaignIDs) { campaigns, error in
+            if let campaigns = campaigns {
+                WayAppUtils.Log.message("Campaigns: \(campaigns)")
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Redeem ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Redeem ERROR: -------------")
+            }
+        }
+    }
+
 }
 
 struct SettingsView_Previews: PreviewProvider {

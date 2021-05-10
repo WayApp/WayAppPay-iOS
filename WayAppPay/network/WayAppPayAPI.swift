@@ -117,6 +117,8 @@ extension WayAppPay {
         case createCampaign(Campaign)
         case getCampaigns(String, String) // GET
         case getCampaign(String, String) // GET
+        case rewardCampaigns(PaymentTransaction, Array<String>) // POST
+        case redeemCampaigns(PaymentTransaction, Array<String>) // POST
 
         private var path: String {
             switch self {
@@ -168,6 +170,8 @@ extension WayAppPay {
             case .createCampaign: return "/campaigns/"
             case .getCampaigns: return "/campaigns/"
             case .getCampaign(let campaignID, let sponsorUUID): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
+            case .rewardCampaigns( _, _): return "/campaigns/rewards/"
+            case .redeemCampaigns( _, _): return "/campaigns/redeems/"
             // TRASH
             case .account: return "/accounts/"
             case .editAccount: return "/accounts/\(WayAppPay.session.accountUUID!)/"
@@ -223,6 +227,8 @@ extension WayAppPay {
             case .createCampaign: return ""
             case .getCampaigns: return ""
             case .getCampaign(let campaignID, let sponsorUUID): return campaignID + "/" + sponsorUUID
+            case .rewardCampaigns: return ""
+            case .redeemCampaigns: return ""
             default: return ""
             }
         }
@@ -242,7 +248,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createCampaign:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .redeemCampaigns:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -321,17 +327,6 @@ extension WayAppPay {
                 }
                 if let parts = parts {
                     let multipart = HTTPCall.BodyPart.multipart(parts)
-                    WayAppUtils.Log.message("multipart: \(multipart)")
-                    return (multipart.contentType, multipart.data)
-                }
-                return nil
-            case .walletPayment(_, _, let transaction), .topup(let transaction):
-                var parts: [HTTPCall.BodyPart]?
-                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
-                    parts = [part]
-                }
-                if let parts = parts {
-                    let multipart = HTTPCall.BodyPart.multipart(parts)
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
@@ -384,6 +379,29 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
+            case .walletPayment(_, _, let transaction), .topup(let transaction):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
+                    parts = [part]
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .rewardCampaigns(let transaction, let campaignIDs), .redeemCampaigns(let transaction, let campaignIDs):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
+                    parts = [part]
+                    if let part = HTTPCall.BodyPart(campaignIDs, name: "campaigns") {
+                        parts?.append(part)
+                    }
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
             default:
                 return nil
             }
@@ -405,7 +423,5 @@ extension WayAppPay {
         func isUnauthorizedStatusCode(_ code: Int) -> Bool {
             return code == 401 || code == 403
         }
-
-
     }
 }

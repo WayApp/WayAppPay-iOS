@@ -150,6 +150,7 @@ enum HTTPCall {
             result(nil, .invalidRequest)
             return
         }
+        WayAppUtils.Log.message("urlRequest url: \(urlRequest.url)")
         URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) -> Void in
             // First check needs to be with error (not data), as data can be nil in successful responses
             if let error = error {

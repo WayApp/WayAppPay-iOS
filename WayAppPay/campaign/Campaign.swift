@@ -94,5 +94,32 @@ extension WayAppPay {
                 }
             }
         }
+        
+        static func reward(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayAppPay.API.rewardCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func redeem(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayAppPay.API.redeemCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
     }
 }

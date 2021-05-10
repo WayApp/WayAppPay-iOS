@@ -108,7 +108,6 @@ extension WayAppPay {
             self.type = type
             self.currency = session.merchants.isEmpty ?  PaymentTransaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
             self.readingType = .STANDARD
-            self.merchantUUID = session.merchantUUID
             self.accountUUID = session.accountUUID
             self.purchaseDetail = purchaseDetail
         }
