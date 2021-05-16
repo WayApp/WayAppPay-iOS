@@ -19,88 +19,12 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
-                    // Las Rozas issuerUUID: f157c0c5-49b4-445a-ad06-70727030b38a
-                    // Parquesur issuerUUID staging: 6fae922e-9a08-48a8-859d-d9e8a0d54f21
-                    // As Cancelas issuerUUID staging: dd5ed363-88ce-4308-9cf2-20f3930d7cfd
-//                    Account.registerAccount(registration: Registration(email: "m3@wayapp.com", issuerUUID: "dd5ed363-88ce-4308-9cf2-20f3930d7cfd"))
                     showAuthenticationView = false
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
-                    // TODO:
-//                    Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
                     //Card.getCards(for: account.accountUUID)
                     //Issuer.get()
-//                    AfterBanks.getBanks()
-                    
-                    /*
-                    Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
-                        if let transactions = transactions {
-                            WayAppUtils.Log.message("Transactions count: \(transactions.count)")
-                            for transaction in transactions {
-                                WayAppUtils.Log.message("Transaction: \(transaction)")
-                            }
-                        } else if let error = error  {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: \(error.localizedDescription)")
-                        } else {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
-                        }
-                    }
- */
-                    /*
-                    Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
-                        if let transactions = transactions {
-                            WayAppUtils.Log.message("Transactions count: \(transactions.count)")
-                            for transaction in transactions {
-                                WayAppUtils.Log.message("Transaction: \(transaction)")
-                            }
-                        } else if let error = error  {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: \(error.localizedDescription)")
-                        } else {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
-                        }
-                    }
-*/
-                    /*
-                    Campaign.get(merchantUUID: "", issuerUUID: "100") { campaigns, error in
-                        if let campaigns = campaigns {
-                            WayAppUtils.Log.message("Campaigns count: \(campaigns.count)")
-                            for campaign in campaigns {
-                                WayAppUtils.Log.message("Campaign: \(campaign)")
-                            }
-                        } else if let error = error  {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
-                        } else {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
-                        }
-                    }
- */
-                    /*
-                    Campaign.get(campaignID: "c040399e-ab0b-4b25-ae55-cc12f9bb3c18", sponsorUUID: "100") { campaigns, error in
-                        if let campaigns = campaigns {
-                            for campaign in campaigns {
-                                WayAppUtils.Log.message("Campaign: \(campaign)")
-                            }
-                        } else if let error = error  {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
-                        } else {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
-                        }
-                    }
- */
-                    /*
-                    let campaign: Campaign = Campaign(name: "C10", sponsorUUID: "100", format: .POINT)
-                    Campaign.create(campaign) { campaigns, error in
-                        if let campaigns = campaigns {
-                            for campaign in campaigns {
-                                WayAppUtils.Log.message("Campaign: \(campaign)")
-                            }
-                        } else if let error = error  {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
-                        } else {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
-                        }
-                    }
-                    */
+//                    AfterBanks.getBanks()                    
                 }
             }
         }

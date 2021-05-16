@@ -109,6 +109,7 @@ extension WayAppPay {
         // Issuers
         case getIssuers // GET
         case getIssuerTransactions(String, Day, Day) // GET
+        case expireIssuerCards(String) // GET
         // Banks
         case getBanks(String) // GET
         case getConsentDetail(String) // GET
@@ -162,6 +163,7 @@ extension WayAppPay {
             // Issuers
             case .getIssuers: return "/issuers/"
             case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
+            case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
             // Banks
             case .getBanks: return "/banks/lists/"
             case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
@@ -219,6 +221,7 @@ extension WayAppPay {
             // Issuers
             case .getIssuers: return ""
             case .getIssuerTransactions(let issuerUUID, _, _): return issuerUUID
+            case .expireIssuerCards(let issuerUUID): return issuerUUID
             // Banks
             case .getBanks: return ""
             case .getConsentDetail(let consentId): return consentId
@@ -240,7 +243,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))

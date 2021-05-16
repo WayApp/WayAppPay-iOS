@@ -143,7 +143,7 @@ struct NewCardView: View {
                         .modifier(WayAppPay.TextFieldModifier())
                         Picker(selection: $selectedIssuer, label: Text("Issuer")) {
                             ForEach(0..<session.issuers.count, id: \.self) {
-                                Text(self.session.issuers[$0].name)
+                                Text(self.session.issuers[$0].name ?? "no name")
                             }
                         }
                         Picker(selection: $selectedCardType, label: Text("Type")) {

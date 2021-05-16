@@ -134,7 +134,8 @@ extension WayAppPay {
             }
         }
         
-        func getTransactionsForAccountByDates(accountUUID: String, initialDate: Date, finalDate: Date, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
+        func getTransactionsForAccountByDates(accountUUID: String, initialDate: Date, finalDate: Date,
+                                              completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
             WayAppPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: initialDate), WayAppPay.reportDateFormatter.string(from: finalDate))
                 .fetch(type: [PaymentTransaction].self) { response in
                     switch response {

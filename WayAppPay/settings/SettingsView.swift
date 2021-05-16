@@ -84,7 +84,13 @@ struct SettingsView: View {
                         Label("Logout", systemImage: "chevron.left.square")
                             .accessibility(label: Text("Logout"))
                     }
-                    if (OperationalEnvironment.current == .staging) {
+                }
+                .accentColor(.primary)
+                .listItemTint(Color("WAP-GreenDark"))
+                if (OperationalEnvironment.isSettingsSupportFunctionsActive) {
+                    Section(header: Label("Support", systemImage: "ladybug")
+                                .accessibility(label: Text("Support"))
+                                .font(.callout)) {
                         Button {
                             DispatchQueue.main.async {
                                 self.reward()
@@ -101,12 +107,43 @@ struct SettingsView: View {
                             Label("Redeem", systemImage: "minus.square")
                                 .accessibility(label: Text("Redeem"))
                         }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.expire()
+                            }
+                        } label: {
+                            Label("Expire", systemImage: "calendar.badge.exclamationmark")
+                                .accessibility(label: Text("Expire"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.registerAccount()
+                            }
+                        } label: {
+                            Label("Register account", systemImage: "arrow.up.and.person.rectangle.portrait")
+                                .accessibility(label: Text("Register account"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.deleteAccount()
+                            }
+                        } label: {
+                            Label("Delete account", systemImage: "trash")
+                                .accessibility(label: Text("Delete account"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.newSEPAs()
+                            }
+                        } label: {
+                            Label("Generate SEPA file", systemImage: "banknote")
+                                .accessibility(label: Text("Generate SEPA file"))
+                        }
+
                     }
-
+                    .accentColor(.primary)
+                    .listItemTint(Color(.systemRed))
                 }
-                .accentColor(.primary)
-                .listItemTint(Color("WAP-GreenDark"))
-
             }
             .navigationBarTitle("Settings", displayMode: .inline)
         }
@@ -147,7 +184,110 @@ struct SettingsView: View {
             }
         }
     }
+    
+    private func expire() {
+//        let issuerUUIDLasRozas = "f157c0c5-49b4-445a-ad06-70727030b38a"
+        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
+//        let issuerUUIDParquesur = "12412d65-411b-4629-a9ce-b5fb281b11bd"
+        WayAppPay.Issuer.expireCards(issuerUUID: issuerUUIDAsCancelas) { issuers, error in
+            WayAppUtils.Log.message("Issuers name: \(issuers?.debugDescription)")
+            if let issuers = issuers {
+                WayAppUtils.Log.message("Issuer name: ")
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Expire ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Expire ERROR: -------------")
+            }
+        }
+    }
+    
+    private func getCampaign(id: String, sponsorUUID: String) {
+        WayAppPay.Campaign.get(campaignID: id, sponsorUUID: sponsorUUID) { campaigns, error in
+            if let campaigns = campaigns {
+                for campaign in campaigns {
+                    WayAppUtils.Log.message("Campaign: \(campaign)")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+            }
+        }
+    }
+    
+    private func getCampaign() {
+        WayAppPay.Campaign.get(merchantUUID: "", issuerUUID: "100") { campaigns, error in
+            if let campaigns = campaigns {
+                WayAppUtils.Log.message("Campaigns count: \(campaigns.count)")
+                for campaign in campaigns {
+                    WayAppUtils.Log.message("Campaign: \(campaign)")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+            }
+        }
+    }
+    
+    private func createCampaign() {
+        let campaign: WayAppPay.Campaign = WayAppPay.Campaign(name: "C10", sponsorUUID: "100", format: .POINT)
+        WayAppPay.Campaign.create(campaign) { campaigns, error in
+            if let campaigns = campaigns {
+                for campaign in campaigns {
+                    WayAppUtils.Log.message("Campaign: \(campaign)")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+            }
+        }
 
+    }
+    
+    private func newSEPAs() {
+        WayAppPay.Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
+            if let transactions = transactions {
+                WayAppUtils.Log.message("Transactions count: \(transactions.count)")
+                for transaction in transactions {
+                    WayAppUtils.Log.message("Transaction: \(transaction)")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
+            }
+        }
+    }
+
+    private func getIssuerTransactions() {
+        // Las Rozas issuerUUID: f157c0c5-49b4-445a-ad06-70727030b38a
+        // Parquesur issuerUUID staging: 6fae922e-9a08-48a8-859d-d9e8a0d54f21
+        // As Cancelas issuerUUID staging: dd5ed363-88ce-4308-9cf2-20f3930d7cfd
+
+        WayAppPay.Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
+            if let transactions = transactions {
+                WayAppUtils.Log.message("Transactions count: \(transactions.count)")
+                for transaction in transactions {
+                    WayAppUtils.Log.message("Transaction: \(transaction)")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Transaction ERROR: -------------")
+            }
+        }
+    }
+    
+    private func registerAccount() {
+        WayAppPay.Account.registerAccount(registration:
+                                            WayAppPay.Registration(email: "m3@wayapp.com", issuerUUID: "dd5ed363-88ce-4308-9cf2-20f3930d7cfd"))
+    }
+    
+    private func deleteAccount() {
+        WayAppPay.Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
+    }
 }
 
 struct SettingsView_Previews: PreviewProvider {
