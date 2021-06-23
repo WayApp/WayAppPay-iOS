@@ -19,7 +19,9 @@ extension WayAppPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
-                    showAuthenticationView = false
+                    DispatchQueue.main.async {
+                        self.showAuthenticationView = false
+                    }
                     doesUserHasMerchantAccount = false
                     Merchant.getMerchantsForAccount(account.accountUUID)
                     //Card.getCards(for: account.accountUUID)
@@ -70,7 +72,6 @@ extension WayAppPay {
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
-        @Published var loginError: Bool = false
         var doesUserHasMerchantAccount: Bool = false
 
         private var networkMonitor = NWPathMonitor()

@@ -70,7 +70,6 @@ struct TransactionRowView: View {
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
                     .padding(.bottom, WayAppPay.UI.verticalSeparation)
-                    .modifier(WayAppPay.TextFieldModifier())
                     .modifier(WayAppPay.ClearButton(text: $email))
                 Button(action: {
                     WayAppPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
@@ -84,7 +83,7 @@ struct TransactionRowView: View {
                          .foregroundColor(.white)
                  }
                 .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
-                .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color("WAP-GreenDark"))
+                .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color("MintGreen"))
                 .cornerRadius(WayAppPay.UI.buttonCornerRadius)
                 .padding(.bottom, self.keyboardObserver.keyboardHeight)
                 .disabled(self.shouldSendEmailButtonBeDisabled)

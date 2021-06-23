@@ -110,7 +110,7 @@ extension WayAppPay {
             return password
         }
 
-        static func registerAccount(registration: Registration) {
+        static func register(registration: Registration) {
             WayAppPay.API.registrationAccount(registration).fetch(type: [Registration].self) { response in
                 WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
                 if case .success(let response?) = response {
@@ -124,56 +124,41 @@ extension WayAppPay {
             }
         }
 
-        static func changePINforEmail(_ email: String, currentPIN: String, newPIN: String, completion: @escaping (Error?) -> Void) {
-            WayAppPay.API.changePIN(ChangePIN(email: email, oldPin: Account.hashedPIN(currentPIN), newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
-                WayAppUtils.Log.message("RESPONSE: \(response)")
-                if case .success(let response?) = response {
-                    if let accounts = response.result,
-                        let account = accounts.first {
-                        completion(nil)
-                        print("success success success success success: \(account)")
-                    }
-                } else if case .failure(let error) = response {
-                    completion(error)
-                    WayAppUtils.Log.message(error.localizedDescription)
+        static func changePIN(_ email: String, newPIN: String, completion: @escaping ([Account]?, Error?) -> Void) {
+            WayAppPay.API.changePIN(ChangePIN(email: email, oldPin: "", newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
         
-        static func forgotPINforEmail(_ email: String, completion: @escaping (String?, Error?) -> Void) {
+        static func forgotPIN(_ email: String, completion: @escaping ([OTP]?, Error?) -> Void) {
             WayAppPay.API.forgotPIN(ChangePIN(email: email, oldPin: "", newPin: "")).fetch(type: [OTP].self) { response in
-                WayAppUtils.Log.message("RESPONSE: \(response)")
-                if case .success(let response?) = response {
-                    if let otps = response.result,
-                        let otp = otps.first {
-                        completion(otp.otp, nil)
-                        print("OTP success success success success success: \(otp)")
-                    }
-                } else if case .failure(let error) = response {
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
                     completion(nil, error)
-                    WayAppUtils.Log.message(error.localizedDescription)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
-        static func load(email: String, pin: String) {
-            WayAppUtils.Log.message("**************HASHED 1234 ===\(Account.hashedPIN(pin))")
+        static func load(email: String, pin: String, completion: @escaping ([Account]?, Error?) -> Void) {
             WayAppPay.API.getAccount(email, Account.hashedPIN(pin)).fetch(type: [WayAppPay.Account].self) { response in
-                if case .success(let response?) = response {
-                    if let accounts = response.result,
-                        let account = accounts.first {
-                        DispatchQueue.main.async {
-                            session.account = account
-                            session.saveLoginData(pin: pin)
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            session.loginError = true
-                        }
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         } // load

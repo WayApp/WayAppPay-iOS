@@ -44,8 +44,8 @@ struct MainView: View {
                         if displayMerchantOption {
                             ShoppingCartView()
                                 .tabItem {
-                                    Label("Cart", systemImage: "cart")
-                                        .accessibility(label: Text("Cart"))
+                                    Label("Campaign", systemImage: "megaphone")
+                                        .accessibility(label: Text("Campaign"))
                             }
                             .tag(Tab.cart)
                             OrderView().environmentObject(self.session)

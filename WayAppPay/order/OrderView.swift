@@ -20,6 +20,19 @@ struct OrderView: View {
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Order")
+            .navigationBarItems(trailing:
+                HStack {
+                    Button(action: {
+                        ShoppingCartView()
+                    }, label: {
+                        Label("Cart", systemImage: "cart")
+                            .accessibility(label: Text("Cart"))
+                    })
+                }
+                .foregroundColor(Color("MintGreen"))
+                .frame(height: 30)
+            )
+
         }
     }
     

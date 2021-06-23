@@ -38,6 +38,7 @@
 		B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */; };
 		B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */; };
 		B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12F17FA23EBD1530012890E /* TransactionRowView.swift */; };
+		B144F2CC26833220001C3C10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */; };
 		B14BA8AD250F77870095C654 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */; };
 		B15800F42507CA380022A687 /* CardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F32507CA380022A687 /* CardDetailView.swift */; };
 		B15800F625093B610022A687 /* NewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F525093B610022A687 /* NewCardView.swift */; };
@@ -110,6 +111,7 @@
 		B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordSecurePersistance.swift; sourceTree = "<group>"; };
 		B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationalEnvironment.swift; sourceTree = "<group>"; };
 		B12F17FA23EBD1530012890E /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
+		B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		B15800F32507CA380022A687 /* CardDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = WayAppPay/product/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
 		B15800F525093B610022A687 /* NewCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCardView.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 				B1E84AC824038A6B0093F9EC /* Localizable.strings */,
 				B1A19AC7240264970070E5FF /* WayApp Pay.entitlements */,
 				B19ACCC0238B092C009FF084 /* Preview Content */,
+				B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */,
 			);
 			path = WayAppPay;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				B1E84ACA24038A6B0093F9EC /* Localizable.strings in Resources */,
 				B104DADF26222E58000EFC75 /* InfoPlist.strings in Resources */,
 				B187D57625DE67640065CAEA /* Assets.xcassets in Resources */,
+				B144F2CC26833220001C3C10 /* LaunchScreen.storyboard in Resources */,
 				B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

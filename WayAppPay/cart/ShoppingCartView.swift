@@ -28,7 +28,7 @@ struct ShoppingCartView: View {
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center)
                     }
-                    .foregroundColor(Color("WAP-Blue"))
+                    .foregroundColor(Color("MintGreen"))
                     .aspectRatio(contentMode: .fit)
                     .padding(.trailing, 16)
                 )

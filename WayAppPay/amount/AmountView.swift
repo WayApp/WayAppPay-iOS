@@ -17,6 +17,7 @@ struct AmountView: View {
     @State private var cartDescription: String = ""
     @State private var wasPaymentSuccessful: Bool = false
     @State private var amount: Double = 0
+    @State private var total: Double = 0
     
     func handleScan() {
         processPayment()
@@ -80,20 +81,38 @@ struct AmountView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                VStack(alignment: .center, spacing: 0.0) {
-                    Spacer()
-                    Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.bottom, WayAppPay.UI.verticalSeparation)
-                        .onTapGesture {
-                            self.delete()
+                Color("CornSilk")
+                    .edgesIgnoringSafeArea(.all)
+                VStack(alignment: .trailing) {
+                    NavigationLink(destination: OrderView()) {
+                        Label(NSLocalizedString("Product catalogue", comment: "Order from product catalogue"), systemImage: "list.bullet.rectangle")
                     }
-                    TextField("shopping cart description", text: $cartDescription)
-                        .modifier(WayAppPay.TextFieldModifier())
-                        .modifier(WayAppPay.ClearButton(text: $cartDescription))
-                        .padding()
-                        .padding(.bottom, WayAppPay.UI.verticalSeparation * 3)
+                    .padding()
+                    HStack {
+                        Spacer()
+                        Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .padding()
+                            .onTapGesture {
+                                self.delete()
+                            }
+                        Button(action: {
+                            delete()
+                        }, label: {
+                            Label("Delete", systemImage: "delete.left")
+                                .accessibility(label: Text("Delete"))
+                        })
+                        Spacer()
+                    }
+                    if (false) {
+                        TextField("shopping cart description", text: $cartDescription)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                            .background(Color.white)
+                            .cornerRadius(WayAppPay.cornerRadius)
+                            .padding()
+                    }
                     VStack {
                         HStack(spacing: 0) {
                             NumberButtonView(number: 1, completion: numberEntered)
@@ -113,10 +132,59 @@ struct AmountView: View {
                         HStack(spacing: 0) {
                             NumberButtonView(number: 100, completion: numberEntered)
                             NumberButtonView(number: 0, completion: numberEntered)
-                            OperationButtonView(image: "delete.left", completion: delete)
+                            OperationButtonView(icon: "plus.circle") {
+                                total += amount
+                                amount = 0
+                            }
                         }
                     }
-                }
+                    if (false) {
+                        HStack {
+                            Spacer()
+                            NavigationLink(destination: OrderView()) {
+                                Label(NSLocalizedString("Charge", comment: "Charge"), systemImage: "banknote")
+                                    .padding()
+                                    .foregroundColor(Color.white)
+                            }
+                            NavigationLink(destination: OrderView()) {
+                                Label(NSLocalizedString("Campaign", comment: "Campaign"), systemImage: "megaphone")
+                                    .padding()
+                                    .foregroundColor(Color.white)
+                            }
+                            Spacer()
+                        }
+                        .buttonStyle(WayAppPay.ButtonModifier())
+                        .padding()
+                        NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
+                            Label(NSLocalizedString("Other options", comment: "Other options"), systemImage: "ellipsis.circle")
+                        }
+                        .padding()
+                    } else {
+                        HStack {
+                            Spacer()
+                            Button {
+                                if let merchantUUID = session.merchantUUID {
+                                    WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: String(self.amount / 100)), isAmount: true)
+                                    self.resetAmountAndDescription()
+                                }
+                            } label: {
+                                Label("Add to cart \(WayAppPay.formatPrice(Int(self.total)))", systemImage: "cart.badge.plus")
+                                    .accessibility(label: Text("Add to cart"))
+                                    .padding()
+                                    .foregroundColor(Color.white)
+                            }
+                            .buttonStyle(WayAppPay.ButtonModifier())
+                            Spacer()
+                        }
+                        .buttonStyle(WayAppPay.ButtonModifier())
+                        .padding()
+                        NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
+                            Label(NSLocalizedString("Other options", comment: "Other options"), systemImage: "ellipsis.circle")
+                        }
+                        .padding()
+                    }
+                } // VStack
+                .textFieldStyle(RoundedBorderTextFieldStyle())
                 if showAlert {
                     Image(systemName: wasPaymentSuccessful ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
                         .resizable()
@@ -124,38 +192,12 @@ struct AmountView: View {
                         .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
                 }
             }
-            .background(
-                Image("WAP-Background")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-            )
             .navigationBarTitle("Amount", displayMode: .inline)
             .navigationBarItems(trailing:
-                HStack {
-                    Button(action: {
-                        if let merchantUUID = session.merchantUUID {
-                            WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: String(self.amount / 100)), isAmount: true)
-                            self.resetAmountAndDescription()
-                        }
-                    }, label: {
-                        Image(systemName: "cart.fill.badge.plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    })
-                    .padding(.trailing, 16)
-                    NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
-                        Image(systemName: "qrcode.viewfinder")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
-                    }
-                    .foregroundColor(Color("WAP-Blue"))
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.trailing, 16)
-                    .disabled(amount == 0 && session.shoppingCart.isEmpty)
-                }
-                .foregroundColor(Color("WAP-Blue"))
-                .frame(height: 30)
+                                    NavigationLink(destination: ShoppingCartView()) {
+                                        Image(systemName: "cart")
+                                    }
+                                    .foregroundColor(Color("MintGreen"))
             )
         }
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })

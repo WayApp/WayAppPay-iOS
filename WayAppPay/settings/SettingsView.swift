@@ -86,7 +86,7 @@ struct SettingsView: View {
                     }
                 }
                 .accentColor(.primary)
-                .listItemTint(Color("WAP-GreenDark"))
+                .listItemTint(Color("MintGreen"))
                 if (OperationalEnvironment.isSettingsSupportFunctionsActive) {
                     Section(header: Label("Support", systemImage: "ladybug")
                                 .accessibility(label: Text("Support"))
@@ -186,10 +186,10 @@ struct SettingsView: View {
     }
     
     private func expire() {
-//        let issuerUUIDLasRozas = "f157c0c5-49b4-445a-ad06-70727030b38a"
-        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
+        let issuerUUIDLasRozas = "f157c0c5-49b4-445a-ad06-70727030b38a"
+//        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
 //        let issuerUUIDParquesur = "12412d65-411b-4629-a9ce-b5fb281b11bd"
-        WayAppPay.Issuer.expireCards(issuerUUID: issuerUUIDAsCancelas) { issuers, error in
+        WayAppPay.Issuer.expireCards(issuerUUID: issuerUUIDLasRozas) { issuers, error in
             WayAppUtils.Log.message("Issuers name: \(issuers?.debugDescription)")
             if let issuers = issuers {
                 WayAppUtils.Log.message("Issuer name: ")
@@ -281,8 +281,8 @@ struct SettingsView: View {
     }
     
     private func registerAccount() {
-        WayAppPay.Account.registerAccount(registration:
-                                            WayAppPay.Registration(email: "m3@wayapp.com", issuerUUID: "dd5ed363-88ce-4308-9cf2-20f3930d7cfd"))
+        WayAppPay.Account.register(registration:
+                                            WayAppPay.Registration(email: "coco@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
     }
     
     private func deleteAccount() {

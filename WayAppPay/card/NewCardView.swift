@@ -140,7 +140,6 @@ struct NewCardView: View {
                                 .textContentType(.nickname)
                                 .keyboardType(.default)
                         }
-                        .modifier(WayAppPay.TextFieldModifier())
                         Picker(selection: $selectedIssuer, label: Text("Issuer")) {
                             ForEach(0..<session.issuers.count, id: \.self) {
                                 Text(self.session.issuers[$0].name ?? "no name")

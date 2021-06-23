@@ -304,8 +304,8 @@ extension WayAppPay {
 //            return URL(string: baseURL + "fd09220a-3a69-4dc5-afd9-19e0e6d1c747" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "c739a79b-8f73-4b7d-aca2-adad51ffa9bd") + queryParameters)
             // Las Rozas STAGING
 //            return URL(string: baseURL + "f9a9b822-867c-11eb-8dcd-0242ac130003" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "dde980f4-867c-11eb-8dcd-0242ac130003") + queryParameters)
-            // Las Rozas PRODUCTION
-//            return URL(string: baseURL + "f96879eb-17a2-48de-8cee-3c2123bfe9b2" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "cd03e6be-7cfe-48a9-924f-703556e12e84") + queryParameters)
+//             Las Rozas PRODUCTION
+//                return URL(string: baseURL + "f96879eb-17a2-48de-8cee-3c2123bfe9b2" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "cd03e6be-7cfe-48a9-924f-703556e12e84") + queryParameters)
         }
                 
         var body: (String, Data)? {
@@ -415,9 +415,9 @@ extension WayAppPay {
             switch self {
             case .registrationAccount:
                 // Parquesur
-                return ["User-Agent": "9062358b-c0b3-45ff-84db-b452c9ac1289"]
+//                return ["User-Agent": "9062358b-c0b3-45ff-84db-b452c9ac1289"]
                 // Las Rozas
-//                return ["User-Agent": "138e3a2d-7666-4ac8-a0e0-145953ce8cab"]
+                return ["User-Agent": "138e3a2d-7666-4ac8-a0e0-145953ce8cab"]
             default:
                 return nil
             }

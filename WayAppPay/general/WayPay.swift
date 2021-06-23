@@ -42,7 +42,7 @@ extension PKPass {
 }
 
 struct WayAppPay {
-    static let cornerRadius: CGFloat = 12
+    static let cornerRadius: CGFloat = 36
     
     struct LazyView<Content: View>: View {
         let build: () -> Content
@@ -54,27 +54,10 @@ struct WayAppPay {
         }
     }
 
-    struct TextFieldModifier: ViewModifier {
-        func body(content: Content) -> some View {
-            content
-                .padding()
-                .cornerRadius(15)
-                .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.black.opacity(0.05),lineWidth: 1)
-                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: 1, y: 1)
-                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: -1, y: -1)
-                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                )
-        }
-    }
-    
     struct ButtonModifier: ButtonStyle {
         func makeBody(configuration: ButtonStyle.Configuration) -> some View {
             MyButton(configuration: configuration)
         }
-
         struct MyButton: View {
             let configuration: ButtonStyle.Configuration
             @Environment(\.isEnabled) private var isEnabled: Bool
@@ -82,26 +65,14 @@ struct WayAppPay {
             var body: some View {
                 configuration.label
                     .font(.headline)
-                    .background(isEnabled ? Color.green : Color.gray)
-                    .cornerRadius(15)
-                    .overlay(
-                        VStack {
-                            if configuration.isPressed {
-                                RoundedRectangle(cornerRadius: WayAppPay.cornerRadius)
-                                    .stroke(Color.black.opacity(0.05),lineWidth: 4)
-                                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: -1, y: -1)
-                                    .clipShape(RoundedRectangle(cornerRadius: WayAppPay.cornerRadius))
-                                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: -1, y: -1)
-                                    .clipShape(RoundedRectangle(cornerRadius: WayAppPay.cornerRadius))
-
-                            }
-                        }
-                    )
-                    .shadow(color: Color.black.opacity(configuration.isPressed ? 0 : 0.2), radius: 1, x: -1, y: -1)
-                    .shadow(color: Color.white.opacity(configuration.isPressed ? 0 : 0.6), radius: 1, x: -1, y: -1)
+                    .background(isEnabled ?
+                                    (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
+                                    : Color("DisabledGray"))
+                    .cornerRadius(WayAppPay.cornerRadius)
             }
         }
     }
+    
     struct UI {
         static let paymentResultSuccessImage = "checkmark.circle.fill"
         static let paymentResultFailureImage = "x.circle.fill"
@@ -160,7 +131,7 @@ struct WayAppPay {
                         self.text = ""})
                     {
                         Image(systemName: "multiply.circle")
-                            .foregroundColor(Color(UIColor.opaqueSeparator))
+                            .foregroundColor(Color.black)
                     }
                     .padding(.trailing, 8)
                 }

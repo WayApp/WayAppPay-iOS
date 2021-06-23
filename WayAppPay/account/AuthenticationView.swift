@@ -18,86 +18,76 @@ struct AuthenticationView: View {
     }
     @State private var pin: String = ""
     @State private var forgotPIN = false
-    
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
-    
-    private let imageSize: CGFloat = 120.0
-    private let textFieldcornerRadius: CGFloat = 20.0
-    
+    @State var loginError: Bool = false
+
+        
     private var shouldSigninButtonBeDisabled: Bool {
         return (!WayAppUtils.validateEmail(email) || pin.count != WayAppPay.Account.PINLength)
     }
     
     var body: some View {
         ZStack {
+            Color("CornSilk")
+                .ignoresSafeArea()
             VStack(alignment: .center) {
-                Image("WAP-Logo")
+                Image("WayPay-Logo")
                     .resizable()
                     .scaledToFit()
-                HStack() {
-                    Image(systemName: "envelope.circle.fill")
-                        .resizable()
-                        .foregroundColor(Color("WAP-Blue"))
-                        .frame(width: 30, height: 30)
-                    TextField("email", text: self.$email)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                        .textContentType(.emailAddress)
-                        .keyboardType(.emailAddress)
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                }
-                .modifier(WayAppPay.TextFieldModifier())
-                .modifier(WayAppPay.ClearButton(text: $email))
-                HStack() {
-                    Image(systemName: "lock.circle.fill")
-                        .resizable()
-                        .foregroundColor(Color("WAP-Blue"))
-                        .frame(width: 30, height: 30)
-                    SecureField("PIN", text: self.$pin)
-                        .textContentType(.password)
-                        .keyboardType(.numberPad)
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                }
-                .modifier(WayAppPay.TextFieldModifier())
-                .modifier(WayAppPay.ClearButton(text: $pin))
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        self.forgotPIN = true
-                    }) {
-                        Text("Forgot PIN?")
-                    }
-                    .sheet(isPresented: self.$forgotPIN) {
-                        EnterOTP()
-                    }
-                }
+                    .padding()
+                TextField("Email", text: self.$email)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .textContentType(.emailAddress)
+                    .keyboardType(.emailAddress)
+                    .background(Color.white)
+                    .cornerRadius(WayAppPay.cornerRadius)
+                    .padding(.horizontal)
+                SecureField("PIN", text: self.$pin)
+                    .textContentType(.password)
+                    .keyboardType(.numberPad)
+                    .background(Color.white)
+                    .cornerRadius(WayAppPay.cornerRadius)
+                    .padding()
                 Button(action: {
-                    WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin)
+                    self.forgotPIN = true
+                }) {
+                    Text("Forgot PIN?")
+                        .foregroundColor(.primary)
+                }
+                .sheet(isPresented: self.$forgotPIN) {
+                    EnterOTP()
+                }
+                .padding()
+                Button(action: {
+                    WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
+                        if let accounts = accounts,
+                           let account = accounts.first {
+                            DispatchQueue.main.async {
+                                session.account = account
+                                session.saveLoginData(pin: pin)
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                loginError = true
+                            }
+                        }
+                    }
                 }) {
                     Text("Sign in")
-                        .padding(.vertical)
+                        .padding()
                         .foregroundColor(Color.white)
-                        .font(.title2)
-                        .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
                 }
                 .disabled(shouldSigninButtonBeDisabled)
                 .buttonStyle(WayAppPay.ButtonModifier())
                 .animation(.easeInOut(duration: 0.3))
-                .alert(isPresented: $session.loginError) {
+                .alert(isPresented: $loginError) {
                     Alert(title: Text("Login error"),
                           message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
                           dismissButton: .default(Text("OK")))
                 }
             } // VStack
-            .padding()
+            .textFieldStyle(RoundedBorderTextFieldStyle())
         }
-        .onTapGesture { hideKeyboard() }
-        .background(
-            Image("WAP-Background")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        )
     }
 }
 
