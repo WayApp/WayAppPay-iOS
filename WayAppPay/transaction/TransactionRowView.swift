@@ -35,9 +35,7 @@ struct TransactionRowView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
                 Text(transaction.type?.title ?? WayAppPay.PaymentTransaction.TransactionType.defaultTitle)
-                Text((transaction.accountUUID != nil && session.accounts[transaction.accountUUID!] != nil) ?
-                    session.accounts[transaction.accountUUID!]!.email ?? "no email" :
-                    "no account")
+                Text(session.account?.email ?? "no email")
                     .font(.subheadline)
             }.contextMenu {
                 if ((transaction.type == WayAppPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {

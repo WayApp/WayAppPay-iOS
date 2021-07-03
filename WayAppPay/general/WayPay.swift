@@ -44,6 +44,25 @@ extension PKPass {
 struct WayAppPay {
     static let cornerRadius: CGFloat = 36
     
+    struct Badge: View {
+        let count: Int
+
+        var body: some View {
+            ZStack(alignment: .topTrailing) {
+                Color.clear
+                Text(String(count))
+                    .font(.system(size: 14))
+                    .foregroundColor(Color.white)
+                    .padding(5)
+                    .background(Color.red)
+                    .clipShape(Circle())
+                    // custom positioning in the top-right corner
+                    .alignmentGuide(.top) { $0[.bottom] }
+                    .alignmentGuide(.trailing) { $0[.trailing] - $0.width * 0.25 }
+            }
+        }
+    }
+    
     struct LazyView<Content: View>: View {
         let build: () -> Content
         init(_ build: @autoclosure @escaping () -> Content) {

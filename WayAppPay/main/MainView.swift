@@ -9,8 +9,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
-    @State private var badgeNumber: Int = 3
+    @EnvironmentObject var session: WayAppPay.Session
     @State private var selection: MainView.Tab = .amount
 
     private var badgePosition: CGFloat = 1
@@ -26,8 +25,7 @@ struct MainView: View {
     }
     
     func merchantTabView() -> AnyView {
-//        let displayMerchantOption = session.doesUserHasMerchantAccount
-        let displayMerchantOption = true
+        let displayMerchantOption = session.doesUserHasMerchantAccount
         return AnyView(
             GeometryReader { geometry in
                 ZStack(alignment: .bottomLeading) {
@@ -42,51 +40,32 @@ struct MainView: View {
                             .tag(Tab.cards)
                         }
                         if displayMerchantOption {
-                            ShoppingCartView()
+                            CampaignsView()
                                 .tabItem {
                                     Label("Campaign", systemImage: "megaphone")
                                         .accessibility(label: Text("Campaign"))
                             }
                             .tag(Tab.cart)
-                            OrderView().environmentObject(self.session)
-                                .tabItem {
-                                    Label("Order", systemImage: "square.and.pencil")
-                                        .accessibility(label: Text("Order"))
-                            }
-                            .tag(Tab.order)
                             AmountView().environmentObject(self.session)
                                 .tabItem {
-                                    Label("Amount", systemImage: "eurosign.circle")
-                                        .accessibility(label: Text("Amount"))
+                                    Label("POS", systemImage: "qrcode.viewfinder")
+                                        .accessibility(label: Text("POS"))
                             }
                             .tag(Tab.amount)
                         }
                         TransactionsView()
                             .tabItem {
-                                Label("Reports", systemImage: "chart.bar")
-                                    .accessibility(label: Text("Reports"))
+                                Label("Sales", systemImage: "chart.bar")
+                                    .accessibility(label: Text("Sales"))
                         }
                         .tag(Tab.reports)
                         SettingsView().environmentObject(self.session)
                             .tabItem {
-                                Label("Settings", systemImage: "gear")
+                                Label("Settings", systemImage: "gearshape.2")
                                     .accessibility(label: Text("Settings"))
                         }
                         .tag(Tab.settings)
                     } // TabView
-                    // Badge View
-                    if displayMerchantOption {
-                        ZStack {
-                            Circle()
-                                .foregroundColor(.red)
-                            Text("\(self.session.shoppingCart.count)")
-                                .foregroundColor(.white)
-                                .font(Font.system(size: 12))
-                        }
-                        .frame(width: 20, height: 20)
-                        .offset(x: ( ( 2 * self.badgePosition) - 1 ) * ( geometry.size.width / ( 2 * self.tabsCount ) ), y: -30)
-                        .opacity(self.session.shoppingCart.count == 0 ? 0 : 1)
-                    }
                 }
             }
         ) // AnyView

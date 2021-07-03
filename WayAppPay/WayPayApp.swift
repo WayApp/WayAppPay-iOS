@@ -12,6 +12,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         WayAppUtils.Log.message("No code in AppDelegate for now. Could remove the AppDelegate from WayPayApp")
 //        UINavigationBar.appearance().backgroundColor = UIColor(named: "CornSilk")
+        UITableView.appearance().backgroundColor = UIColor(named: "CornSilk")
         return true
     }
 }

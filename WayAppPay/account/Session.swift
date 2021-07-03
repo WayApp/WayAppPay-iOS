@@ -52,7 +52,15 @@ extension WayAppPay {
                             WayAppUtils.Log.message("Could not fetch products")
                         }
                     }
-                    merchants[seletectedMerchant].getAccounts()
+                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil) {campaigns, error in
+                        if let campaigns = campaigns {
+                            DispatchQueue.main.async {
+                                session.campaigns.setTo(campaigns)
+                            }
+                        } else {
+                            WayAppUtils.Log.message("Could not fetch campaigns")
+                        }
+                    }
                     //merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
                     //merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
                 }
@@ -66,8 +74,7 @@ extension WayAppPay {
         //TODO: review the need to use @Published for these variables
         @Published var refundState: RefundState = .none
         @Published var products = Container<Product>()
-        @Published var selectedAccount: Int = 0
-        @Published var accounts = Container<Account>()
+        @Published var campaigns = Container<Campaign>()
         @Published var showAuthenticationView: Bool = true
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
@@ -142,10 +149,8 @@ extension WayAppPay {
         private func reset() {
             showAuthenticationView = true
             doesUserHasMerchantAccount = false
-            selectedAccount = 0
             account = nil
             seletectedMerchant = 0
-            accounts.empty()
             merchants.empty()
             transactions.empty()
             products.empty()

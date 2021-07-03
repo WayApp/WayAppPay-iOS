@@ -42,7 +42,7 @@ extension WayAppPay {
             self.name = name
             self.description = description
             self.iva = 0
-            self.price = composeIntPriceFromString(price)
+            self.price = WayAppUtils.composeIntPriceFromString(price)
         }
         
         static func get(_ merchantUUID: String , completion: @escaping ([Product]?, Error?) -> Void) {
@@ -56,20 +56,6 @@ extension WayAppPay {
                     completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
-        }
-
-        private func composeIntPriceFromString(_ price: String) -> Int {
-            var result: Int = 0
-            let splitIn2 = price.components(separatedBy: .punctuationCharacters)
-            if !splitIn2.isEmpty,
-                let whole = Int(splitIn2[0]) {
-                result = whole * 100
-            }
-            if splitIn2.count == 2,
-                let decimals = Int(splitIn2[1].prefix(2)) {
-                result += decimals
-            }
-            return result
         }
 
         static func add(merchantUUID: String, product: Product, image: UIImage?, completion: @escaping (Product?, Error?) -> Void)  {
@@ -93,7 +79,7 @@ extension WayAppPay {
             var newProduct = self
             
             newProduct.name = name.isEmpty ? self.name : name
-            newProduct.price = price.isEmpty ? self.price : composeIntPriceFromString(price)
+            newProduct.price = price.isEmpty ? self.price : WayAppUtils.composeIntPriceFromString(price)
             
             WayAppPay.API.updateProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
                 if case .success(let response?) = response {

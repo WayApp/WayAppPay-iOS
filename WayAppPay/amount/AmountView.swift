@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct AmountView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject var session: WayAppPay.Session
 
     @State private var showScanner = false
     @State private var showAlert = false
     @State private var scannedCode: String? = nil
     @State private var cartDescription: String = ""
     @State private var wasPaymentSuccessful: Bool = false
-    @State private var amount: Double = 0
-    @State private var total: Double = 0
+    @State private var amount: Int = 0
+    @State private var total: Int = 0
     
     func handleScan() {
         processPayment()
@@ -25,7 +25,7 @@ struct AmountView: View {
     
     func numberEntered(number: Int) {
         if number < 10 {
-            amount = (amount*10 + Double(number))
+            amount = (amount*10 + number)
         } else {
             amount *= 100
         }
@@ -47,7 +47,7 @@ struct AmountView: View {
             WayAppUtils.Log.message("missing session.merchantUUID or session.accountUUID")
             return
         }
-        let payment = WayAppPay.PaymentTransaction(amount: Int(amount * 100) / 100, token: code)
+        let payment = WayAppPay.PaymentTransaction(amount: amount / 100, token: code)
         WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
             if case .success(let response?) = response {
@@ -90,7 +90,7 @@ struct AmountView: View {
                     .padding()
                     HStack {
                         Spacer()
-                        Text(WayAppPay.currencyFormatter.string(for: (amount / 100))!)
+                        Text(WayAppPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .padding()
@@ -198,6 +198,7 @@ struct AmountView: View {
                                         Image(systemName: "cart")
                                     }
                                     .foregroundColor(Color("MintGreen"))
+                                    .overlay(WayAppPay.Badge(count: self.session.shoppingCart.count).opacity(self.session.shoppingCart.count == 0 ? 0 : 1))
             )
         }
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })

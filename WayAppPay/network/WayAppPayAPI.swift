@@ -115,8 +115,8 @@ extension WayAppPay {
         case getConsentDetail(String) // GET
         case getConsent(String, AfterBanks.ConsentRequest) // POST
         // Campaign
-        case createCampaign(Campaign)
-        case getCampaigns(String, String) // GET
+        case createPointCampaign(Point)
+        case getCampaigns(String, String?) // GET
         case getCampaign(String, String) // GET
         case rewardCampaigns(PaymentTransaction, Array<String>) // POST
         case redeemCampaigns(PaymentTransaction, Array<String>) // POST
@@ -169,7 +169,7 @@ extension WayAppPay {
             case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
             case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
             // Campaign
-            case .createCampaign: return "/campaigns/"
+            case .createPointCampaign: return "/campaigns/"
             case .getCampaigns: return "/campaigns/"
             case .getCampaign(let campaignID, let sponsorUUID): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
             case .rewardCampaigns( _, _): return "/campaigns/rewards/"
@@ -227,7 +227,7 @@ extension WayAppPay {
             case .getConsentDetail(let consentId): return consentId
             case .getConsent(let accountUUID, _): return accountUUID
             // Campaign
-            case .createCampaign: return ""
+            case .createPointCampaign: return ""
             case .getCampaigns: return ""
             case .getCampaign(let campaignID, let sponsorUUID): return campaignID + "/" + sponsorUUID
             case .rewardCampaigns: return ""
@@ -251,7 +251,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .redeemCampaigns:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .rewardCampaigns, .redeemCampaigns:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -289,7 +289,9 @@ extension WayAppPay {
             case .getSEPA(let initialDate, let finalDate, let fieldName, let fieldValue):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)&fieldName=\(fieldName)&fieldValue=\(fieldValue)"
             case .getCampaigns(let merchantUUID, let issuerUUID):
-                return "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID)"
+                return issuerUUID != nil ?
+                    "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID!)" :
+                    "?merchantUUID=\(merchantUUID)"
             default:
                 return ""
             }
@@ -376,7 +378,7 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .createCampaign(let campaign):
+            case .createPointCampaign(let campaign):
                 if let part = HTTPCall.BodyPart(campaign, name: "campaign") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)

@@ -22,7 +22,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WayPay-Logo" translatesAutoresizingMaskIntoConstraints="NO" id="V8d-go-eMb">
-                                <rect key="frame" x="16" y="433.5" width="382" height="29"/>
+                                <rect key="frame" x="16" y="308" width="382" height="280.5"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
@@ -38,10 +38,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="-941" y="390"/>
         </scene>
     </scenes>
     <resources>
-        <image name="WayPay-Logo" width="141.97900390625" height="29.315999984741211"/>
+        <image name="WayPay-Logo" width="1358.85400390625" height="280.572998046875"/>
     </resources>
 </document>

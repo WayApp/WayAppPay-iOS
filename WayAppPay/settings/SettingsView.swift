@@ -19,20 +19,20 @@ struct SettingsView: View {
     @State private var changePIN = false
     @State private var showBankAuthenticationView = false
     @State private var authURL: String? = nil
-
+    
     var body: some View {
         NavigationView {
             Form {
                 Section(header:
                             Label(NSLocalizedString("Merchants", comment: "SettingsView: section title"), systemImage: "building.2.crop.circle")
-                                .font(.callout)) {
+                            .font(.callout)) {
                     if session.merchants.isEmpty {
                         Text("There are no merchants")
                     } else {
                         Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")
                                 .accessibility(label: Text("Merchant"))) {
                             ForEach(0..<session.merchants.count) {
-                                Text(self.session.merchants[$0].name ?? "Name")
+                                Text(self.session.merchants[$0].name ?? "no name")
                                     .font(Font.caption)
                                     .fontWeight(.light)
                             }
@@ -48,23 +48,11 @@ struct SettingsView: View {
                 Section(header: Label("Accounts", systemImage: "person.2.circle")
                             .accessibility(label: Text("Accounts"))
                             .font(.callout)) {
-                    if WayAppPay.session.accounts.isEmpty {
-                        Text("There are no accounts")
-                    } else {
-                        Picker(selection: $session.selectedAccount, label: Label("Account", systemImage: "person.fill.checkmark")
-                                .accessibility(label: Text("Account"))) {
-                            ForEach(0..<WayAppPay.session.accounts.count) {
-                                Text(WayAppPay.session.accounts[$0].email ?? "no email")
-                                    .font(.caption)
-                                    .fontWeight(.light)
-                            }
-                        }
-                    }
                     /*
-                    NavigationLink(destination: CardsView()) {
-                        Label("Payment tokens", systemImage: "qrcode")
-                    }
- */
+                     NavigationLink(destination: CardsView()) {
+                     Label("Payment tokens", systemImage: "qrcode")
+                     }
+                     */
                     Button {
                         self.changePIN = true
                     } label: {
@@ -77,7 +65,6 @@ struct SettingsView: View {
                     Button {
                         DispatchQueue.main.async {
                             self.session.logout()
-                            WayAppPay.session.accounts.empty()
                             WayAppPay.session.account?.email = ""
                         }
                     } label: {
@@ -91,6 +78,14 @@ struct SettingsView: View {
                     Section(header: Label("Support", systemImage: "ladybug")
                                 .accessibility(label: Text("Support"))
                                 .font(.callout)) {
+                        Button {
+                            DispatchQueue.main.async {
+                                self.create()
+                            }
+                        } label: {
+                            Label("Create point", systemImage: "plus.viewfinder")
+                                .accessibility(label: Text("Create point"))
+                        }
                         Button {
                             DispatchQueue.main.async {
                                 self.reward()
@@ -139,12 +134,13 @@ struct SettingsView: View {
                             Label("Generate SEPA file", systemImage: "banknote")
                                 .accessibility(label: Text("Generate SEPA file"))
                         }
-
+                        
                     }
                     .accentColor(.primary)
                     .listItemTint(Color(.systemRed))
                 }
-            }
+            } // Form
+            .background(Color("CornSilk"))
             .navigationBarTitle("Settings", displayMode: .inline)
         }
     }
@@ -187,8 +183,8 @@ struct SettingsView: View {
     
     private func expire() {
         let issuerUUIDLasRozas = "f157c0c5-49b4-445a-ad06-70727030b38a"
-//        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
-//        let issuerUUIDParquesur = "12412d65-411b-4629-a9ce-b5fb281b11bd"
+        //        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
+        //        let issuerUUIDParquesur = "12412d65-411b-4629-a9ce-b5fb281b11bd"
         WayAppPay.Issuer.expireCards(issuerUUID: issuerUUIDLasRozas) { issuers, error in
             WayAppUtils.Log.message("Issuers name: \(issuers?.debugDescription)")
             if let issuers = issuers {
@@ -197,6 +193,22 @@ struct SettingsView: View {
                 WayAppUtils.Log.message("%%%%%%%%%%%%%% Expire ERROR: \(error.localizedDescription)")
             } else {
                 WayAppUtils.Log.message("%%%%%%%%%%%%%% Expire ERROR: -------------")
+            }
+        }
+    }
+    
+    private func create() {
+        let campaign: WayAppPay.Point = WayAppPay.Point(points: 100)
+        WayAppPay.Point.create(campaign) { campaigns, error in
+            if let campaigns = campaigns {
+                for campaign in campaigns {
+                    WayAppUtils.Log.message("Campaign name: \(campaign.name), sponsorUUID: \(campaign.sponsorUUID), id: \(campaign.id)")
+                    DispatchQueue.main.async {
+                        session.campaigns.add(campaign)
+                    }
+                }
+            } else {
+                WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
             }
         }
     }
@@ -229,23 +241,7 @@ struct SettingsView: View {
             }
         }
     }
-    
-    private func createCampaign() {
-        let campaign: WayAppPay.Campaign = WayAppPay.Campaign(name: "C10", sponsorUUID: "100", format: .POINT)
-        WayAppPay.Campaign.create(campaign) { campaigns, error in
-            if let campaigns = campaigns {
-                for campaign in campaigns {
-                    WayAppUtils.Log.message("Campaign: \(campaign)")
-                }
-            } else if let error = error  {
-                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
-            } else {
-                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
-            }
-        }
-
-    }
-    
+        
     private func newSEPAs() {
         WayAppPay.Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
             if let transactions = transactions {
@@ -260,12 +256,12 @@ struct SettingsView: View {
             }
         }
     }
-
+    
     private func getIssuerTransactions() {
         // Las Rozas issuerUUID: f157c0c5-49b4-445a-ad06-70727030b38a
         // Parquesur issuerUUID staging: 6fae922e-9a08-48a8-859d-d9e8a0d54f21
         // As Cancelas issuerUUID staging: dd5ed363-88ce-4308-9cf2-20f3930d7cfd
-
+        
         WayAppPay.Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
             if let transactions = transactions {
                 WayAppUtils.Log.message("Transactions count: \(transactions.count)")
@@ -282,7 +278,7 @@ struct SettingsView: View {
     
     private func registerAccount() {
         WayAppPay.Account.register(registration:
-                                            WayAppPay.Registration(email: "coco@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
+                                    WayAppPay.Registration(email: "coco@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
     }
     
     private func deleteAccount() {

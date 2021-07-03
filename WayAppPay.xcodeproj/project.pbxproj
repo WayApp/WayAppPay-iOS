@@ -45,6 +45,8 @@
 		B1609567263E876000B14A43 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1609566263E876000B14A43 /* Campaign.swift */; };
 		B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B164A70C24A4C13B0020ACAB /* PassKit.framework */; };
 		B16ECCC225E66D5D007A9115 /* AfterBanks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16ECCC125E66D5D007A9115 /* AfterBanks.swift */; };
+		B17C97C6268E2762007C652C /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17C97C5268E2762007C652C /* Point.swift */; };
+		B17C97C8268E28B9007C652C /* Stamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17C97C7268E28B9007C652C /* Stamp.swift */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
 		B187D57625DE67640065CAEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B187D57525DE67640065CAEA /* Assets.xcassets */; };
 		B19ACCBD238B092A009FF084 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBC238B092A009FF084 /* MainView.swift */; };
@@ -74,6 +76,8 @@
 		B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A58E23E617ED00CC2E04 /* Container.swift */; };
 		B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */; };
 		B1E84ACA24038A6B0093F9EC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1E84AC824038A6B0093F9EC /* Localizable.strings */; };
+		B1E96933268379B200B6B41E /* CampaignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E96932268379B200B6B41E /* CampaignsView.swift */; };
+		B1E9693526837F2400B6B41E /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E9693426837F2400B6B41E /* CampaignView.swift */; };
 		B1F4157A26011A7E00511B6D /* Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F4157926011A7E00511B6D /* Registration.swift */; };
 		B1FEF82D25E0525C0093BCEE /* OrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FEF82C25E0525C0093BCEE /* OrderView.swift */; };
 		B1FEF83025E052DC0093BCEE /* OrderRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FEF82F25E052DC0093BCEE /* OrderRowView.swift */; };
@@ -119,6 +123,8 @@
 		B164A70C24A4C13B0020ACAB /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		B16ECCC125E66D5D007A9115 /* AfterBanks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterBanks.swift; sourceTree = "<group>"; };
 		B174BAF62517489D00F51525 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
+		B17C97C5268E2762007C652C /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		B17C97C7268E28B9007C652C /* Stamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stamp.swift; sourceTree = "<group>"; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
 		B187D57525DE67640065CAEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayApp Pay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WayApp Pay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,6 +157,8 @@
 		B1E7A58E23E617ED00CC2E04 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		B1E7A59023E6335100CC2E04 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		B1E84AC924038A6B0093F9EC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B1E96932268379B200B6B41E /* CampaignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignsView.swift; sourceTree = "<group>"; };
+		B1E9693426837F2400B6B41E /* CampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignView.swift; sourceTree = "<group>"; };
 		B1F4157926011A7E00511B6D /* Registration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Registration.swift; sourceTree = "<group>"; };
 		B1FEF82C25E0525C0093BCEE /* OrderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderView.swift; sourceTree = "<group>"; };
 		B1FEF82F25E052DC0093BCEE /* OrderRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderRowView.swift; sourceTree = "<group>"; };
@@ -293,6 +301,10 @@
 			isa = PBXGroup;
 			children = (
 				B1609566263E876000B14A43 /* Campaign.swift */,
+				B1E96932268379B200B6B41E /* CampaignsView.swift */,
+				B1E9693426837F2400B6B41E /* CampaignView.swift */,
+				B17C97C5268E2762007C652C /* Point.swift */,
+				B17C97C7268E28B9007C652C /* Stamp.swift */,
 			);
 			path = campaign;
 			sourceTree = "<group>";
@@ -525,6 +537,7 @@
 				B1FEF83025E052DC0093BCEE /* OrderRowView.swift in Sources */,
 				B1D8750A23EF2F3B00A1967F /* ReportID.swift in Sources */,
 				B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */,
+				B1E96933268379B200B6B41E /* CampaignsView.swift in Sources */,
 				B15800F42507CA380022A687 /* CardDetailView.swift in Sources */,
 				B14BA8AD250F77870095C654 /* AuthenticationViewModel.swift in Sources */,
 				B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */,
@@ -538,7 +551,9 @@
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
 				B15800F625093B610022A687 /* NewCardView.swift in Sources */,
+				B17C97C8268E28B9007C652C /* Stamp.swift in Sources */,
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
+				B1E9693526837F2400B6B41E /* CampaignView.swift in Sources */,
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
 				AFD14BE024A24CFE0038AA90 /* Checkin.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
@@ -551,6 +566,7 @@
 				B12DE98023AA7B9400C02657 /* WayAppPayAPI.swift in Sources */,
 				B1B3818925066D8D0008BC78 /* Consent.swift in Sources */,
 				B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */,
+				B17C97C6268E2762007C652C /* Point.swift in Sources */,
 				B1F4157A26011A7E00511B6D /* Registration.swift in Sources */,
 				AF3A374023E47A3700E437CA /* AddButtonView.swift in Sources */,
 				B12DE96023AA6C5900C02657 /* JsonCoding.swift in Sources */,

@@ -45,27 +45,6 @@ extension WayAppPay {
         var containerID: String {
             return merchantUUID
         }
-
-        func getAccounts() {
-            WayAppPay.API.getMerchantAccounts(merchantUUID).fetch(type: [Account].self) { response in
-                if case .success(let response?) = response {
-                    if let accounts = response.result {
-                        DispatchQueue.main.async {
-                            session.accounts.setTo(accounts)
-                        }
-                        if let accountUUID = session.accountUUID {
-                            // self.getTransactionsForAccount(accountUUID)
-                        } else {
-                            WayAppUtils.Log.message("Missing session.accountUUID")
-                        }
-                    } else {
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
-            }
-        }
         
         func getPayerForTransaction(accountUUID: String, transactionUUID: String) {
             
