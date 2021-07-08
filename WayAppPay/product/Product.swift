@@ -31,6 +31,11 @@ extension WayAppPay {
         var id: String {
             return productUUID
         }
+        
+        var containerID: String {
+            return productUUID
+        }
+
 
         init(merchantUUID: String, name: String, description: String = String(), price: String) {
             self.productUUID = UUID().uuidString

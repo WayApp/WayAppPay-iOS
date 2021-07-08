@@ -8,8 +8,8 @@
 
 import Foundation
 
-protocol ContainerProtocol: Codable, Identifiable {
-    var id: String { get }
+protocol ContainerProtocol: Codable {
+    var containerID: String { get }
 }
 
 struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, RandomAccessCollection {
@@ -98,14 +98,14 @@ struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, Ran
     }
     
     mutating func remove(_ element: T) {
-        if let index = elements.firstIndex(where: { $0.id == element.id })  {
+        if let index = elements.firstIndex(where: { $0.containerID == element.containerID })  {
             self.elements.remove(at: index)
         }
     }
 
     mutating func remove(_ elements: [T]) {
         for element in elements {
-            if let index = self.elements.firstIndex(where: { $0.id == element.id })  {
+            if let index = self.elements.firstIndex(where: { $0.containerID == element.containerID })  {
                 self.elements.remove(at: index)
             }
         }
@@ -122,21 +122,21 @@ struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, Ran
     }
     
     func contains(_ element: T) -> Bool {
-        if elements.firstIndex(where: { $0.id == element.id }) != nil {
+        if elements.firstIndex(where: { $0.containerID == element.containerID }) != nil {
             return true
         }
         return false
     }
 
     func index(for element: T) -> Int? {
-        if let index = elements.firstIndex(where: { $0.id == element.id }) {
+        if let index = elements.firstIndex(where: { $0.containerID == element.containerID }) {
             return index
         }
         return nil
     }
 
-    func index(forID id: String) -> Int? {
-        if let index = elements.firstIndex(where: { $0.id == id }) {
+    func index(forID containerID: String) -> Int? {
+        if let index = elements.firstIndex(where: { $0.containerID == containerID }) {
             return index
         }
         return nil
@@ -158,10 +158,10 @@ struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, Ran
 
     subscript(index: String) -> T? {
         get {
-            return elements.filter( { $0.id == index } ).first
+            return elements.filter( { $0.containerID == index } ).first
         }
         set {
-            if let index = elements.firstIndex(where: { $0.id == index }),
+            if let index = elements.firstIndex(where: { $0.containerID == index }),
                 let element = newValue {
                 elements[index] = element
             }

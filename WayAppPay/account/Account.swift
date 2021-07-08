@@ -62,6 +62,12 @@ extension WayAppPay {
             return accountUUID
         }
         
+        var containerID: String {
+            return accountUUID
+        }
+
+
+        
         static func hashedPIN(_ pin: String) -> String {
             let escapedPIN = pin.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
             return escapedPIN.sha1()

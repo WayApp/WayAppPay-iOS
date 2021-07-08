@@ -92,6 +92,10 @@ extension WayAppPay {
             return transactionUUID ?? UUID().uuidString
         }
         
+        var containerID: String {
+            return transactionUUID ?? UUID().uuidString
+        }
+
         var isRefund: Bool {
             return refund ?? false
         }

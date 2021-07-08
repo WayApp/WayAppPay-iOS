@@ -41,6 +41,12 @@ final class AfterBanks: ObservableObject {
             return service
         }
         
+        var containerID: String {
+            return service
+        }
+
+
+        
         init(countryCode: String = "ES", paymentsSupported: String = "1") {
             self.service = UUID().uuidString
             self.countryCode = countryCode

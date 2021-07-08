@@ -77,6 +77,11 @@ extension WayAppPay {
             self.state = state
         }
         
+        var containerID: String {
+            return id
+        }
+
+
         static func get<T: Campaign>(merchantUUID: String, issuerUUID: String?, campaignType: T.Type, format: Format, completion: @escaping ([T]?, Error?) -> Void) {
             WayAppPay.API.getCampaigns(merchantUUID, issuerUUID, format).fetch(type: [T].self) { response in
                     switch response {

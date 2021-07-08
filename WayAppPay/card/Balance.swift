@@ -20,6 +20,12 @@ extension WayAppPay {
         var id: String {
             return pan
         }
+        
+        var containerID: String {
+            return pan
+        }
+
+
 
         init(balance: Int = 100000) {
             self.pan = UUID().uuidString

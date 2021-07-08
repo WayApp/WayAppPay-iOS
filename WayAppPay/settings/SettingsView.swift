@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension String: ContainerProtocol {
-    public var id: String {
+    public var containerID: String {
         return self
     }
 }
