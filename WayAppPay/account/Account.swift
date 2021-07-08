@@ -58,7 +58,7 @@ extension WayAppPay {
             return WayAppPay.DefaultKey.ACCOUNT.rawValue
         }
         
-        var containerID: String {
+        var id: String {
             return accountUUID
         }
         

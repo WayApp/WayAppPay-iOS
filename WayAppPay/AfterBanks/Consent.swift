@@ -35,9 +35,5 @@ extension AfterBanks {
         var id: String {
             return consentId
         }
-
-        var containerID: String {
-            return consentId
-        }
     }
 }

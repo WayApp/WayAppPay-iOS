@@ -10,18 +10,13 @@ import SwiftUI
 
 struct CampaignsView: View {
     @EnvironmentObject var session: WayAppPay.Session
-    
+
     var body: some View {
         NavigationView {
             List {
-                ForEach(session.campaigns) { campaign in
+                ForEach(session.stamps) { campaign in
                     NavigationLink(destination: CampaignView(campaign: campaign)) {
-                        VStack(alignment: .leading) {
-                            Text(campaign.name ?? "no name")
-                                .font(.headline)
-                            Text(campaign.description ?? "no description")
-                                .font(.caption)
-                        }
+                        StampRowView(campaign: campaign)
                     }
                 }
                 .onDelete(perform: delete)
@@ -32,19 +27,19 @@ struct CampaignsView: View {
                 NavigationLink(destination: CampaignView(campaign: nil)) {
                     Image(systemName: "plus")
                         .resizable()
-                }
-                
-            )
+            })
         }
     }
     
     func delete(at offsets: IndexSet) {
-        WayAppPay.Product.delete(at: offsets)
+        WayAppPay.Stamp.delete(at: offsets)
     }
+
 }
 
 struct CampaignsView_Previews: PreviewProvider {
     static var previews: some View {
         CampaignsView()
+            .environmentObject(WayAppPay.session)
     }
 }

@@ -42,10 +42,6 @@ extension WayAppPay {
             return merchantUUID
         }
 
-        var containerID: String {
-            return merchantUUID
-        }
-        
         func getPayerForTransaction(accountUUID: String, transactionUUID: String) {
             
         }

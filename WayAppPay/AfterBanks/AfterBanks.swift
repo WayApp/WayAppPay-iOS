@@ -40,10 +40,6 @@ final class AfterBanks: ObservableObject {
         var id: String {
             return service
         }
-
-        var containerID: String {
-            return service
-        }
         
         init(countryCode: String = "ES", paymentsSupported: String = "1") {
             self.service = UUID().uuidString

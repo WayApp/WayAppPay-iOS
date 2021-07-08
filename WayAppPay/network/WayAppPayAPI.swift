@@ -116,8 +116,13 @@ extension WayAppPay {
         case getConsent(String, AfterBanks.ConsentRequest) // POST
         // Campaign
         case createPointCampaign(Point)
-        case getCampaigns(String, String?) // GET
-        case getCampaign(String, String) // GET
+        case createStampCampaign(Stamp)
+        case updatePointCampaign(Point)
+        case updateStampCampaign(Stamp)
+        case toggleCampaignState(String, String, Campaign.Format)
+        case getCampaigns(String, String?, Campaign.Format) // GET
+        case getCampaign(String, String, Campaign.Format) // GET
+        case deleteCampaign(String, String, Campaign.Format) // DELETE
         case rewardCampaigns(PaymentTransaction, Array<String>) // POST
         case redeemCampaigns(PaymentTransaction, Array<String>) // POST
 
@@ -170,8 +175,13 @@ extension WayAppPay {
             case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
             // Campaign
             case .createPointCampaign: return "/campaigns/"
+            case .createStampCampaign: return "/campaigns/"
+            case .updatePointCampaign: return "/campaigns/"
+            case .updateStampCampaign: return "/campaigns/"
             case .getCampaigns: return "/campaigns/"
-            case .getCampaign(let campaignID, let sponsorUUID): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
+            case .toggleCampaignState(let campaignID, let sponsorUUID, _): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/toggles/"
+            case .getCampaign(let campaignID, let sponsorUUID, _): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
+            case .deleteCampaign(let campaignID, let sponsorUUID, _): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
             case .rewardCampaigns( _, _): return "/campaigns/rewards/"
             case .redeemCampaigns( _, _): return "/campaigns/redeems/"
             // TRASH
@@ -228,8 +238,13 @@ extension WayAppPay {
             case .getConsent(let accountUUID, _): return accountUUID
             // Campaign
             case .createPointCampaign: return ""
+            case .createStampCampaign: return ""
+            case .updatePointCampaign: return ""
+            case .updateStampCampaign: return ""
+            case .toggleCampaignState(let campaignID, let sponsorUUID, _): return campaignID + "/" + sponsorUUID
             case .getCampaigns: return ""
-            case .getCampaign(let campaignID, let sponsorUUID): return campaignID + "/" + sponsorUUID
+            case .getCampaign(let campaignID, let sponsorUUID, _): return campaignID + "/" + sponsorUUID
+            case .deleteCampaign(let campaignID, let sponsorUUID, _): return campaignID + "/" + sponsorUUID
             case .rewardCampaigns: return ""
             case .redeemCampaigns: return ""
             default: return ""
@@ -243,7 +258,7 @@ extension WayAppPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -251,8 +266,16 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .rewardCampaigns, .redeemCampaigns:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .redeemCampaigns:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
+                    if let error = error {
+                        result(.failure(error))
+                    } else if let response = response as? Response<T> {
+                        result(.success(response))
+                    }
+                }
+            case .updatePointCampaign, .updateStampCampaign:
+                HTTPCall.PUT(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
                     } else if let response = response as? Response<T> {
@@ -267,7 +290,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .deleteAccount, .deleteCard, .deleteProduct, .deleteMerchant:
+            case .deleteAccount, .deleteCard, .deleteProduct, .deleteMerchant, .deleteCampaign:
                 HTTPCall.DELETE(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -288,10 +311,12 @@ extension WayAppPay {
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)"
             case .getSEPA(let initialDate, let finalDate, let fieldName, let fieldValue):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)&fieldName=\(fieldName)&fieldValue=\(fieldValue)"
-            case .getCampaigns(let merchantUUID, let issuerUUID):
+            case .getCampaigns(let merchantUUID, let issuerUUID, let format):
                 return issuerUUID != nil ?
-                    "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID!)" :
-                    "?merchantUUID=\(merchantUUID)"
+                    "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID!)&format=\(format.rawValue)" :
+                    "?merchantUUID=\(merchantUUID)&format=\(format.rawValue)"
+            case .toggleCampaignState(_, _, let format), .getCampaign(_, _, let format), .deleteCampaign(_, _, let format):
+                return "?format=\(format.rawValue)"
             default:
                 return ""
             }
@@ -378,7 +403,13 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .createPointCampaign(let campaign):
+            case .createPointCampaign(let campaign), .updatePointCampaign(let campaign):
+                if let part = HTTPCall.BodyPart(campaign, name: "campaign") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createStampCampaign(let campaign), .updateStampCampaign(let campaign):
                 if let part = HTTPCall.BodyPart(campaign, name: "campaign") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)

@@ -27,10 +27,6 @@ extension WayAppPay {
             return product.productUUID
         }
         
-        var containerID: String {
-            return product.productUUID
-        }
-        
         init(product: Product, isAmount: Bool = false) {
             self.product = product
             self.isAmount = isAmount

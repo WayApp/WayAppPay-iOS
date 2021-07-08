@@ -35,11 +35,6 @@ extension WayAppPay {
         var id: String {
             return idReport
         }
-        
-        var containerID: String {
-            return idReport
-        }
-        
         static func idReportForMonth(_ date: Date) -> String {
             return String(ISO8601DateFormatter.string(from: Date(), timeZone: TimeZone.current, formatOptions: [.withFullDate]).prefix(7))
         }

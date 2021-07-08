@@ -52,13 +52,22 @@ extension WayAppPay {
                             WayAppUtils.Log.message("Could not fetch products")
                         }
                     }
-                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil) {campaigns, error in
+                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Point.self, format: .POINT) {campaigns, error in
                         if let campaigns = campaigns {
                             DispatchQueue.main.async {
-                                session.campaigns.setTo(campaigns)
+                                session.points.setTo(campaigns)
                             }
                         } else {
-                            WayAppUtils.Log.message("Could not fetch campaigns")
+                            WayAppUtils.Log.message("Could not fetch POINT campaigns")
+                        }
+                    }
+                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Stamp.self, format: .STAMP) {campaigns, error in
+                        if let campaigns = campaigns {
+                            DispatchQueue.main.async {
+                                session.stamps.setTo(campaigns)
+                            }
+                        } else {
+                            WayAppUtils.Log.message("Could not fetch STAMP campaigns")
                         }
                     }
                     //merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
@@ -74,7 +83,8 @@ extension WayAppPay {
         //TODO: review the need to use @Published for these variables
         @Published var refundState: RefundState = .none
         @Published var products = Container<Product>()
-        @Published var campaigns = Container<Campaign>()
+        @Published var points = Container<Point>()
+        @Published var stamps = Container<Stamp>()
         @Published var showAuthenticationView: Bool = true
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()

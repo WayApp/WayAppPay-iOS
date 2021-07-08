@@ -20,9 +20,9 @@ extension WayAppPay {
         var value: Int?
         var format: Format?
         
-        init() {
-            self.message = ""
-            self.name = ""
+        init(name: String, message: String) {
+            self.message = message
+            self.name = name
             self.format = .MANUAL
             self.threshold = 0
         }
@@ -38,7 +38,7 @@ extension WayAppPay {
         var balance: Int?
     }
     
-    class Campaign: Hashable, Codable, Identifiable, ContainerProtocol {
+    class Campaign: Hashable, Codable, Identifiable, Equatable, ContainerProtocol {
         
         static func == (lhs: WayAppPay.Campaign, rhs: WayAppPay.Campaign) -> Bool {
             return (lhs.id == rhs.id) && (lhs.sponsorUUID == rhs.sponsorUUID)
@@ -60,16 +60,12 @@ extension WayAppPay {
         var sponsorUUID: String
         var id: String
         var name: String
+        var format: Format
         var description: String?
-        var format: Format?
         var state: State?
         var expirationDate: Date?
         var creationDate: Date?
         var lastUpdateDate: Date?
-
-        var containerID: String {
-            return id
-        }
                 
         init(name: String, description: String = "", sponsorUUID: String, format: Format, expirationDate: Date = Date.distantFuture, state: State = .ACTIVE) {
             self.id = UUID().uuidString
@@ -81,8 +77,8 @@ extension WayAppPay {
             self.state = state
         }
         
-        static func get(merchantUUID: String, issuerUUID: String?, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayAppPay.API.getCampaigns(merchantUUID, issuerUUID).fetch(type: [Campaign].self) { response in
+        static func get<T: Campaign>(merchantUUID: String, issuerUUID: String?, campaignType: T.Type, format: Format, completion: @escaping ([T]?, Error?) -> Void) {
+            WayAppPay.API.getCampaigns(merchantUUID, issuerUUID, format).fetch(type: [T].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
@@ -94,8 +90,8 @@ extension WayAppPay {
             }
         }
 
-        static func get(campaignID: String, sponsorUUID: String, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayAppPay.API.getCampaign(campaignID, sponsorUUID).fetch(type: [Campaign].self) { response in
+        static func get(campaignID: String, sponsorUUID: String, format: Format, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayAppPay.API.getCampaign(campaignID, sponsorUUID, format).fetch(type: [Campaign].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
@@ -122,6 +118,32 @@ extension WayAppPay {
 
         static func redeem(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
             WayAppPay.API.redeemCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        func toggleState(completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayAppPay.API.toggleCampaignState(self.id, self.sponsorUUID, self.format).fetch(type: [Campaign].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+        
+        static func delete(id: String, sponsorUUID: String, format: Format, completion: @escaping ([String]?, Error?) -> Void) {
+            WayAppPay.API.deleteCampaign(id, sponsorUUID, format).fetch(type: [String].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)

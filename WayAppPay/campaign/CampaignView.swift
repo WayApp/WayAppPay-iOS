@@ -20,7 +20,7 @@ struct CampaignView: View {
     @State private var expirationDate = Date()
     @State private var amountToPrize: Double = 10.0
     @State var campaignCreateError: Bool = false
-    @State private var prize: WayAppPay.Prize = WayAppPay.Prize()
+    @State private var prize: WayAppPay.Prize = WayAppPay.Prize(name: "", message: "")
     @State private var threshold: String = "0"
     @State private var prizeAmount: String = "0"
     @State private var prizeName: String = "1st prize"
@@ -146,29 +146,53 @@ struct CampaignView: View {
                                 prize.threshold = Int((prizeAmount as NSString).doubleValue / (threshold as NSString).doubleValue)
                                 prize.name = prizeName
                             }
-                            let campaign: WayAppPay.Campaign =
-                                WayAppPay.Campaign(name: newName,
-                                                   description: newDescription,
-                                                   sponsorUUID: session.merchantUUID!,
-                                                   format: format,
-                                                   expirationDate: expirationDate)
-                            /*
-                            WayAppPay.Campaign.create(campaign) { campaigns, error in
-                                if let campaigns = campaigns {
-                                    for campaign in campaigns {
-                                        WayAppUtils.Log.message("Campaign: \(campaign)")
-                                        DispatchQueue.main.async {
-                                            session.campaigns.add(campaign)
+                            switch(format) {
+                            case .POINT:
+                                let campaign: WayAppPay.Point =
+                                    WayAppPay.Point(name: newName,
+                                                       description: newDescription,
+                                                       sponsorUUID: session.merchantUUID!,
+                                                       format: format,
+                                                       expirationDate: expirationDate, paymentAmountConvertibleToRewardUnit: 100)
+                                WayAppPay.Point.create(campaign) { campaigns, error in
+                                    if let campaigns = campaigns {
+                                        for campaign in campaigns {
+                                            WayAppUtils.Log.message("Campaign: \(campaign)")
+                                            DispatchQueue.main.async {
+                                                session.points.add(campaign)
+                                            }
                                         }
+                                    } else {
+                                        DispatchQueue.main.async {
+                                            campaignCreateError = true
+                                        }
+                                        WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
                                     }
-                                } else {
-                                    DispatchQueue.main.async {
-                                        campaignCreateError = true
-                                    }
-                                    WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
                                 }
+                            case .STAMP:
+                                let campaign: WayAppPay.Stamp =
+                                    WayAppPay.Stamp(name: newName,
+                                                       description: newDescription,
+                                                       sponsorUUID: session.merchantUUID!,
+                                                       format: format,
+                                                       expirationDate: expirationDate, minimumPaymentAmountToGetStamp: 10)
+
+                                WayAppPay.Stamp.create(campaign) { campaigns, error in
+                                    if let campaigns = campaigns,
+                                       let campaign = campaigns.first {
+                                        WayAppUtils.Log.message("Campaign: name: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
+                                        DispatchQueue.main.async {
+                                            session.stamps.add(campaign)
+                                        }
+                                    } else {
+                                        DispatchQueue.main.async {
+                                            campaignCreateError = true
+                                        }
+                                        WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+                                    }
+                                }
+
                             }
- */
                         }) {
                             Text("Activate campaign")
                                 .padding()

@@ -90,7 +90,7 @@ struct PaymentOptionsView: View {
                         }
                         Section(header: Text("Campaigns").font(.headline)) {
                             List {
-                                ForEach(session.campaigns) { campaign in
+                                ForEach(session.points) { campaign in
                                     Button(action: {
                                         self.showQRScannerForPayment = true
                                     }, label: {

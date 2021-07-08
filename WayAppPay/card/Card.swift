@@ -70,10 +70,6 @@ extension WayAppPay {
             return pan
         }
 
-        var containerID: String {
-            return pan
-        }
-        
         init() {
             self.alias = "Sample card"
             self.pan = UUID().uuidString

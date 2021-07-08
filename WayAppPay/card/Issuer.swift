@@ -31,10 +31,6 @@ extension WayAppPay {
         var id: String {
             return issuerUUID
         }
-
-        var containerID: String {
-            return issuerUUID
-        }
         
         static func get() {
             WayAppPay.API.getIssuers.fetch(type: [Issuer].self) { response in

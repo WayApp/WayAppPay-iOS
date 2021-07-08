@@ -20,6 +20,7 @@ extension WayAppPay {
             case REFUND
             case ADD
             case TOPUP
+            case REWARD
             
             var title: String {
                 switch self {
@@ -27,6 +28,7 @@ extension WayAppPay {
                 case .REFUND: return NSLocalizedString("Refund", comment: "PaymentTransaction.TransactionType")
                 case .ADD: return NSLocalizedString("Add", comment: "PaymentTransaction.TransactionType")
                 case .TOPUP: return NSLocalizedString("Top-up", comment: "PaymentTransaction.TransactionType")
+                case .REWARD: return NSLocalizedString("Reward", comment: "PaymentTransaction.TransactionType")
                 }
             }
         }
@@ -87,10 +89,6 @@ extension WayAppPay {
         var follow: String?
 
         var id: String {
-            return transactionUUID ?? UUID().uuidString
-        }
-        
-        var containerID: String {
             return transactionUUID ?? UUID().uuidString
         }
         

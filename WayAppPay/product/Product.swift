@@ -32,10 +32,6 @@ extension WayAppPay {
             return productUUID
         }
 
-        var containerID: String {
-            return productUUID
-        }
-
         init(merchantUUID: String, name: String, description: String = String(), price: String) {
             self.productUUID = UUID().uuidString
             self.merchantUUID = merchantUUID
@@ -86,7 +82,7 @@ extension WayAppPay {
                     if let products = response.result,
                         let product = products.first {
                         DispatchQueue.main.async {
-                            session.products[product.containerID] = product
+                            session.products[product.id] = product
                         }
                         completion(nil)
                     } else {

@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension String: ContainerProtocol {
-    var containerID: String {
+    public var id: String {
         return self
     }
 }
@@ -80,11 +80,35 @@ struct SettingsView: View {
                                 .font(.callout)) {
                         Button {
                             DispatchQueue.main.async {
-                                self.create()
+                                self.updatePoint()
                             }
                         } label: {
-                            Label("Create point", systemImage: "plus.viewfinder")
-                                .accessibility(label: Text("Create point"))
+                            Label("Update POINT", systemImage: "plus.viewfinder")
+                                .accessibility(label: Text("Update POINT"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.updateStamp()
+                            }
+                        } label: {
+                            Label("Update STAMP", systemImage: "plus.viewfinder")
+                                .accessibility(label: Text("Update STAMP"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.getCampaigns()
+                            }
+                        } label: {
+                            Label("Get campaigns", systemImage: "plus.viewfinder")
+                                .accessibility(label: Text("Get campaigns"))
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayAppPay.Campaign.Format.POINT)
+                            }
+                        } label: {
+                            Label("Get campaign detail", systemImage: "plus.viewfinder")
+                                .accessibility(label: Text("Get campaigns"))
                         }
                         Button {
                             DispatchQueue.main.async {
@@ -197,24 +221,8 @@ struct SettingsView: View {
         }
     }
     
-    private func create() {
-        let campaign: WayAppPay.Point = WayAppPay.Point(points: 100)
-        WayAppPay.Point.create(campaign) { campaigns, error in
-            if let campaigns = campaigns {
-                for campaign in campaigns {
-                    WayAppUtils.Log.message("Campaign name: \(campaign.name), sponsorUUID: \(campaign.sponsorUUID), id: \(campaign.id)")
-                    DispatchQueue.main.async {
-                        session.campaigns.add(campaign)
-                    }
-                }
-            } else {
-                WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
-            }
-        }
-    }
-    
-    private func getCampaign(id: String, sponsorUUID: String) {
-        WayAppPay.Campaign.get(campaignID: id, sponsorUUID: sponsorUUID) { campaigns, error in
+    private func getCampaign(id: String, sponsorUUID: String, format: WayAppPay.Campaign.Format) {
+        WayAppPay.Campaign.get(campaignID: id, sponsorUUID: sponsorUUID, format: format) { campaigns, error in
             if let campaigns = campaigns {
                 for campaign in campaigns {
                     WayAppUtils.Log.message("Campaign: \(campaign)")
@@ -227,8 +235,43 @@ struct SettingsView: View {
         }
     }
     
-    private func getCampaign() {
-        WayAppPay.Campaign.get(merchantUUID: "", issuerUUID: "100") { campaigns, error in
+    private func updatePoint() {
+        let campaign = session.points.first;
+        campaign?.name = "UpdatedNameForPoint"
+        WayAppPay.Point.update(campaign!) { campaigns, error in
+            if let campaigns = campaigns {
+                for campaign in campaigns {
+                    WayAppUtils.Log.message("Campaign: \(campaign.name)")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+            }
+        }
+
+    }
+    
+    private func updateStamp() {
+        if let campaign = session.stamps.first {
+            WayAppUtils.Log.message("Campaign: name BEFORE UPDATE: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
+            campaign.name = "UPDATEDNameForStamp"
+            WayAppPay.Stamp.update(campaign) { campaigns, error in
+                if let campaigns = campaigns {
+                    for campaign in campaigns {
+                        WayAppUtils.Log.message("Campaign: \(campaign.name)")
+                    }
+                } else if let error = error  {
+                    WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
+                } else {
+                    WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
+                }
+            }
+        }
+    }
+    
+    private func getCampaigns() {
+        WayAppPay.Campaign.get(merchantUUID: "sponsorUUID004", issuerUUID: nil, campaignType: WayAppPay.Stamp.self, format: .STAMP) { campaigns, error in
             if let campaigns = campaigns {
                 WayAppUtils.Log.message("Campaigns count: \(campaigns.count)")
                 for campaign in campaigns {
