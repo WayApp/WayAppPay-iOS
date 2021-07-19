@@ -26,7 +26,6 @@ struct ProductRowView: View {
     }
 
     var product: WayAppPay.Product
-    //var productIndex: Int
 
     var body: some View {
         HStack {

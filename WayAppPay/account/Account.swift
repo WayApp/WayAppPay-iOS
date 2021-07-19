@@ -179,6 +179,33 @@ extension WayAppPay {
                 }
             }
         }
+        
+        static func getRewards(_ transaction: PaymentTransaction, completion: @escaping ([Reward]?, Error?) -> Void) {
+            WayAppPay.API.getRewards(transaction).fetch(type: [Reward].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+        
+        static func checkin(_ transaction: PaymentTransaction, completion: @escaping ([WayAppPay.Checkin]?, Error?) -> Void) {
+            WayAppPay.API.checkin(transaction).fetch(type: [Reward].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
     }
 }
 

@@ -9,13 +9,64 @@
 import SwiftUI
 
 
+struct CampaignRowView: View {
+    @EnvironmentObject var session: WayAppPay.Session
+    var campaign: WayAppPay.Campaign
+
+    var body: some View {
+        HStack {
+            Image(systemName: campaign.icon())
+            VStack(alignment: .leading) {
+                Text(campaign.name)
+                Text(campaign.description ?? "no description")
+                    .font(.subheadline)
+            }
+            Spacer()
+            Image(systemName: campaign.state.icon)
+                .foregroundColor(campaign.state.color)
+        }
+        .contextMenu {
+            Button {
+                campaign.toggleState { campaigns, error in
+                    if let campaigns = campaigns,
+                       let updatedCampaign = campaigns.first {
+                        WayAppUtils.Log.message("Campaign: \(updatedCampaign.name), changing state to \(updatedCampaign.state)")
+                        DispatchQueue.main.async {
+                            session.campaigns[campaign.id]?.state = updatedCampaign.state
+                        }
+                        WayAppUtils.Log.message("Campaign: \(updatedCampaign.name), new state \(session.campaigns[campaign.id]!.state)")
+                    } else if let error = error  {
+                        WayAppUtils.Log.message("Campaign: \(campaign.name) could not toggle state. Error: \(error.localizedDescription)")
+                    } else {
+                        WayAppUtils.Log.message("API ERROR")
+                    }
+
+                }
+            } label: {
+                campaign.state == .ACTIVE ?
+                    Label("Disable", systemImage: "envelope")
+                    .accessibility(label: Text("Disable")) :
+                    Label("Enable", systemImage: "envelope")
+                    .accessibility(label: Text("Enable"))
+            }
+        }
+    }
+
+}
+
+struct CampaignRowView_Previews: PreviewProvider {
+    static var previews: some View {
+        CampaignRowView(campaign: WayAppPay.Campaign())
+    }
+}
+
 struct PointRowView: View {
     @EnvironmentObject var session: WayAppPay.Session
     
     var body: some View {
         List {
             ForEach(session.points) { campaign in
-                NavigationLink(destination: CampaignView(campaign: campaign)) {
+                NavigationLink(destination: CampaignNewView(campaign: campaign)) {
                     VStack(alignment: .leading) {
                         Text(campaign.name)
                             .font(.headline)
@@ -27,7 +78,7 @@ struct PointRowView: View {
                             campaign.toggleState { campaigns, error in
                                 if let campaigns = campaigns,
                                    let updatedCampaign = campaigns.first {
-                                    WayAppUtils.Log.message("Campaign: \(updatedCampaign.name), changed state to \(updatedCampaign.state!)")
+                                    WayAppUtils.Log.message("Campaign: \(updatedCampaign.name), changed state to \(updatedCampaign.state)")
                                     DispatchQueue.main.async {
                                         session.points[campaign.id]?.state = updatedCampaign.state
                                         campaign.state = updatedCampaign.state
@@ -93,7 +144,7 @@ struct StampRowView: View {
                 campaign.toggleState { campaigns, error in
                     if let campaigns = campaigns,
                        let updatedCampaign = campaigns.first {
-                        WayAppUtils.Log.message("Campaign: \(updatedCampaign.name), changed state to \(updatedCampaign.state!)")
+                        WayAppUtils.Log.message("Campaign: \(updatedCampaign.name), changed state to \(updatedCampaign.state)")
                         DispatchQueue.main.async {
                             //session.stamps[campaign.id]?.state = updatedCampaign.state
                             campaign.state = updatedCampaign.state
@@ -119,6 +170,6 @@ struct StampRowView: View {
 
 struct StampRowView_Previews: PreviewProvider {
     static var previews: some View {
-        StampRowView(campaign: WayAppPay.Stamp(name: "test", sponsorUUID: "", format: WayAppPay.Campaign.Format.STAMP, minimumPaymentAmountToGetStamp: 10))
+        StampRowView(campaign: WayAppPay.Stamp(campaign: WayAppPay.Campaign(), minimumPaymentAmountToGetStamp: 10, prize: WayAppPay.Prize(campaignID: "campaignID", name: "name", message: "message")))
     }
 }

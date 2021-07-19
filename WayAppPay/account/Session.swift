@@ -52,19 +52,23 @@ extension WayAppPay {
                             WayAppUtils.Log.message("Could not fetch products")
                         }
                     }
-                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Point.self, format: .POINT) {campaigns, error in
-                        if let campaigns = campaigns {
+                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Point.self, format: .POINT) {points, error in
+                        if let points = points {
                             DispatchQueue.main.async {
-                                session.points.setTo(campaigns)
+                                session.points.setTo(points)
+                                session.campaigns.add(points)
+                                session.campaigns.sort(by: <)
                             }
                         } else {
                             WayAppUtils.Log.message("Could not fetch POINT campaigns")
                         }
                     }
-                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Stamp.self, format: .STAMP) {campaigns, error in
-                        if let campaigns = campaigns {
+                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Stamp.self, format: .STAMP) {stamps, error in
+                        if var stamps = stamps {
                             DispatchQueue.main.async {
-                                session.stamps.setTo(campaigns)
+                                session.stamps.setTo(stamps)
+                                session.campaigns.add(stamps)
+                                session.campaigns.sort(by: <)
                             }
                         } else {
                             WayAppUtils.Log.message("Could not fetch STAMP campaigns")
@@ -85,6 +89,7 @@ extension WayAppPay {
         @Published var products = Container<Product>()
         @Published var points = Container<Point>()
         @Published var stamps = Container<Stamp>()
+        @Published var campaigns = Container<Campaign>()
         @Published var showAuthenticationView: Bool = true
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()

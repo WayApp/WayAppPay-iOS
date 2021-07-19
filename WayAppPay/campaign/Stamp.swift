@@ -17,10 +17,10 @@ extension WayAppPay {
             case prize
         }
 
-        init(name: String, description: String = "", sponsorUUID: String, format: Format, expirationDate: Date = Date.distantFuture, state: State = .ACTIVE, minimumPaymentAmountToGetStamp: Int) {
-            super.init(name: name, description: description, sponsorUUID: sponsorUUID, format: format, expirationDate: expirationDate, state: state)
+        init(campaign: Campaign, minimumPaymentAmountToGetStamp: Int, prize: Prize) {
+            super.init(campaign: campaign)
             self.minimumPaymentAmountToGetStamp = minimumPaymentAmountToGetStamp
-            self.prize = Prize(name: "NameStamp1", message: "Message1 for stamp")
+            self.prize = prize
         }
         
         required init(from decoder: Decoder) throws {
@@ -72,23 +72,18 @@ extension WayAppPay {
             }
         }
         
-        static func delete(at offsets: IndexSet) {
-            WayAppUtils.Log.message("Entering")
-            for offset in offsets {
-                WayAppPay.Campaign.delete(id: session.stamps[offset].id, sponsorUUID: session.stamps[offset].sponsorUUID, format: session.stamps[offset].format) { strings, error in
-                    if let error = error {
-                        WayAppUtils.Log.message("Campaign: \(session.stamps[offset].name) could not be . Error: \(error.localizedDescription)")
-                    } else {
-                        WayAppUtils.Log.message("DELETED SUCCESSFULLY")
-                        WayAppUtils.Log.message("Campaign: \(session.stamps[offset].name) deleted successfully")
-                        DispatchQueue.main.async {
-                            WayAppUtils.Log.message("Before total stamps: \(session.stamps.count)")
-                            session.stamps.remove(session.stamps[offset])
-                            WayAppUtils.Log.message("After total stamps: \(session.stamps.count)")
-                        }
-                    }
+        static func prizesForReward(_ reward: Reward) -> [Prize] {
+            WayAppUtils.Log.message("CampaignID : \(reward.campaignID), sponsorUUID: \(reward.sponsorUUID)")
+            var wonPrizes = [Prize]()
+            if let campaignID = reward.campaignID,
+               let balance = reward.balance,
+               let prize = session.stamps[campaignID]?.prize {
+                WayAppUtils.Log.message("Balance: \(balance), prize.amountToGetIt: \(prize.amountToGetIt)")
+                if prize.amountToGetIt <= balance {
+                    wonPrizes.append(prize)
                 }
             }
+            return wonPrizes
         }
 
     }

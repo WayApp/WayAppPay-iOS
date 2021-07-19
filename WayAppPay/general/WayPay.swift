@@ -201,7 +201,14 @@ struct WayAppPay {
         return formatter
     }()
 
-    static let appName = "WayApp Pay"
+    static var displayDateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }
+
+    static let appName = "WayPay"
 
     struct Constant {
     }

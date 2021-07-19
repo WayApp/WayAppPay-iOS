@@ -10,9 +10,9 @@ import SwiftUI
 import UIKit
 
 struct ProductDetailView: View {
+    @SwiftUI.Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var session: WayAppPay.Session
     @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
-    @SwiftUI.Environment(\.presentationMode) var presentationMode
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
 

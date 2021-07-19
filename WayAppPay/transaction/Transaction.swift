@@ -21,6 +21,7 @@ extension WayAppPay {
             case ADD
             case TOPUP
             case REWARD
+            case CHECKIN
             
             var title: String {
                 switch self {
@@ -29,6 +30,7 @@ extension WayAppPay {
                 case .ADD: return NSLocalizedString("Add", comment: "PaymentTransaction.TransactionType")
                 case .TOPUP: return NSLocalizedString("Top-up", comment: "PaymentTransaction.TransactionType")
                 case .REWARD: return NSLocalizedString("Reward", comment: "PaymentTransaction.TransactionType")
+                case .CHECKIN: return NSLocalizedString("Checkin", comment: "PaymentTransaction.TransactionType")
                 }
             }
         }

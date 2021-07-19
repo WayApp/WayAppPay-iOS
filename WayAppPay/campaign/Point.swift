@@ -17,10 +17,10 @@ extension WayAppPay {
             case prizes
         }
         
-        init(name: String, description: String = "", sponsorUUID: String, format: Format, expirationDate: Date = Date.distantFuture, state: State = .ACTIVE, paymentAmountConvertibleToRewardUnit: Int) {
-            super.init(name: name, description: description, sponsorUUID: sponsorUUID, format: format, expirationDate: expirationDate, state: state)
+        init(campaign: Campaign, paymentAmountConvertibleToRewardUnit: Int, prizes: [Prize]) {
+            super.init(campaign: campaign)
             self.paymentAmountConvertibleToRewardUnit = paymentAmountConvertibleToRewardUnit
-            self.prizes = [Prize(name: "NamePoint1", message: "Message1 win a setence")]
+            self.prizes = prizes
         }
 
         required init(from decoder: Decoder) throws {
@@ -72,6 +72,21 @@ extension WayAppPay {
             }
         }
 
+        static func prizesForReward(_ reward: Reward) -> [Prize] {
+            WayAppUtils.Log.message("CampaignID : \(reward.campaignID), sponsorUUID: \(reward.sponsorUUID)")
+            var wonPrizes = [Prize]()
+            if let campaignID = reward.campaignID,
+               let balance = reward.balance,
+               let prizes = session.points[campaignID]?.prizes {
+                for prize in prizes {
+                    WayAppUtils.Log.message("Balance: \(balance), prize.amountToGetIt: \(prize.amountToGetIt)")
+                    if prize.amountToGetIt <= balance {
+                        wonPrizes.append(prize)
+                    }
+                }
+            }
+            return wonPrizes
+        }
     }
 
 }

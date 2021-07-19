@@ -19,6 +19,9 @@ struct AmountView: View {
     @State private var amount: Int = 0
     @State private var total: Int = 0
     
+    @State private var showingActionSheet = false
+    @State private var backgroundColor = Color.white
+
     func handleScan() {
         processPayment()
     }
@@ -90,6 +93,25 @@ struct AmountView: View {
                     .padding()
                     HStack {
                         Spacer()
+                        /*
+                        Text("testing action sheet")
+                            .frame(width: 300, height: 300)
+                            .background(backgroundColor)
+                            .onTapGesture {
+                                self.showingActionSheet = true
+                            }
+                            .actionSheet(isPresented: $showingActionSheet) {
+                                ActionSheet(title: Text("Change background"), message: Text("Select a new color"), buttons: [
+                                    .default(Text("Red"))
+                                        {   self.backgroundColor = .red
+                                            self.showingActionSheet = true
+                                    },
+                                    .default(Text("Green")) { self.backgroundColor = .green },
+                                    .default(Text("Blue")) { self.backgroundColor = .blue },
+                                    .cancel()
+                                ])
+                            }
+ */
                         Text(WayAppPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
                             .font(.largeTitle)
                             .fontWeight(.bold)

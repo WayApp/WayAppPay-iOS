@@ -14,9 +14,9 @@ struct CampaignsView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(session.stamps) { campaign in
-                    NavigationLink(destination: CampaignView(campaign: campaign)) {
-                        StampRowView(campaign: campaign)
+                ForEach(session.campaigns) { campaign in
+                    NavigationLink(destination: CampaignDetailView(campaign: campaign)) {
+                        CampaignRowView(campaign: campaign)
                     }
                 }
                 .onDelete(perform: delete)
@@ -24,7 +24,7 @@ struct CampaignsView: View {
             .listStyle(GroupedListStyle())
             .navigationBarTitle(Text("Campaigns"), displayMode: .inline)
             .navigationBarItems(trailing:
-                NavigationLink(destination: CampaignView(campaign: nil)) {
+                NavigationLink(destination: CampaignNewView(campaign: nil)) {
                     Image(systemName: "plus")
                         .resizable()
             })
@@ -32,7 +32,7 @@ struct CampaignsView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        WayAppPay.Stamp.delete(at: offsets)
+        WayAppPay.Campaign.delete(at: offsets)
     }
 
 }

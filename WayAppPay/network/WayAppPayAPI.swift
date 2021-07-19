@@ -73,6 +73,7 @@ extension WayAppPay {
         case forgotPIN(ChangePIN) // POST
         case changePIN(ChangePIN) // POST
         case deleteAccount(String) // DELETE
+        case checkin(PaymentTransaction) // POST
         // Merchant
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
@@ -119,11 +120,13 @@ extension WayAppPay {
         case createStampCampaign(Stamp)
         case updatePointCampaign(Point)
         case updateStampCampaign(Stamp)
+        case getRewards(PaymentTransaction) // POST
         case toggleCampaignState(String, String, Campaign.Format)
         case getCampaigns(String, String?, Campaign.Format) // GET
         case getCampaign(String, String, Campaign.Format) // GET
         case deleteCampaign(String, String, Campaign.Format) // DELETE
         case rewardCampaigns(PaymentTransaction, Array<String>) // POST
+        case rewardCampaign(PaymentTransaction, Campaign) // POST
         case redeemCampaigns(PaymentTransaction, Array<String>) // POST
 
         private var path: String {
@@ -134,6 +137,7 @@ extension WayAppPay {
             case .forgotPIN: return "/accounts/forgots/"
             case .changePIN: return "/accounts/passwords/"
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
+            case .checkin: return "/accounts/checkins/"
             // Merchants
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
@@ -178,11 +182,13 @@ extension WayAppPay {
             case .createStampCampaign: return "/campaigns/"
             case .updatePointCampaign: return "/campaigns/"
             case .updateStampCampaign: return "/campaigns/"
+            case .getRewards( _): return "/campaigns/rewards/gets/"
             case .getCampaigns: return "/campaigns/"
             case .toggleCampaignState(let campaignID, let sponsorUUID, _): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/toggles/"
             case .getCampaign(let campaignID, let sponsorUUID, _): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
             case .deleteCampaign(let campaignID, let sponsorUUID, _): return "/campaigns/\(campaignID)/sponsors/\(sponsorUUID)/"
             case .rewardCampaigns( _, _): return "/campaigns/rewards/"
+            case .rewardCampaign( _, _): return "/campaigns/rewards/"
             case .redeemCampaigns( _, _): return "/campaigns/redeems/"
             // TRASH
             case .account: return "/accounts/"
@@ -195,7 +201,7 @@ extension WayAppPay {
             // Account
             case .registrationAccount: return ""
             case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
-            case .forgotPIN, .changePIN: return ""
+            case .forgotPIN, .changePIN, .checkin: return ""
             case .deleteAccount(let accountUUID): return accountUUID
             // Merchant
             case .getMerchants(let accountUUID): return accountUUID
@@ -241,11 +247,13 @@ extension WayAppPay {
             case .createStampCampaign: return ""
             case .updatePointCampaign: return ""
             case .updateStampCampaign: return ""
+            case .getRewards: return ""
             case .toggleCampaignState(let campaignID, let sponsorUUID, _): return campaignID + "/" + sponsorUUID
             case .getCampaigns: return ""
             case .getCampaign(let campaignID, let sponsorUUID, _): return campaignID + "/" + sponsorUUID
             case .deleteCampaign(let campaignID, let sponsorUUID, _): return campaignID + "/" + sponsorUUID
             case .rewardCampaigns: return ""
+            case .rewardCampaign: return ""
             case .redeemCampaigns: return ""
             default: return ""
             }
@@ -266,7 +274,7 @@ extension WayAppPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .redeemCampaigns:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -415,7 +423,7 @@ extension WayAppPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .walletPayment(_, _, let transaction), .topup(let transaction):
+            case .walletPayment(_, _, let transaction), .topup(let transaction), .checkin(let transaction):
                 var parts: [HTTPCall.BodyPart]?
                 if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
                     parts = [part]
@@ -430,6 +438,29 @@ extension WayAppPay {
                 if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
                     parts = [part]
                     if let part = HTTPCall.BodyPart(campaignIDs, name: "campaigns") {
+                        parts?.append(part)
+                    }
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .getRewards(let transaction):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
+                    parts = [part]
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .rewardCampaign(let transaction, let campaign):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
+                    parts = [part]
+                    if let part = HTTPCall.BodyPart(campaign, name: "campaign") {
                         parts?.append(part)
                     }
                 }
