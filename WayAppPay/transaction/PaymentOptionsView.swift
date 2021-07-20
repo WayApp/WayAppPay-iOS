@@ -13,6 +13,7 @@ struct PaymentOptionsView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var showQRScannerForPayment = false
+    @State private var showQRScannerForCheckin = false
     @State private var showNFCScannerForPayment = false
     @State private var showQRScannerForReward = false
     @State private var showQRScannerForGetRewards = false
@@ -119,6 +120,33 @@ struct PaymentOptionsView: View {
                                 .background(Color.white)
                             }
                         } // sheet
+                        Button(action: {
+                            WayAppUtils.Log.message("Checkin button pressed")
+                            self.showQRScannerForCheckin = true
+                        }, label: {
+                            HStack {
+                                Image(systemName: "plus.square")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 30, height: 30, alignment: .leading)
+                                Text("Checkin")
+                            }
+                        })
+                        .sheet(isPresented: $showQRScannerForCheckin) {
+                            VStack {
+                                CodeCaptureView(showCodePicker: self.$showQRScannerForCheckin, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleCheckin)
+                                HStack {
+                                    Text("Checkin")
+                                        .foregroundColor(Color.black)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Button("Done") { self.showQRScannerForCheckin = false }
+                                }
+                                .frame(height: 40.0)
+                                .padding()
+                                .background(Color.white)
+                            }
+                        } // sheet
                     }
                     if (topupAmount > 0) {
                         Text("Campaigns")
@@ -176,7 +204,33 @@ struct PaymentOptionsView_Previews: PreviewProvider {
 // NFC Payment
 extension PaymentOptionsView {
     func handleCheckin() {
-        
+        WayAppUtils.Log.message("Checking in")
+        guard let code = scannedCode else {
+            WayAppUtils.Log.message("Missing scannedCode")
+            return
+        }
+        let transaction = WayAppPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
+        isAPICallOngoing = true
+        WayAppPay.Account.checkin(transaction) { checkins, error in
+            self.scannedCode = nil
+            DispatchQueue.main.async {
+                isAPICallOngoing = false
+            }
+            if let checkins = checkins,
+               let checkin = checkins.first {
+                WayAppUtils.Log.message("Checkin success: \(checkin)")
+                DispatchQueue.main.async {
+                    self.apiCallResult(accepted: true)
+                }
+            } else {
+                self.apiCallResult(accepted: false)
+                DispatchQueue.main.async {
+                    // campaignCreateError = true
+                }
+                WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+            }
+        }
+
     }
     
     func handleGetRewards() {
@@ -282,36 +336,6 @@ extension PaymentOptionsView {
     func handleNFCScan() {
         WayAppUtils.Log.message("Scanned NFC Tag: \(scannedCode ?? "no scanned code")")
         handleQRScanPayment()
-    }
-    
-    func handleCheckin() {
-        WayAppUtils.Log.message("handleCheckin: ENTERING with scannedCode=\(scannedCode ?? "no scanned code")")
-        guard let scannedCode = scannedCode else {
-            WayAppUtils.Log.message("handleCheckin: no scanned code")
-            return
-        }
-        WayAppPay.WalletAPI.postCheckin(scannedCode).fetch(type: [WayAppPay.Checkin].self) { response in
-            if case .success(let response?) = response {
-                WayAppUtils.Log.message("handleCheckin: SUCCESS with response=\(response)")
-            } else if case .failure(let error) = response {
-                WayAppUtils.Log.message(error.localizedDescription)
-            }
-        }
-    }
-    
-    func getCheckins() {
-        WayAppUtils.Log.message("getCheckins: ENTERING with scannedCode=\(scannedCode ?? "no scanned code")")
-        guard let scannedCode = scannedCode else {
-            WayAppUtils.Log.message("getCheckins: no scanned code")
-            return
-        }
-        WayAppPay.WalletAPI.getCheckins(scannedCode).fetch(type: [WayAppPay.CheckinRecord].self) { response in
-            if case .success(let response?) = response {
-                WayAppUtils.Log.message("getCheckins: SUCCESS with response=\(response)")
-            } else if case .failure(let error) = response {
-                WayAppUtils.Log.message(error.localizedDescription)
-            }
-        }
     }
     
 }

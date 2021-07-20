@@ -186,9 +186,11 @@ extension WayAppPay {
         }
 
         static func getMerchantsForAccount(_ accountUUID: String) {
+            WayAppUtils.Log.message("Entering")
             WayAppPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
                 if case .success(let response?) = response {
                     if let merchants = response.result {
+                        WayAppUtils.Log.message("Number of merchants: \(merchants.count)")
                         DispatchQueue.main.async {
                             session.merchants.setTo(merchants)
                         }

@@ -45,7 +45,7 @@ extension WayAppPay {
     struct Reward: Hashable, Codable {
         var accountUUID: String?
         var campaignID: String?
-        var format: Format?
+        var format: Campaign.Format?
         var sponsorUUID: String?
         var creationDate: Date?
         var lastUpdateDate: Date?

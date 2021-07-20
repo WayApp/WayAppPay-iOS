@@ -46,7 +46,7 @@ struct MainView: View {
                                         .accessibility(label: Text("Campaign"))
                             }
                             .tag(Tab.cart)
-                            AmountView().environmentObject(self.session)
+                            CheckinView().environmentObject(self.session)
                                 .tabItem {
                                     Label("POS", systemImage: "qrcode.viewfinder")
                                         .accessibility(label: Text("POS"))

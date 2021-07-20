@@ -11,9 +11,6 @@
 		AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A374223E4881F00E437CA /* AuthenticationView.swift */; };
 		AF3A375A23E8233C00E437CA /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A375923E8233C00E437CA /* TransactionsView.swift */; };
 		AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A376323E844FC00E437CA /* AddProductButtonView.swift */; };
-		AFD14BDA249B56320038AA90 /* WalletAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD14BD9249B56320038AA90 /* WalletAPI.swift */; };
-		AFD14BE024A24CFE0038AA90 /* Checkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD14BDF24A24CFE0038AA90 /* Checkin.swift */; };
-		AFD14BE224A2531C0038AA90 /* CheckinRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD14BE124A2531C0038AA90 /* CheckinRecord.swift */; };
 		B104DADF26222E58000EFC75 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B104DADD26222E58000EFC75 /* InfoPlist.strings */; };
 		B108CB2C26A5B3440071346D /* Checkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B108CB2B26A5B3440071346D /* Checkin.swift */; };
 		B10F838825DBCA8000F4B528 /* WayPayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F838725DBCA8000F4B528 /* WayPayApp.swift */; };
@@ -39,6 +36,7 @@
 		B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */; };
 		B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */; };
 		B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12F17FA23EBD1530012890E /* TransactionRowView.swift */; };
+		B13B689026A5DC9700271515 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B688F26A5DC9700271515 /* CheckinView.swift */; };
 		B144F2CC26833220001C3C10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */; };
 		B14BA8AD250F77870095C654 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */; };
 		B15800F42507CA380022A687 /* CardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F32507CA380022A687 /* CardDetailView.swift */; };
@@ -91,9 +89,6 @@
 		AF3A374223E4881F00E437CA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		AF3A375923E8233C00E437CA /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
 		AF3A376323E844FC00E437CA /* AddProductButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductButtonView.swift; sourceTree = "<group>"; };
-		AFD14BD9249B56320038AA90 /* WalletAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletAPI.swift; sourceTree = "<group>"; };
-		AFD14BDF24A24CFE0038AA90 /* Checkin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkin.swift; sourceTree = "<group>"; };
-		AFD14BE124A2531C0038AA90 /* CheckinRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinRecord.swift; sourceTree = "<group>"; };
 		B104DADE26222E58000EFC75 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B108CB2B26A5B3440071346D /* Checkin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkin.swift; sourceTree = "<group>"; };
 		B10F838725DBCA8000F4B528 /* WayPayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayPayApp.swift; sourceTree = "<group>"; };
@@ -119,6 +114,7 @@
 		B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordSecurePersistance.swift; sourceTree = "<group>"; };
 		B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationalEnvironment.swift; sourceTree = "<group>"; };
 		B12F17FA23EBD1530012890E /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
+		B13B688F26A5DC9700271515 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
 		B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		B15800F32507CA380022A687 /* CardDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = WayAppPay/product/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
@@ -191,16 +187,6 @@
 			path = main;
 			sourceTree = "<group>";
 		};
-		AFD14BDB24A24C980038AA90 /* wallet */ = {
-			isa = PBXGroup;
-			children = (
-				AFD14BD9249B56320038AA90 /* WalletAPI.swift */,
-				AFD14BDF24A24CFE0038AA90 /* Checkin.swift */,
-				AFD14BE124A2531C0038AA90 /* CheckinRecord.swift */,
-			);
-			path = wallet;
-			sourceTree = "<group>";
-		};
 		B12DE94C23AA632400C02657 /* account */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,7 +198,6 @@
 				B12DE98523AA7F0E00C02657 /* Biometrics.swift */,
 				B12DE98723AA806F00C02657 /* UserPasswordSecurePersistance.swift */,
 				B1D8750D23F003ED00A1967F /* EnterOTP.swift */,
-				B108CB2B26A5B3440071346D /* Checkin.swift */,
 			);
 			path = account;
 			sourceTree = "<group>";
@@ -304,6 +289,15 @@
 			path = card;
 			sourceTree = "<group>";
 		};
+		B13B688E26A5DC6500271515 /* Checkin */ = {
+			isa = PBXGroup;
+			children = (
+				B108CB2B26A5B3440071346D /* Checkin.swift */,
+				B13B688F26A5DC9700271515 /* CheckinView.swift */,
+			);
+			path = Checkin;
+			sourceTree = "<group>";
+		};
 		B1609565263E874400B14A43 /* campaign */ = {
 			isa = PBXGroup;
 			children = (
@@ -356,11 +350,11 @@
 		B19ACCB7238B092A009FF084 /* WayAppPay */ = {
 			isa = PBXGroup;
 			children = (
-				B1609565263E874400B14A43 /* campaign */,
 				B10F838725DBCA8000F4B528 /* WayPayApp.swift */,
+				B13B688E26A5DC6500271515 /* Checkin */,
+				B1609565263E874400B14A43 /* campaign */,
 				B12DE95123AA641000C02657 /* general */,
 				B1B3817F250533F30008BC78 /* AfterBanks */,
-				AFD14BDB24A24C980038AA90 /* wallet */,
 				AF3A374123E4879800E437CA /* main */,
 				B12DE94C23AA632400C02657 /* account */,
 				B1E7A58B23E585ED00CC2E04 /* merchant */,
@@ -519,7 +513,6 @@
 				B12DE97423AA718300C02657 /* Card.swift in Sources */,
 				B1BA480925D7EFF200ED31EF /* SendEmail.swift in Sources */,
 				B12DE97123AA713C00C02657 /* Issuer.swift in Sources */,
-				AFD14BDA249B56320038AA90 /* WalletAPI.swift in Sources */,
 				B12DE98623AA7F0E00C02657 /* Biometrics.swift in Sources */,
 				B12DE98823AA806F00C02657 /* UserPasswordSecurePersistance.swift in Sources */,
 				B1609567263E876000B14A43 /* Campaign.swift in Sources */,
@@ -558,6 +551,7 @@
 				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
 				B10F838825DBCA8000F4B528 /* WayPayApp.swift in Sources */,
+				B13B689026A5DC9700271515 /* CheckinView.swift in Sources */,
 				B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */,
 				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
@@ -566,10 +560,8 @@
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
 				B1E9693526837F2400B6B41E /* CampaignNewView.swift in Sources */,
 				B1E7A58323E4486700CC2E04 /* SettingsView.swift in Sources */,
-				AFD14BE024A24CFE0038AA90 /* Checkin.swift in Sources */,
 				B12DE96523AA6E2B00C02657 /* SecurityUtilities.swift in Sources */,
 				B1D8750623EEDC1700A1967F /* NumberButtonView.swift in Sources */,
-				AFD14BE224A2531C0038AA90 /* CheckinRecord.swift in Sources */,
 				AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */,
 				B1E7A57E23E4474A00CC2E04 /* AmountView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,

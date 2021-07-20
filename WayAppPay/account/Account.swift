@@ -194,7 +194,7 @@ extension WayAppPay {
         }
         
         static func checkin(_ transaction: PaymentTransaction, completion: @escaping ([WayAppPay.Checkin]?, Error?) -> Void) {
-            WayAppPay.API.checkin(transaction).fetch(type: [Reward].self) { response in
+            WayAppPay.API.checkin(transaction).fetch(type: [WayAppPay.Checkin].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
