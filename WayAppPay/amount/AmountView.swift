@@ -96,28 +96,10 @@ struct AmountView: View {
                     .padding()
                     HStack {
                         Spacer()
-                        /*
-                        Text("testing action sheet")
-                            .frame(width: 300, height: 300)
-                            .background(backgroundColor)
-                            .onTapGesture {
-                                self.showingActionSheet = true
-                            }
-                            .actionSheet(isPresented: $showingActionSheet) {
-                                ActionSheet(title: Text("Change background"), message: Text("Select a new color"), buttons: [
-                                    .default(Text("Red"))
-                                        {   self.backgroundColor = .red
-                                            self.showingActionSheet = true
-                                    },
-                                    .default(Text("Green")) { self.backgroundColor = .green },
-                                    .default(Text("Blue")) { self.backgroundColor = .blue },
-                                    .cancel()
-                                ])
-                            }
- */
                         Text(WayAppPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
                             .font(.largeTitle)
                             .fontWeight(.bold)
+                            .foregroundColor(.black)
                             .padding()
                             .onTapGesture {
                                 self.delete()
@@ -189,7 +171,7 @@ struct AmountView: View {
                             Spacer()
                             Button {
                                 if let merchantUUID = session.merchantUUID {
-                                    WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: String((total + amount) / 100)), isAmount: true)
+                                    WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: WayAppPay.formatAmount(Int((total + amount)*100 / 100))), isAmount: true)
                                     self.resetAmountAndDescription()
                                 }
                             } label: {

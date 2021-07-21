@@ -86,7 +86,7 @@ struct WayAppPay {
                     .font(.headline)
                     .background(isEnabled ?
                                     (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
-                                    : Color("DisabledGray"))
+                                    : Color.gray)
                     .cornerRadius(WayAppPay.cornerRadius)
             }
         }

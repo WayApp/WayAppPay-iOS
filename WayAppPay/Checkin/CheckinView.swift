@@ -49,7 +49,6 @@ struct CheckinView: View {
             } label: {
                 Text("Charge \(WayAppPay.formatPrice(transactionAmount))")
                     .padding()
-                    .foregroundColor(Color.white)
             }
             Spacer()
             Button(action: {
@@ -57,7 +56,6 @@ struct CheckinView: View {
             }) {
                 Text("Cancel")
                     .padding()
-                    .foregroundColor(Color.white)
             }
             .animation(.easeInOut(duration: 0.3))
         }

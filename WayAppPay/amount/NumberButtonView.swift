@@ -19,10 +19,9 @@ struct NumberButtonView: View {
         }) {
             number == 100 ? Text("00") : Text(number.description)
         }
-        .foregroundColor(.primary)
         .font(.largeTitle)
         .frame(minWidth: 100.0, idealWidth: 150.00, maxWidth: 300.0, minHeight: 40.0, idealHeight: 60.0, maxHeight: 80.0, alignment: .center)
-        .border(Color.primary, width: 0.5)
+        .border(Color.black, width: 0.5)
     }
 }
 
