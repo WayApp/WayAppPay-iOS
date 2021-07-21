@@ -37,6 +37,7 @@
 		B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */; };
 		B12F17FB23EBD1530012890E /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12F17FA23EBD1530012890E /* TransactionRowView.swift */; };
 		B13B689026A5DC9700271515 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B688F26A5DC9700271515 /* CheckinView.swift */; };
+		B13B689226A6E7C300271515 /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B689126A6E7C300271515 /* RewardsView.swift */; };
 		B144F2CC26833220001C3C10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */; };
 		B14BA8AD250F77870095C654 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */; };
 		B15800F42507CA380022A687 /* CardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F32507CA380022A687 /* CardDetailView.swift */; };
@@ -115,6 +116,7 @@
 		B12DE98923AA847B00C02657 /* OperationalEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationalEnvironment.swift; sourceTree = "<group>"; };
 		B12F17FA23EBD1530012890E /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
 		B13B688F26A5DC9700271515 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
+		B13B689126A6E7C300271515 /* RewardsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewardsView.swift; sourceTree = "<group>"; };
 		B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		B15800F32507CA380022A687 /* CardDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = WayAppPay/product/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
@@ -303,6 +305,7 @@
 			children = (
 				B1609566263E876000B14A43 /* Campaign.swift */,
 				B1E96932268379B200B6B41E /* CampaignsView.swift */,
+				B13B689126A6E7C300271515 /* RewardsView.swift */,
 				B1E9693426837F2400B6B41E /* CampaignNewView.swift */,
 				B17C97C5268E2762007C652C /* Point.swift */,
 				B17C97C7268E28B9007C652C /* Stamp.swift */,
@@ -550,6 +553,7 @@
 				B12DE96923AA6FAE00C02657 /* HTTPNetworkAccess.swift in Sources */,
 				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
+				B13B689226A6E7C300271515 /* RewardsView.swift in Sources */,
 				B10F838825DBCA8000F4B528 /* WayPayApp.swift in Sources */,
 				B13B689026A5DC9700271515 /* CheckinView.swift in Sources */,
 				B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */,

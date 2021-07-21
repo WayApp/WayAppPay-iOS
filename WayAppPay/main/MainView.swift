@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var session: WayAppPay.Session
-    @State private var selection: MainView.Tab = .amount
+    @State private var selection: MainView.Tab = .settings
 
     private var badgePosition: CGFloat = 1
     private var tabsCount: CGFloat = CGFloat(Tab.allCases.count)
@@ -25,13 +25,12 @@ struct MainView: View {
     }
     
     func merchantTabView() -> AnyView {
-        let displayMerchantOption = session.doesUserHasMerchantAccount
         return AnyView(
             GeometryReader { geometry in
                 ZStack(alignment: .bottomLeading) {
                     // TabView
                     TabView(selection: $selection) {
-                        if !displayMerchantOption {
+                        if !session.doesAccountHasMerchants {
                             CardsView()
                                 .tabItem {
                                     Label("Card", systemImage: "creditcard")
@@ -39,7 +38,7 @@ struct MainView: View {
                             }
                             .tag(Tab.cards)
                         }
-                        if displayMerchantOption {
+                        if session.doesAccountHasMerchants {
                             CampaignsView()
                                 .tabItem {
                                     Label("Campaign", systemImage: "megaphone")

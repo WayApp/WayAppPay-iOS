@@ -15,6 +15,9 @@ extension WayAppPay {
     static var session = Session()
     
     final class Session: ObservableObject {
+        @Published var showAuthenticationView: Bool = true
+        var doesAccountHasMerchants: Bool = false
+
         @Published var banks = Container<AfterBanks.SupportedBank>()
         @Published var account: Account? {
             didSet {
@@ -22,8 +25,13 @@ extension WayAppPay {
                     DispatchQueue.main.async {
                         self.showAuthenticationView = false
                     }
-                    doesUserHasMerchantAccount = false
-                    Merchant.getMerchantsForAccount(account.accountUUID)
+                    Merchant.getMerchantsForAccount(account.accountUUID) { merchants, error in
+                        if let merchants = merchants {
+                            DispatchQueue.main.async {
+                                session.merchants.setTo(merchants)
+                            }
+                        }
+                    }
                     //Card.getCards(for: account.accountUUID)
                     //Issuer.get()
 //                    AfterBanks.getBanks()                    
@@ -35,14 +43,14 @@ extension WayAppPay {
         @Published var merchants = Container<Merchant>() {
             didSet {
                 DispatchQueue.main.async {
-                    self.doesUserHasMerchantAccount = (self.merchants.count > 0)
+                    self.doesAccountHasMerchants = !self.merchants.isEmpty
                     self.seletectedMerchant = UserDefaults.standard.integer(forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
                 }
             }
         }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                if !merchants.isEmpty && doesUserHasMerchantAccount {
+                if !merchants.isEmpty && doesAccountHasMerchants {
                     Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
                         if let products = products {
                             DispatchQueue.main.async {
@@ -90,12 +98,9 @@ extension WayAppPay {
         @Published var points = Container<Point>()
         @Published var stamps = Container<Stamp>()
         @Published var campaigns = Container<Campaign>()
-        @Published var showAuthenticationView: Bool = true
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
-        var doesUserHasMerchantAccount: Bool = false
-
         private var networkMonitor = NWPathMonitor()
         var isNetworkAvailable = false
         
@@ -163,7 +168,7 @@ extension WayAppPay {
         
         private func reset() {
             showAuthenticationView = true
-            doesUserHasMerchantAccount = false
+            doesAccountHasMerchants = false
             account = nil
             seletectedMerchant = 0
             merchants.empty()

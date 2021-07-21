@@ -35,19 +35,23 @@ struct AuthenticationView: View {
                     .scaledToFit()
                     .padding()
                 TextField("Email", text: self.$email)
+                    .font(.title3)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
                     .background(Color.white)
-                    .cornerRadius(WayAppPay.cornerRadius)
                     .padding(.horizontal)
-                SecureField("PIN", text: self.$pin)
-                    .textContentType(.password)
-                    .keyboardType(.numberPad)
-                    .background(Color.white)
-                    .cornerRadius(WayAppPay.cornerRadius)
-                    .padding()
+                HStack {
+                    SecureField("PIN", text: self.$pin)
+                        .font(.title3)
+                        .frame(width: 100)
+                        .textContentType(.password)
+                        .keyboardType(.numberPad)
+                        .background(Color.white)
+                        .padding()
+                    Spacer()
+                }
                 Button(action: {
                     self.forgotPIN = true
                 }) {

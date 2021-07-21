@@ -40,17 +40,44 @@ extension WayAppPay {
             self.format = format
             self.amountToGetIt = 0
         }
+        
+        var displayAs: String {
+            switch format {
+            case .CASHBACK:
+                return "\(format.title): \(WayAppPay.formatPrice(value))"
+            case .COUPON:
+                return "\(format.title): \(value ?? 0)%"
+            case .MANUAL:
+                return "\(format.title)"
+            }
+        }
+        
+        func applyToAmount(_ amount: Int) -> Int {
+            switch format {
+            case .CASHBACK:
+                return max(amount - (value ?? 0),0)
+            case .COUPON:
+                return Int(Double(amount)*((value != nil) ? (1.0 - Double(value!)/100.0) : 1))
+            case .MANUAL:
+                return amount
+            }
+        }
     }
 
-    struct Reward: Hashable, Codable {
-        var accountUUID: String?
-        var campaignID: String?
+    struct Reward: Hashable, Codable, Identifiable {
+        var accountUUID: String
+        var campaignID: String
         var format: Campaign.Format?
         var sponsorUUID: String?
         var creationDate: Date?
         var lastUpdateDate: Date?
         var lastTransactionUUID: String?
         var balance: Int?
+        
+        var id: String {
+            return campaignID
+        }
+
     }
     
     class Campaign: Hashable, Codable, Identifiable, Equatable, ContainerProtocol {
@@ -246,8 +273,7 @@ extension WayAppPay {
         static func prizesForRewards(_ rewards: [Reward]) -> [Prize] {
             var prizes = [Prize]()
             for reward in rewards {
-                if let campaignID = reward.campaignID,
-                   let format = session.campaigns[campaignID]?.format {
+                if let format = session.campaigns[reward.campaignID]?.format {
                     switch format {
                     case .POINT:
                         prizes.append(contentsOf: Point.prizesForReward(reward))

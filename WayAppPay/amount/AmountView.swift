@@ -10,14 +10,15 @@ import SwiftUI
 
 struct AmountView: View {
     @EnvironmentObject var session: WayAppPay.Session
+    @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     @State private var showScanner = false
     @State private var showAlert = false
     @State private var scannedCode: String? = nil
     @State private var cartDescription: String = ""
     @State private var wasPaymentSuccessful: Bool = false
-    @State private var amount: Int = 0
-    @State private var total: Int = 0
+    @State private var amount: Double = 0
+    @State private var total: Double = 0
     
     @State private var showingActionSheet = false
     @State private var backgroundColor = Color.white
@@ -28,7 +29,7 @@ struct AmountView: View {
     
     func numberEntered(number: Int) {
         if number < 10 {
-            amount = (amount*10 + number)
+            amount = (amount*10 + Double(number))
         } else {
             amount *= 100
         }
@@ -40,7 +41,9 @@ struct AmountView: View {
     
     private func resetAmountAndDescription() {
         amount = 0
+        total = 0
         cartDescription = ""
+        self.presentationMode.wrappedValue.dismiss()
     }
     
     func processPayment() {
@@ -50,7 +53,7 @@ struct AmountView: View {
             WayAppUtils.Log.message("missing session.merchantUUID or session.accountUUID")
             return
         }
-        let payment = WayAppPay.PaymentTransaction(amount: amount / 100, token: code)
+        let payment = WayAppPay.PaymentTransaction(amount: Int((total + amount) * 100) / 100, token: code)
         WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
             if case .success(let response?) = response {
@@ -177,7 +180,7 @@ struct AmountView: View {
                         }
                         .buttonStyle(WayAppPay.ButtonModifier())
                         .padding()
-                        NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
+                        NavigationLink(destination: PaymentOptionsView(topupAmount: (total + amount))) {
                             Label(NSLocalizedString("Other options", comment: "Other options"), systemImage: "ellipsis.circle")
                         }
                         .padding()
@@ -186,11 +189,11 @@ struct AmountView: View {
                             Spacer()
                             Button {
                                 if let merchantUUID = session.merchantUUID {
-                                    WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: String(self.amount / 100)), isAmount: true)
+                                    WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID, name: "Amount", description: self.cartDescription, price: String((total + amount) / 100)), isAmount: true)
                                     self.resetAmountAndDescription()
                                 }
                             } label: {
-                                Label("Add to cart \(WayAppPay.formatPrice(Int(self.total)))", systemImage: "cart.badge.plus")
+                                Label("Add to cart \(WayAppPay.formatPrice(Int((total + amount)*100 / 100)))", systemImage: "cart.badge.plus")
                                     .accessibility(label: Text("Add to cart"))
                                     .padding()
                                     .foregroundColor(Color.white)
@@ -200,7 +203,7 @@ struct AmountView: View {
                         }
                         .buttonStyle(WayAppPay.ButtonModifier())
                         .padding()
-                        NavigationLink(destination: PaymentOptionsView(topupAmount: amount)) {
+                        NavigationLink(destination: PaymentOptionsView(topupAmount: total + amount)) {
                             Label(NSLocalizedString("Other options", comment: "Other options"), systemImage: "ellipsis.circle")
                         }
                         .padding()

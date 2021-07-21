@@ -26,7 +26,7 @@ struct PaymentOptionsView: View {
     @State private var isAPICallOngoing = false
     @State private var selectedCampaignID: String = String()
     
-    var topupAmount: Int = 0
+    var topupAmount: Double = 0
     let rowHeight: CGFloat = 60.0
     
     var body: some View {
@@ -273,7 +273,7 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing scannedCode or campaign")
             return
         }
-        let reward = WayAppPay.PaymentTransaction(amount: topupAmount, token: code, type: .REWARD)
+        let reward = WayAppPay.PaymentTransaction(amount: Int(topupAmount*100 / 100), token: code, type: .REWARD)
         isAPICallOngoing = true
         WayAppPay.Campaign.reward(transaction: reward, campaign: campaign) { transactions, error in
             self.scannedCode = nil

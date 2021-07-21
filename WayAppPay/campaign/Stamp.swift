@@ -75,9 +75,8 @@ extension WayAppPay {
         static func prizesForReward(_ reward: Reward) -> [Prize] {
             WayAppUtils.Log.message("CampaignID : \(reward.campaignID), sponsorUUID: \(reward.sponsorUUID)")
             var wonPrizes = [Prize]()
-            if let campaignID = reward.campaignID,
-               let balance = reward.balance,
-               let prize = session.stamps[campaignID]?.prize {
+            if let balance = reward.balance,
+               let prize = session.stamps[reward.campaignID]?.prize {
                 WayAppUtils.Log.message("Balance: \(balance), prize.amountToGetIt: \(prize.amountToGetIt)")
                 if prize.amountToGetIt <= balance {
                     wonPrizes.append(prize)

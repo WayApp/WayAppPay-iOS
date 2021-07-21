@@ -78,6 +78,7 @@ extension WayAppPay {
         var type: TransactionType?
         var result: TransactionResult?
         var purchaseDetail: [CartItem]?
+        var prizes: [Prize]?
         var readingType: ReadingType?
         var paymentMethod: PaymentMethod?
         var amount: Int?
@@ -99,7 +100,7 @@ extension WayAppPay {
         }
                 
         // Payment with Wallet card
-        init(amount: Int, purchaseDetail: [CartItem]? = nil, token: String = String(), type: TransactionType = .SALE) {
+        init(amount: Int, purchaseDetail: [CartItem]? = nil, prizes: [Prize]? = nil, token: String = String(), type: TransactionType = .SALE) {
             self.accountUUID = session.accountUUID
             self.merchantUUID = session.merchantUUID
             self.amount = amount
@@ -110,6 +111,7 @@ extension WayAppPay {
             self.readingType = .STANDARD
             self.accountUUID = session.accountUUID
             self.purchaseDetail = purchaseDetail
+            self.prizes = prizes
         }
         
         var isPOSTPAID: Bool {

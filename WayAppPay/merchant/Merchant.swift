@@ -185,20 +185,15 @@ extension WayAppPay {
             }
         }
 
-        static func getMerchantsForAccount(_ accountUUID: String) {
-            WayAppUtils.Log.message("Entering")
+        static func getMerchantsForAccount(_ accountUUID: String, completion: @escaping ([Merchant]?, Error?) -> Void) {
             WayAppPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
-                if case .success(let response?) = response {
-                    if let merchants = response.result {
-                        WayAppUtils.Log.message("Number of merchants: \(merchants.count)")
-                        DispatchQueue.main.async {
-                            session.merchants.setTo(merchants)
-                        }
-                    } else {
-                        WayAppPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
