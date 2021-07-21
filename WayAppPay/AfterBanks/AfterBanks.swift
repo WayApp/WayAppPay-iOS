@@ -50,15 +50,15 @@ final class AfterBanks: ObservableObject {
     
     static func getBanks(forCountryCode: String = "ES") {
         WayAppUtils.Log.message("******** STARTING getBanks")
-        WayAppPay.API.getBanks(forCountryCode).fetch(type: [[SupportedBank]].self) { response in
+        WayPay.API.getBanks(forCountryCode).fetch(type: [[SupportedBank]].self) { response in
             if case .success(let response?) = response {
                 if let banks = response.result?.first {
                     WayAppUtils.Log.message("******** BANKS=\(banks)")
                     DispatchQueue.main.async {
-                        WayAppPay.session.banks.setTo(banks)
+                        WayPay.session.banks.setTo(banks)
                     }
                 } else {
-                    WayAppPay.API.reportError(response)
+                    WayPay.API.reportError(response)
                 }
             } else if case .failure(let error) = response {
                 WayAppUtils.Log.message(error.localizedDescription)
@@ -82,13 +82,13 @@ final class AfterBanks: ObservableObject {
     }
 */
     static func getConsent(id: String) {
-        WayAppPay.API.getConsentDetail(id).fetch(type: [Consent].self) { response in
+        WayPay.API.getConsentDetail(id).fetch(type: [Consent].self) { response in
             if case .success(let response?) = response {
                 if let consents = response.result,
                     let consent = consents.first {
                     WayAppUtils.Log.message("******** CONSENT=\(consent)")
                 } else {
-                    WayAppPay.API.reportError(response)
+                    WayPay.API.reportError(response)
                 }
             } else if case .failure(let error) = response {
                 WayAppUtils.Log.message(error.localizedDescription)
@@ -101,7 +101,7 @@ final class AfterBanks: ObservableObject {
         WayAppUtils.Log.message("********************** GET CONSENT")
         let consentRequest = ConsentRequest(service: actualService, validUntil: validUntil, urlRedirect: "WAP://pay.wayapp.com", pan: pan)
         
-        WayAppPay.API.getConsent(accountUUID, consentRequest).fetch(type: [ConsentResponse].self) { response in
+        WayPay.API.getConsent(accountUUID, consentRequest).fetch(type: [ConsentResponse].self) { response in
             if case .success(let response?) = response {
                 if let consents = response.result,
                     let consent = consents.first {
@@ -109,8 +109,8 @@ final class AfterBanks: ObservableObject {
                     completion(nil, consent)
                 } else {
                     WayAppUtils.Log.message("********************** GET CONSENT FAILED")
-                    completion(WayAppPay.API.errorFromResponse(response), nil)
-                    WayAppPay.API.reportError(response)
+                    completion(WayPay.API.errorFromResponse(response), nil)
+                    WayPay.API.reportError(response)
                 }
             } else if case .failure(let error) = response {
                 completion(error, nil)

@@ -9,17 +9,17 @@
 import SwiftUI
 
 struct CardDetailView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @EnvironmentObject private var session: WayPay.Session
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
     @SwiftUI.Environment(\.presentationMode) var presentationMode
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
     @State private var action: Int? = 10
     @State private var validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
     @State private var consent: AfterBanks.Consent?
-    @State var authenticationViewModel = WayAppPay.AuthenticationViewModel()
+    @State var authenticationViewModel = WayPay.AuthenticationViewModel()
     
-    var card: WayAppPay.Card?
+    var card: WayPay.Card?
     
     @State var newAlias: String = ""
     @State var newPrice: String = ""
@@ -46,11 +46,11 @@ struct CardDetailView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: WayAppPay.UI.verticalSeparation) {
-            VStack(alignment: .trailing, spacing: WayAppPay.UI.verticalSeparation) {
+        VStack(alignment: .leading, spacing: WayPay.UI.verticalSeparation) {
+            VStack(alignment: .trailing, spacing: WayPay.UI.verticalSeparation) {
                 HStack(alignment: .center, spacing: 12) {
                     Text("Alias")
-                    TextField("\(card?.alias ?? WayAppPay.Card.defaultName)", text: $newAlias)
+                    TextField("\(card?.alias ?? WayPay.Card.defaultName)", text: $newAlias)
                         .textContentType(.none)
                         .keyboardType(.default)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -78,7 +78,7 @@ struct CardDetailView: View {
             .padding(.bottom, keyboardObserver.keyboardHeight)
             .animation(.easeInOut(duration: 0.3))
             .onAppear(perform: {
-                WayAppUtils.Log.message("********************** CardDetailView onAppear: WayAppPay.session.afterBanks.banks count=\(WayAppPay.session.banks.count)")
+                WayAppUtils.Log.message("********************** CardDetailView onAppear: WayAppPay.session.afterBanks.banks count=\(WayPay.session.banks.count)")
             })
             Spacer()
         }
@@ -147,6 +147,6 @@ struct CardDetailView: View {
 
 struct CardDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100"))
+        ProductDetailView(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100"))
     }
 }

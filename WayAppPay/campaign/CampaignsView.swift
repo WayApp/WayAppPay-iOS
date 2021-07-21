@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CampaignsView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
 
     var body: some View {
         NavigationView {
@@ -32,7 +32,7 @@ struct CampaignsView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        WayAppPay.Campaign.delete(at: offsets)
+        WayPay.Campaign.delete(at: offsets)
     }
 
 }
@@ -40,6 +40,6 @@ struct CampaignsView: View {
 struct CampaignsView_Previews: PreviewProvider {
     static var previews: some View {
         CampaignsView()
-            .environmentObject(WayAppPay.session)
+            .environmentObject(WayPay.session)
     }
 }

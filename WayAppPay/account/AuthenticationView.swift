@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
-    @State private var email: String = UserDefaults.standard.string(forKey: WayAppPay.DefaultKey.EMAIL.rawValue) ?? "" {
+    @EnvironmentObject private var session: WayPay.Session
+    @State private var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? "" {
         didSet {
-            UserDefaults.standard.set(email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
+            UserDefaults.standard.set(email, forKey: WayPay.DefaultKey.EMAIL.rawValue)
             UserDefaults.standard.synchronize()
         }
     }
@@ -22,7 +22,7 @@ struct AuthenticationView: View {
 
         
     private var shouldSigninButtonBeDisabled: Bool {
-        return (!WayAppUtils.validateEmail(email) || pin.count != WayAppPay.Account.PINLength)
+        return (!WayAppUtils.validateEmail(email) || pin.count != WayPay.Account.PINLength)
     }
     
     var body: some View {
@@ -63,7 +63,7 @@ struct AuthenticationView: View {
                 }
                 .padding()
                 Button(action: {
-                    WayAppPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
+                    WayPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
                         if let accounts = accounts,
                            let account = accounts.first {
                             DispatchQueue.main.async {
@@ -82,7 +82,7 @@ struct AuthenticationView: View {
                         .foregroundColor(Color.white)
                 }
                 .disabled(shouldSigninButtonBeDisabled)
-                .buttonStyle(WayAppPay.ButtonModifier())
+                .buttonStyle(WayPay.ButtonModifier())
                 .animation(.easeInOut(duration: 0.3))
                 .alert(isPresented: $loginError) {
                     Alert(title: Text("Login error"),

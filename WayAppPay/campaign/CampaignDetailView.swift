@@ -13,7 +13,7 @@ struct CampaignDetailView: View {
     enum DisplayOption {
         case transactions, customers
     }
-    var campaign: WayAppPay.Campaign
+    var campaign: WayPay.Campaign
     @State private var displayOption: DisplayOption = .transactions
 
     
@@ -23,7 +23,7 @@ struct CampaignDetailView: View {
                 Label(NSLocalizedString("Expires on", comment: "CampaignDetailView: campaign expires on") + ": ", systemImage: "calendar")
                 .font(.callout)
                 Text(campaign.expirationDate != nil ?
-                        ("\(WayAppPay.displayDateFormatter.string(from: campaign.expirationDate!))") :
+                        ("\(WayPay.displayDateFormatter.string(from: campaign.expirationDate!))") :
                         NSLocalizedString("none", comment: "CampaignDetailView: campaign expires on"))
                 Spacer()
                 Button {
@@ -68,6 +68,6 @@ struct CampaignDetailView: View {
 
 struct CampaignDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        CampaignDetailView(campaign: WayAppPay.Campaign())
+        CampaignDetailView(campaign: WayPay.Campaign())
     }
 }

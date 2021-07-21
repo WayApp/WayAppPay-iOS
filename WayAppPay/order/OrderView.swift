@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct Badge: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -30,7 +30,7 @@ struct Badge: View {
 
 
 struct OrderView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
     
     var body: some View {
         NavigationView {
@@ -58,7 +58,7 @@ struct OrderView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        WayAppPay.Product.delete(at: offsets)
+        WayPay.Product.delete(at: offsets)
     }
 
 }
@@ -70,6 +70,6 @@ struct OrderView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.session)
+        .environmentObject(WayPay.session)
     }
 }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
     @State private var selection: MainView.Tab = .settings
 
     private var badgePosition: CGFloat = 1
@@ -81,6 +81,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environmentObject(WayAppPay.session)
+        MainView().environmentObject(WayPay.session)
     }
 }

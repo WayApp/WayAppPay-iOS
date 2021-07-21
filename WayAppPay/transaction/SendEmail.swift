@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct SendEmail: Codable {
         var merchantUUID: String?
@@ -19,7 +19,7 @@ extension WayAppPay {
         var transaction: PaymentTransaction?
         
         init(merchantUUID: String, transactionUUID: String, sendTo: String, transaction: PaymentTransaction, body: String = "valor por defecto", subject: String = "subject por defecto") {
-            self.merchantUUID = WayAppPay.session.merchantUUID
+            self.merchantUUID = WayPay.session.merchantUUID
             self.transactionUUID = transactionUUID
             self.sendTo = sendTo
             self.transaction = transaction
@@ -39,7 +39,7 @@ extension WayAppPay {
                 WayAppUtils.Log.message("Missing merchantUUID or transactionUUID")
                 return
             }
-            WayAppPay.API.sendEmail(merchantUUID, transactionUUID, sendEmail).fetch(type: [SendEmail].self) { response in
+            WayPay.API.sendEmail(merchantUUID, transactionUUID, sendEmail).fetch(type: [SendEmail].self) { response in
                 if case .success(let response?) = response {
                     WayAppUtils.Log.message("Email sent !!!!=\(response)")
                 } else if case .failure(let error) = response {

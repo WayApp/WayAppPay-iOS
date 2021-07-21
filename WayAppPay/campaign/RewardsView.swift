@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct RewardsView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
 
-    var rewards: [WayAppPay.Reward]
+    var rewards: [WayPay.Reward]
 
     var body: some View {
         List {

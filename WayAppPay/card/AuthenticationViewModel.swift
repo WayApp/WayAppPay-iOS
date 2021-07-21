@@ -8,7 +8,7 @@
 
 import AuthenticationServices
 
-extension WayAppPay {
+extension WayPay {
     class AuthenticationViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
 
         func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
@@ -36,15 +36,15 @@ extension WayAppPay {
                 let queryItems = URLComponents(string: callbackURL.absoluteString)?.queryItems
                 WayAppUtils.Log.message("queryItems=\(queryItems?.description ?? "NO QUERY ITEMS")")
                 //  let token = queryItems?.filter({ $0.name == "token" }).first?.value
-                WayAppPay.API.getConsentDetail(consent.consentId).fetch(type: [AfterBanks.Consent].self) { response in
+                WayPay.API.getConsentDetail(consent.consentId).fetch(type: [AfterBanks.Consent].self) { response in
                     if case .success(let response?) = response {
                         if let consents = response.result,
                             let consent = consents.first {
                             WayAppUtils.Log.message("******** CONSENT=\(consent)")
                             completion(nil, consent)
                         } else {
-                            completion(WayAppPay.API.errorFromResponse(response), nil)
-                            WayAppPay.API.reportError(response)
+                            completion(WayPay.API.errorFromResponse(response), nil)
+                            WayPay.API.reportError(response)
                         }
                     } else if case .failure(let error) = response {
                         completion(error, nil)

@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension WayAppPay {
+extension WayPay {
     /*
      * Process to add any API method:
      * 1) Add the case to the API enum
@@ -20,11 +20,11 @@ extension WayAppPay {
     enum API: HTTPCallEndpoint {
         
         static var jsonEncoder: JSONEncoder {
-            return WayAppPay.jsonEncoder
+            return WayPay.jsonEncoder
         }
         
         static var jsonDecoder: JSONDecoder {
-            return WayAppPay.jsonDecoder
+            return WayPay.jsonDecoder
         }
         
         typealias Email = String
@@ -192,7 +192,7 @@ extension WayAppPay {
             case .redeemCampaigns( _, _): return "/campaigns/redeems/"
             // TRASH
             case .account: return "/accounts/"
-            case .editAccount: return "/accounts/\(WayAppPay.session.accountUUID!)/"
+            case .editAccount: return "/accounts/\(WayPay.session.accountUUID!)/"
             }
         }
         

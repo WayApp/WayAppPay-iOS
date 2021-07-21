@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
 
 //    static func saveBiometricsEmail(_ email: String) {
 //        UserDefaults.standard.set(email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)

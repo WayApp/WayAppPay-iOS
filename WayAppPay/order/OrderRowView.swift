@@ -25,7 +25,7 @@ struct OrderRowView: View {
         #endif
     }
 
-    var product: WayAppPay.Product
+    var product: WayPay.Product
 
     var body: some View {
         HStack {
@@ -35,9 +35,9 @@ struct OrderRowView: View {
                     .clipShape(RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous))
                     .accessibility(hidden: true)
                 VStack(alignment: .leading, spacing: 1.0) {
-                    Text(product.name ?? WayAppPay.Product.defaultName)
+                    Text(product.name ?? WayPay.Product.defaultName)
                         .font(Font.title3)
-                    Text("\(WayAppPay.formatPrice(product.price))")
+                    Text("\(WayPay.formatPrice(product.price))")
                         .font(Font.callout)
                 }
                 .padding(.vertical, metrics.textPadding)
@@ -47,13 +47,13 @@ struct OrderRowView: View {
             .accessibilityElement(children: .combine)
         }
         .onTapGesture {
-            WayAppPay.session.shoppingCart.addProduct(self.product)
+            WayPay.session.shoppingCart.addProduct(self.product)
         }
     }
 }
 
 struct OrderRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductRowView(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100"))
+        ProductRowView(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100"))
     }
 }

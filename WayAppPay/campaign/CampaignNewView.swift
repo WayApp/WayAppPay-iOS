@@ -10,14 +10,14 @@ import SwiftUI
 
 struct CampaignNewView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject private var session: WayAppPay.Session
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @EnvironmentObject private var session: WayPay.Session
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
 
-    @State private var format: WayAppPay.Campaign.Format = .STAMP    
-    @State private var prizeFormat: WayAppPay.Prize.Format = .MANUAL
+    @State private var format: WayPay.Campaign.Format = .STAMP    
+    @State private var prizeFormat: WayPay.Prize.Format = .MANUAL
     @State private var prizeAmount: String = "0"
     @State private var prizeName: String = "1st prize"
-    @State private var prize: WayAppPay.Prize = WayAppPay.Prize(campaignID: "campaignID", name: "name", message: "message")
+    @State private var prize: WayPay.Prize = WayPay.Prize(campaignID: "campaignID", name: "name", message: "message")
     @State var newName: String = ""
     @State var newDescription: String = ""
     @State var minimumPurchaseAmountRequired: Bool = false
@@ -28,7 +28,7 @@ struct CampaignNewView: View {
     @State var campaignCreateError: Bool = false
     @State private var threshold: String = "0"
 
-    let campaign: WayAppPay.Campaign?
+    let campaign: WayPay.Campaign?
 
     private var shouldSaveButtonBeDisabled: Bool {
         return (newName.isEmpty || threshold == "0")
@@ -42,9 +42,9 @@ struct CampaignNewView: View {
                             .font(.callout)) {
                     Picker(selection: $format, label: Text("Campaign format?")) {
                         Label(NSLocalizedString("Stamp", comment: "Stamp campaign format"), systemImage: "rectangle.and.pencil.and.ellipsis")
-                            .tag(WayAppPay.Campaign.Format.STAMP)
+                            .tag(WayPay.Campaign.Format.STAMP)
                         Label(NSLocalizedString("Point", comment: "Point cam,paign format"), systemImage: "number")
-                            .tag(WayAppPay.Campaign.Format.POINT)
+                            .tag(WayPay.Campaign.Format.POINT)
                      }
                      .pickerStyle(SegmentedPickerStyle())
                     Text("This is some longer text that is limited to three lines maximum, so anything more than that will cause the text to clip.")
@@ -129,7 +129,7 @@ struct CampaignNewView: View {
                         VStack(alignment: .leading) {
                             HStack {
                                 Picker(selection: $prize.format, label: Text("Prize format" + " -> ")) {
-                                    ForEach(WayAppPay.Prize.Format.allCases, id: \.self) { format in
+                                    ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
                                         Text(format.title)
                                     }
                                 }
@@ -169,7 +169,7 @@ struct CampaignNewView: View {
                         if (!expires) {
                             expirationDate = Date.distantFuture
                         }
-                        let campaign = WayAppPay.Campaign(name: newName,
+                        let campaign = WayPay.Campaign(name: newName,
                                                           description: newDescription,
                                                           sponsorUUID: session.merchantUUID!,
                                                           format: format,
@@ -179,11 +179,11 @@ struct CampaignNewView: View {
                         switch(format) {
                         case .POINT:
                             prize.amountToGetIt = Int((prizeAmount as NSString).doubleValue / (threshold as NSString).doubleValue)
-                            let campaign: WayAppPay.Point =
-                                WayAppPay.Point(campaign: campaign,
+                            let campaign: WayPay.Point =
+                                WayPay.Point(campaign: campaign,
                                                    paymentAmountConvertibleToRewardUnit: 100,
                                                    prizes: [prize])
-                            WayAppPay.Point.create(campaign) { campaigns, error in
+                            WayPay.Point.create(campaign) { campaigns, error in
                                 if let campaigns = campaigns {
                                     for campaign in campaigns {
                                         WayAppUtils.Log.message("Campaign: \(campaign)")
@@ -202,13 +202,13 @@ struct CampaignNewView: View {
                             }
                         case .STAMP:
                             prize.amountToGetIt = Int(amountToPrize)
-                            let campaign: WayAppPay.Stamp =
-                                WayAppPay.Stamp(campaign: campaign,
+                            let campaign: WayPay.Stamp =
+                                WayPay.Stamp(campaign: campaign,
                                                 minimumPaymentAmountToGetStamp: minimumPurchaseAmountRequired
                                                 ? Int(threshold) ?? Int.max:
                                                     Int.max,
                                                 prize: prize)
-                            WayAppPay.Stamp.create(campaign) { campaigns, error in
+                            WayPay.Stamp.create(campaign) { campaigns, error in
                                 if let campaigns = campaigns,
                                    let campaign = campaigns.first {
                                     WayAppUtils.Log.message("Campaign: name: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
@@ -232,7 +232,7 @@ struct CampaignNewView: View {
                             .foregroundColor(Color.white)
                     }
                     .disabled(shouldSaveButtonBeDisabled)
-                    .buttonStyle(WayAppPay.ButtonModifier())
+                    .buttonStyle(WayPay.ButtonModifier())
                     .alert(isPresented: $campaignCreateError) {
                         Alert(title: Text("Error creating the campaign"),
                               message: Text("Try again. If problem persists contact support@wayapp.com"),
@@ -249,6 +249,6 @@ struct CampaignNewView: View {
 
 struct CampaignView_Previews: PreviewProvider {
     static var previews: some View {
-        CampaignNewView(campaign: WayAppPay.Campaign(name: "Sample name", sponsorUUID: "sponsorUUID", format: .POINT))
+        CampaignNewView(campaign: WayPay.Campaign(name: "Sample name", sponsorUUID: "sponsorUUID", format: .POINT))
     }
 }

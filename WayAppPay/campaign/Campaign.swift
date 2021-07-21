@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension WayAppPay {
+extension WayPay {
     
     struct Prize: Hashable, Codable {
         enum Format: String, Codable, CaseIterable {
@@ -44,7 +44,7 @@ extension WayAppPay {
         var displayAs: String {
             switch format {
             case .CASHBACK:
-                return "\(format.title): \(WayAppPay.formatPrice(value))"
+                return "\(format.title): \(WayPay.formatPrice(value))"
             case .COUPON:
                 return "\(format.title): \(value ?? 0)%"
             case .MANUAL:
@@ -159,93 +159,93 @@ extension WayAppPay {
         }
         
         static func get<T: Campaign>(merchantUUID: String, issuerUUID: String?, campaignType: T.Type, format: Format, completion: @escaping ([T]?, Error?) -> Void) {
-            WayAppPay.API.getCampaigns(merchantUUID, issuerUUID, format).fetch(type: [T].self) { response in
+            WayPay.API.getCampaigns(merchantUUID, issuerUUID, format).fetch(type: [T].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
                     case .failure(let error):
                         completion(nil, error)
                     default:
-                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
             }
         }
 
         static func get(campaignID: String, sponsorUUID: String, format: Format, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayAppPay.API.getCampaign(campaignID, sponsorUUID, format).fetch(type: [Campaign].self) { response in
+            WayPay.API.getCampaign(campaignID, sponsorUUID, format).fetch(type: [Campaign].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
                     case .failure(let error):
                         completion(nil, error)
                     default:
-                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
             }
         }
 
         static func reward(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayAppPay.API.rewardCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
+            WayPay.API.rewardCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
         
         static func reward(transaction: PaymentTransaction, campaign: Campaign, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
-            WayAppPay.API.rewardCampaign(transaction, campaign).fetch(type: [PaymentTransaction].self) { response in
+            WayPay.API.rewardCampaign(transaction, campaign).fetch(type: [PaymentTransaction].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
 
         static func redeem(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayAppPay.API.redeemCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
+            WayPay.API.redeemCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
         func toggleState(completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayAppPay.API.toggleCampaignState(self.id, self.sponsorUUID, self.format).fetch(type: [Campaign].self) { response in
+            WayPay.API.toggleCampaignState(self.id, self.sponsorUUID, self.format).fetch(type: [Campaign].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
         
         static func delete(id: String, sponsorUUID: String, format: Format, completion: @escaping ([String]?, Error?) -> Void) {
-            WayAppPay.API.deleteCampaign(id, sponsorUUID, format).fetch(type: [String].self) { response in
+            WayPay.API.deleteCampaign(id, sponsorUUID, format).fetch(type: [String].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
@@ -253,7 +253,7 @@ extension WayAppPay {
         static func delete(at offsets: IndexSet) {
             WayAppUtils.Log.message("Entering")
             for offset in offsets {
-                WayAppPay.Campaign.delete(id: session.campaigns[offset].id, sponsorUUID: session.campaigns[offset].sponsorUUID, format: session.campaigns[offset].format) { strings, error in
+                WayPay.Campaign.delete(id: session.campaigns[offset].id, sponsorUUID: session.campaigns[offset].sponsorUUID, format: session.campaigns[offset].format) { strings, error in
                     if let error = error {
                         WayAppUtils.Log.message("Campaign: \(session.campaigns[offset].name) could not be . Error: \(error.localizedDescription)")
                     } else {

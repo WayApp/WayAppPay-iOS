@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct NewCardView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @EnvironmentObject private var session: WayPay.Session
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
     @SwiftUI.Environment(\.presentationMode) var presentationMode
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
     @State private var action: Int? = 10
     @State private var selectedCardType = 0
     @State private var consent: AfterBanks.Consent?
-    @State var authenticationViewModel = WayAppPay.AuthenticationViewModel()
+    @State var authenticationViewModel = WayPay.AuthenticationViewModel()
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -49,7 +49,7 @@ struct NewCardView: View {
         if session.accountUUID == nil {
             return true
         }
-        switch WayAppPay.Card.PaymentFormat.allCases[selectedCardType] {
+        switch WayPay.Card.PaymentFormat.allCases[selectedCardType] {
         case .PREPAID: return alias.isEmpty
         case .POSTPAID: return alias.isEmpty
         default: return true
@@ -91,7 +91,7 @@ struct NewCardView: View {
                 Text("Grant consent")
                     .foregroundColor(.black)
                     .padding(.vertical)
-                    .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+                    .frame(maxWidth: .infinity, minHeight: WayPay.UI.buttonHeight)
             })
             .disabled(session.banks.isEmpty || (session.accountUUID == nil))
             .background((session.banks.isEmpty || (session.accountUUID == nil)) ? Color.gray : Color.green)
@@ -115,7 +115,7 @@ struct NewCardView: View {
         DispatchQueue.main.async {
             self.isAPICallOngoing = true
         }
-        WayAppPay.Card.create(alias: self.alias, issuerUUID: session.issuers[selectedIssuer].issuerUUID, type: WayAppPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
+        WayPay.Card.create(alias: self.alias, issuerUUID: session.issuers[selectedIssuer].issuerUUID, type: WayPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
             DispatchQueue.main.async {
                 self.isAPICallOngoing = false
             }
@@ -146,20 +146,20 @@ struct NewCardView: View {
                             }
                         }
                         Picker(selection: $selectedCardType, label: Text("Type")) {
-                            ForEach(0..<WayAppPay.Card.PaymentFormat.allCases.count, id: \.self) {
-                                Text(WayAppPay.Card.PaymentFormat.allCases[$0].rawValue)
+                            ForEach(0..<WayPay.Card.PaymentFormat.allCases.count, id: \.self) {
+                                Text(WayPay.Card.PaymentFormat.allCases[$0].rawValue)
                             }
                         }.pickerStyle(SegmentedPickerStyle())
                     }
                     if isAPICallOngoing {
-                        WayAppPay.ActivityIndicator(isAnimating: true)
+                        WayPay.ActivityIndicator(isAnimating: true)
                     }
-                    if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
+                    if WayPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
                         Section(header: Text("Prepaid")) {
                             prepaidOptions()
                         }
                     }
-                    if WayAppPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID {
+                    if WayPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID {
                         postpaidOptions()
                     }
                 }
@@ -184,6 +184,6 @@ struct NewCardView: View {
 
 struct NewCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product(merchantUUID: "",  name: "no name", price: "100"))
+        ProductDetailView(product: WayPay.Product(merchantUUID: "",  name: "no name", price: "100"))
     }
 }

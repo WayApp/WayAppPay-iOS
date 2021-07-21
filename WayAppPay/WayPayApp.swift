@@ -13,7 +13,7 @@ struct WayPayApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
-                .environmentObject(WayAppPay.session)
+                .environmentObject(WayPay.session)
                 .accentColor(Color("MintGreen"))
         }
         .commands {

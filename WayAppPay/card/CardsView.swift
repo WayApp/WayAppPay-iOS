@@ -44,7 +44,7 @@ struct PassViewer: UIViewControllerRepresentable {
 }
 
 struct CardsView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
     
     var body: some View {
         NavigationView {
@@ -66,7 +66,7 @@ struct CardsView: View {
     } // Body
     
     func delete(at offsets: IndexSet) {
-        WayAppPay.Card.delete(at: offsets)
+        WayPay.Card.delete(at: offsets)
     }
 }
 

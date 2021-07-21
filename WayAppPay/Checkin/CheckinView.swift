@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CheckinView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     @State private var showQRScanner = true
@@ -19,7 +19,7 @@ struct CheckinView: View {
     @State private var showTransactionResult = false
     @State private var wasTransactionSuccessful = false
     @State private var wasScanSuccessful: Bool = false
-    @State private var checkin: WayAppPay.Checkin?
+    @State private var checkin: WayPay.Checkin?
     @State private var selectedPrize: Int = -1
 
     private var fullname: String {
@@ -47,7 +47,7 @@ struct CheckinView: View {
             Button {
                 handleQRScanPayment()
             } label: {
-                Text("Charge \(WayAppPay.formatPrice(transactionAmount))")
+                Text("Charge \(WayPay.formatPrice(transactionAmount))")
                     .padding()
             }
             Spacer()
@@ -59,13 +59,13 @@ struct CheckinView: View {
             }
             .animation(.easeInOut(duration: 0.3))
         }
-        .buttonStyle(WayAppPay.ButtonModifier())
+        .buttonStyle(WayPay.ButtonModifier())
     }
     
     var body: some View {
         NavigationView {
             if (showQRScanner) {
-                CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleScan)
+                CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
                     .navigationBarTitle("Scan customer QR", displayMode: .inline)
             } else if isAPICallOngoing {
                 ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
@@ -141,7 +141,7 @@ struct CheckinView: View {
         self.wasTransactionSuccessful = false
         self.selectedPrize = -1
         self.checkin = nil
-        WayAppPay.session.shoppingCart.empty()
+        WayPay.session.shoppingCart.empty()
         self.showQRScanner = true
     }
     
@@ -159,9 +159,9 @@ struct CheckinView: View {
             WayAppUtils.Log.message("Missing scannedCode")
             return
         }
-        let transaction = WayAppPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
+        let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
         isAPICallOngoing = true
-        WayAppPay.Account.checkin(transaction) { checkins, error in
+        WayPay.Account.checkin(transaction) { checkins, error in
             //self.scannedCode = nil
             if let checkins = checkins,
                let checkin = checkins.first {
@@ -186,15 +186,15 @@ struct CheckinView: View {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
-        var prizes = [WayAppPay.Prize]()
+        var prizes = [WayPay.Prize]()
         if selectedPrize != -1,
            let prize = checkin?.prizes?[selectedPrize] {
             prizes.append(prize)
         }
-        let payment = WayAppPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, prizes: prizes, token: code)
+        let payment = WayPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, prizes: prizes, token: code)
         WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: \(payment)")
         isAPICallOngoing = true
-        WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
+        WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
             DispatchQueue.main.async {
                 isAPICallOngoing = false
             }

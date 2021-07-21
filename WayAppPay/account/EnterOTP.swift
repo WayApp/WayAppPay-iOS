@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct EnterOTP: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
     @State var otp: String = String()
     @State var otpReceived: String?
-    @State var email: String = UserDefaults.standard.string(forKey: WayAppPay.DefaultKey.EMAIL.rawValue) ?? ""
+    @State var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? ""
     @State private var isAPICallOngoing = false
     @State private var showResetResultAlert = false
 
     @SwiftUI.Environment(\.presentationMode) var presentationMode
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
 
     @State private var newPIN = String()
     @State private var confirmationPIN = String()
@@ -28,14 +28,14 @@ struct EnterOTP: View {
     }
 
     var shouldChangePINbuttonBeDisabled: Bool {
-        return (otp.count < WayAppPay.Account.PINLength) ||
-            (otp.count > WayAppPay.Account.PINLength) ||
-            (otp.count == WayAppPay.Account.PINLength && otp != otpReceived)
+        return (otp.count < WayPay.Account.PINLength) ||
+            (otp.count > WayPay.Account.PINLength) ||
+            (otp.count == WayPay.Account.PINLength && otp != otpReceived)
     }
     
     private var isUserInputValid: Bool {
-        return (newPIN.count == WayAppPay.Account.PINLength) &&
-                (confirmationPIN.count == WayAppPay.Account.PINLength) &&
+        return (newPIN.count == WayPay.Account.PINLength) &&
+                (confirmationPIN.count == WayPay.Account.PINLength) &&
                 (newPIN == confirmationPIN)
     }
         
@@ -58,13 +58,13 @@ struct EnterOTP: View {
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .background(Color.white)
-                            .cornerRadius(WayAppPay.cornerRadius)
+                            .cornerRadius(WayPay.cornerRadius)
                             .padding()
                         Button(action: {
                             DispatchQueue.main.async {
                                 self.isAPICallOngoing = true
                             }
-                            WayAppPay.Account.forgotPIN(self.email) { otps, error in
+                            WayPay.Account.forgotPIN(self.email) { otps, error in
                                 DispatchQueue.main.async {
                                     self.isAPICallOngoing = false
                                 }
@@ -85,7 +85,7 @@ struct EnterOTP: View {
                                 .foregroundColor(Color.white)
                          }
                         .disabled(shouldSendEmailButtonBeDisabled)
-                        .buttonStyle(WayAppPay.ButtonModifier())
+                        .buttonStyle(WayPay.ButtonModifier())
                     }
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
@@ -102,9 +102,9 @@ struct EnterOTP: View {
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
-                            .cornerRadius(WayAppPay.cornerRadius)
-                            .foregroundColor((otp.count == WayAppPay.Account.PINLength && otpReceived != otp) ||
-                                otp.count > WayAppPay.Account.PINLength ? .red : .primary)
+                            .cornerRadius(WayPay.cornerRadius)
+                            .foregroundColor((otp.count == WayPay.Account.PINLength && otpReceived != otp) ||
+                                otp.count > WayPay.Account.PINLength ? .red : .primary)
                             .padding()
                     }
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -124,9 +124,9 @@ struct EnterOTP: View {
                                     .textContentType(.oneTimeCode)
                                     .keyboardType(.numberPad)
                                     .background(Color.white)
-                                    .cornerRadius(WayAppPay.cornerRadius)
+                                    .cornerRadius(WayPay.cornerRadius)
                                     .padding()
-                                    .foregroundColor(newPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                                    .foregroundColor(newPIN.count > WayPay.Account.PINLength ? .red : .primary)
                             }
                             HStack(alignment: .center) {
                                 Text("Re-enter")
@@ -134,10 +134,10 @@ struct EnterOTP: View {
                                     .textContentType(.oneTimeCode)
                                     .keyboardType(.numberPad)
                                     .background(Color.white)
-                                    .cornerRadius(WayAppPay.cornerRadius)
+                                    .cornerRadius(WayPay.cornerRadius)
                                     .padding()
-                                    .foregroundColor((confirmationPIN.count == WayAppPay.Account.PINLength && newPIN != confirmationPIN) ||
-                                    confirmationPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                                    .foregroundColor((confirmationPIN.count == WayPay.Account.PINLength && newPIN != confirmationPIN) ||
+                                    confirmationPIN.count > WayPay.Account.PINLength ? .red : .primary)
                             }
                         }
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -146,7 +146,7 @@ struct EnterOTP: View {
                             DispatchQueue.main.async {
                                 self.isAPICallOngoing = true
                             }
-                            WayAppPay.Account.changePIN(self.email, newPIN: self.newPIN) { accounts, error in
+                            WayPay.Account.changePIN(self.email, newPIN: self.newPIN) { accounts, error in
                                 DispatchQueue.main.async {
                                     self.isAPICallOngoing = false
                                 }
@@ -169,7 +169,7 @@ struct EnterOTP: View {
                                 .foregroundColor(Color.white)
                         }
                         .disabled(shouldChangeButtonBeDisabled)
-                        .buttonStyle(WayAppPay.ButtonModifier())
+                        .buttonStyle(WayPay.ButtonModifier())
                         .alert(isPresented: $showChangeResultAlert) {
                             Alert(title: Text("System error"),
                                   message: Text("PIN could not be changed. Try again later. If problem persists contact support@wayapp.com"),

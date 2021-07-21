@@ -8,15 +8,15 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct Checkin: Codable {
         var accountUUID: String
         var firstName: String?
         var lastName: String?
-        var transactions: [WayAppPay.PaymentTransaction]?
-        var rewards: [WayAppPay.Reward]?
-        var prizes: [WayAppPay.Prize]?
+        var transactions: [WayPay.PaymentTransaction]?
+        var rewards: [WayPay.Reward]?
+        var prizes: [WayPay.Prize]?
         
     }
 }

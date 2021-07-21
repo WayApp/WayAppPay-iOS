@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     // Used in this format by API
     struct CartItem: Codable {

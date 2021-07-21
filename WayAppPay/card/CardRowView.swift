@@ -10,11 +10,11 @@ import SwiftUI
 import PassKit
 
 struct CardRowView: View {
-    var card: WayAppPay.Card
+    var card: WayPay.Card
     
     var body: some View {
         Label {
-            Text(card.alias ?? WayAppPay.Card.defaultName)
+            Text(card.alias ?? WayPay.Card.defaultName)
         }
         icon: {
             card.pkPass?.icon != nil ? Image(uiImage: card.pkPass!.icon) : Image(systemName: "qrcode")
@@ -25,6 +25,6 @@ struct CardRowView: View {
 
 struct CardRowView_Previews: PreviewProvider {
     static var previews: some View {
-        CardRowView(card: WayAppPay.Card())
+        CardRowView(card: WayPay.Card())
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct ReportID: Codable, Identifiable, ContainerProtocol {
         var idReport: String

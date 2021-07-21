@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct TransactionRowView: View {
-    @EnvironmentObject var session: WayAppPay.Session
-    var transaction: WayAppPay.PaymentTransaction
+    @EnvironmentObject var session: WayPay.Session
+    var transaction: WayPay.PaymentTransaction
     
     @State private var send = false
     
-    @State var email: String = UserDefaults.standard.string(forKey: WayAppPay.DefaultKey.EMAIL.rawValue) ?? ""
+    @State var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? ""
 
     static var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -27,18 +27,18 @@ struct TransactionRowView: View {
         return !WayAppUtils.validateEmail(email)
     }
 
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
 
     var body: some View {
         HStack {
             transaction.result?.image
             VStack(alignment: .leading, spacing: 8) {
                 Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
-                Text(transaction.type?.title ?? WayAppPay.PaymentTransaction.TransactionType.defaultTitle)
+                Text(transaction.type?.title ?? WayPay.PaymentTransaction.TransactionType.defaultTitle)
                 Text(session.account?.email ?? "no email")
                     .font(.subheadline)
             }.contextMenu {
-                if ((transaction.type == WayAppPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
+                if ((transaction.type == WayPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
                     Button {
                         transaction.processRefund()
                     } label: {
@@ -55,22 +55,22 @@ struct TransactionRowView: View {
 
             }
             Spacer()
-            Text(WayAppPay.formatPrice(transaction.amount))
+            Text(WayPay.formatPrice(transaction.amount))
                 .fontWeight(.medium)
         }
         .padding()
         .sheet(isPresented: self.$send) {
-            VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
+            VStack(alignment: .center, spacing: WayPay.UI.verticalSeparation) {
                 Text("Email receipt to:")
                     .font(.title)
                 TextField("Email", text: self.$email)
                     .textContentType(.emailAddress)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
-                    .padding(.bottom, WayAppPay.UI.verticalSeparation)
-                    .modifier(WayAppPay.ClearButton(text: $email))
+                    .padding(.bottom, WayPay.UI.verticalSeparation)
+                    .modifier(WayPay.ClearButton(text: $email))
                 Button(action: {
-                    WayAppPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
+                    WayPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
                     DispatchQueue.main.async {
                         self.send = false
                     }
@@ -80,9 +80,9 @@ struct TransactionRowView: View {
                          .fontWeight(.heavy)
                          .foregroundColor(.white)
                  }
-                .frame(maxWidth: .infinity, minHeight: WayAppPay.UI.buttonHeight)
+                .frame(maxWidth: .infinity, minHeight: WayPay.UI.buttonHeight)
                 .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color("MintGreen"))
-                .cornerRadius(WayAppPay.UI.buttonCornerRadius)
+                .cornerRadius(WayPay.UI.buttonCornerRadius)
                 .padding(.bottom, self.keyboardObserver.keyboardHeight)
                 .disabled(self.shouldSendEmailButtonBeDisabled)
             }.padding()
@@ -92,6 +92,6 @@ struct TransactionRowView: View {
 
 struct TransactionRowView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionRowView(transaction: WayAppPay.PaymentTransaction(amount: 100))
+        TransactionRowView(transaction: WayPay.PaymentTransaction(amount: 100))
     }
 }

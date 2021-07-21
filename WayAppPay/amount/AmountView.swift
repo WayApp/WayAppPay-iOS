@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AmountView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var amount: Double = 0
@@ -41,7 +41,7 @@ struct AmountView: View {
                 VStack(alignment: .trailing) {
                     HStack {
                         Spacer()
-                        Text(WayAppPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
+                        Text(WayPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.black)
@@ -86,20 +86,20 @@ struct AmountView: View {
                         Spacer()
                         Button {
                             if let merchantUUID = session.merchantUUID {
-                                WayAppPay.session.shoppingCart.addProduct(WayAppPay.Product(merchantUUID: merchantUUID,
-                                                                                            name: NSLocalizedString("Amount", comment: "Product name for entered amount"), description: NSLocalizedString("Entered amount", comment: "Product description for entered amount"), price: WayAppPay.formatAmount(Int((total + amount)*100 / 100))), isAmount: true)
+                                WayPay.session.shoppingCart.addProduct(WayPay.Product(merchantUUID: merchantUUID,
+                                                                                            name: NSLocalizedString("Amount", comment: "Product name for entered amount"), description: NSLocalizedString("Entered amount", comment: "Product description for entered amount"), price: WayPay.formatAmount(Int((total + amount)*100 / 100))), isAmount: true)
                                 self.resetAmountAndDescription()
                             }
                         } label: {
-                            Label("Add to cart \(WayAppPay.formatPrice(Int((total + amount)*100 / 100)))", systemImage: "cart.badge.plus")
+                            Label("Add to cart \(WayPay.formatPrice(Int((total + amount)*100 / 100)))", systemImage: "cart.badge.plus")
                                 .accessibility(label: Text("Add to cart"))
                                 .padding()
                                 .foregroundColor(Color.white)
                         }
-                        .buttonStyle(WayAppPay.ButtonModifier())
+                        .buttonStyle(WayPay.ButtonModifier())
                         Spacer()
                     }
-                    .buttonStyle(WayAppPay.ButtonModifier())
+                    .buttonStyle(WayPay.ButtonModifier())
                     .padding()
                 } // VStack
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -116,6 +116,6 @@ struct AmountView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.session)
+        .environmentObject(WayPay.session)
     }
 }

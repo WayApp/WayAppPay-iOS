@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct Issuer: Hashable, Codable, Identifiable, ContainerProtocol {
         var issuerUUID: String
@@ -33,14 +33,14 @@ extension WayAppPay {
         }
         
         static func get() {
-            WayAppPay.API.getIssuers.fetch(type: [Issuer].self) { response in
+            WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
                 if case .success(let response?) = response {
                     if let issuers = response.result {
                         DispatchQueue.main.async {
                             session.issuers.setTo(issuers)
                         }
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -49,21 +49,21 @@ extension WayAppPay {
         }
         
         static func expireCards(issuerUUID: String, completion: @escaping ([Issuer]?, Error?) -> Void) {
-            WayAppPay.API.expireIssuerCards(issuerUUID).fetch(type: [Issuer].self) { response in
+            WayPay.API.expireIssuerCards(issuerUUID).fetch(type: [Issuer].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
         
         static func getTransactions(issuerUUID: String, initialDate: String, finalDate: String, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
-            WayAppPay.API.getIssuerTransactions(issuerUUID,initialDate, finalDate)
+            WayPay.API.getIssuerTransactions(issuerUUID,initialDate, finalDate)
                 .fetch(type: [PaymentTransaction].self) { response in
                     switch response {
                     case .success(let response?):
@@ -71,7 +71,7 @@ extension WayAppPay {
                     case .failure(let error):
                         completion(nil, error)
                     default:
-                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
             }
         }

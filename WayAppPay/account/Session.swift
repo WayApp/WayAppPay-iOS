@@ -10,7 +10,7 @@ import Network
 import SwiftUI
 import PassKit
 
-extension WayAppPay {
+extension WayPay {
     
     static var session = Session()
     
@@ -44,7 +44,7 @@ extension WayAppPay {
             didSet {
                 DispatchQueue.main.async {
                     self.doesAccountHasMerchants = !self.merchants.isEmpty
-                    self.seletectedMerchant = UserDefaults.standard.integer(forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
+                    self.seletectedMerchant = UserDefaults.standard.integer(forKey: WayPay.DefaultKey.MERCHANT.rawValue)
                 }
             }
         }
@@ -111,7 +111,7 @@ extension WayAppPay {
             self.networkMonitor.pathUpdateHandler = { path in
                 self.isNetworkAvailable = (path.status == .satisfied)
             }
-            if let account = Account.load(defaultKey: WayAppPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
+            if let account = Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
             }
             if PKPassLibrary.isPassLibraryAvailable() {
@@ -149,7 +149,7 @@ extension WayAppPay {
                 let email = account.email {
                 account.save()
                 // Saves email
-                UserDefaults.standard.set(account.email, forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
+                UserDefaults.standard.set(account.email, forKey: WayPay.DefaultKey.EMAIL.rawValue)
                 // Saves password
                 do {
                     WayAppUtils.Log.message("*********SAVING PIN=\(pin)")
@@ -162,7 +162,7 @@ extension WayAppPay {
         }
         
         func saveSelectedMerchant() {
-            UserDefaults.standard.set(seletectedMerchant, forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
+            UserDefaults.standard.set(seletectedMerchant, forKey: WayPay.DefaultKey.MERCHANT.rawValue)
             UserDefaults.standard.synchronize()
         }
         
@@ -185,7 +185,7 @@ extension WayAppPay {
                     WayAppUtils.Log.message("Cannot retrieve saved email or password")
                     return
             }
-            WayAppPay.DefaultKey.resetSessionKeys()
+            WayPay.DefaultKey.resetSessionKeys()
             reset()
             do {
                 try Account.deletePassword(password, forEmail: email)

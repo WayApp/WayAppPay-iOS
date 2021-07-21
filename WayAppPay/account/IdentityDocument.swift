@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct IdentityDocument: Codable, Hashable {
         enum Document: String, Codable {

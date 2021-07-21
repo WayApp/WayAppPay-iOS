@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct Merchant: Codable, Identifiable, ContainerProtocol, Equatable, Hashable {
         
@@ -47,7 +47,7 @@ extension WayAppPay {
         }
 
         func getTransactionsForAccount(_ accountUUID: String) {
-            WayAppPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [PaymentTransaction].self) { response in
+            WayPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [PaymentTransaction].self) { response in
                 WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount")
                 if case .success(let response?) = response {
                     WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount success")
@@ -58,7 +58,7 @@ extension WayAppPay {
                         }
                     } else {
                         WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount EMPTY")
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message("@@@@@@@@@@@@@@@@@@@@@@@@@ getTransactionsForAccount failure")
@@ -72,13 +72,13 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing accountUUID")
                 return
             }
-            WayAppPay.API.getTransaction(merchantUUID, accountUUID, uuid).fetch(type: [PaymentTransaction].self) { response in
+            WayPay.API.getTransaction(merchantUUID, accountUUID, uuid).fetch(type: [PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result,
                         let transaction = transactions.first {
                         print("TRANSACTION DETAIL=\(transaction)")
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -91,8 +91,8 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing accountUUID")
                 return
             }
-            WayAppUtils.Log.message("DATE: \(day), DAY: \(WayAppPay.reportDateFormatter.string(from: day))")
-            WayAppPay.API.getMerchantAccountTransactionsForDay(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: day)).fetch(type: [PaymentTransaction].self) { response in
+            WayAppUtils.Log.message("DATE: \(day), DAY: \(WayPay.reportDateFormatter.string(from: day))")
+            WayPay.API.getMerchantAccountTransactionsForDay(merchantUUID, accountUUID, WayPay.reportDateFormatter.string(from: day)).fetch(type: [PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result {
                         DispatchQueue.main.async {
@@ -101,7 +101,7 @@ extension WayAppPay {
                         }
                         print("TRANSACTIONS=\(transactions)")
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -111,7 +111,7 @@ extension WayAppPay {
         
         func getTransactionsForAccountByDates(accountUUID: String, initialDate: Date, finalDate: Date,
                                               completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
-            WayAppPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayAppPay.reportDateFormatter.string(from: initialDate), WayAppPay.reportDateFormatter.string(from: finalDate))
+            WayPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayPay.reportDateFormatter.string(from: initialDate), WayPay.reportDateFormatter.string(from: finalDate))
                 .fetch(type: [PaymentTransaction].self) { response in
                     switch response {
                     case .success(let response?):
@@ -119,7 +119,7 @@ extension WayAppPay {
                     case .failure(let error):
                         completion(nil, error)
                     default:
-                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
             }
         }
@@ -133,7 +133,7 @@ extension WayAppPay {
         // La Rozas f157c0c5-49b4-445a-ad06-70727030b38a
 
         static func newSEPAS(initialDate: String, finalDate: String, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
-            WayAppPay.API.getSEPA(initialDate, finalDate,
+            WayPay.API.getSEPA(initialDate, finalDate,
                                   "issuerUUID", "3a825be4-c97c-4592-a61e-aa729d1fca74")
                 .fetch(type: [PaymentTransaction].self) { response in
                     switch response {
@@ -142,7 +142,7 @@ extension WayAppPay {
                     case .failure(let error):
                         completion(nil, error)
                     default:
-                        completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
             }
         }
@@ -153,7 +153,7 @@ extension WayAppPay {
                 return
             }
             WayAppUtils.Log.message("accountUUID: \(accountUUID), month: \(month)")
-            WayAppPay.API.getMonthReportID(merchantUUID, accountUUID, month).fetch(type: [ReportID].self) { response in
+            WayPay.API.getMonthReportID(merchantUUID, accountUUID, month).fetch(type: [ReportID].self) { response in
                 if case .success(let response?) = response {
                     if let reportIDs = response.result,
                         let reportID = reportIDs.first {
@@ -162,7 +162,7 @@ extension WayAppPay {
                         }
                         WayAppUtils.Log.message("ReportID=\(reportID)")
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -171,13 +171,13 @@ extension WayAppPay {
         }
 
         func getDetailForAccount(_ accountUUID: String) {
-            WayAppPay.API.getMerchantAccountDetail(merchantUUID, accountUUID).fetch(type: [Account].self) { response in
+            WayPay.API.getMerchantAccountDetail(merchantUUID, accountUUID).fetch(type: [Account].self) { response in
                 if case .success(let response?) = response {
                     if let accounts = response.result,
                         let account = accounts.first {
                         WayAppUtils.Log.message("Merchant=\(self.name ?? "no name")\nAccount=\(account.email ?? "no email")\n\(account)")
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -186,20 +186,20 @@ extension WayAppPay {
         }
 
         static func getMerchantsForAccount(_ accountUUID: String, completion: @escaping ([Merchant]?, Error?) -> Void) {
-            WayAppPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
+            WayPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
         
         static func delete(_ merchantUUID: String) {
-            WayAppPay.API.deleteMerchant(merchantUUID).fetch(type: [String].self) { response in
+            WayPay.API.deleteMerchant(merchantUUID).fetch(type: [String].self) { response in
                 if case .success(_) = response {
                     WayAppUtils.Log.message("Merchant with UUID=\(merchantUUID) successfully deleted")
                     DispatchQueue.main.async {

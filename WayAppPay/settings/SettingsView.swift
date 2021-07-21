@@ -15,7 +15,7 @@ extension String: ContainerProtocol {
 }
 
 struct SettingsView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
     @State private var changePIN = false
     @State private var showBankAuthenticationView = false
     @State private var authURL: String? = nil
@@ -65,7 +65,7 @@ struct SettingsView: View {
                     Button {
                         DispatchQueue.main.async {
                             self.session.logout()
-                            WayAppPay.session.account?.email = ""
+                            WayPay.session.account?.email = ""
                         }
                     } label: {
                         Label("Logout", systemImage: "chevron.left.square")
@@ -104,7 +104,7 @@ struct SettingsView: View {
                         }
                         Button {
                             DispatchQueue.main.async {
-                                self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayAppPay.Campaign.Format.POINT)
+                                self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayPay.Campaign.Format.POINT)
                             }
                         } label: {
                             Label("Get campaign detail", systemImage: "plus.viewfinder")
@@ -174,9 +174,9 @@ struct SettingsView: View {
         let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
         let C10 =  "c040399e-ab0b-4b25-ae55-cc12f9bb3c18"
         let C1 = "e5154471-ca71-448a-82d2-7b28712b88aa"
-        let transaction = WayAppPay.PaymentTransaction(amount: 1000, token: activeToken)
+        let transaction = WayPay.PaymentTransaction(amount: 1000, token: activeToken)
         let campaignIDs = [C1, C10]
-        WayAppPay.Campaign.reward(transaction: transaction, campaignIDs: campaignIDs) { campaigns, error in
+        WayPay.Campaign.reward(transaction: transaction, campaignIDs: campaignIDs) { campaigns, error in
             if let campaigns = campaigns {
                 WayAppUtils.Log.message("Campaigns: \(campaigns)")
             } else if let error = error  {
@@ -192,9 +192,9 @@ struct SettingsView: View {
         let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
         let C10 =  "c040399e-ab0b-4b25-ae55-cc12f9bb3c18"
         let C1 = "e5154471-ca71-448a-82d2-7b28712b88aa"
-        let transaction = WayAppPay.PaymentTransaction(amount: 100, token: activeToken)
+        let transaction = WayPay.PaymentTransaction(amount: 100, token: activeToken)
         let campaignIDs = [C1]
-        WayAppPay.Campaign.redeem(transaction: transaction, campaignIDs: campaignIDs) { campaigns, error in
+        WayPay.Campaign.redeem(transaction: transaction, campaignIDs: campaignIDs) { campaigns, error in
             if let campaigns = campaigns {
                 WayAppUtils.Log.message("Campaigns: \(campaigns)")
             } else if let error = error  {
@@ -209,7 +209,7 @@ struct SettingsView: View {
         let issuerUUIDLasRozas = "f157c0c5-49b4-445a-ad06-70727030b38a"
         //        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
         //        let issuerUUIDParquesur = "12412d65-411b-4629-a9ce-b5fb281b11bd"
-        WayAppPay.Issuer.expireCards(issuerUUID: issuerUUIDLasRozas) { issuers, error in
+        WayPay.Issuer.expireCards(issuerUUID: issuerUUIDLasRozas) { issuers, error in
             WayAppUtils.Log.message("Issuers name: \(issuers?.debugDescription)")
             if let issuers = issuers {
                 WayAppUtils.Log.message("Issuer name: ")
@@ -221,8 +221,8 @@ struct SettingsView: View {
         }
     }
     
-    private func getCampaign(id: String, sponsorUUID: String, format: WayAppPay.Campaign.Format) {
-        WayAppPay.Campaign.get(campaignID: id, sponsorUUID: sponsorUUID, format: format) { campaigns, error in
+    private func getCampaign(id: String, sponsorUUID: String, format: WayPay.Campaign.Format) {
+        WayPay.Campaign.get(campaignID: id, sponsorUUID: sponsorUUID, format: format) { campaigns, error in
             if let campaigns = campaigns {
                 for campaign in campaigns {
                     WayAppUtils.Log.message("Campaign: \(campaign)")
@@ -238,7 +238,7 @@ struct SettingsView: View {
     private func updatePoint() {
         let campaign = session.points.first;
         campaign?.name = "UpdatedNameForPoint"
-        WayAppPay.Point.update(campaign!) { campaigns, error in
+        WayPay.Point.update(campaign!) { campaigns, error in
             if let campaigns = campaigns {
                 for campaign in campaigns {
                     WayAppUtils.Log.message("Campaign: \(campaign.name)")
@@ -256,7 +256,7 @@ struct SettingsView: View {
         if let campaign = session.stamps.first {
             WayAppUtils.Log.message("Campaign: name BEFORE UPDATE: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
             campaign.name = "UPDATEDNameForStamp"
-            WayAppPay.Stamp.update(campaign) { campaigns, error in
+            WayPay.Stamp.update(campaign) { campaigns, error in
                 if let campaigns = campaigns {
                     for campaign in campaigns {
                         WayAppUtils.Log.message("Campaign: \(campaign.name)")
@@ -271,7 +271,7 @@ struct SettingsView: View {
     }
     
     private func getCampaigns() {
-        WayAppPay.Campaign.get(merchantUUID: "sponsorUUID004", issuerUUID: nil, campaignType: WayAppPay.Stamp.self, format: .STAMP) { campaigns, error in
+        WayPay.Campaign.get(merchantUUID: "sponsorUUID004", issuerUUID: nil, campaignType: WayPay.Stamp.self, format: .STAMP) { campaigns, error in
             if let campaigns = campaigns {
                 WayAppUtils.Log.message("Campaigns count: \(campaigns.count)")
                 for campaign in campaigns {
@@ -286,7 +286,7 @@ struct SettingsView: View {
     }
         
     private func newSEPAs() {
-        WayAppPay.Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
+        WayPay.Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
             if let transactions = transactions {
                 WayAppUtils.Log.message("Transactions count: \(transactions.count)")
                 for transaction in transactions {
@@ -305,7 +305,7 @@ struct SettingsView: View {
         // Parquesur issuerUUID staging: 6fae922e-9a08-48a8-859d-d9e8a0d54f21
         // As Cancelas issuerUUID staging: dd5ed363-88ce-4308-9cf2-20f3930d7cfd
         
-        WayAppPay.Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
+        WayPay.Issuer.getTransactions(issuerUUID: "1338193f-c6d9-4c19-a7d8-1c80fe9f017f", initialDate: "2021-04-15", finalDate: "2021-04-19") { transactions, error in
             if let transactions = transactions {
                 WayAppUtils.Log.message("Transactions count: \(transactions.count)")
                 for transaction in transactions {
@@ -320,12 +320,12 @@ struct SettingsView: View {
     }
     
     private func registerAccount() {
-        WayAppPay.Account.register(registration:
-                                    WayAppPay.Registration(email: "coco@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
+        WayPay.Account.register(registration:
+                                    WayPay.Registration(email: "coco@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
     }
     
     private func deleteAccount() {
-        WayAppPay.Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
+        WayPay.Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
     }
 }
 
@@ -337,6 +337,6 @@ struct SettingsView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.session)
+        .environmentObject(WayPay.session)
     }
 }

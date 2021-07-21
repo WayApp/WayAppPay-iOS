@@ -15,7 +15,7 @@ protocol DefaultKeyPersistence: Codable {
 extension DefaultKeyPersistence {
     func save() {
         do {
-            let data = try WayAppPay.jsonEncoder.encode(self)
+            let data = try WayPay.jsonEncoder.encode(self)
             UserDefaults.standard.set(data, forKey: defaultKey.uppercased())
             UserDefaults.standard.synchronize()
         } catch {
@@ -26,7 +26,7 @@ extension DefaultKeyPersistence {
     static func load<T: Decodable>(defaultKey: String, type: T.Type) -> T? {
         if let data = UserDefaults.standard.data(forKey: defaultKey.uppercased()) {
             do {
-                return try WayAppPay.jsonDecoder.decode(T.self, from: data)
+                return try WayPay.jsonDecoder.decode(T.self, from: data)
             } catch {
                 WayAppUtils.Log.message("Error: \(error.localizedDescription)")
             }

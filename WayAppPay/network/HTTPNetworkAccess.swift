@@ -162,7 +162,7 @@ enum HTTPCall {
                 result(nil, .unhandled(error))
             } else if let data = data,
                       let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                      let objectResponse = try? WayAppPay.jsonDecoder.decode(decodingType, from: data),
+                      let objectResponse = try? WayPay.jsonDecoder.decode(decodingType, from: data),
                       let code = jsonResponse["code"] as? Int {
                 WayAppUtils.Log.message("\nurlRequest: \(urlRequest)\nData: \(objectResponse)")
                 
@@ -271,7 +271,7 @@ extension HTTPCall {
         }
         // Better done as init and not as part of the enum definition so that it can fail graciously. Otherwise forces Data to be Optional
         init?<T: Encodable>(_ object: T, name: String, contentType: String = "application/json") {
-            if let data = try? WayAppPay.jsonEncoder.encode(object) {
+            if let data = try? WayPay.jsonEncoder.encode(object) {
                 self = .object(name: name, contentType: contentType, data: data)
             } else {
                 return nil

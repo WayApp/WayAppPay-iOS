@@ -25,7 +25,7 @@ struct ShoppingCartRowView: View {
         #endif
     }
 
-    var item: WayAppPay.ShoppingCartItem
+    var item: WayPay.ShoppingCartItem
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -33,20 +33,20 @@ struct ShoppingCartRowView: View {
                 Image(systemName: "number.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: WayAppPay.UI.shoppingCartRowImageSize, height: WayAppPay.UI.shoppingCartRowImageSize)
+                    .frame(width: WayPay.UI.shoppingCartRowImageSize, height: WayPay.UI.shoppingCartRowImageSize)
             } else {
-                ImageView(withURL: item.product.image, size: WayAppPay.UI.shoppingCartRowImageSize)
+                ImageView(withURL: item.product.image, size: WayPay.UI.shoppingCartRowImageSize)
                     .frame(width: metrics.thumbnailSize, height: metrics.thumbnailSize)
                     .clipShape(RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous))
                     .accessibility(hidden: true)
            }
             Text("\(item.cartItem.quantity)").fontWeight(.bold)
             Text(verbatim: item.isAmount ?
-                item.product.description == nil ? item.product.name ?? WayAppPay.Product.defaultName : item.product.description!
+                item.product.description == nil ? item.product.name ?? WayPay.Product.defaultName : item.product.description!
                 :
-                item.product.name ?? WayAppPay.Product.defaultName)
+                item.product.name ?? WayPay.Product.defaultName)
             Spacer()
-            Text("\(WayAppPay.formatPrice(item.cartItem.price))").fontWeight(.bold)
+            Text("\(WayPay.formatPrice(item.cartItem.price))").fontWeight(.bold)
         }
         .contextMenu {
             Button {
@@ -70,21 +70,21 @@ struct ShoppingCartRowView: View {
         }
     }
     
-    private func removeOne(_ item: WayAppPay.ShoppingCartItem) {
-        WayAppPay.session.shoppingCart.removeProduct(item.product)
+    private func removeOne(_ item: WayPay.ShoppingCartItem) {
+        WayPay.session.shoppingCart.removeProduct(item.product)
     }
     
-    private func addOne(_ item: WayAppPay.ShoppingCartItem) {
-        WayAppPay.session.shoppingCart.addProduct(item.product)
+    private func addOne(_ item: WayPay.ShoppingCartItem) {
+        WayPay.session.shoppingCart.addProduct(item.product)
     }
     
-    private func removeAll(_ item: WayAppPay.ShoppingCartItem) {
-        WayAppPay.session.shoppingCart.removeAllProduct(item.product)
+    private func removeAll(_ item: WayPay.ShoppingCartItem) {
+        WayPay.session.shoppingCart.removeAllProduct(item.product)
     }
 }
 
 struct ShoppingCartRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingCartRowView(item: WayAppPay.ShoppingCartItem(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100")))
+        ShoppingCartRowView(item: WayPay.ShoppingCartItem(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100")))
     }
 }

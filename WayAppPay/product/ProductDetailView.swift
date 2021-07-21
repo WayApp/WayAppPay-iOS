@@ -11,12 +11,12 @@ import UIKit
 
 struct ProductDetailView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject private var session: WayAppPay.Session
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @EnvironmentObject private var session: WayPay.Session
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
 
-    var product: WayAppPay.Product?
+    var product: WayPay.Product?
     
     @State var newName: String = ""
     @State var newPrice: String = ""
@@ -46,7 +46,7 @@ struct ProductDetailView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: WayAppPay.UI.verticalSeparation) {
+        VStack(alignment: .center, spacing: WayPay.UI.verticalSeparation) {
             if newImage == nil {
                 ImageView(withURL: product?.image)
             } else {
@@ -67,14 +67,14 @@ struct ProductDetailView: View {
             VStack(alignment: .trailing) {
                 HStack(alignment: .center, spacing: 6) {
                     Text("Name")
-                    TextField("\(product?.name ?? WayAppPay.Product.defaultName)", text: $newName)
+                    TextField("\(product?.name ?? WayPay.Product.defaultName)", text: $newName)
                         .textContentType(.name)
                         .keyboardType(.default)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
                 HStack(alignment: .center, spacing: 6) {
                     Text("Price")
-                    TextField("\(WayAppPay.formatAmount(product?.price ?? 0))", text: $newPrice)
+                    TextField("\(WayPay.formatAmount(product?.price ?? 0))", text: $newPrice)
                         .keyboardType(.decimalPad)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
@@ -97,8 +97,8 @@ struct ProductDetailView: View {
                 if self.product == nil,
                    let merchantUUID = session.merchantUUID {
                     // creation
-                    let newProduct = WayAppPay.Product(merchantUUID: merchantUUID, name: self.newName, price: self.newPrice)
-                    WayAppPay.Product.add(merchantUUID: merchantUUID, product: newProduct, image: self.newImage) { product, error in
+                    let newProduct = WayPay.Product(merchantUUID: merchantUUID, name: self.newName, price: self.newPrice)
+                    WayPay.Product.add(merchantUUID: merchantUUID, product: newProduct, image: self.newImage) { product, error in
                         if let product = product {
                             DispatchQueue.main.async {
                                 session.products.add(product)
@@ -128,6 +128,6 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100"))
+        ProductDetailView(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100"))
     }
 }

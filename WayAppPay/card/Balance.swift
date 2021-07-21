@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     
     struct Balance: Codable, Identifiable, ContainerProtocol {
         var pan: String

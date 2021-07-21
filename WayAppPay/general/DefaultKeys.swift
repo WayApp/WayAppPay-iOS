@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     public enum DefaultKey: String {
         // Not session related
         case EMAIL // Stores the email for biometrics login
@@ -18,9 +18,9 @@ extension WayAppPay {
 
         static func resetSessionKeys() {
             // Only session keys
-            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.EMAIL.rawValue)
-            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.ACCOUNT.rawValue)
-            UserDefaults.standard.removeObject(forKey: WayAppPay.DefaultKey.MERCHANT.rawValue)
+            UserDefaults.standard.removeObject(forKey: WayPay.DefaultKey.EMAIL.rawValue)
+            UserDefaults.standard.removeObject(forKey: WayPay.DefaultKey.ACCOUNT.rawValue)
+            UserDefaults.standard.removeObject(forKey: WayPay.DefaultKey.MERCHANT.rawValue)
             UserDefaults.standard.synchronize()
         }
         

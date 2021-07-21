@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     class Point: Campaign {
         var paymentAmountConvertibleToRewardUnit: Int?
         var prizes: [Prize]?
@@ -47,27 +47,27 @@ extension WayAppPay {
         }
         
         static func create(_ campaign: Point, completion: @escaping ([Point]?, Error?) -> Void) {
-            WayAppPay.API.createPointCampaign(campaign).fetch(type: [Point].self) { response in
+            WayPay.API.createPointCampaign(campaign).fetch(type: [Point].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
         static func update(_ campaign: Point, completion: @escaping ([Point]?, Error?) -> Void) {
-            WayAppPay.API.updatePointCampaign(campaign).fetch(type: [Point].self) { response in
+            WayPay.API.updatePointCampaign(campaign).fetch(type: [Point].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }

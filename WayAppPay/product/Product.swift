@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension WayAppPay {
+extension WayPay {
     
     struct Product: Codable, Identifiable, ContainerProtocol {
         
@@ -42,27 +42,27 @@ extension WayAppPay {
         }
         
         static func get(_ merchantUUID: String , completion: @escaping ([Product]?, Error?) -> Void) {
-            WayAppPay.API.getProducts(merchantUUID).fetch(type: [Product].self) { response in
+            WayPay.API.getProducts(merchantUUID).fetch(type: [Product].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
         static func add(merchantUUID: String, product: Product, image: UIImage?, completion: @escaping (Product?, Error?) -> Void)  {
-            WayAppPay.API.addProduct(merchantUUID, product, image).fetch(type: [Product].self) { response in
+            WayPay.API.addProduct(merchantUUID, product, image).fetch(type: [Product].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result?.first, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
@@ -77,7 +77,7 @@ extension WayAppPay {
             newProduct.name = name.isEmpty ? self.name : name
             newProduct.price = price.isEmpty ? self.price : WayAppUtils.composeIntPriceFromString(price)
             
-            WayAppPay.API.updateProduct(merchantUUID, newProduct, image).fetch(type: [WayAppPay.Product].self) { response in
+            WayPay.API.updateProduct(merchantUUID, newProduct, image).fetch(type: [WayPay.Product].self) { response in
                 if case .success(let response?) = response {
                     if let products = response.result,
                         let product = products.first {
@@ -86,8 +86,8 @@ extension WayAppPay {
                         }
                         completion(nil)
                     } else {
-                        completion(WayAppPay.API.errorFromResponse(response))
-                        WayAppPay.API.reportError(response)
+                        completion(WayPay.API.errorFromResponse(response))
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     completion(error)
@@ -102,7 +102,7 @@ extension WayAppPay {
                 return
             }
             for offset in offsets {
-                WayAppPay.API.deleteProduct(merchantUUID, session.products[offset].productUUID).fetch(type: [String].self) { response in
+                WayPay.API.deleteProduct(merchantUUID, session.products[offset].productUUID).fetch(type: [String].self) { response in
                     if case .success(_) = response {
                         WayAppUtils.Log.message("DELETED SUCCESSFULLY")
                         DispatchQueue.main.async {

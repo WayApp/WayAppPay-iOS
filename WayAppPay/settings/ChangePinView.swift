@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ChangePinView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
     @State private var currentPIN = String()
     let savedPIN: String?
     let email: String?
@@ -22,12 +22,12 @@ struct ChangePinView: View {
 
     @SwiftUI.Environment(\.presentationMode) var presentationMode
 
-    @ObservedObject private var keyboardObserver = WayAppPay.KeyboardObserver()
+    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
     
     init() {
-        if let account = WayAppPay.session.account,
+        if let account = WayPay.session.account,
             let email = account.email,
-            let savedPIN = WayAppPay.Account.retrievePassword(forEmail: email) {
+            let savedPIN = WayPay.Account.retrievePassword(forEmail: email) {
             self.email = email
             self.savedPIN = savedPIN
         } else {
@@ -49,14 +49,14 @@ struct ChangePinView: View {
     
     private var isUserInputValid: Bool {
         return isCurrentPINValid &&
-                (newPIN.count == WayAppPay.Account.PINLength) &&
-                (confirmationPIN.count == WayAppPay.Account.PINLength) &&
+                (newPIN.count == WayPay.Account.PINLength) &&
+                (confirmationPIN.count == WayPay.Account.PINLength) &&
                 (newPIN == confirmationPIN) &&
                 (newPIN != currentPIN)
     }
     
     var isCurrentPINValid: Bool {
-        if currentPIN.count == WayAppPay.Account.PINLength {
+        if currentPIN.count == WayPay.Account.PINLength {
             return savedPIN == currentPIN
         } else  {
             return false
@@ -81,10 +81,10 @@ struct ChangePinView: View {
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
-                            .cornerRadius(WayAppPay.cornerRadius)
+                            .cornerRadius(WayPay.cornerRadius)
                             .padding()
-                            .foregroundColor((newPIN.count == WayAppPay.Account.PINLength && newPIN == currentPIN) ||
-                            newPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                            .foregroundColor((newPIN.count == WayPay.Account.PINLength && newPIN == currentPIN) ||
+                            newPIN.count > WayPay.Account.PINLength ? .red : .primary)
                     }
                     HStack(alignment: .center) {
                         Text("New")
@@ -92,10 +92,10 @@ struct ChangePinView: View {
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
-                            .cornerRadius(WayAppPay.cornerRadius)
+                            .cornerRadius(WayPay.cornerRadius)
                             .padding()
-                            .foregroundColor((newPIN.count == WayAppPay.Account.PINLength && newPIN == currentPIN) ||
-                            newPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                            .foregroundColor((newPIN.count == WayPay.Account.PINLength && newPIN == currentPIN) ||
+                            newPIN.count > WayPay.Account.PINLength ? .red : .primary)
                     }
                     HStack(alignment: .center) {
                         Text("Re-enter")
@@ -103,10 +103,10 @@ struct ChangePinView: View {
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
-                            .cornerRadius(WayAppPay.cornerRadius)
+                            .cornerRadius(WayPay.cornerRadius)
                             .padding()
-                            .foregroundColor((confirmationPIN.count == WayAppPay.Account.PINLength && newPIN != confirmationPIN) ||
-                            confirmationPIN.count > WayAppPay.Account.PINLength ? .red : .primary)
+                            .foregroundColor((confirmationPIN.count == WayPay.Account.PINLength && newPIN != confirmationPIN) ||
+                            confirmationPIN.count > WayPay.Account.PINLength ? .red : .primary)
                     }
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -116,7 +116,7 @@ struct ChangePinView: View {
                         DispatchQueue.main.async {
                             self.isAPICallOngoing = true
                         }
-                        WayAppPay.Account.changePIN(email, newPIN: self.newPIN) { accounts, error in
+                        WayPay.Account.changePIN(email, newPIN: self.newPIN) { accounts, error in
                             DispatchQueue.main.async {
                                 self.isAPICallOngoing = false
                             }
@@ -140,7 +140,7 @@ struct ChangePinView: View {
                         .foregroundColor(Color.white)
                 }
                 .disabled(shouldChangeButtonBeDisabled)
-                .buttonStyle(WayAppPay.ButtonModifier())
+                .buttonStyle(WayPay.ButtonModifier())
                 .alert(isPresented: $showChangeResultAlert) {
                     Alert(title: Text("System error"),
                           message: Text("PIN could not be changed. Try again later. If problem persists contact support@wayapp.com"),

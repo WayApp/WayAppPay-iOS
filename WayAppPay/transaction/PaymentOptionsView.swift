@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PaymentOptionsView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var showQRScannerForPayment = false
@@ -36,7 +36,7 @@ struct PaymentOptionsView: View {
                     Text("Payment")
                         .font(.title)
                     List {
-                        if !WayAppPay.session.shoppingCart.isEmpty {
+                        if !WayPay.session.shoppingCart.isEmpty {
                             Button(action: {
                                 self.showQRScannerForPayment = true
                             }, label: {
@@ -50,9 +50,9 @@ struct PaymentOptionsView: View {
                             })
                             .sheet(isPresented: $showQRScannerForPayment) {
                                 VStack {
-                                    CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleQRScanPayment)
+                                    CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleQRScanPayment)
                                     HStack {
-                                        Text("Charge: \(WayAppPay.formatPrice(self.session.amount))")
+                                        Text("Charge: \(WayPay.formatPrice(self.session.amount))")
                                             .foregroundColor(Color.black)
                                             .fontWeight(.medium)
                                         Spacer()
@@ -74,14 +74,14 @@ struct PaymentOptionsView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30, alignment: .leading)
-                                    Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount / 100)!)")
+                                    Text("Top-up: \(WayPay.currencyFormatter.string(for: topupAmount / 100)!)")
                                 }
                             })
                             .sheet(isPresented: $showQRScannerForPayment) {
                                 VStack {
-                                    CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleTopup)
+                                    CodeCaptureView(showCodePicker: self.$showQRScannerForPayment, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleTopup)
                                     HStack {
-                                        Text("Top-up: \(WayAppPay.currencyFormatter.string(for: topupAmount / 100)!)")
+                                        Text("Top-up: \(WayPay.currencyFormatter.string(for: topupAmount / 100)!)")
                                             .foregroundColor(Color.black)
                                             .fontWeight(.medium)
                                         Spacer()
@@ -107,7 +107,7 @@ struct PaymentOptionsView: View {
                         })
                         .sheet(isPresented: $showQRScannerForGetRewards) {
                             VStack {
-                                CodeCaptureView(showCodePicker: self.$showQRScannerForGetRewards, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleGetRewards)
+                                CodeCaptureView(showCodePicker: self.$showQRScannerForGetRewards, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleGetRewards)
                                 HStack {
                                     Text("Rewards")
                                         .foregroundColor(Color.black)
@@ -134,7 +134,7 @@ struct PaymentOptionsView: View {
                         })
                         .sheet(isPresented: $showQRScannerForCheckin) {
                             VStack {
-                                CodeCaptureView(showCodePicker: self.$showQRScannerForCheckin, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleCheckin)
+                                CodeCaptureView(showCodePicker: self.$showQRScannerForCheckin, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleCheckin)
                                 HStack {
                                     Text("Checkin")
                                         .foregroundColor(Color.black)
@@ -164,7 +164,7 @@ struct PaymentOptionsView: View {
                         } // List
                         .sheet(isPresented: $showQRScannerForReward) {
                             VStack {
-                                CodeCaptureView(showCodePicker: self.$showQRScannerForReward, code: self.$scannedCode, codeTypes: WayAppPay.acceptedPaymentCodes, completion: self.handleReward)
+                                CodeCaptureView(showCodePicker: self.$showQRScannerForReward, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleReward)
                                 HStack {
                                     Label(session.campaigns[selectedCampaignID]?.name ?? "Reward", systemImage: "list.bullet.rectangle")
                                     Spacer()
@@ -179,10 +179,10 @@ struct PaymentOptionsView: View {
                 } // VStack
                 .padding()
                 if showAlert {
-                    Image(systemName: wasPaymentSuccessful ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
+                    Image(systemName: wasPaymentSuccessful ? WayPay.UI.paymentResultSuccessImage : WayPay.UI.paymentResultFailureImage)
                         .resizable()
                         .foregroundColor(wasPaymentSuccessful ? Color.green : Color.red)
-                        .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
+                        .frame(width: WayPay.UI.paymentResultImageSize, height: WayPay.UI.paymentResultImageSize, alignment: .center)
                 }
                 if isAPICallOngoing {
                     ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
@@ -209,9 +209,9 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing scannedCode")
             return
         }
-        let transaction = WayAppPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
+        let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
         isAPICallOngoing = true
-        WayAppPay.Account.checkin(transaction) { checkins, error in
+        WayPay.Account.checkin(transaction) { checkins, error in
             self.scannedCode = nil
             DispatchQueue.main.async {
                 isAPICallOngoing = false
@@ -239,16 +239,16 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing scannedCode")
             return
         }
-        let transaction = WayAppPay.PaymentTransaction(amount: 0, token: code, type: .REWARD)
+        let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .REWARD)
         isAPICallOngoing = true
-        WayAppPay.Account.getRewards(transaction) { rewards, error in
+        WayPay.Account.getRewards(transaction) { rewards, error in
             self.scannedCode = nil
             DispatchQueue.main.async {
                 isAPICallOngoing = false
             }
             if let rewards = rewards {
                 WayAppUtils.Log.message("Get rewards success. Number of rewards: \(rewards.count)")
-                let prizes = WayAppPay.Campaign.prizesForRewards(rewards)
+                let prizes = WayPay.Campaign.prizesForRewards(rewards)
                 WayAppUtils.Log.message("Number of prizes: \(prizes.count)")
                 for prize in prizes {
                     WayAppUtils.Log.message("Prize: \(prize)")
@@ -273,9 +273,9 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing scannedCode or campaign")
             return
         }
-        let reward = WayAppPay.PaymentTransaction(amount: Int(topupAmount*100 / 100), token: code, type: .REWARD)
+        let reward = WayPay.PaymentTransaction(amount: Int(topupAmount*100 / 100), token: code, type: .REWARD)
         isAPICallOngoing = true
-        WayAppPay.Campaign.reward(transaction: reward, campaign: campaign) { transactions, error in
+        WayPay.Campaign.reward(transaction: reward, campaign: campaign) { transactions, error in
             self.scannedCode = nil
             DispatchQueue.main.async {
                 isAPICallOngoing = false
@@ -303,9 +303,9 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
-        let topup = WayAppPay.PaymentTransaction(amount: Int(topupAmount), token: code, type: .TOPUP)
+        let topup = WayPay.PaymentTransaction(amount: Int(topupAmount), token: code, type: .TOPUP)
         isAPICallOngoing = true
-        WayAppPay.API.topup(topup).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
+        WayPay.API.topup(topup).fetch(type: [WayPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
             if case .success(let response?) = response,
                let transactions = response.result,
@@ -315,9 +315,9 @@ extension PaymentOptionsView {
                     self.session.transactions.addAsFirst(transaction)
                     self.wasPaymentSuccessful = (transaction.result == .ACCEPTED)
                     self.showAlert = true
-                    WayAppPay.session.shoppingCart.empty()
+                    WayPay.session.shoppingCart.empty()
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + WayPay.UI.paymentResultDisplayDuration) {
                     self.showAlert = false
                     self.presentationMode.wrappedValue.dismiss()
                 }
@@ -326,7 +326,7 @@ extension PaymentOptionsView {
                 WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
                 self.wasPaymentSuccessful = false
                 self.showAlert = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + WayPay.UI.paymentResultDisplayDuration) {
                     self.showAlert = false
                 }
             }
@@ -347,9 +347,9 @@ extension PaymentOptionsView {
             self.scannedCode = nil
             self.wasPaymentSuccessful = accepted
             self.showAlert = true
-            WayAppPay.session.shoppingCart.empty()
+            WayPay.session.shoppingCart.empty()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + WayPay.UI.paymentResultDisplayDuration) {
             self.showAlert = false
             self.presentationMode.wrappedValue.dismiss()
         }
@@ -366,10 +366,10 @@ extension PaymentOptionsView {
             WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
-        let payment = WayAppPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, token: code)
+        let payment = WayPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, token: code)
         WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: \(payment)")
         isAPICallOngoing = true
-        WayAppPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
+        WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
             self.scannedCode = nil
             DispatchQueue.main.async {
                 isAPICallOngoing = false

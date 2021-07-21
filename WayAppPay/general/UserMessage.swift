@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension WayAppPay {
+extension WayPay {
     enum UserMessage {
         case error(String, String)
         case titleAndText(String, String)
@@ -29,7 +29,7 @@ extension WayAppPay {
             case .titleAndText(let title, let text): return (title, text)
             case .closeTo(let title, let body): return (title, body)
             case .invalidEmail: return (NSLocalizedString("Invalid email address", comment: "User message: invalidEmail title"), NSLocalizedString("Enter a valid email address for this account", comment: "User message: invalidEmail message"))
-            case .invalidPassword: return (NSLocalizedString("PIN not valid", comment: "User message: invalidPassword title"), NSLocalizedString("PIN must have \(WayAppPay.Account.PINLength) digits", comment: "User message: password minimum length requirement"))
+            case .invalidPassword: return (NSLocalizedString("PIN not valid", comment: "User message: invalidPassword title"), NSLocalizedString("PIN must have \(WayPay.Account.PINLength) digits", comment: "User message: password minimum length requirement"))
             case .passwordsDoNotMatch: return (NSLocalizedString("PIN does not match", comment: "User message: passwordsDoNotMatch title"), NSLocalizedString("Both entered PINs must match", comment: "User message: passwords do not match"))
             case .confirmationEmailHelp(let email): return (NSLocalizedString("Confirmation code", comment: "User message: confirmationEmailHelpTitle"), NSLocalizedString("The 4-digit confirmation code was emailed to: \(email). Please enter it here", comment: "User message: confirmationEmailHelpMessage"))
             case .loginFailed: return (NSLocalizedString("Login attempt failed", comment: "User message: loginFailed title"), NSLocalizedString("Try again, if problem persists contact us at support@wayapp.com", comment: "User message: Login error during authentication"))

@@ -10,7 +10,7 @@ import Foundation
 
 public typealias JSON = Dictionary<String, Any>
 
-extension WayAppPay {
+extension WayPay {
     
     static var jsonEncoder: JSONEncoder = {
         let encoder = JSONEncoder()

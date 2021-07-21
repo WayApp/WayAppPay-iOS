@@ -8,7 +8,7 @@
 
 import PassKit
 
-extension WayAppPay {
+extension WayPay {
     
     struct Card: Codable, Identifiable, ContainerProtocol {
         static let defaultImageName = "creditcard"
@@ -92,14 +92,14 @@ extension WayAppPay {
         }
                         
         static func getCards(for accountUUID: String) {
-            WayAppPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
+            WayPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
                 if case .success(let response?) = response {
                     if let cards = response.result {
                         DispatchQueue.main.async {
                             session.cards.setTo(cards)
                         }
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -116,7 +116,7 @@ extension WayAppPay {
 
             let newCard = Card(alias: alias, issuerUUID: issuerUUID, type: type, consent: consent, selectedIBAN: selectedIBAN, limitPerOperation: Card.limitPerOperation)
 
-            WayAppPay.API.createCard(accountUUID, newCard).fetch(type: [Card].self) { response in
+            WayPay.API.createCard(accountUUID, newCard).fetch(type: [Card].self) { response in
                 if case .success(let response?) = response {
                     if let cards = response.result,
                         let card = cards.first {
@@ -127,8 +127,8 @@ extension WayAppPay {
                         
                         completion(nil, card)
                     } else {
-                        completion(WayAppPay.API.errorFromResponse(response), nil)
-                        WayAppPay.API.reportError(response)
+                        completion(WayPay.API.errorFromResponse(response), nil)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     completion(error, nil)
@@ -145,7 +145,7 @@ extension WayAppPay {
             var editedCard = self
             editedCard.alias = "S10000"
             //editedCard.iban = iban
-            WayAppPay.API.editCard(accountUUID, editedCard).fetch(type: [Card].self) { response in
+            WayPay.API.editCard(accountUUID, editedCard).fetch(type: [Card].self) { response in
                 if case .success(let response?) = response {
                     if let cards = response.result,
                         let card = cards.first {
@@ -155,8 +155,8 @@ extension WayAppPay {
                         }
                         completion(nil)
                     } else {
-                        completion(WayAppPay.API.errorFromResponse(response))
-                        WayAppPay.API.reportError(response)
+                        completion(WayPay.API.errorFromResponse(response))
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     completion(error)
@@ -171,7 +171,7 @@ extension WayAppPay {
                 return
             }
             for offset in offsets {
-                WayAppPay.API.deleteCard(accountUUID, session.cards[offset].pan).fetch(type: [String].self) { response in
+                WayPay.API.deleteCard(accountUUID, session.cards[offset].pan).fetch(type: [String].self) { response in
                     if case .success(_) = response {
                         DispatchQueue.main.async {
                             session.cards.remove(session.cards[offset])

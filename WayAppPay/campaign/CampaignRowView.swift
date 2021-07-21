@@ -10,8 +10,8 @@ import SwiftUI
 
 
 struct CampaignRowView: View {
-    @EnvironmentObject var session: WayAppPay.Session
-    var campaign: WayAppPay.Campaign
+    @EnvironmentObject var session: WayPay.Session
+    var campaign: WayPay.Campaign
 
     var body: some View {
         HStack {
@@ -56,12 +56,12 @@ struct CampaignRowView: View {
 
 struct CampaignRowView_Previews: PreviewProvider {
     static var previews: some View {
-        CampaignRowView(campaign: WayAppPay.Campaign())
+        CampaignRowView(campaign: WayPay.Campaign())
     }
 }
 
 struct PointRowView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
     
     var body: some View {
         List {
@@ -107,7 +107,7 @@ struct PointRowView: View {
     func delete(at offsets: IndexSet) {
         WayAppUtils.Log.message("Entering")
         if let offset = offsets.first {
-            WayAppPay.Campaign.delete(id: session.points[offset].id, sponsorUUID: session.points[offset].sponsorUUID, format: session.points[offset].format) { strings, error in
+            WayPay.Campaign.delete(id: session.points[offset].id, sponsorUUID: session.points[offset].sponsorUUID, format: session.points[offset].format) { strings, error in
                 if let error = error {
                     WayAppUtils.Log.message("Campaign: \(session.points[offset].name) could not be . Error: \(error.localizedDescription)")
                 } else {
@@ -130,7 +130,7 @@ struct PointRowView_Previews: PreviewProvider {
 }
 
 struct StampRowView: View {
-    var campaign: WayAppPay.Stamp
+    var campaign: WayPay.Stamp
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -170,6 +170,6 @@ struct StampRowView: View {
 
 struct StampRowView_Previews: PreviewProvider {
     static var previews: some View {
-        StampRowView(campaign: WayAppPay.Stamp(campaign: WayAppPay.Campaign(), minimumPaymentAmountToGetStamp: 10, prize: WayAppPay.Prize(campaignID: "campaignID", name: "name", message: "message")))
+        StampRowView(campaign: WayPay.Stamp(campaign: WayPay.Campaign(), minimumPaymentAmountToGetStamp: 10, prize: WayPay.Prize(campaignID: "campaignID", name: "name", message: "message")))
     }
 }

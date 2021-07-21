@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
     class Stamp: Campaign {
         var minimumPaymentAmountToGetStamp: Int?
         var prize: Prize?
@@ -47,27 +47,27 @@ extension WayAppPay {
         }
 
         static func create(_ campaign: Stamp, completion: @escaping ([Stamp]?, Error?) -> Void) {
-            WayAppPay.API.createStampCampaign(campaign).fetch(type: [Stamp].self) { response in
+            WayPay.API.createStampCampaign(campaign).fetch(type: [Stamp].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
         static func update(_ campaign: Stamp, completion: @escaping ([Stamp]?, Error?) -> Void) {
-            WayAppPay.API.updateStampCampaign(campaign).fetch(type: [Stamp].self) { response in
+            WayPay.API.updateStampCampaign(campaign).fetch(type: [Stamp].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }

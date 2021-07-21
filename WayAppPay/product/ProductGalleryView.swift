@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProductGalleryView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
     
     var body: some View {
         NavigationView {
@@ -34,7 +34,7 @@ struct ProductGalleryView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        WayAppPay.Product.delete(at: offsets)
+        WayPay.Product.delete(at: offsets)
     }
 
 }
@@ -46,6 +46,6 @@ struct ProductGalleryView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.session)
+        .environmentObject(WayPay.session)
     }
 }

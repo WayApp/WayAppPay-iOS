@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct TransactionsView: View {
-    @EnvironmentObject var session: WayAppPay.Session
+    @EnvironmentObject var session: WayPay.Session
     @State var monthSelection = Calendar.current.component(.month, from: Date()) - 1
     @State private var isAPICallOngoing = false
 
@@ -52,7 +52,7 @@ struct TransactionsView: View {
     ]
 
     private func fillReportID() {
-        var reportID = WayAppPay.ReportID()
+        var reportID = WayPay.ReportID()
         
         for transaction in session.transactions where transaction.result == .ACCEPTED {
             switch transaction.type {
@@ -76,12 +76,12 @@ struct TransactionsView: View {
                             HStack {
                                 Label("Sales", systemImage: "arrow.up.square")
                                     .accessibility(label: Text("Sales"))
-                                Text("\(WayAppPay.formatPrice(session.thisMonthReportID?.totalSales ?? 0))")
+                                Text("\(WayPay.formatPrice(session.thisMonthReportID?.totalSales ?? 0))")
                             }
                             HStack {
                                 Label("Refunds", systemImage: "arrow.down.square")
                                     .accessibility(label: Text("Refunds"))
-                                Text("\(WayAppPay.formatPrice(session.thisMonthReportID?.totalRefund ?? 0))")
+                                Text("\(WayPay.formatPrice(session.thisMonthReportID?.totalRefund ?? 0))")
                             }
                         }
                         Picker(selection: $monthSelection, label: Text("Select another month:")) {
@@ -142,10 +142,10 @@ struct TransactionsView: View {
                 })
                 .navigationBarTitle("Transactions")
                 if session.refundState != .none {
-                    Image(systemName: session.refundState == .success ? WayAppPay.UI.paymentResultSuccessImage : WayAppPay.UI.paymentResultFailureImage)
+                    Image(systemName: session.refundState == .success ? WayPay.UI.paymentResultSuccessImage : WayPay.UI.paymentResultFailureImage)
                         .resizable()
                         .foregroundColor(session.refundState == .success ? Color.green : Color.red)
-                        .frame(width: WayAppPay.UI.paymentResultImageSize, height: WayAppPay.UI.paymentResultImageSize, alignment: .center)
+                        .frame(width: WayPay.UI.paymentResultImageSize, height: WayPay.UI.paymentResultImageSize, alignment: .center)
                 }
                 if isAPICallOngoing {
                     ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
@@ -163,6 +163,6 @@ struct TransactionsView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.session)
+        .environmentObject(WayPay.session)
     }
 }

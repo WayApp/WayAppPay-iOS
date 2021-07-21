@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension WayAppPay {
+extension WayPay {
     struct PaymentTransaction: Codable, ContainerProtocol, Identifiable {
         
         static let defaultCurrency = Currency.EUR
@@ -124,7 +124,7 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
                 return
             }
-            WayAppPay.API.walletPayment(merchantUUID, accountUUID, self).fetch(type: [WayAppPay.PaymentTransaction].self) { response in
+            WayPay.API.walletPayment(merchantUUID, accountUUID, self).fetch(type: [WayPay.PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result,
                         let transaction = transactions.first {
@@ -133,7 +133,7 @@ extension WayAppPay {
                         }
                         WayAppUtils.Log.message("PAGO HECHO!!!!=\(transaction)")
                     } else {
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -148,29 +148,29 @@ extension WayAppPay {
                 WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
                 return
             }
-            WayAppPay.API.refundTransaction(merchantUUID, accountUUID, transactionUUID, self).fetch(type: [PaymentTransaction].self) { response in
+            WayPay.API.refundTransaction(merchantUUID, accountUUID, transactionUUID, self).fetch(type: [PaymentTransaction].self) { response in
                 if case .success(let response?) = response {
                     if let transactions = response.result,
                         let transaction = transactions.first {
                         DispatchQueue.main.async {
-                            WayAppPay.session.transactions.addAsFirst(transaction)
-                            WayAppPay.session.refundState = .success
+                            WayPay.session.transactions.addAsFirst(transaction)
+                            WayPay.session.refundState = .success
                         }
                         WayAppUtils.Log.message("REFUND HECHO!!!!=\(transaction)")
                     } else {
                         DispatchQueue.main.async {
-                            WayAppPay.session.refundState = .failure
+                            WayPay.session.refundState = .failure
                         }
-                        WayAppPay.API.reportError(response)
+                        WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
                     DispatchQueue.main.async {
-                        WayAppPay.session.refundState = .failure
+                        WayPay.session.refundState = .failure
                     }
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + WayAppPay.UI.paymentResultDisplayDuration) {
-                    WayAppPay.session.refundState = .none
+                DispatchQueue.main.asyncAfter(deadline: .now() + WayPay.UI.paymentResultDisplayDuration) {
+                    WayPay.session.refundState = .none
                 }
             }
         }

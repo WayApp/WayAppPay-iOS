@@ -25,7 +25,7 @@ struct ProductRowView: View {
         #endif
     }
 
-    var product: WayAppPay.Product
+    var product: WayPay.Product
 
     var body: some View {
         HStack {
@@ -35,8 +35,8 @@ struct ProductRowView: View {
                     .clipShape(RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous))
                     .accessibility(hidden: true)
                 VStack(alignment: .leading, spacing: 1.0) {
-                    Text(product.name ?? WayAppPay.Product.defaultName)
-                    Text("\(WayAppPay.formatPrice(product.price))")
+                    Text(product.name ?? WayPay.Product.defaultName)
+                    Text("\(WayPay.formatPrice(product.price))")
                         .foregroundColor(.secondary)
                 }
                 .padding(.vertical, metrics.textPadding)
@@ -51,6 +51,6 @@ struct ProductRowView: View {
 
 struct ProductRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductRowView(product: WayAppPay.Product(merchantUUID: "", name: "no name", price: "100"))
+        ProductRowView(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100"))
     }
 }

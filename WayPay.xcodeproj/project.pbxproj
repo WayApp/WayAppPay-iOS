@@ -471,7 +471,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B19ACCB0238B092A009FF084 /* Build configuration list for PBXProject "WayAppPay" */;
+			buildConfigurationList = B19ACCB0238B092A009FF084 /* Build configuration list for PBXProject "WayPay" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -779,7 +779,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B19ACCB0238B092A009FF084 /* Build configuration list for PBXProject "WayAppPay" */ = {
+		B19ACCB0238B092A009FF084 /* Build configuration list for PBXProject "WayPay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B19ACCC7238B092C009FF084 /* Debug */,

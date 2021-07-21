@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ShoppingCartView: View {
-    @EnvironmentObject private var session: WayAppPay.Session
+    @EnvironmentObject private var session: WayPay.Session
  
     var body: some View {
         NavigationView {
@@ -21,7 +21,7 @@ struct ShoppingCartView: View {
                     .onDelete(perform: delete)
                 }
                 .listStyle(GroupedListStyle())
-                .navigationBarTitle(WayAppPay.formatPrice(session.amount))
+                .navigationBarTitle(WayPay.formatPrice(session.amount))
                 .navigationBarItems(trailing:
                     NavigationLink(destination: PaymentOptionsView()) {
                         Image(systemName: "qrcode.viewfinder")
@@ -50,6 +50,6 @@ struct ShoppingCartView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayAppPay.session)
+        .environmentObject(WayPay.session)
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension WayAppPay {
+extension WayPay {
 
     struct ChangePIN: Codable {
         var email: String
@@ -55,7 +55,7 @@ extension WayAppPay {
         
         // DefaultKeyPersistence
         var defaultKey: String {
-            return WayAppPay.DefaultKey.ACCOUNT.rawValue
+            return WayPay.DefaultKey.ACCOUNT.rawValue
         }
         
         var id: String {
@@ -68,7 +68,7 @@ extension WayAppPay {
         }
 
         static func savePassword(_ password: String, forEmail email: String) throws {
-            let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
+            let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayPay.appName)
             let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
             do {
                 try KeychainHandler.addQuery(query)
@@ -81,7 +81,7 @@ extension WayAppPay {
         }
         
         static func deletePassword(_ password: String, forEmail email: String) throws {
-            let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
+            let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayPay.appName)
             let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
             do {
                 try KeychainHandler.deleteQuery(query)
@@ -91,7 +91,7 @@ extension WayAppPay {
         }
         
         static func updatePassword(_ password: String, forEmail email: String) throws {
-            let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayAppPay.appName)
+            let genericPassword = KeychainHandler.GenericPasswordCredentials(account: email, password: password, service: WayPay.appName)
             let query = KeychainHandler.createGenericPasswordQuery(for: genericPassword)
             do {
                 try KeychainHandler.updateQuery(query, password: password)
@@ -103,7 +103,7 @@ extension WayAppPay {
         static func retrievePassword(forEmail: String) -> String? {
             var password: String?
             do {
-                password = try KeychainHandler.searchGenericPasswordQuery(account: forEmail, service: WayAppPay.appName)
+                password = try KeychainHandler.searchGenericPasswordQuery(account: forEmail, service: WayPay.appName)
             } catch {
                 WayAppUtils.Log.message(error.localizedDescription)
             }
@@ -111,7 +111,7 @@ extension WayAppPay {
         }
 
         static func register(registration: Registration) {
-            WayAppPay.API.registrationAccount(registration).fetch(type: [Registration].self) { response in
+            WayPay.API.registrationAccount(registration).fetch(type: [Registration].self) { response in
                 WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
                 if case .success(let response?) = response {
                     if let registrations = response.result,
@@ -125,46 +125,46 @@ extension WayAppPay {
         }
 
         static func changePIN(_ email: String, newPIN: String, completion: @escaping ([Account]?, Error?) -> Void) {
-            WayAppPay.API.changePIN(ChangePIN(email: email, oldPin: "", newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
+            WayPay.API.changePIN(ChangePIN(email: email, oldPin: "", newPin: Account.hashedPIN(newPIN))).fetch(type: [Account].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
         
         static func forgotPIN(_ email: String, completion: @escaping ([OTP]?, Error?) -> Void) {
-            WayAppPay.API.forgotPIN(ChangePIN(email: email, oldPin: "", newPin: "")).fetch(type: [OTP].self) { response in
+            WayPay.API.forgotPIN(ChangePIN(email: email, oldPin: "", newPin: "")).fetch(type: [OTP].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
 
         static func load(email: String, pin: String, completion: @escaping ([Account]?, Error?) -> Void) {
-            WayAppPay.API.getAccount(email, Account.hashedPIN(pin)).fetch(type: [WayAppPay.Account].self) { response in
+            WayPay.API.getAccount(email, Account.hashedPIN(pin)).fetch(type: [WayPay.Account].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         } // load
             
         static func delete(_ accountUUID: String) {
-            WayAppPay.API.deleteAccount(accountUUID).fetch(type: [String].self) { response in
+            WayPay.API.deleteAccount(accountUUID).fetch(type: [String].self) { response in
                 WayAppUtils.Log.message("DELETE Response")
                 if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -181,27 +181,27 @@ extension WayAppPay {
         }
         
         static func getRewards(_ transaction: PaymentTransaction, completion: @escaping ([Reward]?, Error?) -> Void) {
-            WayAppPay.API.getRewards(transaction).fetch(type: [Reward].self) { response in
+            WayPay.API.getRewards(transaction).fetch(type: [Reward].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
         
-        static func checkin(_ transaction: PaymentTransaction, completion: @escaping ([WayAppPay.Checkin]?, Error?) -> Void) {
-            WayAppPay.API.checkin(transaction).fetch(type: [WayAppPay.Checkin].self) { response in
+        static func checkin(_ transaction: PaymentTransaction, completion: @escaping ([WayPay.Checkin]?, Error?) -> Void) {
+            WayPay.API.checkin(transaction).fetch(type: [WayPay.Checkin].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
                 default:
-                    completion(nil, WayAppPay.API.ResponseError.INVALID_SERVER_DATA)
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
@@ -209,7 +209,7 @@ extension WayAppPay {
     }
 }
 
-extension WayAppPay {
+extension WayPay {
     
     enum Currency: String, Codable {
         case CHF, CLP, COP, EUR, GBP, USD, VEF, Unknown

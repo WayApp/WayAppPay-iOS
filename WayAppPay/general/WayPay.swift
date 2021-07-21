@@ -41,7 +41,7 @@ extension PKPass {
     }
 }
 
-struct WayAppPay {
+struct WayPay {
     static let cornerRadius: CGFloat = 36
     
     struct Badge: View {
@@ -87,7 +87,7 @@ struct WayAppPay {
                     .background(isEnabled ?
                                     (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
                                     : Color.gray)
-                    .cornerRadius(WayAppPay.cornerRadius)
+                    .cornerRadius(WayPay.cornerRadius)
             }
         }
     }
@@ -180,7 +180,7 @@ struct WayAppPay {
 
     static func formatPrice(_ price: Int?) -> String {
         if let price = price,
-            let formatted = WayAppPay.currencyFormatter.string(for: Double(price) / 100) {
+            let formatted = WayPay.currencyFormatter.string(for: Double(price) / 100) {
             return formatted
         }
         return ""
@@ -188,7 +188,7 @@ struct WayAppPay {
 
     static func formatAmount(_ price: Int?) -> String {
         if let price = price,
-            let formatted = WayAppPay.amountFormatter.string(for: Double(price) / 100) {
+            let formatted = WayPay.amountFormatter.string(for: Double(price) / 100) {
             return formatted
         }
         return ""
