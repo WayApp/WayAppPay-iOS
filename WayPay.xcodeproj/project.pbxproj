@@ -40,7 +40,6 @@
 		B13B689226A6E7C300271515 /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B689126A6E7C300271515 /* RewardsView.swift */; };
 		B144F2CC26833220001C3C10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */; };
 		B14BA8AD250F77870095C654 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */; };
-		B15800F42507CA380022A687 /* CardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F32507CA380022A687 /* CardDetailView.swift */; };
 		B15800F625093B610022A687 /* NewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15800F525093B610022A687 /* NewCardView.swift */; };
 		B1609567263E876000B14A43 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1609566263E876000B14A43 /* Campaign.swift */; };
 		B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B164A70C24A4C13B0020ACAB /* PassKit.framework */; };
@@ -48,6 +47,7 @@
 		B17C97C6268E2762007C652C /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17C97C5268E2762007C652C /* Point.swift */; };
 		B17C97C8268E28B9007C652C /* Stamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17C97C7268E28B9007C652C /* Stamp.swift */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
+		B1843DBF26A96EE000C4F832 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1843DBE26A96EE000C4F832 /* Assets.xcassets */; };
 		B19ACCBD238B092A009FF084 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBC238B092A009FF084 /* MainView.swift */; };
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
 		B1A19AC2240251FA0070E5FF /* PaymentOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A19AC1240251FA0070E5FF /* PaymentOptionsView.swift */; };
@@ -79,7 +79,6 @@
 		B1E96933268379B200B6B41E /* CampaignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E96932268379B200B6B41E /* CampaignsView.swift */; };
 		B1E9693526837F2400B6B41E /* CampaignNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E9693426837F2400B6B41E /* CampaignNewView.swift */; };
 		B1EB03892695A817004269AE /* CampaignRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EB03882695A817004269AE /* CampaignRowView.swift */; };
-		B1F22FE126A57E4700124A95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1F22FE026A57E4700124A95 /* Assets.xcassets */; };
 		B1F4157A26011A7E00511B6D /* Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F4157926011A7E00511B6D /* Registration.swift */; };
 		B1FEF82D25E0525C0093BCEE /* OrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FEF82C25E0525C0093BCEE /* OrderView.swift */; };
 		B1FEF83025E052DC0093BCEE /* OrderRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FEF82F25E052DC0093BCEE /* OrderRowView.swift */; };
@@ -119,7 +118,6 @@
 		B13B689126A6E7C300271515 /* RewardsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewardsView.swift; sourceTree = "<group>"; };
 		B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B14BA8AC250F77870095C654 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
-		B15800F32507CA380022A687 /* CardDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = WayAppPay/product/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
 		B15800F525093B610022A687 /* NewCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewCardView.swift; sourceTree = "<group>"; };
 		B1609566263E876000B14A43 /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
 		B164A70C24A4C13B0020ACAB /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
@@ -128,6 +126,7 @@
 		B17C97C5268E2762007C652C /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		B17C97C7268E28B9007C652C /* Stamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stamp.swift; sourceTree = "<group>"; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
+		B1843DBE26A96EE000C4F832 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WayPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCBC238B092A009FF084 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -162,7 +161,6 @@
 		B1E96932268379B200B6B41E /* CampaignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignsView.swift; sourceTree = "<group>"; };
 		B1E9693426837F2400B6B41E /* CampaignNewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignNewView.swift; sourceTree = "<group>"; };
 		B1EB03882695A817004269AE /* CampaignRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRowView.swift; sourceTree = "<group>"; };
-		B1F22FE026A57E4700124A95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = WayAppPay/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		B1F4157926011A7E00511B6D /* Registration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Registration.swift; sourceTree = "<group>"; };
 		B1FEF82C25E0525C0093BCEE /* OrderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderView.swift; sourceTree = "<group>"; };
 		B1FEF82F25E052DC0093BCEE /* OrderRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderRowView.swift; sourceTree = "<group>"; };
@@ -281,7 +279,6 @@
 				B12DE97023AA713C00C02657 /* Issuer.swift */,
 				B1B3817D250523D60008BC78 /* Balance.swift */,
 				B1B381792505031D0008BC78 /* CardsView.swift */,
-				B15800F32507CA380022A687 /* CardDetailView.swift */,
 				B15800F525093B610022A687 /* NewCardView.swift */,
 				B1B3817B25050D350008BC78 /* CardRowView.swift */,
 				B1D6990523EA22A40049E1D8 /* QRScannerView.swift */,
@@ -328,7 +325,7 @@
 		B187D53825DE661A0065CAEA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				B1F22FE026A57E4700124A95 /* Assets.xcassets */,
+				B1843DBE26A96EE000C4F832 /* Assets.xcassets */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -336,7 +333,7 @@
 		B19ACCAC238B092A009FF084 = {
 			isa = PBXGroup;
 			children = (
-				B19ACCB7238B092A009FF084 /* WayAppPay */,
+				B19ACCB7238B092A009FF084 /* WayPay */,
 				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB6238B092A009FF084 /* Products */,
 			);
@@ -350,7 +347,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B19ACCB7238B092A009FF084 /* WayAppPay */ = {
+		B19ACCB7238B092A009FF084 /* WayPay */ = {
 			isa = PBXGroup;
 			children = (
 				B10F838725DBCA8000F4B528 /* WayPayApp.swift */,
@@ -378,7 +375,7 @@
 				B19ACCC0238B092C009FF084 /* Preview Content */,
 				B144F2CB26833220001C3C10 /* LaunchScreen.storyboard */,
 			);
-			path = WayAppPay;
+			path = WayPay;
 			sourceTree = "<group>";
 		};
 		B19ACCC0238B092C009FF084 /* Preview Content */ = {
@@ -499,7 +496,7 @@
 				B104DADF26222E58000EFC75 /* InfoPlist.strings in Resources */,
 				B144F2CC26833220001C3C10 /* LaunchScreen.storyboard in Resources */,
 				B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */,
-				B1F22FE126A57E4700124A95 /* Assets.xcassets in Resources */,
+				B1843DBF26A96EE000C4F832 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,7 +542,6 @@
 				B1D8750A23EF2F3B00A1967F /* ReportID.swift in Sources */,
 				B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */,
 				B1E96933268379B200B6B41E /* CampaignsView.swift in Sources */,
-				B15800F42507CA380022A687 /* CardDetailView.swift in Sources */,
 				B14BA8AD250F77870095C654 /* AuthenticationViewModel.swift in Sources */,
 				B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */,
 				AF3A376423E844FC00E437CA /* AddProductButtonView.swift in Sources */,
@@ -728,13 +724,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = WayAppPay/WayPay.entitlements;
+				CODE_SIGN_ENTITLEMENTS = WayPay/WayPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_ASSET_PATHS = "\"WayAppPay/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"WayPay/Preview Content\"";
 				DEVELOPMENT_TEAM = KY762H7M37;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = WayAppPay/Info.plist;
+				INFOPLIST_FILE = WayPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -755,13 +751,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = WayAppPay/WayPay.entitlements;
+				CODE_SIGN_ENTITLEMENTS = WayPay/WayPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_ASSET_PATHS = "\"WayAppPay/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"WayPay/Preview Content\"";
 				DEVELOPMENT_TEAM = KY762H7M37;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = WayAppPay/Info.plist;
+				INFOPLIST_FILE = WayPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

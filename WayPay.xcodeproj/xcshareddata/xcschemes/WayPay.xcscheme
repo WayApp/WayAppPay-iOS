@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B19ACCB4238B092A009FF084"
-               BuildableName = "WayApp Pay.app"
+               BuildableName = "WayPay.app"
                BlueprintName = "WayPay"
                ReferencedContainer = "container:WayPay.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B19ACCB4238B092A009FF084"
-            BuildableName = "WayApp Pay.app"
+            BuildableName = "WayPay.app"
             BlueprintName = "WayPay"
             ReferencedContainer = "container:WayPay.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B19ACCB4238B092A009FF084"
-            BuildableName = "WayApp Pay.app"
+            BuildableName = "WayPay.app"
             BlueprintName = "WayPay"
             ReferencedContainer = "container:WayPay.xcodeproj">
          </BuildableReference>

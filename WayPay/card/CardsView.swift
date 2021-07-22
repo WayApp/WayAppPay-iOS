@@ -50,7 +50,7 @@ struct CardsView: View {
         NavigationView {
             List {
                 ForEach(session.cards) { card in
-                    NavigationLink(destination: CardDetailView(card: card)) {
+                    NavigationLink(destination: NewCardView()) {
                         CardRowView(card: card)}
                 }
             } // List
