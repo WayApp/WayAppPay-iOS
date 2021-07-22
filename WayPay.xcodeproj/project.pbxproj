@@ -128,7 +128,7 @@
 		B17C97C5268E2762007C652C /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		B17C97C7268E28B9007C652C /* Stamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stamp.swift; sourceTree = "<group>"; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
-		B19ACCB5238B092A009FF084 /* WayApp Pay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WayApp Pay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B19ACCB5238B092A009FF084 /* WayPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WayPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCBC238B092A009FF084 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B19ACCC6238B092C009FF084 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 		B19ACCB6238B092A009FF084 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B19ACCB5238B092A009FF084 /* WayApp Pay.app */,
+				B19ACCB5238B092A009FF084 /* WayPay.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -438,9 +438,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B19ACCB4238B092A009FF084 /* WayAppPay */ = {
+		B19ACCB4238B092A009FF084 /* WayPay */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B19ACCC9238B092C009FF084 /* Build configuration list for PBXNativeTarget "WayAppPay" */;
+			buildConfigurationList = B19ACCC9238B092C009FF084 /* Build configuration list for PBXNativeTarget "WayPay" */;
 			buildPhases = (
 				B19ACCB1238B092A009FF084 /* Sources */,
 				B19ACCB2238B092A009FF084 /* Frameworks */,
@@ -450,9 +450,9 @@
 			);
 			dependencies = (
 			);
-			name = WayAppPay;
+			name = WayPay;
 			productName = WayAppPay;
-			productReference = B19ACCB5238B092A009FF084 /* WayApp Pay.app */;
+			productReference = B19ACCB5238B092A009FF084 /* WayPay.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -485,7 +485,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B19ACCB4238B092A009FF084 /* WayAppPay */,
+				B19ACCB4238B092A009FF084 /* WayPay */,
 			);
 		};
 /* End PBXProject section */
@@ -742,7 +742,7 @@
 				);
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wayapp.WayAppPay;
-				PRODUCT_NAME = "WayApp Pay";
+				PRODUCT_NAME = WayPay;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -769,7 +769,7 @@
 				);
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wayapp.WayAppPay;
-				PRODUCT_NAME = "WayApp Pay";
+				PRODUCT_NAME = WayPay;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -788,7 +788,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B19ACCC9238B092C009FF084 /* Build configuration list for PBXNativeTarget "WayAppPay" */ = {
+		B19ACCC9238B092C009FF084 /* Build configuration list for PBXNativeTarget "WayPay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B19ACCCA238B092C009FF084 /* Debug */,
