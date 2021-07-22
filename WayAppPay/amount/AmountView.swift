@@ -83,6 +83,7 @@ struct AmountView: View {
                         }
                     }
                     HStack {
+                        
                         Spacer()
                         Button {
                             if let merchantUUID = session.merchantUUID {
