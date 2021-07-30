@@ -21,7 +21,9 @@ struct CheckinView: View {
     @State private var wasScanSuccessful: Bool = false
     @State private var checkin: WayPay.Checkin?
     @State private var selectedPrize: Int = -1
-    
+    @State var stampCampaign: WayPay.Stamp?
+    @State var pointCampaign: WayPay.Point?
+
     private var fullname: String {
         if let checkin = checkin {
             return (checkin.firstName ?? "") + (checkin.lastName != nil ? " " + checkin.lastName! : "")
@@ -65,6 +67,15 @@ struct CheckinView: View {
         .background(Color("CornSilk"))
     }
     
+    private func getRewardBalanceForCampaign(_ id: String) -> Int? {
+        if let rewards = checkin?.rewards {
+            for reward in rewards where reward.campaignID == id {
+                return reward.balance
+            }
+        }
+        return nil
+    }
+    
     var body: some View {
         if (showQRScanner) {
             CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
@@ -86,8 +97,17 @@ struct CheckinView: View {
                             .font(.callout)) {
                     if let rewards = checkin.rewards,
                        !rewards.isEmpty {
-                        NavigationLink(destination: RewardsView(rewards: rewards)) {
-                            Label(NSLocalizedString("Balance", comment: "CheckinView: Balances"), systemImage: "number.square")
+                        VStack(alignment: .leading){
+                            if let stampCampaign = stampCampaign,
+                               let amountToGetIt = stampCampaign.prize?.amountToGetIt {
+                                Text(stampCampaign.name + ": ").bold() +
+                                    Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0) + " / ") +
+                                    Text("\(amountToGetIt)")
+                            }
+                            Divider()
+                            if let pointCampaign = pointCampaign {
+                                Text(pointCampaign.name + ": " + String(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                            }
                         }
                     } else {
                         Text("No campaigns")
@@ -112,6 +132,10 @@ struct CheckinView: View {
                         Label(NSLocalizedString("Transactions", comment: "CheckinView: Transactions"), systemImage: "number.square")
                     }
                 }
+                .onAppear(perform: {
+                    stampCampaign = WayPay.Campaign.activeStampCampaign()
+                    pointCampaign = WayPay.Campaign.activePointCampaign()
+                })
                 Section(header:
                             Label(NSLocalizedString("Payment", comment: "CheckinView: section title"), systemImage: "eurosign.square")
                             .font(.callout)) {

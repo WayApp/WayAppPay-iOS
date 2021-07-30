@@ -16,7 +16,7 @@ struct PointNewView: View {
     @State private var prizeFormat: WayPay.Prize.Format = .MANUAL
     @State private var prizeAmount: String = "0"
     @State private var prizeName: String = "1st prize"
-    @State private var prize: WayPay.Prize = WayPay.Prize(campaignID: "", name: "", message: "")
+    @State private var prize: WayPay.Prize = WayPay.Prize(campaignID: "", name: "", message: "", amountToGetIt: 0)
     @State var newName: String = ""
     @State var expires: Bool = false
     @State private var expirationDate = Date()

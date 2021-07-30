@@ -17,6 +17,5 @@ extension WayPay {
         var transactions: [WayPay.PaymentTransaction]?
         var rewards: [WayPay.Reward]?
         var prizes: [WayPay.Prize]?
-        
     }
 }

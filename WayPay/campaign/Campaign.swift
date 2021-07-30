@@ -33,12 +33,12 @@ extension WayPay {
         var value: Int?
         var format: Format
         
-        init(campaignID: String, name: String, message: String, format: Format = .MANUAL) {
+        init(campaignID: String, name: String, message: String, format: Format = .MANUAL, amountToGetIt: Int) {
             self.campaignID = campaignID
             self.message = message
             self.name = name
             self.format = format
-            self.amountToGetIt = 0
+            self.amountToGetIt = amountToGetIt
         }
         
         var displayAs: String {
