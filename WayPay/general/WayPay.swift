@@ -93,6 +93,27 @@ struct WayPay {
         }
     }
     
+    struct StampButtonModifier: ButtonStyle {
+        func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+            MyButton(configuration: configuration)
+        }
+        struct MyButton: View {
+            let configuration: ButtonStyle.Configuration
+            @Environment(\.isEnabled) private var isEnabled: Bool
+            
+            var body: some View {
+                configuration.label
+                    .font(.headline)
+                    .background(isEnabled ?
+                                    (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
+                                    : Color.gray)
+                    .cornerRadius(12)
+                    .foregroundColor(.white)
+            }
+        }
+    }
+
+    
     struct UI {
         static let paymentResultSuccessImage = "checkmark.circle.fill"
         static let paymentResultFailureImage = "x.circle.fill"

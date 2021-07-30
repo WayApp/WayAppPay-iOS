@@ -285,14 +285,27 @@ extension WayPay {
             return prizes
         }
 
-        func icon() -> String {
+        static func icon(format: Format) -> String {
             switch format {
             case .POINT:
-                return "number.square"
+                return "number"
             case .STAMP:
-                return "arrow.down.square.fill"
+                return "loupe"
             }
         }
 
+        func icon() -> String {
+            Campaign.icon(format: format)
+        }
+
+        static func activeStampCampaign() -> Stamp? {
+            let campaigns = session.stamps.filter(satisfying: {$0.format == .STAMP})
+            return campaigns.first
+        }
+
+        static func activePointCampaign() -> Point? {
+            let campaigns = session.points.filter(satisfying: {$0.format == .POINT})
+            return campaigns.first
+        }
     }
 }
