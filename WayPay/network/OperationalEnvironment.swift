@@ -12,7 +12,7 @@ enum OperationalEnvironment {
     case production, staging
     
     static var current: OperationalEnvironment = .staging
-    static var isSettingsSupportFunctionsActive = true
+    static var isSettingsSupportFunctionsActive = false
     
     static var wayappPayAPIBaseURL: String {
         switch OperationalEnvironment.current {

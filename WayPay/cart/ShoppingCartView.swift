@@ -12,28 +12,24 @@ struct ShoppingCartView: View {
     @EnvironmentObject private var session: WayPay.Session
  
     var body: some View {
-        NavigationView {
-            ZStack {
-                List {
-                    ForEach(session.shoppingCart.items) { item in
-                        ShoppingCartRowView(item: item)
-                    }
-                    .onDelete(perform: delete)
-                }
-                .listStyle(GroupedListStyle())
-                .navigationBarTitle(WayPay.formatPrice(session.amount))
-                .navigationBarItems(trailing:
-                    NavigationLink(destination: PaymentOptionsView()) {
-                        Image(systemName: "qrcode.viewfinder")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
-                    }
-                    .foregroundColor(Color("MintGreen"))
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.trailing, 16)
-                )
+        List {
+            ForEach(session.shoppingCart.items) { item in
+                ShoppingCartRowView(item: item)
             }
+            .onDelete(perform: delete)
         }
+        .listStyle(GroupedListStyle())
+        .navigationBarTitle(WayPay.formatPrice(session.amount))
+        .navigationBarItems(trailing:
+            NavigationLink(destination: PaymentOptionsView()) {
+                Image(systemName: "qrcode.viewfinder")
+                .resizable()
+                .frame(width: 30, height: 30, alignment: .center)
+            }
+            .foregroundColor(Color("MintGreen"))
+            .aspectRatio(contentMode: .fit)
+            .padding(.trailing, 16)
+        )
     }
     
     func delete(at offsets: IndexSet) {

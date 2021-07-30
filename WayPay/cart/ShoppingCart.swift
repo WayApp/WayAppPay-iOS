@@ -65,6 +65,13 @@ extension WayPay {
             }
         }
         
+        mutating func add(merchantUUID: String, cartItems: [CartItem]) {
+            empty()
+            for cartItem in cartItems {
+                items.add(ShoppingCartItem(product: Product(merchantUUID: merchantUUID, name: cartItem.name ?? "", price: 100), isAmount: false))
+            }
+        }
+        
         mutating func removeProduct(_ product: Product) {
             if let index = items.index(forID: product.productUUID) {
                 items[index].cartItem.quantity -= 1

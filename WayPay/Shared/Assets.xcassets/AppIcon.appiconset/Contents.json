@@ -1,109 +1,109 @@
 {
   "images" : [
     {
-      "filename" : "WAP-iOS-Icon_40.png",
+      "filename" : "wp-icon-40.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "WAP-iOS-Icon_60.png",
+      "filename" : "wp-icon-60.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "WAP-iOS-Icon_58.png",
+      "filename" : "wp-icon-58.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "WAP-iOS-Icon_87.png",
+      "filename" : "wp-icon-87.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "WAP-iOS-Icon_80.png",
+      "filename" : "wp-icon-80.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "WAP-iOS-Icon_120.png",
+      "filename" : "wp-icon-120.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "WAP-iOS-Icon_120-1.png",
+      "filename" : "wp-icon-121.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "WAP-iOS-Icon_180.png",
+      "filename" : "wp-icon-180.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "filename" : "WAP-iOS-Icon_20.png",
+      "filename" : "wp-icon-20.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "20x20"
     },
     {
-      "filename" : "WAP-iOS-Icon_40-1.png",
+      "filename" : "wp-icon-41.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "WAP-iOS-Icon_29.png",
+      "filename" : "wp-icon-29.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "filename" : "WAP-iOS-Icon_58-1.png",
+      "filename" : "wp-icon-59.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "WAP-iOS-Icon_40-2.png",
+      "filename" : "wp-icon-42.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
-      "filename" : "WAP-iOS-Icon_80-1.png",
+      "filename" : "wp-icon-81.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "WAP-iOS-Icon_76.png",
+      "filename" : "wp-icon-76.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "76x76"
     },
     {
-      "filename" : "WAP-iOS-Icon_152.png",
+      "filename" : "wp-icon-152.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "76x76"
     },
     {
-      "filename" : "WAP-iOS-Icon_167.png",
+      "filename" : "wp-icon-167.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "WAP-iOS-Icon_1024.png",
+      "filename" : "wp-icon-1024.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

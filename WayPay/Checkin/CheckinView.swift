@@ -11,7 +11,7 @@ import SwiftUI
 struct CheckinView: View {
     @EnvironmentObject private var session: WayPay.Session
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
+    
     @State private var showQRScanner = true
     @State private var scannedCode: String? = nil
     @State private var isAPICallOngoing = false
@@ -21,7 +21,7 @@ struct CheckinView: View {
     @State private var wasScanSuccessful: Bool = false
     @State private var checkin: WayPay.Checkin?
     @State private var selectedPrize: Int = -1
-
+    
     private var fullname: String {
         if let checkin = checkin {
             return (checkin.firstName ?? "") + (checkin.lastName != nil ? " " + checkin.lastName! : "")
@@ -41,7 +41,7 @@ struct CheckinView: View {
         }
         return session.amount
     }
-
+    
     private var actionButtons: some View {
         HStack {
             Button {
@@ -60,82 +60,96 @@ struct CheckinView: View {
             .animation(.easeInOut(duration: 0.3))
         }
         .buttonStyle(WayPay.ButtonModifier())
+        .listRowInsets(EdgeInsets())
+        .padding()
+        .background(Color("CornSilk"))
     }
     
     var body: some View {
-        NavigationView {
-            if (showQRScanner) {
-                CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
-                    .navigationBarTitle("Scan customer QR", displayMode: .inline)
-            } else if isAPICallOngoing {
-                ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
-                    .alert(isPresented: $scanError) {
-                        Alert(title: Text("QR not found"),
-                              message: Text("Try again. If not found again, contact support@wayapp.com"),
-                              dismissButton: .default(
-                                              Text("OK"),
-                                              action: displayScanner)
-                        )}
-            } else if let checkin = checkin {
-                Form {
-                    Section(header:
-                                Label(NSLocalizedString("Campaigns", comment: "CheckinView: button title"), systemImage: "person.fill.viewfinder")
-                                .font(.callout)) {
-                        if let rewards = checkin.rewards,
-                           !rewards.isEmpty {
-                            NavigationLink(destination: RewardsView(rewards: rewards)) {
-                                Label(NSLocalizedString("Balance", comment: "CheckinView: Balances"), systemImage: "number.square")
-                            }
-                        } else {
-                            Text("No campaigns")
+        if (showQRScanner) {
+            CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarTitle("Scan QR")
+        } else if isAPICallOngoing {
+            ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
+                .alert(isPresented: $scanError) {
+                    Alert(title: Text("QR not found"),
+                          message: Text("Try again. If not found again, contact support@wayapp.com"),
+                          dismissButton: .default(
+                            Text("OK"),
+                            action: displayScanner)
+                    )}
+        } else if let checkin = checkin {
+            Form {
+                Section(header:
+                            Label(NSLocalizedString("Loyalty", comment: "CheckinView: button title"), systemImage: "person.fill.viewfinder")
+                            .font(.callout)) {
+                    if let rewards = checkin.rewards,
+                       !rewards.isEmpty {
+                        NavigationLink(destination: RewardsView(rewards: rewards)) {
+                            Label(NSLocalizedString("Balance", comment: "CheckinView: Balances"), systemImage: "number.square")
                         }
-                        if let prizes = checkin.prizes,
-                           !prizes.isEmpty {
-                            Picker(selection: $selectedPrize, label: Label("Has won", systemImage: "app.gift")
-                                    .accessibility(label: Text("Has won"))) {
-                                ForEach(0..<prizes.count) {
-                                    Text(prizes[$0].displayAs)
-                                        .font(Font.body)
-                                }
-                            }
-                            .onChange(of: selectedPrize, perform: { merchant in
-                                WayAppUtils.Log.message("selectedPrize success")
-
-                            })
-                        } else {
-                            Text("Has not won any prize")
-                        }
+                    } else {
+                        Text("No campaigns")
                     }
-                    Section(header:
-                                Label(NSLocalizedString("Payment", comment: "CheckinView: section title"), systemImage: "eurosign.square")
-                                .font(.callout)) {
-                        NavigationLink(destination: AmountView()) {
-                            Label(NSLocalizedString("Enter amount", comment: "CheckinView: Enter amount"), systemImage: "square.grid.3x3")
+                    if let prizes = checkin.prizes,
+                       !prizes.isEmpty {
+                        Picker(selection: $selectedPrize, label: Label("Has won", systemImage: "app.gift")
+                                .accessibility(label: Text("Has won"))) {
+                            ForEach(0..<prizes.count) {
+                                Text(prizes[$0].displayAs)
+                                    .font(Font.body)
+                            }
                         }
-                        NavigationLink(destination: OrderView()) {
-                            Label(NSLocalizedString("Select products", comment: "CheckinView: Order from product catalogue option"), systemImage: "filemenu.and.selection")
-                        }
-                        NavigationLink(destination: ShoppingCartView()) {
-                            Label(shoppingCartMenuOption, systemImage: "cart")
-                        }
+                        .onChange(of: selectedPrize, perform: { merchant in
+                            WayAppUtils.Log.message("selectedPrize success")
+                            
+                        })
+                    } else {
+                        Text("Has not won any prize")
                     }
-                    actionButtons
+                    NavigationLink(destination: TransactionsView(accountUUID: checkin.accountUUID)) {
+                        Label(NSLocalizedString("Transactions", comment: "CheckinView: Transactions"), systemImage: "number.square")
+                    }
                 }
-                .navigationBarTitle(fullname, displayMode: .inline)
-                .alert(isPresented: $showTransactionResult) {
-                    Alert(
-                        title: Text(wasTransactionSuccessful ? "✅" : "🚫")
-                            .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
-                            .font(.title),
-                        message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
-                        dismissButton: .default(
-                                        Text("OK"),
-                                        action: displayScanner)
-                    )
+                Section(header:
+                            Label(NSLocalizedString("Payment", comment: "CheckinView: section title"), systemImage: "eurosign.square")
+                            .font(.callout)) {
+                    NavigationLink(destination: AmountView()) {
+                        Label(NSLocalizedString("Enter amount", comment: "CheckinView: Enter amount"), systemImage: "square.grid.3x3")
+                    }
+                    NavigationLink(destination: OrderView()) {
+                        Label(NSLocalizedString("Select products", comment: "CheckinView: Order from product catalogue option"), systemImage: "filemenu.and.selection")
+                    }
+                    NavigationLink(destination: ShoppingCartView()) {
+                        Label(shoppingCartMenuOption, systemImage: "cart")
+                    }
                 }
+                Section(header:
+                            Label(NSLocalizedString("Top up", comment: "CheckinView: section title"), systemImage: "plus.app")
+                            .font(.callout)) {
+                    NavigationLink(destination: AmountView(scannedCode: scannedCode, displayOption: AmountView.DisplayOption.topup)) {
+                        Label(NSLocalizedString("Top up amount", comment: "CheckinView: Enter amount"), systemImage: "square.grid.3x3")
+                    }
+                    
+                }
+                actionButtons
             }
+            .edgesIgnoringSafeArea(.all)
+            .navigationBarTitle(fullname)
+            .alert(isPresented: $showTransactionResult) {
+                Alert(
+                    title: Text(wasTransactionSuccessful ? "✅" : "🚫")
+                        .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
+                        .font(.title),
+                    message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
+                    dismissButton: .default(
+                        Text("OK"),
+                        action: displayScanner)
+                )
+            }
+        }
     }
-}
     private func displayScanner() {
         self.showTransactionResult = false
         self.wasTransactionSuccessful = false
@@ -152,7 +166,7 @@ struct CheckinView: View {
             self.wasTransactionSuccessful = accepted
         }
     }
-
+    
     private func handleScan() {
         WayAppUtils.Log.message("Checking in")
         guard let code = scannedCode else {
@@ -221,7 +235,7 @@ struct CheckinView: View {
             }
         }
     }
-
+    
 }
 
 struct CheckinView_Previews: PreviewProvider {

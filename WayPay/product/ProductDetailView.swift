@@ -97,7 +97,9 @@ struct ProductDetailView: View {
                 if self.product == nil,
                    let merchantUUID = session.merchantUUID {
                     // creation
-                    let newProduct = WayPay.Product(merchantUUID: merchantUUID, name: self.newName, price: self.newPrice)
+                    WayAppUtils.Log.message("newPrice=\(newPrice), double=\((self.newPrice as NSString).doubleValue), Double*100=\((self.newPrice as NSString).doubleValue*100), Int=\(Int((self.newPrice as NSString).doubleValue*100)))")
+                    let newProduct = WayPay.Product(merchantUUID: merchantUUID, name: self.newName,
+                                                    price: WayAppUtils.composeIntPriceFromString(self.newPrice))
                     WayPay.Product.add(merchantUUID: merchantUUID, product: newProduct, image: self.newImage) { product, error in
                         if let product = product {
                             DispatchQueue.main.async {
@@ -128,6 +130,6 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100"))
+        ProductDetailView(product: WayPay.Product(merchantUUID: "", name: "no name", price: 100))
     }
 }

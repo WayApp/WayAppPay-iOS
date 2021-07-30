@@ -82,18 +82,11 @@ extension WayPay {
                             WayAppUtils.Log.message("Could not fetch STAMP campaigns")
                         }
                     }
-                    //merchants[seletectedMerchant].getReportID(for: accountUUID, month: ReportID.idReportForMonth(Date()))
-                    //merchants[seletectedMerchant].getTransactionsForAccountForDay(accountUUID, day: Calendar.current.date(byAdding: .day, value: 0, to: Date())!)
                 }
             }
         }
-        
-        enum RefundState {
-            case none, success, failure
-        }
-              
+                      
         //TODO: review the need to use @Published for these variables
-        @Published var refundState: RefundState = .none
         @Published var products = Container<Product>()
         @Published var points = Container<Point>()
         @Published var stamps = Container<Stamp>()

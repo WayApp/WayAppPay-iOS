@@ -184,6 +184,6 @@ struct NewCardView: View {
 
 struct NewCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayPay.Product(merchantUUID: "",  name: "no name", price: "100"))
+        ProductDetailView(product: WayPay.Product(merchantUUID: "",  name: "no name", price: 100))
     }
 }

@@ -51,6 +51,6 @@ struct ProductRowView: View {
 
 struct ProductRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductRowView(product: WayPay.Product(merchantUUID: "", name: "no name", price: "100"))
+        ProductRowView(product: WayPay.Product(merchantUUID: "", name: "no name", price: 100))
     }
 }

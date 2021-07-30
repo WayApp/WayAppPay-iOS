@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct TransactionRowView: View {
+    @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var session: WayPay.Session
     var transaction: WayPay.PaymentTransaction
     
@@ -33,10 +34,11 @@ struct TransactionRowView: View {
         HStack {
             transaction.result?.image
             VStack(alignment: .leading, spacing: 8) {
-                Text(transaction.creationDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.creationDate!) : "no date")
+                Text(transaction.lastUpdateDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.lastUpdateDate!) : "no date")
                 Text(transaction.type?.title ?? WayPay.PaymentTransaction.TransactionType.defaultTitle)
-                Text(session.account?.email ?? "no email")
                     .font(.subheadline)
+                Text(transaction.getPurchaseDetail())
+                    .font(.footnote)
             }.contextMenu {
                 if ((transaction.type == WayPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
                     Button {
@@ -52,7 +54,13 @@ struct TransactionRowView: View {
                     Label("Email receipt", systemImage: "envelope")
                         .accessibility(label: Text("Email receipt"))
                 }
-
+                Button {
+                    session.shoppingCart.add(merchantUUID: session.merchantUUID ?? "", cartItems: transaction.purchaseDetail ?? [])
+                    self.presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Label("Repeat", systemImage: "repeat")
+                        .accessibility(label: Text("Repeat"))
+                }
             }
             Spacer()
             Text(WayPay.formatPrice(transaction.amount))

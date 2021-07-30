@@ -10,6 +10,11 @@ import SwiftUI
 
 @main
 struct WayPayApp: App {
+    
+    init() {
+        UITableView.appearance().backgroundColor = UIColor(named: "CornSilk")
+    }
+    
     var body: some Scene {
         WindowGroup {
             MainView()

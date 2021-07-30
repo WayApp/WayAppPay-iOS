@@ -154,25 +154,28 @@ extension WayPay {
                         let transaction = transactions.first {
                         DispatchQueue.main.async {
                             WayPay.session.transactions.addAsFirst(transaction)
-                            WayPay.session.refundState = .success
                         }
                         WayAppUtils.Log.message("REFUND HECHO!!!!=\(transaction)")
                     } else {
-                        DispatchQueue.main.async {
-                            WayPay.session.refundState = .failure
-                        }
                         WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
-                    DispatchQueue.main.async {
-                        WayPay.session.refundState = .failure
-                    }
                     WayAppUtils.Log.message(error.localizedDescription)
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + WayPay.UI.paymentResultDisplayDuration) {
-                    WayPay.session.refundState = .none
+            }
+        }
+        
+        func getPurchaseDetail() -> String {
+            var description = String()
+            if let purchaseDetail = purchaseDetail {
+                for cartItem in purchaseDetail {
+                    if let name = cartItem.name {
+                        description.append((description.isEmpty ? "" : ", ") + name + " (\(cartItem.quantity))")
+                    }
                 }
             }
+            
+            return description
         }
     
     }

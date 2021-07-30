@@ -109,18 +109,21 @@ extension WayPay {
             }
         }
         
-        func getTransactionsForAccountByDates(accountUUID: String, initialDate: Date, finalDate: Date,
+        func getTransactionsForAccountByDates(accountUUID: String, initialDate: String?, finalDate: String?,
                                               completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
-            WayPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, WayPay.reportDateFormatter.string(from: initialDate), WayPay.reportDateFormatter.string(from: finalDate))
-                .fetch(type: [PaymentTransaction].self) { response in
-                    switch response {
-                    case .success(let response?):
-                        completion(response.result, nil)
-                    case .failure(let error):
-                        completion(nil, error)
-                    default:
-                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
-                    }
+            if let initialDate = initialDate,
+               let finalDate = finalDate {
+                WayPay.API.getMerchantAccountTransactionsByDates(merchantUUID, accountUUID, initialDate, finalDate)
+                    .fetch(type: [PaymentTransaction].self) { response in
+                        switch response {
+                        case .success(let response?):
+                            completion(response.result, nil)
+                        case .failure(let error):
+                            completion(nil, error)
+                        default:
+                            completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                        }
+                }
             }
         }
         

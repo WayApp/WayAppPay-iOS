@@ -11,15 +11,16 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var session: WayPay.Session
     @State private var selection: MainView.Tab = .settings
-
+    
     private var badgePosition: CGFloat = 1
     private var tabsCount: CGFloat = CGFloat(Tab.allCases.count)
-
+    
     enum Tab: Hashable, CaseIterable {
         case cards
         case cart
         case order
-        case amount
+        case checkin
+        case POS
         case reports
         case settings
     }
@@ -33,35 +34,44 @@ struct MainView: View {
                         if !session.doesAccountHasMerchants {
                             CardsView()
                                 .tabItem {
-                                    Label("Card", systemImage: "creditcard")
+                                    Label("Card", systemImage: "creditcard.fill")
                                         .accessibility(label: Text("Card"))
-                            }
-                            .tag(Tab.cards)
+                                }
+                                .tag(Tab.cards)
                         }
                         if session.doesAccountHasMerchants {
-                            CampaignsView()
-                                .tabItem {
-                                    Label("Campaign", systemImage: "megaphone")
-                                        .accessibility(label: Text("Campaign"))
+                            NavigationView {
+                                CampaignsView()
+                            }
+                            .tabItem {
+                                Label("Campaign", systemImage: "megaphone.fill")
+                                    .accessibility(label: Text("Campaign"))
                             }
                             .tag(Tab.cart)
-                            CheckinView().environmentObject(self.session)
-                                .tabItem {
-                                    Label("POS", systemImage: "qrcode.viewfinder")
-                                        .accessibility(label: Text("POS"))
+                            NavigationView {
+                                CheckinView().environmentObject(self.session)
                             }
-                            .tag(Tab.amount)
-                        }
-                        TransactionsView()
+                            
                             .tabItem {
-                                Label("Sales", systemImage: "chart.bar")
-                                    .accessibility(label: Text("Sales"))
+                                Label("Checkin", systemImage: "qrcode.viewfinder")
+                                    .accessibility(label: Text("Checkin"))
+                            }
+                            .tag(Tab.checkin)
+                        }
+                        NavigationView {
+                            TransactionsView()
+                        }
+                        .tabItem {
+                            Label("Sales", systemImage: "chart.bar.xaxis")
+                                .accessibility(label: Text("Sales"))
                         }
                         .tag(Tab.reports)
-                        SettingsView().environmentObject(self.session)
-                            .tabItem {
-                                Label("Settings", systemImage: "gearshape.2")
-                                    .accessibility(label: Text("Settings"))
+                        NavigationView {
+                            SettingsView().environmentObject(self.session)
+                        }
+                        .tabItem {
+                            Label("Settings", systemImage: "gearshape.2.fill")
+                                .accessibility(label: Text("Settings"))
                         }
                         .tag(Tab.settings)
                     } // TabView

@@ -21,152 +21,150 @@ struct SettingsView: View {
     @State private var authURL: String? = nil
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header:
-                            Label(NSLocalizedString("Merchants", comment: "SettingsView: section title"), systemImage: "building.2.crop.circle")
-                            .font(.callout)) {
-                    if session.merchants.isEmpty {
-                        Text("There are no merchants")
-                    } else {
-                        Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")
-                                .accessibility(label: Text("Merchant"))) {
-                            ForEach(0..<session.merchants.count) {
-                                Text(self.session.merchants[$0].name ?? "no name")
-                                    .font(Font.caption)
-                                    .fontWeight(.light)
-                            }
+        Form {
+            Section(header:
+                        Label(NSLocalizedString("Merchants", comment: "SettingsView: section title"), systemImage: "building.2.crop.circle")
+                        .font(.callout)) {
+                if session.merchants.isEmpty {
+                    Text("There are no merchants")
+                } else {
+                    Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")
+                            .accessibility(label: Text("Merchant"))) {
+                        ForEach(0..<session.merchants.count) {
+                            Text(self.session.merchants[$0].name ?? "no name")
+                                .font(Font.caption)
+                                .fontWeight(.light)
                         }
-                        .onChange(of: session.seletectedMerchant, perform: { merchant in
-                            session.saveSelectedMerchant()
-                        })
                     }
-                    NavigationLink(destination: ProductGalleryView()) {
-                        Label(NSLocalizedString("Product catalogue", comment: "SettingsView: merchants products"), systemImage: "list.bullet.rectangle")
-                    }
+                    .onChange(of: session.seletectedMerchant, perform: { merchant in
+                        session.saveSelectedMerchant()
+                    })
                 }
-                Section(header: Label("Accounts", systemImage: "person.2.circle")
-                            .accessibility(label: Text("Accounts"))
-                            .font(.callout)) {
-                    /*
-                     NavigationLink(destination: CardsView()) {
-                     Label("Payment tokens", systemImage: "qrcode")
-                     }
-                     */
-                    Button {
-                        self.changePIN = true
-                    } label: {
-                        Label("Change PIN", systemImage: "lock.rotation.open")
-                            .accessibility(label: Text("Change PIN"))
+                NavigationLink(destination: ProductGalleryView()) {
+                    Label(NSLocalizedString("Product catalogue", comment: "SettingsView: merchants products"), systemImage: "list.bullet.rectangle")
+                }
+            }
+            Section(header: Label("Accounts", systemImage: "person.2.circle")
+                        .accessibility(label: Text("Accounts"))
+                        .font(.callout)) {
+                /*
+                 NavigationLink(destination: CardsView()) {
+                 Label("Payment tokens", systemImage: "qrcode")
+                 }
+                 */
+                Button {
+                    self.changePIN = true
+                } label: {
+                    Label("Change PIN", systemImage: "lock.rotation.open")
+                        .accessibility(label: Text("Change PIN"))
+                }
+                .sheet(isPresented: self.$changePIN) {
+                    ChangePinView()
+                }
+                Button {
+                    DispatchQueue.main.async {
+                        self.session.logout()
+                        WayPay.session.account?.email = ""
                     }
-                    .sheet(isPresented: self.$changePIN) {
-                        ChangePinView()
+                } label: {
+                    Label("Logout", systemImage: "chevron.left.square")
+                        .accessibility(label: Text("Logout"))
+                }
+            }
+            .accentColor(.primary)
+            .listItemTint(Color("MintGreen"))
+            if (OperationalEnvironment.isSettingsSupportFunctionsActive) {
+                Section(header: Label("Support", systemImage: "ladybug")
+                            .accessibility(label: Text("Support"))
+                            .font(.callout)) {
+                    Button {
+                        DispatchQueue.main.async {
+                            self.updatePoint()
+                        }
+                    } label: {
+                        Label("Update POINT", systemImage: "plus.viewfinder")
+                            .accessibility(label: Text("Update POINT"))
                     }
                     Button {
                         DispatchQueue.main.async {
-                            self.session.logout()
-                            WayPay.session.account?.email = ""
+                            self.updateStamp()
                         }
                     } label: {
-                        Label("Logout", systemImage: "chevron.left.square")
-                            .accessibility(label: Text("Logout"))
+                        Label("Update STAMP", systemImage: "plus.viewfinder")
+                            .accessibility(label: Text("Update STAMP"))
                     }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.getCampaigns()
+                        }
+                    } label: {
+                        Label("Get campaigns", systemImage: "plus.viewfinder")
+                            .accessibility(label: Text("Get campaigns"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayPay.Campaign.Format.POINT)
+                        }
+                    } label: {
+                        Label("Get campaign detail", systemImage: "plus.viewfinder")
+                            .accessibility(label: Text("Get campaigns"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.reward()
+                        }
+                    } label: {
+                        Label("Reward", systemImage: "plus.viewfinder")
+                            .accessibility(label: Text("Reward"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.redeem()
+                        }
+                    } label: {
+                        Label("Redeem", systemImage: "minus.square")
+                            .accessibility(label: Text("Redeem"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.expire()
+                        }
+                    } label: {
+                        Label("Expire", systemImage: "calendar.badge.exclamationmark")
+                            .accessibility(label: Text("Expire"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.registerAccount()
+                        }
+                    } label: {
+                        Label("Register account", systemImage: "arrow.up.and.person.rectangle.portrait")
+                            .accessibility(label: Text("Register account"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.deleteAccount()
+                        }
+                    } label: {
+                        Label("Delete account", systemImage: "trash")
+                            .accessibility(label: Text("Delete account"))
+                    }
+                    Button {
+                        DispatchQueue.main.async {
+                            self.newSEPAs()
+                        }
+                    } label: {
+                        Label("Generate SEPA file", systemImage: "banknote")
+                            .accessibility(label: Text("Generate SEPA file"))
+                    }
+                    
                 }
                 .accentColor(.primary)
-                .listItemTint(Color("MintGreen"))
-                if (OperationalEnvironment.isSettingsSupportFunctionsActive) {
-                    Section(header: Label("Support", systemImage: "ladybug")
-                                .accessibility(label: Text("Support"))
-                                .font(.callout)) {
-                        Button {
-                            DispatchQueue.main.async {
-                                self.updatePoint()
-                            }
-                        } label: {
-                            Label("Update POINT", systemImage: "plus.viewfinder")
-                                .accessibility(label: Text("Update POINT"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.updateStamp()
-                            }
-                        } label: {
-                            Label("Update STAMP", systemImage: "plus.viewfinder")
-                                .accessibility(label: Text("Update STAMP"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.getCampaigns()
-                            }
-                        } label: {
-                            Label("Get campaigns", systemImage: "plus.viewfinder")
-                                .accessibility(label: Text("Get campaigns"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayPay.Campaign.Format.POINT)
-                            }
-                        } label: {
-                            Label("Get campaign detail", systemImage: "plus.viewfinder")
-                                .accessibility(label: Text("Get campaigns"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.reward()
-                            }
-                        } label: {
-                            Label("Reward", systemImage: "plus.viewfinder")
-                                .accessibility(label: Text("Reward"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.redeem()
-                            }
-                        } label: {
-                            Label("Redeem", systemImage: "minus.square")
-                                .accessibility(label: Text("Redeem"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.expire()
-                            }
-                        } label: {
-                            Label("Expire", systemImage: "calendar.badge.exclamationmark")
-                                .accessibility(label: Text("Expire"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.registerAccount()
-                            }
-                        } label: {
-                            Label("Register account", systemImage: "arrow.up.and.person.rectangle.portrait")
-                                .accessibility(label: Text("Register account"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.deleteAccount()
-                            }
-                        } label: {
-                            Label("Delete account", systemImage: "trash")
-                                .accessibility(label: Text("Delete account"))
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.newSEPAs()
-                            }
-                        } label: {
-                            Label("Generate SEPA file", systemImage: "banknote")
-                                .accessibility(label: Text("Generate SEPA file"))
-                        }
-                        
-                    }
-                    .accentColor(.primary)
-                    .listItemTint(Color(.systemRed))
-                }
-            } // Form
-            .background(Color("CornSilk"))
-            .navigationBarTitle("Settings", displayMode: .inline)
-        }
+                .listItemTint(Color(.systemRed))
+            }
+        } // Form
+        .edgesIgnoringSafeArea(.all)
+        .navigationBarTitle("Settings")
     }
     
     private func reward() {

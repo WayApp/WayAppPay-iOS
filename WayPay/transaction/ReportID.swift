@@ -32,6 +32,15 @@ extension WayPay {
             refundPerDay = []
         }
         
+        mutating func reset() {
+            totalSales = 0
+            totalRefund = 0
+            sales = [:]
+            refund = [:]
+            totalPerDay = []
+            refundPerDay = []
+        }
+        
         var id: String {
             return idReport
         }

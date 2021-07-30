@@ -32,13 +32,13 @@ extension WayPay {
             return productUUID
         }
 
-        init(merchantUUID: String, name: String, description: String = String(), price: String) {
+        init(merchantUUID: String, name: String, description: String = String(), price: Int) {
             self.productUUID = UUID().uuidString
             self.merchantUUID = merchantUUID
             self.name = name
             self.description = description
             self.iva = 0
-            self.price = WayAppUtils.composeIntPriceFromString(price)
+            self.price = price
         }
         
         static func get(_ merchantUUID: String , completion: @escaping ([Product]?, Error?) -> Void) {

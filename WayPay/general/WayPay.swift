@@ -88,6 +88,7 @@ struct WayPay {
                                     (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
                                     : Color.gray)
                     .cornerRadius(WayPay.cornerRadius)
+                    .foregroundColor(.white)
             }
         }
     }
@@ -162,19 +163,19 @@ struct WayPay {
 
     static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
-        formatter.usesGroupingSeparator = true
         formatter.locale = Locale.current
-        formatter.numberStyle = .currencyAccounting
+        formatter.numberStyle = .currency
+        formatter.usesGroupingSeparator = true
         formatter.minimumFractionDigits = 2
         return formatter
     }()
 
     static let amountFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
-        formatter.usesGroupingSeparator = true
         formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
+        formatter.usesGroupingSeparator = true
         return formatter
     }()
 
@@ -196,7 +197,7 @@ struct WayPay {
 
     static let reportDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd"
+        formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale.current
         return formatter
     }()

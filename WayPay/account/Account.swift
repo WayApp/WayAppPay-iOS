@@ -162,6 +162,21 @@ extension WayPay {
                 }
             }
         } // load
+        
+        static func transactions(merchantUUID: String, accountUUID: String, initialDate: String, finalDate: String, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
+            WayPay.API.getTransactionsForConsumerByDate(merchantUUID, accountUUID, initialDate, finalDate)
+                .fetch(type: [PaymentTransaction].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        } // load
+
             
         static func delete(_ accountUUID: String) {
             WayPay.API.deleteAccount(accountUUID).fetch(type: [String].self) { response in

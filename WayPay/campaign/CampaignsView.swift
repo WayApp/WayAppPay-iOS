@@ -12,23 +12,22 @@ struct CampaignsView: View {
     @EnvironmentObject var session: WayPay.Session
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(session.campaigns) { campaign in
-                    NavigationLink(destination: CampaignDetailView(campaign: campaign)) {
-                        CampaignRowView(campaign: campaign)
-                    }
+        List {
+            ForEach(session.campaigns) { campaign in
+                NavigationLink(destination: CampaignDetailView(campaign: campaign)) {
+                    CampaignRowView(campaign: campaign)
                 }
-                .onDelete(perform: delete)
             }
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle(Text("Campaigns"), displayMode: .inline)
-            .navigationBarItems(trailing:
-                NavigationLink(destination: CampaignNewView(campaign: nil)) {
-                    Image(systemName: "plus")
-                        .resizable()
-            })
+            .onDelete(perform: delete)
         }
+        .edgesIgnoringSafeArea(.all)
+        .listStyle(GroupedListStyle())
+        .navigationBarTitle(Text("Campaigns"))
+        .navigationBarItems(trailing:
+            NavigationLink(destination: CampaignNewView(campaign: nil)) {
+                Image(systemName: "plus")
+                    .resizable()
+        })
     }
     
     func delete(at offsets: IndexSet) {
