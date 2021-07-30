@@ -305,4 +305,27 @@ extension WayAppUtils {
         return false
     }
     
+    static func composeIntPriceFromString(_ price: String) -> Int {
+        var result: Int = 0
+        let splitIn2 = price.components(separatedBy: .punctuationCharacters)
+        if !splitIn2.isEmpty,
+            let whole = Int(splitIn2[0]) {
+            result = whole * 100
+        }
+        if splitIn2.count == 2 {
+            let decimals = splitIn2[1]
+            if decimals.count == 1,
+               let value = Int(decimals) {
+                result += value*10
+            } else if decimals.count == 2,
+                let value = Int(decimals) {
+                result += value
+            } else if decimals.count > 2,
+                      let value = Int(decimals.prefix(2)) {
+                result += value
+            }
+        }
+        return result
+    }
+
 }
