@@ -93,20 +93,36 @@ struct CheckinView: View {
         } else if let checkin = checkin {
             Form {
                 Section(header:
-                            Label(NSLocalizedString("Loyalty", comment: "CheckinView: button title"), systemImage: "person.fill.viewfinder")
+                            Label(NSLocalizedString("Relationship", comment: "CheckinView: section title"), systemImage: "person.fill.viewfinder")
                             .font(.callout)) {
                     if let rewards = checkin.rewards,
                        !rewards.isEmpty {
                         VStack(alignment: .leading){
                             if let stampCampaign = stampCampaign,
                                let amountToGetIt = stampCampaign.prize?.amountToGetIt {
-                                Text(stampCampaign.name + ": ").bold() +
-                                    Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0) + " / ") +
-                                    Text("\(amountToGetIt)")
+                                Label {
+                                    Text(stampCampaign.name + ": ").bold() +
+                                        Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0) + " / ") +
+                                        Text("\(amountToGetIt)")
+                                } icon: {
+                                    Image(systemName: WayPay.Campaign.icon(format: .STAMP))
+                                }
                             }
                             Divider()
                             if let pointCampaign = pointCampaign {
-                                Text(pointCampaign.name + ": " + String(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                                Label {
+                                    Text(pointCampaign.name + ": ").bold() + Text(String(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                                } icon: {
+                                    Image(systemName: WayPay.Campaign.icon(format: .POINT))
+                                }
+                            }
+                            Divider()
+                            if let prepaidBalance = checkin.prepaidBalance {
+                                Label {
+                                    Text("Available balance" + ": ") + Text(WayPay.formatPrice(prepaidBalance))
+                                } icon: {
+                                    Image(systemName: "creditcard")
+                                }
                             }
                         }
                     } else {
@@ -114,8 +130,16 @@ struct CheckinView: View {
                     }
                     if let prizes = checkin.prizes,
                        !prizes.isEmpty {
-                        Picker(selection: $selectedPrize, label: Label("Has won", systemImage: "app.gift")
-                                .accessibility(label: Text("Has won"))) {
+                        ForEach(0..<prizes.count) {
+                            Text(prizes[$0].displayAs)
+                                .font(Font.body)
+                        }
+                    }
+                    /*
+                    if let prizes = checkin.prizes,
+                       !prizes.isEmpty {
+                        Picker(selection: $selectedPrize, label: Label("Won prizes", systemImage: "app.gift")
+                                .accessibility(label: Text("Won prizes"))) {
                             ForEach(0..<prizes.count) {
                                 Text(prizes[$0].displayAs)
                                     .font(Font.body)
@@ -128,6 +152,7 @@ struct CheckinView: View {
                     } else {
                         Text("Has not won any prize")
                     }
+ */
                     NavigationLink(destination: TransactionsView(accountUUID: checkin.accountUUID)) {
                         Label(NSLocalizedString("Transactions", comment: "CheckinView: Transactions"), systemImage: "number.square")
                     }
