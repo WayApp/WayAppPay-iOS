@@ -19,6 +19,10 @@ extension WayPay {
         static let defaultImageName = "questionmark.square"
         static let defaultName = "missing name"
 
+        enum Level: String, Codable {
+            case ONE, TWO, THREE
+        }
+
         var merchantUUID: String
         var name: String?
         var description: String?
@@ -30,6 +34,7 @@ extension WayPay {
         var creationDate: Date?
         var lastUpdateDate: Date?
         var currency: Currency?
+        var level: Level?
         
         init(name: String) {
             self.merchantUUID = UUID().uuidString

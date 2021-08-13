@@ -166,8 +166,8 @@ struct CampaignsView: View {
             }
             .navigationBarTitle(Text("Campaigns"))
             .onAppear(perform: {
-                stampCampaign = WayPay.Campaign.activeStampCampaign()
-                pointCampaign = WayPay.Campaign.activePointCampaign()
+                stampCampaign = session.activeStampCampaign()
+                pointCampaign = session.activePointCampaign()
                 isStampCampaignActive = stampCampaign?.state == .ACTIVE
                 isPointCampaignActive = pointCampaign?.state == .ACTIVE
                 inputAmount = false

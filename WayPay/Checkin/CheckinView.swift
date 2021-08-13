@@ -44,6 +44,16 @@ struct CheckinView: View {
         return session.amount
     }
     
+    private func displayScanner() {
+        self.showTransactionResult = false
+        self.wasTransactionSuccessful = false
+        self.selectedPrize = -1
+        self.checkin = nil
+        isAPICallOngoing = false
+        // TODO: checking shoppingcart
+        self.showQRScanner = true
+    }
+    
     private var actionButtons: some View {
         HStack {
             Button {
@@ -54,7 +64,9 @@ struct CheckinView: View {
             }
             Spacer()
             Button(action: {
-                self.displayScanner()
+                DispatchQueue.main.async {
+                    self.displayScanner()
+                }
             }) {
                 Text("Cancel")
                     .padding()
@@ -158,8 +170,8 @@ struct CheckinView: View {
                     }
                 }
                 .onAppear(perform: {
-                    stampCampaign = WayPay.Campaign.activeStampCampaign()
-                    pointCampaign = WayPay.Campaign.activePointCampaign()
+                    stampCampaign = session.activeStampCampaign()
+                    pointCampaign = session.activePointCampaign()
                 })
                 Section(header:
                             Label(NSLocalizedString("Payment", comment: "CheckinView: section title"), systemImage: "eurosign.square")
@@ -198,14 +210,6 @@ struct CheckinView: View {
                 )
             }
         }
-    }
-    private func displayScanner() {
-        self.showTransactionResult = false
-        self.wasTransactionSuccessful = false
-        self.selectedPrize = -1
-        self.checkin = nil
-        WayPay.session.shoppingCart.empty()
-        self.showQRScanner = true
     }
     
     private func transactionResult(accepted: Bool) {

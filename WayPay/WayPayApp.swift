@@ -12,7 +12,8 @@ import SwiftUI
 struct WayPayApp: App {
     
     init() {
-        UITableView.appearance().backgroundColor = UIColor(named: "CornSilk")
+        //UITableView.appearance().backgroundColor = UIColor(named: "CornSilk")
+        UITableView.appearance().backgroundColor = UIColor.white
     }
     
     var body: some Scene {

@@ -84,6 +84,13 @@ extension WayPay {
             }
             return wonPrizes
         }
+        
+        static func isStampCampaignActive() -> Bool {
+            if (session.stamps.isEmpty || session.stamps.first?.state != .ACTIVE) {
+                return false
+            }
+            return true
+        }
 
     }
 }

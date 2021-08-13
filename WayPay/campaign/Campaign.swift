@@ -10,7 +10,7 @@ import SwiftUI
 
 extension WayPay {
     
-    struct Prize: Hashable, Codable {
+    struct Prize: Hashable, Codable, Identifiable {
         enum Format: String, Codable, CaseIterable {
             case CASHBACK, COUPON, MANUAL
             
@@ -44,12 +44,16 @@ extension WayPay {
         var displayAs: String {
             switch format {
             case .CASHBACK:
-                return "\(format.title): \(WayPay.formatPrice(value))"
+                return "\(format.title): \(name ?? "-"): \(WayPay.formatPrice(value))\n\(message ?? "-")"
             case .COUPON:
-                return "\(format.title): \(value ?? 0)%"
+                return "\(format.title): \(name ?? "-"): \(value ?? 0)%\n\(message ?? "-")"
             case .MANUAL:
-                return "\(format.title)"
+                return "\(format.title): \(name ?? "-")\n\(message ?? "-")"
             }
+        }
+        
+        var id: String {
+            return campaignID
         }
         
         func applyToAmount(_ amount: Int) -> Int {
@@ -298,14 +302,5 @@ extension WayPay {
             Campaign.icon(format: format)
         }
 
-        static func activeStampCampaign() -> Stamp? {
-            let campaigns = session.stamps.filter(satisfying: {$0.format == .STAMP})
-            return campaigns.first
-        }
-
-        static func activePointCampaign() -> Point? {
-            let campaigns = session.points.filter(satisfying: {$0.format == .POINT})
-            return campaigns.first
-        }
     }
 }

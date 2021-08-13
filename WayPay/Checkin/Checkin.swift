@@ -19,5 +19,10 @@ extension WayPay {
         var prizes: [WayPay.Prize]?
         var type: Card.PaymentFormat?
         var prepaidBalance: Int?
+        var token: String?
+        
+        var isWayPayPaymentAvailable: Bool {
+            return type == .POSTPAID || (prepaidBalance ?? -1 > 0)
+        }
     }
 }

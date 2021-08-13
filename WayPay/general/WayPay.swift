@@ -112,6 +112,49 @@ struct WayPay {
             }
         }
     }
+    
+    struct WideButtonModifier: ButtonStyle {
+        func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+            MyButton(configuration: configuration)
+        }
+        struct MyButton: View {
+            let configuration: ButtonStyle.Configuration
+            @Environment(\.isEnabled) private var isEnabled: Bool
+            
+            var body: some View {
+                configuration.label
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .background(isEnabled ?
+                                    (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
+                                    : Color.gray)
+                    .cornerRadius(6)
+                    .foregroundColor(.white)
+
+            }
+        }
+    }
+
+
+    struct CancelButtonModifier: ButtonStyle {
+        func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+            MyButton(configuration: configuration)
+        }
+        struct MyButton: View {
+            let configuration: ButtonStyle.Configuration
+            @Environment(\.isEnabled) private var isEnabled: Bool
+            
+            var body: some View {
+                configuration.label
+                    .font(.headline)
+                    .background(isEnabled ?
+                                    (configuration.isPressed ? Color("SunrayOrange") : .red)
+                                    : Color.gray)
+                    .cornerRadius(12)
+                    .foregroundColor(.white)
+            }
+        }
+    }
 
     
     struct UI {

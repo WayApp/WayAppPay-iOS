@@ -41,10 +41,10 @@ struct MainView: View {
                         }
                         if session.doesAccountHasMerchants {
                             NavigationView {
-                                CampaignsView()
+                                CheckoutView()
                             }
                             .tabItem {
-                                Label("Campaign", systemImage: "megaphone.fill")
+                                Label("Checkout", systemImage: "eurosign.square")
                                     .accessibility(label: Text("Campaign"))
                             }
                             .tag(Tab.cart)

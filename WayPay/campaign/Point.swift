@@ -73,7 +73,7 @@ extension WayPay {
         }
 
         static func prizesForReward(_ reward: Reward) -> [Prize] {
-            WayAppUtils.Log.message("CampaignID : \(reward.campaignID), sponsorUUID: \(reward.sponsorUUID)")
+            WayAppUtils.Log.message("CampaignID : \(reward.campaignID), sponsorUUID: \(reward.sponsorUUID ?? "no sponsorUUID")")
             var wonPrizes = [Prize]()
             if let balance = reward.balance,
                let prizes = session.points[reward.campaignID]?.prizes {
@@ -85,6 +85,13 @@ extension WayPay {
                 }
             }
             return wonPrizes
+        }
+        
+        static func isPointCampaignActive() -> Bool {
+            if (session.points.isEmpty || session.points.first?.state != .ACTIVE) {
+                return false
+            }
+            return true
         }
     }
 

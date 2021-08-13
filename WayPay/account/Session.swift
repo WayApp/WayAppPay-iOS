@@ -72,7 +72,7 @@ extension WayPay {
                         }
                     }
                     Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Stamp.self, format: .STAMP) {stamps, error in
-                        if var stamps = stamps {
+                        if let stamps = stamps {
                             DispatchQueue.main.async {
                                 session.stamps.setTo(stamps)
                                 session.campaigns.add(stamps)
@@ -87,13 +87,30 @@ extension WayPay {
         }
                       
         //TODO: review the need to use @Published for these variables
+        @Published var campaigns = Container<Campaign>()
         @Published var products = Container<Product>()
         @Published var points = Container<Point>()
         @Published var stamps = Container<Stamp>()
-        @Published var campaigns = Container<Campaign>()
         @Published var transactions = Container<PaymentTransaction>()
         @Published var shoppingCart = ShoppingCart()
         @Published var thisMonthReportID: ReportID?
+        @Published var checkin: Checkin? {
+         didSet {
+            if checkin == nil {
+                selectedPrize = -1
+            }
+         }
+        }
+        @Published var selectedPrize: Int = -1
+        
+        func activeStampCampaign() -> Stamp? {
+            return stamps.first
+        }
+
+        func activePointCampaign() -> Point? {
+            return points.first
+        }
+
         private var networkMonitor = NWPathMonitor()
         var isNetworkAvailable = false
         

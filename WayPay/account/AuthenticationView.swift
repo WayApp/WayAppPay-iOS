@@ -26,42 +26,25 @@ struct AuthenticationView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color("CornSilk")
-                .ignoresSafeArea()
-            VStack(alignment: .center) {
-                Image("WayPay-Logo")
-                    .resizable()
-                    .scaledToFit()
-                    .padding()
+        VStack() {
+            Text("")
+                .padding(.bottom,100)
+            Image("WayPay-Logo")
+                .resizable()
+                .scaledToFit()
+                .padding(.horizontal)
+            Form {
                 TextField("Email", text: self.$email)
                     .font(.title3)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
-                    .background(Color.white)
-                    .padding(.horizontal)
-                HStack {
-                    SecureField("PIN", text: self.$pin)
-                        .font(.title3)
-                        .frame(width: 100)
-                        .textContentType(.password)
-                        .keyboardType(.numberPad)
-                        .background(Color.white)
-                        .padding()
-                    Spacer()
-                }
-                Button(action: {
-                    self.forgotPIN = true
-                }) {
-                    Text("Forgot PIN?")
-                        .foregroundColor(.primary)
-                }
-                .sheet(isPresented: self.$forgotPIN) {
-                    EnterOTP()
-                }
-                .padding()
+                SecureField("PIN", text: self.$pin)
+                    .font(.title3)
+                    .frame(width: 100)
+                    .textContentType(.password)
+                    .keyboardType(.numberPad)
                 Button(action: {
                     WayPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
                         if let accounts = accounts,
@@ -79,19 +62,41 @@ struct AuthenticationView: View {
                 }) {
                     Text("Sign in")
                         .padding()
-                        .foregroundColor(Color.white)
                 }
                 .disabled(shouldSigninButtonBeDisabled)
-                .buttonStyle(WayPay.ButtonModifier())
+                .buttonStyle(WayPay.WideButtonModifier())
                 .animation(.easeInOut(duration: 0.3))
                 .alert(isPresented: $loginError) {
                     Alert(title: Text("Login error"),
                           message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
                           dismissButton: .default(Text("OK")))
                 }
-            } // VStack
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-        }
+                HStack {
+                    Button(action: {
+                        self.forgotPIN = true
+                    }) {
+                        Text("Register")
+                            .bold()
+                            .foregroundColor(Color("MintGreen"))
+                    }
+                    .sheet(isPresented: self.$forgotPIN) {
+                        EnterOTP()
+                    }
+                    Spacer()
+                    Button(action: {
+                        self.forgotPIN = true
+                    }) {
+                        Text("Forgot PIN")
+                            .bold()
+                            .foregroundColor(Color("MintGreen"))
+                    }
+                    .sheet(isPresented: self.$forgotPIN) {
+                        EnterOTP()
+                    }
+                } // HStack
+            } // Form
+            .padding()
+        } // VStack
     }
 }
 

@@ -112,14 +112,6 @@ struct PointOfSaleView: View {
                         })
                         Spacer()
                     }
-                    if (false) {
-                        TextField("shopping cart description", text: $cartDescription)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .background(Color.white)
-                            .cornerRadius(WayPay.cornerRadius)
-                            .padding()
-                    }
                     VStack {
                         HStack(spacing: 0) {
                             NumberButtonView(number: 1, completion: numberEntered)

@@ -39,13 +39,13 @@ struct ScanView: View {
                         message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
                         dismissButton: .default(
                             Text("OK"),
-                            action: backToCampaigns)
+                            action: goBack)
                     )
                 }
         }
     }
     
-    private func backToCampaigns() {
+    private func goBack() {
         isAPICallOngoing = false
         self.presentationMode.wrappedValue.dismiss()
     }
@@ -61,27 +61,46 @@ struct ScanView: View {
     private func handleScan() {
         WayAppUtils.Log.message("Scanned success")
         guard let code = scannedCode,
-              let campaign = campaign,
               let value = value else {
             WayAppUtils.Log.message("Missing scannedCode")
             return
         }
-        let transaction = WayPay.PaymentTransaction(amount: value, token: code, type: .REWARD)
         isAPICallOngoing = true
-        WayPay.Campaign.reward(transaction: transaction, campaign: campaign) { transactions, error in
-            //self.scannedCode = nil
-            if let transactions = transactions,
-               let transaction = transactions.first {
-                DispatchQueue.main.async {
-                    transactionResult(accepted: transaction.result == .ACCEPTED)
+        if let campaign = campaign {
+            let transaction = WayPay.PaymentTransaction(amount: value, token: code, type: .REWARD)
+            WayPay.Campaign.reward(transaction: transaction, campaign: campaign) { transactions, error in
+                //self.scannedCode = nil
+                if let transactions = transactions,
+                   let transaction = transactions.first {
+                    DispatchQueue.main.async {
+                        transactionResult(accepted: transaction.result == .ACCEPTED)
+                    }
+                    WayAppUtils.Log.message("Checkin success: \(transaction)")
+                } else {
+                    DispatchQueue.main.async {
+                        transactionResult(accepted: false)
+                    }
+                    WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
                 }
-                WayAppUtils.Log.message("Checkin success: \(transaction)")
-            } else {
-                DispatchQueue.main.async {
-                    transactionResult(accepted: false)
-                }
-                WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
             }
+        } else {
+            let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
+            WayPay.Account.checkin(transaction) { checkins, error in
+                //self.scannedCode = nil
+                if let checkins = checkins,
+                   let checkin = checkins.first {
+                    DispatchQueue.main.async {
+                        session.checkin = checkin
+                        self.goBack()                    }
+                    WayAppUtils.Log.message("Scan success: \(checkin)")
+                } else {
+                    DispatchQueue.main.async {
+                        self.goBack()  
+                    }
+                    WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+                }
+            }
+
         }
     }
     

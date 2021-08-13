@@ -116,7 +116,7 @@ struct StampNewView: View {
                     prize.amountToGetIt = Int(amountToPrize)
                     let stampCampaign: WayPay.Stamp =
                         WayPay.Stamp(campaign: campaign,
-                                     minimumPaymentAmountToGetStamp: minimumPurchaseAmountRequired ? Int(threshold) ?? 0: 0,
+                                     minimumPaymentAmountToGetStamp: minimumPurchaseAmountRequired ? (Int(threshold) ?? 0) * 100: 0,
                                      prize: prize)
                     WayPay.Stamp.create(stampCampaign) { campaigns, error in
                         if let campaigns = campaigns,
