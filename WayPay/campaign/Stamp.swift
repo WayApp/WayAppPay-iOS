@@ -92,5 +92,13 @@ extension WayPay {
             return true
         }
 
+        static func isIssuerStampCampaignActive() -> Bool {
+            if let checkin = session.checkin,
+               let issuerStampCampaigns = checkin.issuerStampCampaigns,
+               !issuerStampCampaigns.isEmpty {
+                return true
+            }
+            return false
+        }
     }
 }

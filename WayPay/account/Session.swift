@@ -112,6 +112,24 @@ extension WayPay {
             return points.first
         }
 
+        func activeIssuerPointCampaign() -> Point? {
+            if let checkin = checkin,
+               let issuerPointCampaigns = checkin.issuerPointCampaigns,
+               !issuerPointCampaigns.isEmpty {
+                return issuerPointCampaigns.first
+            }
+            return nil
+        }
+
+        func activeIssuerStampCampaign() -> Stamp? {
+            if let checkin = checkin,
+               let issuerStampCampaigns = checkin.issuerStampCampaigns,
+               !issuerStampCampaigns.isEmpty {
+                return issuerStampCampaigns.first
+            }
+            return nil
+        }
+
         private var networkMonitor = NWPathMonitor()
         var isNetworkAvailable = false
         

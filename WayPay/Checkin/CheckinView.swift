@@ -151,6 +151,26 @@ struct CheckinView: View {
                                 }
                                 Divider()
                             }
+                            if let issuerPointCampaign = session.activeIssuerPointCampaign() {
+                                Label {
+                                    Text(issuerPointCampaign.name + ": ") +
+                                    Text(String(getRewardBalanceForCampaign(issuerPointCampaign.id) ?? 0))
+                                        .bold().foregroundColor(Color.green)
+                                } icon: {
+                                    Image(systemName: WayPay.Campaign.icon(format: .POINT))
+                                }
+                                Divider()
+                            }
+                            if let issuerStampCampaign = session.activeIssuerStampCampaign() {
+                                Label {
+                                    Text(issuerStampCampaign.name + ": ") +
+                                    Text(String(getRewardBalanceForCampaign(issuerStampCampaign.id) ?? 0))
+                                        .bold().foregroundColor(Color.green)
+                                } icon: {
+                                    Image(systemName: WayPay.Campaign.icon(format: .STAMP))
+                                }
+                                Divider()
+                            }
                         }
                     } else {
                         Text("No campaigns")

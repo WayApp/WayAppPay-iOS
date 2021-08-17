@@ -201,6 +201,20 @@ extension WayPay {
                     }
             }
         }
+        
+        static func getForIssuer(merchantUUID: String, issuerUUID: String, format: Format, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayPay.API.getCampaignsForIssuer(merchantUUID, issuerUUID, format).fetch(type: [Campaign].self) { response in
+                    switch response {
+                    case .success(let response?):
+                        completion(response.result, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    default:
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                    }
+            }
+        }
+
 
         static func reward(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
             WayPay.API.rewardCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in

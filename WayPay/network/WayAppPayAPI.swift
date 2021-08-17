@@ -133,6 +133,7 @@ extension WayPay {
         case rewardCampaigns(PaymentTransaction, Array<String>) // POST
         case rewardCampaign(PaymentTransaction, Campaign) // POST
         case redeemCampaigns(PaymentTransaction, Array<String>) // POST
+        case getCampaignsForIssuer(String, String, Campaign.Format) // GET
 
         private var path: String {
             switch self {
@@ -200,6 +201,7 @@ extension WayPay {
             case .rewardCampaigns( _, _): return "/campaigns/rewards/"
             case .rewardCampaign( _, _): return "/campaigns/rewards/"
             case .redeemCampaigns( _, _): return "/campaigns/redeems/"
+            case .getCampaignsForIssuer(let merchantUUID, let issuerUUID, _): return "/campaigns/merchants/\(merchantUUID)/issuers/\(issuerUUID)/"
             // TRASH
             case .account: return "/accounts/"
             case .editAccount: return "/accounts/\(WayPay.session.accountUUID!)/"
@@ -270,6 +272,7 @@ extension WayPay {
             case .rewardCampaigns: return ""
             case .rewardCampaign: return ""
             case .redeemCampaigns: return ""
+            case .getCampaignsForIssuer(let merchantUUID, let issuerUUID, _): return merchantUUID + "/" + issuerUUID
             default: return ""
             }
         }
@@ -281,7 +284,7 @@ extension WayPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState:
+            case .getAccount, .getConsentDetail, .getProducts, .getProductDetail,.getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -338,7 +341,7 @@ extension WayPay {
                 return issuerUUID != nil ?
                     "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID!)&format=\(format.rawValue)" :
                     "?merchantUUID=\(merchantUUID)&format=\(format.rawValue)"
-            case .toggleCampaignState(_, _, let format), .getCampaign(_, _, let format), .deleteCampaign(_, _, let format):
+            case .toggleCampaignState(_, _, let format), .getCampaign(_, _, let format), .deleteCampaign(_, _, let format), .getCampaignsForIssuer(_, _, let format):
                 return "?format=\(format.rawValue)"
             default:
                 return ""

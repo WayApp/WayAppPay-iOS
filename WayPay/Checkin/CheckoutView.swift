@@ -73,7 +73,6 @@ struct CheckoutView: View {
                     .font(.caption)
                     .foregroundColor(Color.blue)
             }
-            Spacer()
             Button(action: {
                 if let stampCampaign = stampCampaign {
                     rewardLoyalty(campaign: stampCampaign)
@@ -84,6 +83,16 @@ struct CheckoutView: View {
             }
             .buttonStyle(WayPay.WideButtonModifier())
             .disabled(!WayPay.Stamp.isStampCampaignActive())
+            Button(action: {
+                if let stampCampaign = stampCampaign {
+                    rewardLoyalty(campaign: stampCampaign)
+                }
+            }) {
+                Label(NSLocalizedString("Reward community campaign", comment: "CheckoutView: button title"), systemImage: "building.2.fill")
+                    .padding()
+            }
+            .buttonStyle(WayPay.WideButtonModifier())
+            .disabled(!WayPay.Stamp.isIssuerStampCampaignActive() && !WayPay.Point.isIssuerPointCampaignActive())
         }
         .animation(.easeInOut(duration: 0.3))
         .listRowInsets(EdgeInsets())
