@@ -33,6 +33,18 @@ extension WayPay {
                 case .CHECKIN: return NSLocalizedString("Checkin", comment: "PaymentTransaction.TransactionType")
                 }
             }
+            
+            var icon: String {
+                switch self {
+                case .SALE: return "plus.square.fill"
+                case .REFUND: return "minus.square.fill"
+                case .ADD: return "plus.square.fill"
+                case .TOPUP: return "rectangle.fill.badge.plus"
+                case .REWARD: return "seal.fill"
+                case .CHECKIN: return "person.fill.viewfinder"
+                }
+            }
+
         }
 
         enum TransactionResult: String, Codable {

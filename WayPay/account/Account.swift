@@ -53,6 +53,14 @@ extension WayPay {
         var creationDate: Date?
         var lastUpdateDate: Date?
         
+        init(firstName: String, lastName: String, phone: String, email: String) {
+            self.firstName = firstName
+            self.lastName = lastName
+            self.phone = phone
+            self.email = email
+            self.accountUUID = ""
+        }
+        
         // DefaultKeyPersistence
         var defaultKey: String {
             return WayPay.DefaultKey.ACCOUNT.rawValue
@@ -110,16 +118,44 @@ extension WayPay {
             return password
         }
 
-        static func register(registration: Registration) {
+        static func register(registration: Registration, completion: @escaping ([Registration]?, Error?) -> Void) {
             WayPay.API.registrationAccount(registration).fetch(type: [Registration].self) { response in
                 WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
-                if case .success(let response?) = response {
-                    if let registrations = response.result,
-                        let registration = registrations.first {
-                        print("success success success success success: \(registration)")
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func accountAndMerchant(account: Account, merchant: Merchant, completion: @escaping ([Merchant]?, Error?) -> Void) {
+            WayPay.API.accountAndMerchant(account, merchant).fetch(type: [Merchant].self) { response in
+                WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func createAccount(account: AccountRequest, completion: @escaping ([Account]?, Error?) -> Void) {
+            WayPay.API.createAccount(account).fetch(type: [Account].self) { response in
+                WayAppUtils.Log.message("Account: createAccount: response: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }

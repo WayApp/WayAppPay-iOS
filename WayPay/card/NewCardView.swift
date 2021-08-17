@@ -110,24 +110,7 @@ struct NewCardView: View {
     
     private func grantConsent(accountUUID: String) {
     }
-    
-    private func createCard(accountUUID: String) {
-        DispatchQueue.main.async {
-            self.isAPICallOngoing = true
-        }
-        WayPay.Card.create(alias: self.alias, issuerUUID: session.issuers[selectedIssuer].issuerUUID, type: WayPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
-            DispatchQueue.main.async {
-                self.isAPICallOngoing = false
-            }
-            if error != nil {
-                DispatchQueue.main.async {
-                    self.showUpdateResultAlert = true
-                    WayAppUtils.Log.message("********************** \(error!.localizedDescription)")
-                }
-            }
-        }
-    }
-        
+            
     var body: some View {
         NavigationView {
             ZStack {

@@ -19,7 +19,7 @@ struct TransactionRowView: View {
 
     static var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
+        dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .short
         return dateFormatter
     }()
@@ -32,13 +32,17 @@ struct TransactionRowView: View {
 
     var body: some View {
         HStack {
-            transaction.result?.image
+            Image(systemName: transaction.type?.icon ?? "questionmark.square.fill")
             VStack(alignment: .leading, spacing: 8) {
-                Text(transaction.lastUpdateDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.lastUpdateDate!) : "no date")
                 Text(transaction.type?.title ?? WayPay.PaymentTransaction.TransactionType.defaultTitle)
+                Text(transaction.lastUpdateDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.lastUpdateDate!) : "no date")
                     .font(.subheadline)
-                Text(transaction.getPurchaseDetail())
-                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                if !transaction.getPurchaseDetail().isEmpty {
+                    Text(transaction.getPurchaseDetail())
+                        .font(.footnote)
+                }
+
             }.contextMenu {
                 if ((transaction.type == WayPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
                     Button {
@@ -64,7 +68,8 @@ struct TransactionRowView: View {
             }
             Spacer()
             Text(WayPay.formatPrice(transaction.amount))
-                .fontWeight(.medium)
+                .bold()
+                .foregroundColor(transaction.result == .ACCEPTED ? Color.green : Color.red)
         }
         .padding()
         .sheet(isPresented: self.$send) {

@@ -68,6 +68,7 @@ extension WayPay {
         }
         
         // Account
+        case createAccount(AccountRequest) // POST
         case registrationAccount(Registration) // POST
         case getAccount(Email, PIN) // GET
         case forgotPIN(ChangePIN) // POST
@@ -75,6 +76,9 @@ extension WayPay {
         case deleteAccount(String) // DELETE
         case checkin(PaymentTransaction) // POST
         // Merchant
+        case createMerchant(Merchant) // POST
+        case createMerchantForAccount(String, Merchant) // POST
+        case accountAndMerchant(Account, Merchant) // POST
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
@@ -133,6 +137,7 @@ extension WayPay {
         private var path: String {
             switch self {
             // Account
+            case .createAccount: return "/accounts/"
             case .registrationAccount: return "/accounts/registrations/"
             case .getAccount(let email, let hashedPIN): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN)/"
             case .forgotPIN: return "/accounts/forgots/"
@@ -140,6 +145,9 @@ extension WayPay {
             case .deleteAccount(let uuid): return "/accounts/\(uuid)/"
             case .checkin: return "/accounts/checkins/"
             // Merchants
+            case .createMerchant(_): return "/merchants/"
+            case .createMerchantForAccount(let accountUUID, _): return "/accounts/\(accountUUID)/merchants/"
+            case .accountAndMerchant(_ , _): return "/merchants/"
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
@@ -201,11 +209,15 @@ extension WayPay {
         private var signature: String {
             switch self {
             // Account
+            case .createAccount: return ""
             case .registrationAccount: return ""
             case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
             case .forgotPIN, .changePIN, .checkin: return ""
             case .deleteAccount(let accountUUID): return accountUUID
             // Merchant
+            case .createMerchant: return ""
+            case .createMerchantForAccount(let accountUUID, _): return accountUUID
+            case .accountAndMerchant(_ , _): return ""
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
@@ -277,7 +289,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .accountAndMerchant, .createAccount, .createMerchant, .createMerchantForAccount:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -469,6 +481,31 @@ extension WayPay {
                 }
                 if let parts = parts {
                     let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .accountAndMerchant(let account, let merchant):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(account, name: "account") {
+                    parts = [part]
+                    if let part = HTTPCall.BodyPart(merchant, name: "merchant") {
+                        parts?.append(part)
+                    }
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createAccount(let account):
+                if let part = HTTPCall.BodyPart(account, name: "account") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createMerchant(let merchant), .createMerchantForAccount(_, let merchant):
+                if let part = HTTPCall.BodyPart(merchant, name: "merchant") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }
                 return nil

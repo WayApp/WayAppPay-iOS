@@ -18,7 +18,6 @@ extension WayPay {
         @Published var showAuthenticationView: Bool = true
         var doesAccountHasMerchants: Bool = false
 
-        @Published var banks = Container<AfterBanks.SupportedBank>()
         @Published var account: Account? {
             didSet {
                 if let account = account {
@@ -32,14 +31,9 @@ extension WayPay {
                             }
                         }
                     }
-                    //Card.getCards(for: account.accountUUID)
-                    //Issuer.get()
-//                    AfterBanks.getBanks()                    
                 }
             }
         }
-        @Published var cards = Container<Card>()
-        @Published var issuers = Container<Issuer>()
         @Published var merchants = Container<Merchant>() {
             didSet {
                 DispatchQueue.main.async {
@@ -85,6 +79,13 @@ extension WayPay {
                 }
             }
         }
+        
+        var merchant: Merchant? {
+            if (merchants.isEmpty) {
+                return nil
+            }
+            return merchants[seletectedMerchant]
+        }
                       
         //TODO: review the need to use @Published for these variables
         @Published var campaigns = Container<Campaign>()
@@ -123,13 +124,6 @@ extension WayPay {
             }
             if let account = Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
-            }
-            if PKPassLibrary.isPassLibraryAvailable() {
-                passes = pkLibrary.passes()
-                passes = passes.filter({
-                    $0.passTypeIdentifier == "pass.com.wayapp.pay"
-                })
-                WayAppUtils.Log.message("++++++++ PASSES count=\(passes.count), passes=\(passes)")
             }
         }
         
@@ -185,7 +179,6 @@ extension WayPay {
             transactions.empty()
             products.empty()
             shoppingCart.empty()
-            cards.empty()
         }
         
         func logout() {

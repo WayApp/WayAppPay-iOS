@@ -13,7 +13,7 @@ struct StampNewView: View {
     @EnvironmentObject private var session: WayPay.Session
     @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
     
-    @State private var prizeFormat: WayPay.Prize.Format = .MANUAL
+    @State private var prizeFormat: WayPay.Prize.Format = .CASHBACK
     @State private var prizeAmount: String = "0"
     @State private var prizeName: String = "1st prize"
     @State private var prize: WayPay.Prize = WayPay.Prize(campaignID: "", name: "", message: "", amountToGetIt: 0)
@@ -33,10 +33,10 @@ struct StampNewView: View {
     
     var body: some View {
         Form {
-            Section(header: Label("Name", systemImage: "person.2.circle")
+            Section(header: Label("campaign name", systemImage: "checkmark.seal.fill")
                         .accessibility(label: Text("Name"))
                         .font(.caption)) {
-                TextField("", text: $newName)
+                TextField(session.merchant?.name ?? "", text: $newName)
                     .textContentType(.name)
                     .keyboardType(.default)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -45,16 +45,18 @@ struct StampNewView: View {
                             .stroke(Color("MintGreen"), lineWidth: 0.5)
                     )
             }
-            Section(header: Label("Configuration", systemImage: "person.2.circle")
+            Section(header: Label("Configuration", systemImage: "gearshape")
                         .accessibility(label: Text("Configuration"))
                         .font(.caption)) {
                 Toggle("Minimum purchase required?", isOn: $minimumPurchaseAmountRequired)
                 if minimumPurchaseAmountRequired {
                     HStack {
-                        Text("Amount")
+                        Text("Amount" + ": ")
                         TextField("\(threshold)", text: $threshold)
+                            .frame(width: 80)
                             .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                        Text(" €")
                     }
                 }
                 Toggle("Expires?", isOn: $expires)
@@ -64,21 +66,16 @@ struct StampNewView: View {
                     }
                 }
             }
-            Section(header: Label("Prize", systemImage: "person.2.circle")
+            Section(header: Label("Prize", systemImage: "gift")
                         .accessibility(label: Text("Prize"))
                         .font(.caption)) {
                 VStack(alignment: .leading) {
-                    Text("Stamps to get prize:") + Text(" \(Int(amountToPrize))").bold()
+                    Text("Visits to get prize" + ": ") + Text(" \(Int(amountToPrize))").bold().foregroundColor(Color("MintGreen"))
+                            
                     Slider(value: $amountToPrize, in: 1...25, step: 1)
                 }
-                Text("Winning message:")
-                TextEditor(text: $prize.message)
-                    .font(.body)
-                    .keyboardType(.default)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color("MintGreen"), lineWidth: 0.5))
                 VStack(alignment: .leading) {
+                    Text("Reward customers with cashback (€) or discount (%):")
                     HStack {
                         Picker(selection: $prize.format, label: Text("Prize format" + " -> ")) {
                             ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
@@ -88,15 +85,14 @@ struct StampNewView: View {
                         .pickerStyle(MenuPickerStyle())
                         Text(prize.format.title)
                     }
-                    if (prize.format != .MANUAL) {
-                        HStack {
-                            Text("Amount")
-                            TextField("\(prizeAmount)", text: $prizeAmount)
-                                .frame(width: 80)
-                                .keyboardType(.numberPad)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                            Spacer()
-                        }
+                    HStack {
+                        Text(prize.format.amountTitle)
+                        TextField("\(prizeAmount)", text: $prizeAmount)
+                            .frame(width: 80)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        Text(" " + prize.format.amountSymbol)
+                        Spacer()
                     }
                 }
             }
@@ -114,6 +110,7 @@ struct StampNewView: View {
                     prize.name = prizeName
                     prize.value = Int(prizeAmount)
                     prize.amountToGetIt = Int(amountToPrize)
+                    prize.message = WayPay.Prize.winnningMessage
                     let stampCampaign: WayPay.Stamp =
                         WayPay.Stamp(campaign: campaign,
                                      minimumPaymentAmountToGetStamp: minimumPurchaseAmountRequired ? (Int(threshold) ?? 0) * 100: 0,
@@ -135,14 +132,14 @@ struct StampNewView: View {
                         }
                     }
                 }) {
-                    Text("Activate campaign")
+                    Text("Activate")
                         .padding()
                         .foregroundColor(Color.white)
                 }
                 .disabled(shouldSaveButtonBeDisabled)
-                .buttonStyle(WayPay.ButtonModifier())
+                .buttonStyle(WayPay.WideButtonModifier())
                 .alert(isPresented: $campaignCreateError) {
-                    Alert(title: Text("Error creating the campaign"),
+                    Alert(title: Text("Error creating campaign"),
                           message: Text("Try again. If problem persists contact support@wayapp.com"),
                           dismissButton: .default(Text("OK")))
                 }

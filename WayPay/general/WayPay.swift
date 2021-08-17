@@ -20,6 +20,11 @@ extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+    
+    func showKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
+    }
+
 }
 #endif
 
@@ -70,6 +75,30 @@ struct WayPay {
         }
         var body: Content {
             build()
+        }
+    }
+
+    struct WayPayProgressViewStyle: ProgressViewStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            ProgressView(configuration)
+                .progressViewStyle(CircularProgressViewStyle())
+                .foregroundColor(.primary)
+                .padding()
+                .background(Color.green.opacity(0.20))
+                .cornerRadius(8)
+        }
+    }
+    
+    struct TextFieldModifier: ViewModifier {
+        let padding: CGFloat // <- space between text and border
+        let lineWidth: CGFloat
+
+        func body(content: Content) -> some View {
+            content
+                .padding(padding)
+                .overlay(RoundedRectangle(cornerRadius: padding)
+                            .stroke(Color.primary, lineWidth: lineWidth)
+                )
         }
     }
 
@@ -126,11 +155,10 @@ struct WayPay {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .background(isEnabled ?
-                                    (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
+                                    (configuration.isPressed ? Color.orange : Color.green)
                                     : Color.gray)
                     .cornerRadius(6)
                     .foregroundColor(.white)
-
             }
         }
     }
@@ -147,10 +175,11 @@ struct WayPay {
             var body: some View {
                 configuration.label
                     .font(.headline)
+                    .frame(maxWidth: .infinity)
                     .background(isEnabled ?
                                     (configuration.isPressed ? Color("SunrayOrange") : .red)
                                     : Color.gray)
-                    .cornerRadius(12)
+                    .cornerRadius(6)
                     .foregroundColor(.white)
             }
         }

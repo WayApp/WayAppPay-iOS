@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var session: WayPay.Session
-    @State private var selection: MainView.Tab = .settings
+    @State private var selection: MainView.Tab = .cart
     
     private var badgePosition: CGFloat = 1
     private var tabsCount: CGFloat = CGFloat(Tab.allCases.count)
@@ -31,33 +31,23 @@ struct MainView: View {
                 ZStack(alignment: .bottomLeading) {
                     // TabView
                     TabView(selection: $selection) {
-                        if !session.doesAccountHasMerchants {
-                            CardsView()
-                                .tabItem {
-                                    Label("Card", systemImage: "creditcard.fill")
-                                        .accessibility(label: Text("Card"))
-                                }
-                                .tag(Tab.cards)
+                        NavigationView {
+                            CheckoutView()
                         }
-                        if session.doesAccountHasMerchants {
-                            NavigationView {
-                                CheckoutView()
-                            }
-                            .tabItem {
-                                Label("Checkout", systemImage: "eurosign.square")
-                                    .accessibility(label: Text("Campaign"))
-                            }
-                            .tag(Tab.cart)
-                            NavigationView {
-                                CheckinView().environmentObject(self.session)
-                            }
-                            
-                            .tabItem {
-                                Label("Checkin", systemImage: "qrcode.viewfinder")
-                                    .accessibility(label: Text("Checkin"))
-                            }
-                            .tag(Tab.checkin)
+                        .tabItem {
+                            Label("Checkout", systemImage: "qrcode.viewfinder")
+                                .accessibility(label: Text("Checkout"))
                         }
+                        .tag(Tab.cart)
+                        NavigationView {
+                            CheckinView().environmentObject(self.session)
+                        }
+                        
+                        .tabItem {
+                            Label("Customer", systemImage: "person.fill.questionmark")
+                                .accessibility(label: Text("Customer"))
+                        }
+                        .tag(Tab.checkin)
                         NavigationView {
                             TransactionsView()
                         }
@@ -70,7 +60,7 @@ struct MainView: View {
                             SettingsView().environmentObject(self.session)
                         }
                         .tabItem {
-                            Label("Settings", systemImage: "gearshape.2.fill")
+                            Label("Settings", systemImage: "gearshape.fill")
                                 .accessibility(label: Text("Settings"))
                         }
                         .tag(Tab.settings)
@@ -82,7 +72,10 @@ struct MainView: View {
     
     var body: some View {
         if session.showAuthenticationView {
-            return AnyView(AuthenticationView())
+            return AnyView(
+                NavigationView {
+                    AuthenticationView()
+                })
         } else {
             return merchantTabView()
         }

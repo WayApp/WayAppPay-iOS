@@ -13,7 +13,7 @@ struct PointNewView: View {
     @EnvironmentObject private var session: WayPay.Session
     @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
 
-    @State private var prizeFormat: WayPay.Prize.Format = .MANUAL
+    @State private var prizeFormat: WayPay.Prize.Format = .CASHBACK
     @State private var prizeAmount: String = "0"
     @State private var prizeName: String = "1st prize"
     @State private var prize: WayPay.Prize = WayPay.Prize(campaignID: "", name: "", message: "", amountToGetIt: 0)
@@ -97,15 +97,13 @@ struct PointNewView: View {
                         .pickerStyle(MenuPickerStyle())
                         Text(prize.format.title)
                     }
-                    if (prize.format != .MANUAL) {
-                        HStack {
-                            Text("Amount")
-                            TextField("\(prizeAmount)", text: $prizeAmount)
-                                .frame(width: 80)
-                                .keyboardType(.numberPad)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                            Spacer()
-                        }
+                    HStack {
+                        Text("Amount")
+                        TextField("\(prizeAmount)", text: $prizeAmount)
+                            .frame(width: 80)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        Spacer()
                     }
                 }
             }

@@ -63,6 +63,7 @@ struct ProductDetailView: View {
             })
             if isAPICallOngoing {
                 ProgressView("Please wait…")
+                    .progressViewStyle(WayPay.WayPayProgressViewStyle())
             }
             VStack(alignment: .trailing) {
                 HStack(alignment: .center, spacing: 6) {

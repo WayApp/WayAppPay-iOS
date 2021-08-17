@@ -16,7 +16,7 @@ struct AmountView: View {
         
         var title: String {
             switch self {
-            case .charge: return NSLocalizedString("Charge", comment: "AmountViewOption title")
+            case .charge: return NSLocalizedString("Amount", comment: "AmountViewOption title")
             case .topup: return NSLocalizedString("Top up", comment: "AmountViewOption title")
             }
         }
@@ -54,90 +54,82 @@ struct AmountView: View {
     }
         
     var body: some View {
-        ZStack {
-            Color("CornSilk")
-                .edgesIgnoringSafeArea(.all)
-            VStack(alignment: .trailing) {
-                HStack {
-                    Spacer()
-                    Text(WayPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-                        .padding()
-                        .onTapGesture {
-                            self.delete()
-                        }
-                    Button(action: {
-                        delete()
-                    }, label: {
-                        Label("Delete", systemImage: "delete.left")
-                            .accessibility(label: Text("Delete"))
-                    })
-                    Spacer()
-                }
-                VStack {
-                    HStack(spacing: 0) {
-                        NumberButtonView(number: 1, completion: numberEntered)
-                        NumberButtonView(number: 2, completion: numberEntered)
-                        NumberButtonView(number: 3, completion: numberEntered)
+        VStack(alignment: .trailing) {
+            HStack {
+                Spacer()
+                Text(WayPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                    .padding()
+                    .onTapGesture {
+                        self.delete()
                     }
-                    HStack(spacing: 0) {
-                        NumberButtonView(number: 4, completion: numberEntered)
-                        NumberButtonView(number: 5, completion: numberEntered)
-                        NumberButtonView(number: 6, completion: numberEntered)
-                    }
-                    HStack(spacing: 0) {
-                        NumberButtonView(number: 7, completion: numberEntered)
-                        NumberButtonView(number: 8, completion: numberEntered)
-                        NumberButtonView(number: 9, completion: numberEntered)
-                    }
-                    HStack(spacing: 0) {
-                        NumberButtonView(number: 100, completion: numberEntered)
-                        NumberButtonView(number: 0, completion: numberEntered)
-                        OperationButtonView(icon: "plus.circle") {
-                            total += amount
-                            amount = 0
-                        }
-                    }
-                }
-                HStack {
-                    Spacer()
-                    Button {
-                        if let merchantUUID = session.merchantUUID {
-                            switch displayOption {
-                            case .charge:
-                                WayPay.session.shoppingCart.addProduct(WayPay.Product(merchantUUID: merchantUUID,
-                                                                                            name: NSLocalizedString("Amount", comment: "Product name for entered amount"), description: NSLocalizedString("Entered amount", comment: "Product description for entered amount"), price: Int((total + amount)*100 / 100)), isAmount: true)
-                            case .topup:
-                                handleTopup()
-                            }
-                        }
-                    } label: {
-                        Text(displayOption.buttonTitle)
-                            .accessibility(label: Text(displayOption.buttonTitle))
-                            .padding()
-                            .foregroundColor(Color.white)
-                    }
-                    .buttonStyle(WayPay.ButtonModifier())
-                    Spacer()
-                }
-                .buttonStyle(WayPay.ButtonModifier())
-                .padding()
-            } // VStack
-            .navigationBarTitle(displayOption.title)
-            .background(Color("CornSilk"))
-            .alert(isPresented: $showTransactionResult) {
-                Alert(
-                    title: Text(wasTransactionSuccessful ? "✅" : "🚫")
-                        .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
-                        .font(.title),
-                    message: Text(displayOption.buttonTitle + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
-                    dismissButton: .default(
-                                    Text("OK"),
-                                    action: dismissView)
-                )
+                Button(action: {
+                    delete()
+                }, label: {
+                    Label("Reset", systemImage: "delete.left")
+                        .accessibility(label: Text("Reset"))
+                })
+                Spacer()
             }
+            VStack {
+                HStack(spacing: 0) {
+                    NumberButtonView(number: 1, completion: numberEntered)
+                    NumberButtonView(number: 2, completion: numberEntered)
+                    NumberButtonView(number: 3, completion: numberEntered)
+                }
+                HStack(spacing: 0) {
+                    NumberButtonView(number: 4, completion: numberEntered)
+                    NumberButtonView(number: 5, completion: numberEntered)
+                    NumberButtonView(number: 6, completion: numberEntered)
+                }
+                HStack(spacing: 0) {
+                    NumberButtonView(number: 7, completion: numberEntered)
+                    NumberButtonView(number: 8, completion: numberEntered)
+                    NumberButtonView(number: 9, completion: numberEntered)
+                }
+                HStack(spacing: 0) {
+                    NumberButtonView(number: 100, completion: numberEntered)
+                    NumberButtonView(number: 0, completion: numberEntered)
+                    OperationButtonView(icon: "plus.circle") {
+                        total += amount
+                        amount = 0
+                    }
+                }
+            }
+            Button {
+                if let merchantUUID = session.merchantUUID {
+                    switch displayOption {
+                    case .charge:
+                        WayPay.session.shoppingCart.addProduct(WayPay.Product(merchantUUID: merchantUUID,
+                                                                                    name: NSLocalizedString("Amount", comment: "Product name for entered amount"), description: NSLocalizedString("Entered amount", comment: "Product description for entered amount"), price: Int((total + amount)*100 / 100)), isAmount: true)
+                        dismissView()
+                    case .topup:
+                        handleTopup()
+                    }
+                }
+            } label: {
+                Text(displayOption.buttonTitle + ": " + WayPay.currencyFormatter.string(for: Double((Double(amount + total) / 100)))!)
+                    .accessibility(label: Text(displayOption.buttonTitle))
+                    .padding()
+                    .foregroundColor(Color.white)
+            }
+            .buttonStyle(WayPay.WideButtonModifier())
+            .disabled((total + amount) <= 0)
+            .padding()
+        } // VStack
+        .navigationBarTitle(displayOption.title)
+        .alert(isPresented: $showTransactionResult) {
+            Alert(
+                title: Text(wasTransactionSuccessful ? "✅" : "🚫")
+                    .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
+                    .font(.title),
+                message: Text(displayOption.buttonTitle + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
+                dismissButton: .default(
+                                Text("OK"),
+                                action: dismissView)
+            )
         }
     }
     
@@ -169,10 +161,15 @@ struct AmountView: View {
                 WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: SUCCESS")
                 if let transactions = response.result,
                    let transaction = transactions.first {
+                    WayAppUtils.Log.message("Checkin: \(String(describing: session.checkin))")
+                    WayAppUtils.Log.message("New session.checkin?.prepaidBalance: \(String(describing: session.checkin?.prepaidBalance))")
                     DispatchQueue.main.async {
                         self.transactionResult(accepted: transaction.result == .ACCEPTED)
                         self.session.transactions.addAsFirst(transaction)
+                        self.session.checkin?.prepaidBalance = (self.session.checkin?.prepaidBalance ?? 0) + (transaction.amount ?? 0)
                     }
+                    WayAppUtils.Log.message("Checkin: \(String(describing: session.checkin))")
+                    WayAppUtils.Log.message("New session.checkin?.prepaidBalance: \(String(describing: session.checkin?.prepaidBalance))")
                 } else {
                     WayAppUtils.Log.message("INVALID_SERVER_DATA")
                     self.transactionResult(accepted: false)

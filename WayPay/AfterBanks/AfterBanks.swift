@@ -48,24 +48,6 @@ final class AfterBanks: ObservableObject {
         }
     } // SupportedBank
     
-    static func getBanks(forCountryCode: String = "ES") {
-        WayAppUtils.Log.message("******** STARTING getBanks")
-        WayPay.API.getBanks(forCountryCode).fetch(type: [[SupportedBank]].self) { response in
-            if case .success(let response?) = response {
-                if let banks = response.result?.first {
-                    WayAppUtils.Log.message("******** BANKS=\(banks)")
-                    DispatchQueue.main.async {
-                        WayPay.session.banks.setTo(banks)
-                    }
-                } else {
-                    WayPay.API.reportError(response)
-                }
-            } else if case .failure(let error) = response {
-                WayAppUtils.Log.message(error.localizedDescription)
-            }
-        }
-    }
-
     /*
     static func getConsentFor(service: String = "sandbox") {
         API.getUserAccountConsent(service).fetch(type: ConsentResponse.self) { response in

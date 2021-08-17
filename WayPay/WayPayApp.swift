@@ -12,7 +12,6 @@ import SwiftUI
 struct WayPayApp: App {
     
     init() {
-        //UITableView.appearance().backgroundColor = UIColor(named: "CornSilk")
         UITableView.appearance().backgroundColor = UIColor.white
     }
     
@@ -20,7 +19,7 @@ struct WayPayApp: App {
         WindowGroup {
             MainView()
                 .environmentObject(WayPay.session)
-                .accentColor(Color("MintGreen"))
+                .accentColor(Color.green)
         }
         .commands {
             SidebarCommands()

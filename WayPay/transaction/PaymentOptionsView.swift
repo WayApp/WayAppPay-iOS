@@ -186,6 +186,7 @@ struct PaymentOptionsView: View {
                 }
                 if isAPICallOngoing {
                     ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
+                        .progressViewStyle(WayPay.WayPayProgressViewStyle())
                 }
             } // ZStack
             .foregroundColor(.primary)

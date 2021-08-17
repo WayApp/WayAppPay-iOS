@@ -11,19 +11,37 @@ import SwiftUI
 extension WayPay {
     
     struct Prize: Hashable, Codable, Identifiable {
+        static let winnningMessage = NSLocalizedString("Congratulations. You got the prize!", comment: "winnningMessage default")
         enum Format: String, Codable, CaseIterable {
-            case CASHBACK, COUPON, MANUAL
+            case CASHBACK, COUPON
             
             var title: String {
                 switch self {
                 case .CASHBACK:
                     return NSLocalizedString("Cashback", comment: "Prize format title")
                 case .COUPON:
-                    return NSLocalizedString("Coupon", comment: "Prize format title")
-                case .MANUAL:
-                    return NSLocalizedString("Manual", comment: "Prize format title")
+                    return NSLocalizedString("Discount", comment: "Prize format title")
                 }
             }
+            
+            var amountTitle: String {
+                switch self {
+                case .CASHBACK:
+                    return NSLocalizedString("Cashback amount", comment: "Prize amountTitle")
+                case .COUPON:
+                    return NSLocalizedString("Discount", comment: "Prize amountTitle")
+                }
+            }
+            
+            var amountSymbol: String {
+                switch self {
+                case .CASHBACK:
+                    return NSLocalizedString("€", comment: "Prize amountTitle")
+                case .COUPON:
+                    return NSLocalizedString("%", comment: "Prize amountTitle")
+                }
+            }
+
         }
         
         var campaignID: String
@@ -33,7 +51,7 @@ extension WayPay {
         var value: Int?
         var format: Format
         
-        init(campaignID: String, name: String, message: String, format: Format = .MANUAL, amountToGetIt: Int) {
+        init(campaignID: String, name: String, message: String = Prize.winnningMessage, format: Format = .CASHBACK, amountToGetIt: Int) {
             self.campaignID = campaignID
             self.message = message
             self.name = name
@@ -44,11 +62,9 @@ extension WayPay {
         var displayAs: String {
             switch format {
             case .CASHBACK:
-                return "\(format.title): \(name ?? "-"): \(WayPay.formatPrice(value))\n\(message ?? "-")"
+                return "\(format.title): \(name ?? "-"): \(WayPay.formatPrice(value))\n\(message )"
             case .COUPON:
-                return "\(format.title): \(name ?? "-"): \(value ?? 0)%\n\(message ?? "-")"
-            case .MANUAL:
-                return "\(format.title): \(name ?? "-")\n\(message ?? "-")"
+                return "\(format.title): \(name ?? "-"): \(value ?? 0)%\n\(message )"
             }
         }
         
@@ -62,8 +78,6 @@ extension WayPay {
                 return max(amount - (value ?? 0),0)
             case .COUPON:
                 return Int(Double(amount)*((value != nil) ? (1.0 - Double(value!)/100.0) : 1))
-            case .MANUAL:
-                return amount
             }
         }
     }
@@ -292,9 +306,9 @@ extension WayPay {
         static func icon(format: Format) -> String {
             switch format {
             case .POINT:
-                return "number"
+                return "banknote"
             case .STAMP:
-                return "loupe"
+                return "circle.grid.3x3"
             }
         }
 

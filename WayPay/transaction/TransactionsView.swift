@@ -194,6 +194,7 @@ struct TransactionsView: View {
             }
             if isAPICallOngoing {
                 ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
+                    .progressViewStyle(WayPay.WayPayProgressViewStyle())
             }
         }
     }

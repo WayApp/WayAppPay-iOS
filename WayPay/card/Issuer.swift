@@ -31,23 +31,7 @@ extension WayPay {
         var id: String {
             return issuerUUID
         }
-        
-        static func get() {
-            WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
-                if case .success(let response?) = response {
-                    if let issuers = response.result {
-                        DispatchQueue.main.async {
-                            session.issuers.setTo(issuers)
-                        }
-                    } else {
-                        WayPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
-                }
-            }
-        }
-        
+                
         static func expireCards(issuerUUID: String, completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.expireIssuerCards(issuerUUID).fetch(type: [Issuer].self) { response in
                 switch response {

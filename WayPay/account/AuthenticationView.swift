@@ -26,77 +26,72 @@ struct AuthenticationView: View {
     }
     
     var body: some View {
-        VStack() {
-            Text("")
-                .padding(.bottom,100)
-            Image("WayPay-Logo")
-                .resizable()
-                .scaledToFit()
-                .padding(.horizontal)
-            Form {
-                TextField("Email", text: self.$email)
-                    .font(.title3)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    .textContentType(.emailAddress)
-                    .keyboardType(.emailAddress)
-                SecureField("PIN", text: self.$pin)
-                    .font(.title3)
-                    .frame(width: 100)
-                    .textContentType(.password)
-                    .keyboardType(.numberPad)
+        Form {
+            HStack {
+                Spacer()
+                Image("WayPay-Logo")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal)
+                Spacer()
+            }
+            TextField("email", text: self.$email)
+                .font(.body)
+                .autocapitalization(.none)
+                .disableAutocorrection(true)
+                .textContentType(.emailAddress)
+                .keyboardType(.emailAddress)
+            SecureField("4-digit PIN", text: self.$pin)
+                .font(.body)
+                .frame(width: 100)
+                .textContentType(.password)
+                .keyboardType(.numberPad)
+            HStack {
+                Spacer()
                 Button(action: {
-                    WayPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
-                        if let accounts = accounts,
-                           let account = accounts.first {
-                            DispatchQueue.main.async {
-                                session.account = account
-                                session.saveLoginData(pin: pin)
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                loginError = true
-                            }
+                    self.forgotPIN = true
+                }) {
+                    Text("Forgot PIN")
+                        .foregroundColor(Color("MintGreen"))
+                }
+                .sheet(isPresented: self.$forgotPIN) {
+                    EnterOTP()
+                }
+
+            }
+            Button(action: {
+                WayPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
+                    if let accounts = accounts,
+                       let account = accounts.first {
+                        DispatchQueue.main.async {
+                            session.account = account
+                            session.saveLoginData(pin: pin)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            loginError = true
                         }
                     }
-                }) {
-                    Text("Sign in")
-                        .padding()
                 }
-                .disabled(shouldSigninButtonBeDisabled)
-                .buttonStyle(WayPay.WideButtonModifier())
-                .animation(.easeInOut(duration: 0.3))
-                .alert(isPresented: $loginError) {
-                    Alert(title: Text("Login error"),
-                          message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
-                          dismissButton: .default(Text("OK")))
-                }
-                HStack {
-                    Button(action: {
-                        self.forgotPIN = true
-                    }) {
-                        Text("Register")
-                            .bold()
-                            .foregroundColor(Color("MintGreen"))
-                    }
-                    .sheet(isPresented: self.$forgotPIN) {
-                        EnterOTP()
-                    }
-                    Spacer()
-                    Button(action: {
-                        self.forgotPIN = true
-                    }) {
-                        Text("Forgot PIN")
-                            .bold()
-                            .foregroundColor(Color("MintGreen"))
-                    }
-                    .sheet(isPresented: self.$forgotPIN) {
-                        EnterOTP()
-                    }
-                } // HStack
-            } // Form
-            .padding()
-        } // VStack
+            }) {
+                Text("Sign in")
+                    .padding()
+            }
+            .disabled(shouldSigninButtonBeDisabled)
+            .buttonStyle(WayPay.WideButtonModifier())
+            .animation(.easeInOut(duration: 0.3))
+            .alert(isPresented: $loginError) {
+                Alert(title: Text("Login error"),
+                      message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
+                      dismissButton: .default(Text("OK")))
+            }
+            NavigationLink(destination: RegistrationView()) {
+                Text("New account")
+                    .foregroundColor(Color("MintGreen"))
+            }
+        } // Form
+        .padding()
+        .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     }
 }
 

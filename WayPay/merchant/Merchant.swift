@@ -36,20 +36,57 @@ extension WayPay {
         var currency: Currency?
         var level: Level?
         
-        init(name: String) {
-            self.merchantUUID = UUID().uuidString
+        init(name: String, email: String, level: Level = .ONE) {
+            self.merchantUUID = ""
             self.name = name
-            self.description = name
+            self.email = email
+            self.level = level
         }
 
         // Protocol Identifiable
         var id: String {
             return merchantUUID
         }
+        
+        var allowsPointCampaign: Bool {
+            return (level == nil) || (level != Level.ONE)
+        }
+
+        var allowsGiftcard: Bool {
+            return (level == nil) || (level != Level.ONE)
+        }
 
         func getPayerForTransaction(accountUUID: String, transactionUUID: String) {
-            
         }
+        
+        static func createMerchant(merchant: Merchant, completion: @escaping ([Merchant]?, Error?) -> Void) {
+            WayPay.API.createMerchant(merchant).fetch(type: [Merchant].self) { response in
+                WayAppUtils.Log.message("Merchant: createMerchant: response: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func createMerchantForAccount(accountUUID: String, merchant: Merchant, completion: @escaping ([Merchant]?, Error?) -> Void) {
+            WayPay.API.createMerchantForAccount(accountUUID, merchant).fetch(type: [Merchant].self) { response in
+                WayAppUtils.Log.message("Merchant: createMerchantForAccount: response: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
 
         func getTransactionsForAccount(_ accountUUID: String) {
             WayPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [PaymentTransaction].self) { response in

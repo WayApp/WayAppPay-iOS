@@ -88,7 +88,7 @@ struct ChangePinView: View {
                     }
                     HStack(alignment: .center) {
                         Text("New")
-                        TextField("4-digits", text: $newPIN)
+                        TextField("4-digit", text: $newPIN)
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
@@ -99,7 +99,7 @@ struct ChangePinView: View {
                     }
                     HStack(alignment: .center) {
                         Text("Re-enter")
-                        TextField("4-digits", text: $confirmationPIN)
+                        TextField("4-digit", text: $confirmationPIN)
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)

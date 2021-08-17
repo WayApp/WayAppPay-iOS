@@ -12,25 +12,21 @@ struct ProductGalleryView: View {
     @EnvironmentObject var session: WayPay.Session
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(session.products) { product in
-                    NavigationLink(destination: ProductDetailView(product: product)) {
-                        ProductRowView(product: product)
-                    }
+        List {
+            ForEach(session.products) { product in
+                NavigationLink(destination: ProductDetailView(product: product)) {
+                    ProductRowView(product: product)
                 }
-                .onDelete(perform: delete)
             }
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle(Text("Products"), displayMode: .inline)
-            .navigationBarItems(trailing:
-                NavigationLink(destination: ProductDetailView(product: nil)) {   Image(systemName: "plus.circle")
-                        .resizable()
-                    .frame(width: 30, height: 30, alignment: .center)
-                }
-                .aspectRatio(contentMode: .fit)
-            )
+            .onDelete(perform: delete)
         }
+        .listStyle(GroupedListStyle())
+        .navigationBarTitle(Text("Products"), displayMode: .inline)
+        .navigationBarItems(trailing:
+            NavigationLink(destination: ProductDetailView(product: nil)) {
+                Text("New")
+            }
+        )
     }
     
     func delete(at offsets: IndexSet) {
