@@ -37,7 +37,7 @@ struct RegistrationView: View {
     @State var loginError: Bool = false
     @State private var businessName = String()
     @State private var phoneNumber = String()
-    @State private var logo: UIImage? = UIImage(named: "logoPlaceholder")
+    @State private var logo: UIImage? = UIImage(named: WayPay.Merchant.defaultLogo)
     @State private var showImagePicker: Bool = false
 
     private var shouldRegistrationButtonBeDisabled: Bool {
@@ -106,7 +106,7 @@ struct RegistrationView: View {
                     if let accounts = accounts,
                        let account = accounts.first {
                         let merchant = WayPay.Merchant(name: businessName, email: email)
-                        WayPay.Merchant.createMerchantForAccount(accountUUID: account.accountUUID, merchant: merchant) { merchants, error in
+                        WayPay.Merchant.createMerchantForAccount(accountUUID: account.accountUUID, merchant: merchant, logo: logo) { merchants, error in
                             if let merchants = merchants,
                                let merchant = merchants.first {
                                 WayAppUtils.Log.message("Merchant: \(merchant)")

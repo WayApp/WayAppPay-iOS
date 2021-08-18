@@ -15,6 +15,7 @@ extension WayPay {
         // Session related
         case ACCOUNT // Stores the user account while in session
         case MERCHANT // Stores selected merchant
+        case SKIP_ONBOARDING // Does not reset with logout
 
         static func resetSessionKeys() {
             // Only session keys

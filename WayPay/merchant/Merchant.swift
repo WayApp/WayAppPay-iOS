@@ -6,7 +6,7 @@
 //  Copyright © 2020 WayApp. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 extension WayPay {
     
@@ -18,6 +18,7 @@ extension WayPay {
 
         static let defaultImageName = "questionmark.square"
         static let defaultName = "missing name"
+        static let defaultLogo = "logoPlaceholder"
 
         enum Level: String, Codable {
             case ONE, TWO, THREE
@@ -73,8 +74,8 @@ extension WayPay {
             }
         }
 
-        static func createMerchantForAccount(accountUUID: String, merchant: Merchant, completion: @escaping ([Merchant]?, Error?) -> Void) {
-            WayPay.API.createMerchantForAccount(accountUUID, merchant).fetch(type: [Merchant].self) { response in
+        static func createMerchantForAccount(accountUUID: String, merchant: Merchant, logo: UIImage?, completion: @escaping ([Merchant]?, Error?) -> Void) {
+            WayPay.API.createMerchantForAccount(accountUUID, merchant, logo).fetch(type: [Merchant].self) { response in
                 WayAppUtils.Log.message("Merchant: createMerchantForAccount: response: \(response)")
                 switch response {
                 case .success(let response?):

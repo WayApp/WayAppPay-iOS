@@ -15,9 +15,10 @@ extension WayPay {
     static var session = Session()
     
     final class Session: ObservableObject {
+        @Published var imageDownloader: ImageDownloader?
         @Published var showAuthenticationView: Bool = true
+        @AppStorage("skipOnboarding") var skipOnboarding: Bool = UserDefaults.standard.bool(forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
         var doesAccountHasMerchants: Bool = false
-
         @Published var account: Account? {
             didSet {
                 if let account = account {
@@ -45,6 +46,7 @@ extension WayPay {
         @Published var seletectedMerchant: Int = 0 {
             didSet {
                 if !merchants.isEmpty && doesAccountHasMerchants {
+                    imageDownloader = ImageDownloader(imageURL: merchant?.logo, addToCache: true)
                     Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
                         if let products = products {
                             DispatchQueue.main.async {

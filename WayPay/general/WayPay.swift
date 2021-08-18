@@ -163,7 +163,6 @@ struct WayPay {
         }
     }
 
-
     struct CancelButtonModifier: ButtonStyle {
         func makeBody(configuration: ButtonStyle.Configuration) -> some View {
             MyButton(configuration: configuration)

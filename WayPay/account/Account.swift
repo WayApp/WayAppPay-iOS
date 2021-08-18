@@ -132,20 +132,6 @@ extension WayPay {
             }
         }
 
-        static func accountAndMerchant(account: Account, merchant: Merchant, completion: @escaping ([Merchant]?, Error?) -> Void) {
-            WayPay.API.accountAndMerchant(account, merchant).fetch(type: [Merchant].self) { response in
-                WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
-                switch response {
-                case .success(let response?):
-                    completion(response.result, nil)
-                case .failure(let error):
-                    completion(nil, error)
-                default:
-                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
-                }
-            }
-        }
-
         static func createAccount(account: AccountRequest, completion: @escaping ([Account]?, Error?) -> Void) {
             WayPay.API.createAccount(account).fetch(type: [Account].self) { response in
                 WayAppUtils.Log.message("Account: createAccount: response: \(response)")

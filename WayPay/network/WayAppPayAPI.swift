@@ -77,7 +77,7 @@ extension WayPay {
         case checkin(PaymentTransaction) // POST
         // Merchant
         case createMerchant(Merchant) // POST
-        case createMerchantForAccount(String, Merchant) // POST
+        case createMerchantForAccount(String, Merchant, UIImage?) // POST
         case accountAndMerchant(Account, Merchant) // POST
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
@@ -147,7 +147,7 @@ extension WayPay {
             case .checkin: return "/accounts/checkins/"
             // Merchants
             case .createMerchant(_): return "/merchants/"
-            case .createMerchantForAccount(let accountUUID, _): return "/accounts/\(accountUUID)/merchants/"
+            case .createMerchantForAccount(let accountUUID, _, _): return "/accounts/\(accountUUID)/merchants/"
             case .accountAndMerchant(_ , _): return "/merchants/"
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
@@ -218,7 +218,7 @@ extension WayPay {
             case .deleteAccount(let accountUUID): return accountUUID
             // Merchant
             case .createMerchant: return ""
-            case .createMerchantForAccount(let accountUUID, _): return accountUUID
+            case .createMerchantForAccount(let accountUUID, _, _): return accountUUID
             case .accountAndMerchant(_ , _): return ""
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
@@ -506,9 +506,22 @@ extension WayPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .createMerchant(let merchant), .createMerchantForAccount(_, let merchant):
+            case .createMerchant(let merchant):
                 if let part = HTTPCall.BodyPart(merchant, name: "merchant") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createMerchantForAccount(_, let merchant, let logo):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(merchant, name: "merchant") {
+                    parts = [part]
+                    if let logo = logo {
+                        parts?.append(HTTPCall.BodyPart.image(name: "logo", image: logo))
+                    }
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
                     return (multipart.contentType, multipart.data)
                 }
                 return nil

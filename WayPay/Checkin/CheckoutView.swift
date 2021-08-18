@@ -14,8 +14,10 @@ struct CheckoutView: View {
     @State var inputAmount: Bool = false
     @State private var purchaseAmount: String = ""
     @State private var showTransactionResult = false
+    @State private var showStampHelp = false
     @State private var wasTransactionSuccessful = false
     @State private var isAPICallOngoing = false
+    @State private var displayPromotionAlert = false
     let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
 
     var purchaseAmountValueToDisplay: Int {
@@ -61,34 +63,56 @@ struct CheckoutView: View {
             Button(action: {
                 if let pointCampaign = pointCampaign {
                     rewardLoyalty(campaign: pointCampaign)
+                } else {
+                    displayPromotionAlert = true
                 }
             }) {
                 Label(NSLocalizedString("Reward purchase amount", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .POINT))
                     .padding()
             }
-            .buttonStyle(WayPay.WideButtonModifier())
-            .disabled(!WayPay.Point.isPointCampaignActive())
-            if (!WayPay.Point.isPointCampaignActive()) {
-                Link("↳ " + NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request points campaign feature"), destination: URL(string: "mailto:sales@wayapp.com?subject=Reward by € consumption&body=Hello, I am interested in using this feature. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!)
-                    .font(.caption)
-                    .foregroundColor(Color.blue)
+            .font(.headline)
+            .frame(maxWidth: .infinity)
+            .background(!WayPay.Point.isPointCampaignActive() ? Color.blue.opacity(0.50) : Color.green)
+            .cornerRadius(6)
+            .foregroundColor(.white)
+            .alert(isPresented: $displayPromotionAlert) {
+                Alert(
+                    title: Text("Premium feature")
+                        .font(.title),
+                    message: Text("Contact sales@wayapp.com to enable"),
+                    dismissButton: .default(
+                        Text("OK"),
+                        action: {})
+                )
             }
             Button(action: {
                 if let stampCampaign = stampCampaign {
                     rewardLoyalty(campaign: stampCampaign)
+                } else {
+                    showStampHelp = true
                 }
             }) {
                 Label(NSLocalizedString("Reward visit", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
                     .padding()
             }
             .buttonStyle(WayPay.WideButtonModifier())
-            .disabled(!WayPay.Stamp.isStampCampaignActive())
+            .alert(isPresented: $showStampHelp) {
+                Alert(
+                    title: Text("Needs setup in Settings")
+                        .font(.title),
+                    message: Text("Needs activation on the Settings tab. Contact support@wayapp.com for help"),
+                    dismissButton: .default(
+                        Text("OK"),
+                        action: {})
+                )
+            }
+
             Button(action: {
                 if let stampCampaign = stampCampaign {
                     rewardLoyalty(campaign: stampCampaign)
                 }
             }) {
-                Label(NSLocalizedString("Reward community campaign", comment: "CheckoutView: button title"), systemImage: "building.2.fill")
+                Label(NSLocalizedString("Community campaign", comment: "CheckoutView: button title"), systemImage: "network")
                     .padding()
             }
             .buttonStyle(WayPay.WideButtonModifier())
@@ -194,14 +218,25 @@ struct CheckoutView: View {
             ScrollView {
                 VStack {
                     VStack(alignment: .center, spacing: 4) {
+                        if session.imageDownloader?.image != nil {
+                            Image(uiImage: session.imageDownloader!.image!)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 80, maxHeight: 80)
+                        } else {
+                            Image("WayPay-Hands")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 80, maxHeight: 80)
+                        }
                         HStack {
                             TextField("\(purchaseAmount)", text: $purchaseAmount)
                                 .font(.title)
                                 .frame(width: 120, height: 40)
                                 .keyboardType(.decimalPad)
                                 .disabled(session.checkin != nil)
-                                .modifier(WayPay.TextFieldModifier(padding: 10, lineWidth: 2))
-                            Text("€")
+                                .modifier(WayPay.TextFieldModifier(padding: 10, lineWidth: 1))
+                            Text(Locale.current.currencySymbol ?? "")
                         }
                         .padding()
                         if (!purchaseAmount.isEmpty && session.checkin == nil) {

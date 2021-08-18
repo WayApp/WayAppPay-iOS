@@ -61,6 +61,9 @@
 		B1B3818925066D8D0008BC78 /* Consent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B3818825066D8D0008BC78 /* Consent.swift */; };
 		B1BA480925D7EFF200ED31EF /* SendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BA480825D7EFF200ED31EF /* SendEmail.swift */; };
 		B1BA480E25D7F08200ED31EF /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BA480D25D7F08200ED31EF /* BarView.swift */; };
+		B1D0D8BE26CCF835009171A7 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D0D8BD26CCF835009171A7 /* OnboardingView.swift */; };
+		B1D0D8C126CCFA09009171A7 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D0D8C026CCFA09009171A7 /* OnboardingPage.swift */; };
+		B1D0D8C326CCFE00009171A7 /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D0D8C226CCFE00009171A7 /* OnboardingPageView.swift */; };
 		B1D6990623EA22A40049E1D8 /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D6990523EA22A40049E1D8 /* QRScannerView.swift */; };
 		B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750123ED8CA000A1967F /* ChangePinView.swift */; };
 		B1D8750623EEDC1700A1967F /* NumberButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D8750523EEDC1700A1967F /* NumberButtonView.swift */; };
@@ -144,6 +147,9 @@
 		B1B3818825066D8D0008BC78 /* Consent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consent.swift; sourceTree = "<group>"; };
 		B1BA480825D7EFF200ED31EF /* SendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendEmail.swift; sourceTree = "<group>"; };
 		B1BA480D25D7F08200ED31EF /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
+		B1D0D8BD26CCF835009171A7 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		B1D0D8C026CCFA09009171A7 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
+		B1D0D8C226CCFE00009171A7 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		B1D6990523EA22A40049E1D8 /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		B1D8750123ED8CA000A1967F /* ChangePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePinView.swift; sourceTree = "<group>"; };
 		B1D8750523EEDC1700A1967F /* NumberButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberButtonView.swift; sourceTree = "<group>"; };
@@ -355,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				B10F838725DBCA8000F4B528 /* WayPayApp.swift */,
+				B1D0D8BF26CCF844009171A7 /* onboarding */,
 				B13B688E26A5DC6500271515 /* Checkin */,
 				B1609565263E874400B14A43 /* campaign */,
 				B12DE95123AA641000C02657 /* general */,
@@ -395,6 +402,16 @@
 				B16ECCC125E66D5D007A9115 /* AfterBanks.swift */,
 			);
 			path = AfterBanks;
+			sourceTree = "<group>";
+		};
+		B1D0D8BF26CCF844009171A7 /* onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				B1D0D8BD26CCF835009171A7 /* OnboardingView.swift */,
+				B1D0D8C026CCFA09009171A7 /* OnboardingPage.swift */,
+				B1D0D8C226CCFE00009171A7 /* OnboardingPageView.swift */,
+			);
+			path = onboarding;
 			sourceTree = "<group>";
 		};
 		B1E7A57C23E4472F00CC2E04 /* amount */ = {
@@ -507,6 +524,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1D0D8BE26CCF835009171A7 /* OnboardingView.swift in Sources */,
 				B12DE95323AA643E00C02657 /* WayPay.swift in Sources */,
 				B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */,
 				B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */,
@@ -524,6 +542,7 @@
 				B12DE98A23AA847B00C02657 /* OperationalEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
 				B1D8750823EEDF6600A1967F /* OperationButtonView.swift in Sources */,
+				B1D0D8C126CCFA09009171A7 /* OnboardingPage.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B16ECCC225E66D5D007A9115 /* AfterBanks.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
@@ -550,6 +569,7 @@
 				B165F48B26B4174400104E1F /* ScanView.swift in Sources */,
 				B1E7A58F23E617ED00CC2E04 /* Container.swift in Sources */,
 				B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */,
+				B1D0D8C326CCFE00009171A7 /* OnboardingPageView.swift in Sources */,
 				B13B689226A6E7C300271515 /* RewardsView.swift in Sources */,
 				B10F838825DBCA8000F4B528 /* WayPayApp.swift in Sources */,
 				B1066B9A26C934E6000A3DB5 /* RegistrationView.swift in Sources */,

@@ -10,68 +10,19 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var session: WayPay.Session
-    @State private var selection: MainView.Tab = .cart
-    
-    private var badgePosition: CGFloat = 1
-    private var tabsCount: CGFloat = CGFloat(Tab.allCases.count)
-    
+    @State private var selection: MainView.Tab = Tab.settings
+
     enum Tab: Hashable, CaseIterable {
-        case cards
-        case cart
-        case order
+        case checkout
         case checkin
-        case POS
         case reports
         case settings
     }
     
-    func merchantTabView() -> AnyView {
-        return AnyView(
-            GeometryReader { geometry in
-                ZStack(alignment: .bottomLeading) {
-                    // TabView
-                    TabView(selection: $selection) {
-                        NavigationView {
-                            CheckoutView()
-                        }
-                        .tabItem {
-                            Label("Checkout", systemImage: "qrcode.viewfinder")
-                                .accessibility(label: Text("Checkout"))
-                        }
-                        .tag(Tab.cart)
-                        NavigationView {
-                            CheckinView().environmentObject(self.session)
-                        }
-                        
-                        .tabItem {
-                            Label("Customer", systemImage: "person.fill.questionmark")
-                                .accessibility(label: Text("Customer"))
-                        }
-                        .tag(Tab.checkin)
-                        NavigationView {
-                            TransactionsView()
-                        }
-                        .tabItem {
-                            Label("Sales", systemImage: "chart.bar.xaxis")
-                                .accessibility(label: Text("Sales"))
-                        }
-                        .tag(Tab.reports)
-                        NavigationView {
-                            SettingsView().environmentObject(self.session)
-                        }
-                        .tabItem {
-                            Label("Settings", systemImage: "gearshape.fill")
-                                .accessibility(label: Text("Settings"))
-                        }
-                        .tag(Tab.settings)
-                    } // TabView
-                }
-            }
-        ) // AnyView
-    }
-    
     var body: some View {
-        if session.showAuthenticationView {
+        if !session.skipOnboarding {
+            return AnyView(OnboardingView())
+        } else if session.showAuthenticationView {
             return AnyView(
                 NavigationView {
                     AuthenticationView()
@@ -80,6 +31,47 @@ struct MainView: View {
             return merchantTabView()
         }
     }
+    
+    func merchantTabView() -> AnyView {
+        return AnyView(
+            TabView(selection: $selection) {
+                NavigationView {
+                    CheckoutView()
+                }
+                .tabItem {
+                    Label("Checkout", systemImage: "qrcode.viewfinder")
+                        .accessibility(label: Text("Checkout"))
+                }
+                .tag(Tab.checkout)
+                NavigationView {
+                    CheckinView().environmentObject(self.session)
+                }
+                
+                .tabItem {
+                    Label("Customer", systemImage: "person.fill.questionmark")
+                        .accessibility(label: Text("Customer"))
+                }
+                .tag(Tab.checkin)
+                NavigationView {
+                    TransactionsView()
+                }
+                .tabItem {
+                    Label("Sales", systemImage: "chart.bar.xaxis")
+                        .accessibility(label: Text("Sales"))
+                }
+                .tag(Tab.reports)
+                NavigationView {
+                    SettingsView().environmentObject(self.session)
+                }
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                        .accessibility(label: Text("Settings"))
+                }
+                .tag(Tab.settings)
+            } // TabView
+        ) // AnyView
+    }
+
 }
 
 struct MainView_Previews: PreviewProvider {
