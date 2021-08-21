@@ -250,6 +250,23 @@ extension WayPay {
     
     enum Currency: String, Codable {
         case CHF, CLP, COP, EUR, GBP, USD, VEF, Unknown
+        
+        init?(rawValue: String?) {
+            guard let rawValue = rawValue else {
+                self = .EUR
+                return
+            }
+            switch rawValue {
+            case "EUR": self = .EUR
+            case "GBP": self = .GBP
+            case "CHF": self = .CHF
+            case "CLP": self = .CLP
+            case "COP": self = .GBP
+            case "USD": self = .GBP
+            case "VEF": self = .GBP
+            default: self = .EUR
+            }
+        }
     }
 
     struct Address: Codable, Hashable {

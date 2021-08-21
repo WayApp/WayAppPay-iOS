@@ -193,7 +193,7 @@ struct TransactionsView: View {
                     .frame(width: WayPay.UI.paymentResultImageSize, height: WayPay.UI.paymentResultImageSize, alignment: .center)
             }
             if isAPICallOngoing {
-                ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
+                ProgressView(NSLocalizedString(WayPay.UserMessage.progressView.alert.title, comment: "Activity indicator"))
                     .progressViewStyle(WayPay.WayPayProgressViewStyle())
             }
         }

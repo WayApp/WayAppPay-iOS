@@ -31,46 +31,44 @@ struct SettingsView: View {
             Section(header:
                         Label(NSLocalizedString("Reward visits", comment: "CampaignsView: section title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
                         .font(.callout)) {
-                if !session.stamps.isEmpty {
-                    if let stampCampaign = session.activeStampCampaign() {
-                        Text(stampCampaign.name)
-                        HStack {
-                            Toggle("", isOn: $isStampCampaignActive)
-                                .onChange(of: isStampCampaignActive, perform: {value in
-                                    if shouldStampCampaignToggleCallAPI {
-                                        stampCampaign.toggleState() { campaigns, error in
-                                            if let campaigns = campaigns,
-                                               let campaign = campaigns.first {
-                                                session.campaigns[campaign.id]?.state = campaign.state
-                                                session.stamps[campaign.id]?.state = campaign.state
-                                            }
-                                        }
-                                    }
-                                    shouldStampCampaignToggleCallAPI = true
-                                })
-                                .labelsHidden()
-                                .toggleStyle(SwitchToggleStyle(tint: Color("MintGreen")))
-                            Spacer()
-                            Button {
-                                WayPay.Campaign.delete(id: stampCampaign.id, sponsorUUID: stampCampaign.sponsorUUID, format: .STAMP) { result, error in
-                                    if error == nil {
-                                        DispatchQueue.main.async {
-                                            session.stamps.remove(stampCampaign)
-                                            session.campaigns.remove(stampCampaign)
+                if let stampCampaign = session.activeStampCampaign() {
+                    Text(stampCampaign.name)
+                    HStack {
+                        Toggle("", isOn: $isStampCampaignActive)
+                            .onChange(of: isStampCampaignActive, perform: {value in
+                                if shouldStampCampaignToggleCallAPI {
+                                    stampCampaign.toggleState() { campaigns, error in
+                                        if let campaigns = campaigns,
+                                           let campaign = campaigns.first {
+                                            session.campaigns[campaign.id]?.state = campaign.state
+                                            session.stamps[campaign.id]?.state = campaign.state
                                         }
                                     }
                                 }
-                            } label: {
-                                Image(systemName: "trash.circle.fill")
-                                    .resizable()
-                                    .frame(width: 48.0, height: 48.0)
-                                    .foregroundColor(Color.red)
+                                shouldStampCampaignToggleCallAPI = true
+                            })
+                            .labelsHidden()
+                            .toggleStyle(SwitchToggleStyle(tint: Color.green))
+                        Spacer()
+                        Button {
+                            WayPay.Campaign.delete(id: stampCampaign.id, sponsorUUID: stampCampaign.sponsorUUID, format: .STAMP) { result, error in
+                                if error == nil {
+                                    DispatchQueue.main.async {
+                                        session.stamps.remove(stampCampaign)
+                                        session.campaigns.remove(stampCampaign)
+                                    }
+                                }
                             }
+                        } label: {
+                            Image(systemName: "trash.circle.fill")
+                                .resizable()
+                                .frame(width: 48.0, height: 48.0)
+                                .foregroundColor(Color.red)
                         }
-                        .onAppear(perform: {
-                            isStampCampaignActive = session.activeStampCampaign()?.state == .ACTIVE
-                        })
                     }
+                    .onAppear(perform: {
+                        isStampCampaignActive = session.activeStampCampaign()?.state == .ACTIVE
+                    })
                 } else {
                     Text("Reward customers by number of visits. The more they visit, the more cashbask or discounts they get.")
                         .font(.caption)
@@ -81,6 +79,7 @@ struct SettingsView: View {
                     }
                 }
             } // Section STAMP
+            .listItemTint(Color.green)
             Section(header:
                         Label(NSLocalizedString("Reward consumption", comment: "CampaignsView: section title"), systemImage: WayPay.Campaign.icon(format: .POINT))
                         .font(.callout)) {
@@ -141,6 +140,7 @@ struct SettingsView: View {
                     }
                 }
             } // Section POINT
+            .listItemTint(Color.green)
             Section(header:
                         Label(NSLocalizedString("Rechargable giftcard", comment: "SettingsView: section title"), systemImage: "gift")
                         .font(.callout)) {
@@ -150,6 +150,7 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundColor(Color.blue)
             } // Section Giftcard
+            .listItemTint(Color("MintGreen"))
             Section(header:
                         Label(NSLocalizedString("My business", comment: "SettingsView: section title"), systemImage: "cart")
                         .font(.callout)) {
@@ -172,13 +173,23 @@ struct SettingsView: View {
                         session.saveSelectedMerchant()
                     })
                 }
+                NavigationLink(destination: CheckoutQRView()) {
+                    Label(NSLocalizedString("Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
+                }
                 NavigationLink(destination: ProductGalleryView()) {
                     Label(NSLocalizedString("Product catalogue", comment: "SettingsView: merchants products"), systemImage: "list.bullet.rectangle")
                 }
+                NavigationLink(destination: CustomerQRView()) {
+                    Label(NSLocalizedString("Customer registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.crop.circle.fill.badge.checkmark")
+                }
             }
+            .listItemTint(Color.green)
             Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person.2.circle")
                         .accessibility(label: Text("My account"))
                         .font(.callout)) {
+                NavigationLink(destination: OnboardingView(fromSettings: true)) {
+                    Label(NSLocalizedString("Tutorial", comment: "SettingsView: OnboardingView option"), systemImage: "questionmark.video.fill")
+                }
                 Button {
                     self.changePIN = true
                 } label: {
@@ -198,7 +209,7 @@ struct SettingsView: View {
                         .accessibility(label: Text("Logout"))
                 }
             }
-            .listItemTint(Color("MintGreen"))
+            .listItemTint(Color.green)
             if (OperationalEnvironment.isSettingsSupportFunctionsActive) {
                 Section(header: Label("Support", systemImage: "ladybug")
                             .accessibility(label: Text("Support"))
@@ -285,7 +296,7 @@ struct SettingsView: View {
                     }
                     
                 }
-                .listItemTint(Color(.systemRed))
+                .listItemTint(Color.red)
             }
         } // Form
         .accentColor(.primary)

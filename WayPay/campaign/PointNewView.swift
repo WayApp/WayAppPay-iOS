@@ -32,27 +32,24 @@ struct PointNewView: View {
 
     var body: some View {
         Form {
-            Section(header: Label("Name", systemImage: "person.2.circle")
+            Section(header: Label("Name", systemImage: "checkmark.seal.fill")
                         .accessibility(label: Text("Name"))
                         .font(.caption)) {
-                TextField("", text: $newName)
+                TextField(session.merchant?.name ?? "", text: $newName)
                     .textContentType(.name)
                     .keyboardType(.default)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .background(
-                        RoundedRectangle(cornerRadius: 4, style: .continuous)
-                            .stroke(Color("MintGreen"), lineWidth: 0.5)
-                    )
             }
-            Section(header: Label("Configuration", systemImage: "person.2.circle")
+            Section(header: Label("Configuration", systemImage: "gearshape")
                         .accessibility(label: Text("Configuration"))
-                        .font(.callout)) {
+                        .font(.caption)) {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("1 point for every:")
+                        Text("Amount to reach prize:")
                         TextField("\(threshold)", text: $threshold)
-                            .keyboardType(.decimalPad)
+                            .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .frame(width: 80)
                     }
                     Toggle("Has expiration date", isOn: $expires)
                     if expires {
@@ -66,48 +63,29 @@ struct PointNewView: View {
                         .accessibility(label: Text("Prize"))
                         .font(.caption)) {
                 if ((threshold as NSString).doubleValue > 0) {
-                    HStack {
-                        TextField("0", text: $prizeAmount)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                        Text("\(Int((prizeAmount as NSString).doubleValue / (threshold as NSString).doubleValue)) points")
-                        TextField("\(prizeName)", text: $prizeName)
-                            .textContentType(.name)
-                            .keyboardType(.default)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .background(
-                                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                    .stroke(Color("MintGreen"), lineWidth: 0.5))
-                    }
-                }
-                Text("Winning message:")
-                TextEditor(text: $prize.message)
-                    .font(.body)
-                    .keyboardType(.default)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color("MintGreen"), lineWidth: 0.5))
-                VStack(alignment: .leading) {
-                    HStack {
-                        Picker(selection: $prize.format, label: Text("Prize format" + " -> ")) {
-                            ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
-                                Text(format.title)
+                    VStack(alignment: .leading) {
+                        Text("Reward customers with cashback (€) or discount (%):")
+                        HStack {
+                            Picker(selection: $prize.format, label: Text("Prize format" + " -> ")) {
+                                ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
+                                    Text(format.title)
+                                }
                             }
+                            .pickerStyle(MenuPickerStyle())
+                            Text(prize.format.title)
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        Text(prize.format.title)
-                    }
-                    HStack {
-                        Text("Amount")
-                        TextField("\(prizeAmount)", text: $prizeAmount)
-                            .frame(width: 80)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                        Spacer()
+                        HStack {
+                            Text(prize.format.amountTitle)
+                            TextField("\(prizeAmount)", text: $prizeAmount)
+                                .frame(width: 80)
+                                .keyboardType(.numberPad)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            Text(" " + prize.format.amountSymbol)
+                            Spacer()
+                        }
                     }
                 }
             }
-
             HStack {
                 Spacer()
                 Button(action: {
@@ -121,7 +99,9 @@ struct PointNewView: View {
                                                       expirationDate: expirationDate, state: .ACTIVE)
                     prize.name = prizeName
                     prize.value = Int(prizeAmount)
-                    prize.amountToGetIt = Int((prizeAmount as NSString).doubleValue / (threshold as NSString).doubleValue)
+                    prize.amountToGetIt = Int(threshold) ?? 0
+                    prize.message = WayPay.Prize.winnningMessage
+
                     let pointCampaign: WayPay.Point =
                         WayPay.Point(campaign: campaign,
                                            paymentAmountConvertibleToRewardUnit: 100,
@@ -144,7 +124,7 @@ struct PointNewView: View {
                         }
                     }
                 }) {
-                    Text("Activate campaign")
+                    Text("Activate")
                         .padding()
                         .foregroundColor(Color.white)
                 }

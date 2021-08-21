@@ -1,9 +1,9 @@
-/* Bundle name */
-"CFBundleName" = "WayApp Pay";
+/* Bundle display name */
+"CFBundleDisplayName" = "WayPay";
 
-/* Privacy - NFC Scan Usage Description */
-"NFCReaderUsageDescription" = "Acepta NFC como medio de pago";
+/* Bundle name */
+"CFBundleName" = "WayPay";
 
 /* Privacy - Camera Usage Description */
-"NSCameraUsageDescription" = "Escanea QR";
+"NSCameraUsageDescription" = "Escanear el QR de clientes";
 

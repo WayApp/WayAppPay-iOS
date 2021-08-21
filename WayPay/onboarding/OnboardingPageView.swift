@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct OnboardingPageView: View {
-    @EnvironmentObject var session: WayPay.Session
-
     var page: OnboardingPage = .ONE
 
     var body: some View {
@@ -18,26 +16,16 @@ struct OnboardingPageView: View {
             Image(page.image)
                 .resizable()
                 .scaledToFit()
+                .padding(.horizontal)
             Text(page.title)
                 .font(.title2)
                 .bold()
+                .padding(.horizontal)
             Text(page.explanation)
                 .font(.body)
                 .multilineTextAlignment(.center)
-                .padding()
-            if page.displayButton {
-                Button(action: {
-                    session.skipOnboarding = true
-                    UserDefaults.standard.set(true, forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
-                    UserDefaults.standard.synchronize()
-                }, label: {
-                    Text("Get Started")
-                        .padding()
-                })
-                .buttonStyle(WayPay.WideButtonModifier())
-            }
+                .padding(.vertical)
         }
-        .padding()
     }
 }
 

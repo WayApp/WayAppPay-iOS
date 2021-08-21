@@ -42,6 +42,7 @@ extension WayPay {
             self.name = name
             self.email = email
             self.level = level
+            self.currency = Currency.init(rawValue: Locale.current.currencyCode)
         }
 
         // Protocol Identifiable

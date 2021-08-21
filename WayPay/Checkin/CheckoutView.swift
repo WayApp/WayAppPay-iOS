@@ -229,6 +229,9 @@ struct CheckoutView: View {
                                 .scaledToFit()
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
+                        Text("Enter purchase amount:")
+                            .font(.caption)
+                            .padding(.top)
                         HStack {
                             TextField("\(purchaseAmount)", text: $purchaseAmount)
                                 .font(.title)
@@ -281,7 +284,7 @@ struct CheckoutView: View {
                             }
                             awardButtons
                             Divider()
-                            if (checkin.isWayPayPaymentAvailable) {
+                            if (checkin.isWayPayPaymentAvailable && purchaseAmountValue > 0) {
                                 Button {
                                     processPayment(amount: purchaseAmountValue)
                                 } label: {
@@ -312,10 +315,10 @@ struct CheckoutView: View {
                 .frame(minWidth: 200, idealWidth: 400, maxWidth: 400)
                 .frame(maxWidth: .infinity)
             } // Scrollview
-            .navigationTitle(purchaseAmount.isEmpty ? "Amount" : WayPay.formatPrice(purchaseAmountValueToDisplay))
+            .navigationTitle(purchaseAmount.isEmpty ? NSLocalizedString("Amount", comment: "CheckoutView: navigationTitle") : WayPay.formatPrice(purchaseAmountValueToDisplay))
             .gesture(DragGesture().onChanged { _ in hideKeyboard() })
             if isAPICallOngoing {
-                ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
+                ProgressView(WayPay.UserMessage.progressView.alert.title)
                     .progressViewStyle(WayPay.WayPayProgressViewStyle())
                     .alert(isPresented: $showTransactionResult) {
                         Alert(

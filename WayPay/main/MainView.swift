@@ -10,13 +10,32 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var session: WayPay.Session
-    @State private var selection: MainView.Tab = Tab.settings
+    @State private var selection: MainView.Tab = Tab.checkout
 
     enum Tab: Hashable, CaseIterable {
         case checkout
         case checkin
         case reports
         case settings
+        
+        var title: String {
+            switch self {
+            case .checkout: return NSLocalizedString("Checkout", comment: "MainView tab title")
+            case .checkin: return NSLocalizedString("Customer", comment: "MainView tab title")
+            case .reports: return NSLocalizedString("Sales", comment: "MainView tab title")
+            case .settings: return NSLocalizedString("Settings", comment: "MainView tab title")
+            }
+        }
+        
+        var icon: String {
+            switch self {
+            case .checkout: return "qrcode.viewfinder"
+            case .checkin: return "person.fill.questionmark"
+            case .reports: return "chart.bar.xaxis"
+            case .settings: return "gearshape.fill"
+            }
+        }
+
     }
     
     var body: some View {
@@ -39,8 +58,8 @@ struct MainView: View {
                     CheckoutView()
                 }
                 .tabItem {
-                    Label("Checkout", systemImage: "qrcode.viewfinder")
-                        .accessibility(label: Text("Checkout"))
+                    Label(Tab.checkout.title, systemImage: Tab.checkout.icon)
+                        .accessibility(label: Text(Tab.checkout.title))
                 }
                 .tag(Tab.checkout)
                 NavigationView {
@@ -48,24 +67,24 @@ struct MainView: View {
                 }
                 
                 .tabItem {
-                    Label("Customer", systemImage: "person.fill.questionmark")
-                        .accessibility(label: Text("Customer"))
+                    Label(Tab.checkin.title, systemImage: Tab.checkin.icon)
+                        .accessibility(label: Text(Tab.checkin.title))
                 }
                 .tag(Tab.checkin)
                 NavigationView {
                     TransactionsView()
                 }
                 .tabItem {
-                    Label("Sales", systemImage: "chart.bar.xaxis")
-                        .accessibility(label: Text("Sales"))
+                    Label(Tab.reports.title, systemImage: Tab.reports.icon)
+                        .accessibility(label: Text(Tab.reports.title))
                 }
                 .tag(Tab.reports)
                 NavigationView {
                     SettingsView().environmentObject(self.session)
                 }
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
-                        .accessibility(label: Text("Settings"))
+                    Label(Tab.settings.title, systemImage: Tab.settings.icon)
+                        .accessibility(label: Text(Tab.settings.title))
                 }
                 .tag(Tab.settings)
             } // TabView

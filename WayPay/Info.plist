@@ -35,10 +35,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NFCReaderUsageDescription</key>
-	<string>Accepts NFC tags as payment method</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Scan payment cards</string>
+	<string>Scan clients QR codes</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -70,10 +68,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
-	<array>
-		<string>com.apple.developer.nfc.readersession.iso7816.select-identifiers</string>
 	</array>
 </dict>
 </plist>

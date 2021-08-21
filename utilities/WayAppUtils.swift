@@ -328,4 +328,24 @@ extension WayAppUtils {
         return result
     }
 
+    static func generateQR(from string: String, foregroundColor: UIColor = UIColor.black) -> UIImage? {
+        if let data = string.data(using: String.Encoding.isoLatin1, allowLossyConversion: false),
+            let colorFilter = CIFilter(name: "CIFalseColor"),
+            let filter = CIFilter(name: "CIQRCodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            filter.setValue("H", forKey: "inputCorrectionLevel")
+            colorFilter.setValue(filter.outputImage, forKey: "inputImage")
+            colorFilter.setValue(CIColor(color: UIColor.white), forKey: "inputColor1") // Background
+            colorFilter.setValue(CIColor(color: foregroundColor), forKey: "inputColor0") // Foreground
+            if let qrcodeImage = colorFilter.outputImage {
+                let scaledCiImage = qrcodeImage.transformed(by: CGAffineTransform(scaleX: 10.0, y: 10.0))
+                let ciContext = CIContext()
+                if  let outputImageRef = ciContext.createCGImage(scaledCiImage, from: scaledCiImage.extent) {
+                    return UIImage(cgImage: outputImageRef, scale: 1.0, orientation: UIImage.Orientation.up)
+                }
+            }
+        }
+        return nil
+    }
+
 }

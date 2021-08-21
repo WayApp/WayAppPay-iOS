@@ -84,8 +84,9 @@ struct WayPay {
                 .progressViewStyle(CircularProgressViewStyle())
                 .foregroundColor(.primary)
                 .padding()
-                .background(Color.green.opacity(0.20))
+                .background(Color.green.opacity(0.25))
                 .cornerRadius(8)
+                .scaleEffect(x: 1.25, y: 1.25, anchor: .center)
         }
     }
     
@@ -118,6 +119,7 @@ struct WayPay {
                                     : Color.gray)
                     .cornerRadius(WayPay.cornerRadius)
                     .foregroundColor(.white)
+                    .clipShape(Capsule())
             }
         }
     }
@@ -138,6 +140,7 @@ struct WayPay {
                                     : Color.gray)
                     .cornerRadius(12)
                     .foregroundColor(.white)
+                    .clipShape(Capsule())
             }
         }
     }
@@ -159,6 +162,7 @@ struct WayPay {
                                     : Color.gray)
                     .cornerRadius(6)
                     .foregroundColor(.white)
+                    .clipShape(Capsule())
             }
         }
     }
@@ -180,6 +184,7 @@ struct WayPay {
                                     : Color.gray)
                     .cornerRadius(6)
                     .foregroundColor(.white)
+                    .clipShape(Capsule())
             }
         }
     }

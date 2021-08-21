@@ -22,6 +22,7 @@ extension WayPay {
         case passwordChangeFailed
         case forgotPassword(String)
         case forgotPasswordError(String)
+        case progressView
 
         var alert: (title: String, message: String) {
             switch self {
@@ -37,6 +38,7 @@ extension WayPay {
             case .passwordChangeFailed: return (NSLocalizedString("PIN was not changed", comment: "User message: passwordChangeFailed title"), NSLocalizedString("Try your current PIN again, if problem persists contact us at support@wayapp.com", comment: "User message: passwordChangeFailed: registration error during registration"))
             case .forgotPassword(let email): return (NSLocalizedString("To finish the PIN change", comment: "User message: forgotPassword title"), NSLocalizedString("Follow instructions emailed to: ", comment: "User message: forgotPassword") + email)
             case .forgotPasswordError(let email): return (NSLocalizedString("Email address not valid", comment: "User message: forgotPasswordError title"), NSLocalizedString("Email address \(email) is not registered", comment: "User message: forgotPasswordError"))
+            case .progressView: return (NSLocalizedString("Processing...", comment: "ProgressView title message"),"")
             }
         }
     }

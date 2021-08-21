@@ -1,38 +1,67 @@
 /* No comment provided by engineer. */
+" " = " ";
+
+/* No comment provided by engineer. */
+" / %@" = " / %@";
+
+/* No comment provided by engineer. */
+" %@" = " %@";
+
+/* No comment provided by engineer. */
+" €" = " €";
+
+/* No comment provided by engineer. */
+"-" = "-";
+
+/* No comment provided by engineer. */
+": " = ": ";
+
+/* No comment provided by engineer. */
 "%@" = "%@";
 
 /* No comment provided by engineer. */
 "+" = "+";
 
 /* No comment provided by engineer. */
-"⌫" = "⌫";
+"00" = "00";
 
 /* No comment provided by engineer. */
-"00" = "00";
+"4-digit" = "4 dígitos";
+
+/* No comment provided by engineer. */
+"4-digit PIN" = "PIN (4 dígitos)";
 
 /* No comment provided by engineer. */
 "4-digits" = "4 dígitos";
 
 /* No comment provided by engineer. */
-"Account" = "Cuenta";
+"Activate" = "Activar";
 
 /* No comment provided by engineer. */
-"Accounts" = "Cuentas";
+"Active customers" = "Clientes activos";
+
+/* CheckinView: section title */
+"Activity" = "Movimientos";
 
 /* PaymentTransaction.TransactionType */
-"Add" = "Recarga";
+"Add" = "Añadir";
 
 /* No comment provided by engineer. */
-"Add one" = "Añadir uno";
+"Add one" = "Añadir 1";
 
-/* No comment provided by engineer. */
-"alias" = "alias";
+/* AmountViewOption action buttonTitle */
+"Add to cart" = "Añadir a cesta";
 
-/* No comment provided by engineer. */
-"Alias" = "Alias";
-
-/* No comment provided by engineer. */
+/* AmountViewOption title
+   CheckoutView: navigationTitle
+   Product name for entered amount */
 "Amount" = "Importe";
+
+/* No comment provided by engineer. */
+"Amount to reach prize:" = "Importe para alcanzar premio:";
+
+/* No comment provided by engineer. */
+"Amount: " = "Importe: ";
 
 /* month of the year */
 "April" = "Abril";
@@ -41,28 +70,40 @@
 "August" = "Agosto";
 
 /* No comment provided by engineer. */
-"Bank" = "Banco";
+"Award points" = "Otorgar puntos";
 
 /* No comment provided by engineer. */
-"Bank account" = "Cuenta bancaria";
+"Balance: " = "Saldo: ";
+
+/* waypayButtonTitle */
+"Bank account payment" = "Pago de cuenta bancaria";
 
 /* User message: passwords do not match */
-"Both entered PINs must match" = "Ambos PINes deben ser idénticos";
+"Both entered PINs must match" = "Ambos PIN deben ser iguales";
+
+/* No comment provided by engineer. */
+"business name" = "nombre del comercio";
+
+/* Campaign */
+"Campaign" = "Campaña";
+
+/* No comment provided by engineer. */
+"Campaign expires on" = "Campaña caduca en";
+
+/* CheckinView: section title */
+"Campaigns" = "Campañas";
 
 /* No comment provided by engineer. */
 "Cancel" = "Cancelar";
 
 /* No comment provided by engineer. */
-"Card" = "QR";
-
-/* No comment provided by engineer. */
-"Card could not be created. Try again later. If problem persists contact support@wayapp.com" = "Token de pago no se pudo crear. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
-
-/* No comment provided by engineer. */
-"Card could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Token de pago no se pudo actualizar. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
-
-/* No comment provided by engineer. */
 "Cart" = "Cesta";
+
+/* Prize format title */
+"Cashback" = "Cashback";
+
+/* Prize amountTitle */
+"Cashback amount" = "Importe de cashback";
 
 /* No comment provided by engineer. */
 "Change" = "Cambiar";
@@ -70,59 +111,140 @@
 /* No comment provided by engineer. */
 "Change PIN" = "Cambiar PIN";
 
-/* No comment provided by engineer. */
+/* Charge */
 "Charge" = "Cobrar";
+
+/* No comment provided by engineer. */
+"Charge %@" = "Cobrar %@";
 
 /* No comment provided by engineer. */
 "Charge: %@" = "Cobrar: %@";
 
 /* No comment provided by engineer. */
-"Check-in" = "Check-in";
+"Check rewards" = "Saldos";
+
+/* PaymentTransaction.TransactionType */
+"Checkin" = "Checkin";
+
+/* MainView tab title */
+"Checkout" = "Checkout";
+
+/* CheckoutQRView title
+   SettingsView: CheckoutQRView option */
+"Checkout QR" = "Checkout QR";
+
+/* CheckoutView: button title */
+"Community campaign" = "Campaña de comunidad";
+
+/* No comment provided by engineer. */
+"Configuration" = "Configuración";
+
+/* CampaignAction button label */
+"Configure" = "Configurar";
+
+/* No comment provided by engineer. */
+"confirm PIN" = "confirma el PIN";
 
 /* User message: confirmationEmailHelpTitle */
 "Confirmation code" = "Código de confirmación";
 
-/* No comment provided by engineer. */
-"Consent valid until" = "Consentimiento válido hasta";
+/* winnningMessage default */
+"Congratulations. You got the prize!" = "¡Enhorabuena! Alcanzaste el premio";
 
-/* No comment provided by engineer. */
-"Currency" = "Moneda";
+/* Request giftcard feature
+   Request points campaign feature */
+"Contact sales@wayapp.com to enable" = "Contacta a sales@wayapp.com para activar";
 
 /* No comment provided by engineer. */
 "Current" = "Actual";
 
+/* MainView tab title */
+"Customer" = "Cliente";
+
+/* SettingsView: CheckoutQRView option */
+"Customer registration QR" = "QR de registro";
+
+/* CampaignDetailView: campaign customers */
+"Customers" = "Clientes";
+
+/* No comment provided by engineer. */
+"Customers list" = "Lista de clientes";
+
 /* month of the year */
 "December" = "Diciembre";
+
+/* waypayButtonTitle */
+"Deduct" = "Cobrar";
+
+/* No comment provided by engineer. */
+"Delete" = "Borrar";
+
+/* No comment provided by engineer. */
+"Delete account" = "Borrar cuenta";
+
+/* Prize amountTitle
+   Prize format title */
+"Discount" = "Descuento";
+
+/* No comment provided by engineer. */
+"Display option?" = "¿Opción?";
+
+/* CampaignDetailView: edit campaign */
+"Edit campaign" = "Editar campaña";
 
 /* No comment provided by engineer. */
 "email" = "email";
 
 /* No comment provided by engineer. */
-"Email" = "Correo electrónico";
+"Email" = "Email";
+
+/* No comment provided by engineer. */
+"email address" = "email";
 
 /* User message: forgotPasswordError */
-"Email address (email) is not registered" = "Correo electrónico (email) no registrado";
+"Email address (email) is not registered" = "Email no registrado";
 
 /* User message: forgotPasswordError title */
-"Email address not valid" = "Correo electrónico no válido";
+"Email address not valid" = "Email no es válida";
 
 /* No comment provided by engineer. */
-"Email new PIN to:" = "Enviar nuevo PIN a:";
+"Email new PIN to:" = "Email nuevo PIN a:";
 
 /* No comment provided by engineer. */
-"Email or PIN invalid. Try again. If problem persists contact support@wayapp.com" = "Correo electrónico o PIN inválido. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+"Email or PIN invalid. Try again. If problem persists contact support@wayapp.com" = "Email o PIN inválido. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
 
 /* No comment provided by engineer. */
-"Email receipt" = "Enviar recibo";
+"Email receipt" = "Envía recibo al email";
 
 /* No comment provided by engineer. */
-"Email receipt to:" = "Enviar recibo a:";
+"Email receipt to:" = "Envía recibo a:";
 
 /* User message: invalidEmail message */
-"Enter a valid email address for this account" = "Entre una dirección de correo válida para esta cuenta";
+"Enter a valid email address for this account" = "Escribe un email válido para la cuenta";
+
+/* CheckinView: Enter amount */
+"Enter amount" = "Escribe el importe";
 
 /* No comment provided by engineer. */
-"Enter OTP received on email:" = "Entre clave recibida en:";
+"Enter OTP received:" = "Escribe la clave reciba";
+
+/* No comment provided by engineer. */
+"Enter purchase amount:" = "Escribe el importe de la compra:";
+
+/* Product description for entered amount */
+"Entered amount" = "Importe ingresado";
+
+/* No comment provided by engineer. */
+"Error creating campaign" = "Error en la creación de la campaña";
+
+/* No comment provided by engineer. */
+"Error creating the campaign" = "Error en la creación de la campaña";
+
+/* No comment provided by engineer. */
+"Expire" = "Caduca";
+
+/* CampaignDetailView: campaign expires on */
+"Expires on" = "Caduca en";
 
 /* month of the year */
 "February" = "Febrero";
@@ -131,34 +253,40 @@
 "Follow instructions emailed to: " = "Sigue las instrucciones enviadas a: ";
 
 /* No comment provided by engineer. */
-"Forgot PIN?" = "¿Olvidaste PIN?";
+"Forgot PIN" = "Olvidé el PIN";
+
+/* waypayButtonTitle */
+"from giftcard" = "de tarjeta regalo";
 
 /* No comment provided by engineer. */
-"Grant" = "Conceder";
+"Generate SEPA file" = "Genera fichero SEPA";
 
 /* No comment provided by engineer. */
-"Grant consent" = "Conceder consentimiento";
+"Get campaigns" = "Mis campañas";
+
+/* CampaignAction button label */
+"Get started, is free!" = "Inicia tu campaña, ¡es gratis!";
+
+/* CheckinView: section title */
+"Giftcard" = "Tarjeta regalo";
 
 /* No comment provided by engineer. */
-"IBAN" = "IBAN";
+"Hello" = "Hola";
 
 /* HTTPCall: Error: invalidRequest */
-"Invalid API request. Check URL" = "Llamada API inválida. Revisa el URL";
+"Invalid API request. Check URL" = "Invalid API request. Check URL";
 
 /* User message: invalidEmail title */
-"Invalid email address" = "Dirección de correo electrónico inválida";
+"Invalid email address" = "Email inválido";
 
 /* HTTPCall: Error: invalidServerResponse */
-"Invalid server response" = "Respuesta del servidor inválida";
-
-/* No comment provided by engineer. */
-"Issuer" = "Emisor";
+"Invalid server response" = "Invalid server response";
 
 /* month of the year */
 "January" = "Enero";
 
 /* HTTPCall: Error: jsonConversion */
-"JSON conversion error" = "Error en el JSON";
+"JSON conversion error" = "JSON conversion error";
 
 /* month of the year */
 "July" = "Julio";
@@ -167,10 +295,13 @@
 "June" = "Junio";
 
 /* User message: loginFailed title */
-"Login attempt failed" = "Intento de iniciar sesión falló";
+"Login attempt failed" = "Error en inicio de sesión";
 
 /* No comment provided by engineer. */
-"Login error" = "Error de iniciar sesión";
+"Login error" = "Error en inicio de sesión";
+
+/* business logo */
+"Logo" = "Logo";
 
 /* No comment provided by engineer. */
 "Logout" = "Salir";
@@ -182,13 +313,13 @@
 "May" = "Mayo";
 
 /* No comment provided by engineer. */
-"Merchant" = "Entidad";
+"Merchant" = "Comercio";
 
 /* SettingsView: section title */
-"Merchants" = "Entidades";
+"My account" = "Mi cuenta";
 
-/* No comment provided by engineer. */
-"missing IBAN" = "falta IBAN";
+/* SettingsView: section title */
+"My business" = "Mi comercio";
 
 /* Placeholder name for new product */
 "name" = "nombre";
@@ -197,22 +328,40 @@
 "Name" = "Nombre";
 
 /* No comment provided by engineer. */
-"New" = "Nuevo";
+"Needs activation on the Settings tab. Contact support@wayapp.com for help" = "Activa la campaña en Configuración. Contacta a support@wayapp.com si necesitas ayuda";
 
 /* No comment provided by engineer. */
-"New card" = "Nuevo token de pago";
+"Needs setup in Settings" = "Activa la campaña en Configuración";
 
 /* No comment provided by engineer. */
-"New PIN" = "Nuevo PIN";
+"New" = "Nueva";
 
 /* No comment provided by engineer. */
-"NFC" = "NFC";
+"New account" = "Cuenta nueva";
 
 /* No comment provided by engineer. */
-"no email" = "no email";
+"New campaign" = "Campaña nueva";
+
+/* No comment provided by engineer. */
+"New PIN" = "PIN nuevo";
+
+/* No comment provided by engineer. */
+"No campaigns" = "No hay campañas";
+
+/* No comment provided by engineer. */
+"no description" = "sin descripción";
+
+/* No comment provided by engineer. */
+"No merchant registered" = "No hay comercios registrados";
+
+/* No comment provided by engineer. */
+"no name" = "sin nombre";
 
 /* HTTPCall: Error: noNetwork */
-"No network" = "No hay red";
+"No network" = "No hay conexión a Internet";
+
+/* CampaignDetailView: campaign expires on */
+"none" = "ninguno";
 
 /* month of the year */
 "November" = "Noviembre";
@@ -226,89 +375,165 @@
 /* Scanning transaction type */
 "Operation" = "Operación";
 
-/* No comment provided by engineer. */
+/* CheckinView: section title */
 "Order" = "Pedido";
+
+/* Other options */
+"Other options" = "Otras opciones";
 
 /* No comment provided by engineer. */
 "Payment" = "Pago";
 
 /* No comment provided by engineer. */
+"Pending prizes" = "Premios disponibles";
+
+/* No comment provided by engineer. */
+"phone number" = "teléfono";
+
+/* No comment provided by engineer. */
 "PIN" = "PIN";
 
 /* No comment provided by engineer. */
-"PIN could not be changed. Try again later. If problem persists contact support@wayapp.com" = "PIN no se pudo cambiar. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+"PIN could not be changed. Try again later. If problem persists contact support@wayapp.com" = "Error cambiando el PIN. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
 
 /* User message: passwordsDoNotMatch title */
-"PIN does not match" = "PIN no es igual";
+"PIN does not match" = "Los PIN no son iguales";
 
 /* User message: password minimum length requirement */
-"PIN must have (WayAppPay.Account.PINLength) digits" = "PIN debe tener (WayAppPay.Account.PINLength) dígitos";
+"PIN must have (WayPay.Account.PINLength) digits" = "PIN debe ser de (WayPay.Account.PINLength) dígitos";
 
 /* User message: invalidPassword title */
-"PIN not valid" = "PIN no válido";
+"PIN not valid" = "PIN no es correcto";
 
 /* User message: passwordChangeFailed title */
-"PIN was not changed" = "PIN no fue cambiado";
+"PIN was not changed" = "No se pudo cambiar el PIN";
 
-/* Activity indicator */
-"Please wait…" = "Por favor espere...";
+/* CampaignsView: section title */
+"Point" = "Puntos";
 
 /* No comment provided by engineer. */
-"Prepaid" = "Prepago";
+"Premium feature" = "Funcionalidad premium";
 
 /* No comment provided by engineer. */
 "Price" = "Precio";
 
-/* SettingsView: merchants products */
+/* No comment provided by engineer. */
+"Prize" = "Premio";
+
+/* No comment provided by engineer. */
+"Prize format -> " = "Formato de premio -> ";
+
+/* No comment provided by engineer. */
+"Prizes redeemed" = "Premios canjeados";
+
+/* ProgressView title message */
+"Processing..." = "Procesando...";
+
+/* Order from product catalogue
+   SettingsView: merchants products */
 "Product catalogue" = "Catálogo de productos";
 
 /* No comment provided by engineer. */
-"Product could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Producto no pudo ser actualizado. Intenta más tarde. Si no se soliciona el problema contáctanos a support@wayapp.com";
+"Product could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Error actualizando producto. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
 
 /* No comment provided by engineer. */
 "Products" = "Productos";
 
 /* No comment provided by engineer. */
-"QR" = "Código QR";
+"QR not found" = "No se encontró el QR";
 
 /* No comment provided by engineer. */
-"Re-enter" = "Re-escribir";
+"Re-enter" = "Ingresa de nuevo";
+
+/* CheckinView: Transactions */
+"Recent purchases" = "Operaciones recientes";
+
+/* SettingsView: section title */
+"Rechargable giftcard" = "Tarjeta regalo recargable";
 
 /* No comment provided by engineer. */
-"Read token" = "Leer token de pago";
+"Redeem" = "Canjea";
+
+/* No comment provided by engineer. */
+"Redeem prize:" = "Canjea premio:";
 
 /* PaymentTransaction.TransactionType */
-"Refund" = "Devolución";
+"Refund" = "Reembolso";
 
 /* No comment provided by engineer. */
-"Refunds" = "Devoluciones";
+"Refunds" = "Reembolsos";
+
+/* No comment provided by engineer. */
+"Register account" = "Regístrate";
 
 /* User message: registrationFailed title */
-"Registration attempt failed" = "Intento de registro falló";
+"Registration attempt failed" = "Error en el registro";
+
+/* CheckoutQRView title */
+"Registration QR" = "QR de registro";
 
 /* No comment provided by engineer. */
-"Remove all" = "Eliminar todos";
+"Remove all" = "Elimina todos";
 
 /* No comment provided by engineer. */
-"Remove one" = "Eliminar uno";
+"Remove one" = "Elimina uno";
 
 /* No comment provided by engineer. */
-"Renew" = "Renovar";
+"Repeat" = "Repite";
 
 /* No comment provided by engineer. */
-"Reports" = "Reportes";
+"Reset" = "Reinicia";
+
+/* PaymentTransaction.TransactionType */
+"Reward" = "Saldo de campaña";
+
+/* CampaignsView: section title */
+"Reward consumption" = "Premia el importe de las compras";
+
+/* No comment provided by engineer. */
+"Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get." = "Premia a los clientes por el importe de sus compras. Cada compra cuenta para ganar cashback o descuentos";
+
+/* No comment provided by engineer. */
+"Reward customers by number of visits. The more they visit, the more cashbask or discounts they get." = "Premia a los clientes por sus vistas. Cada visita cuenta para ganar cashback o descuentos";
+
+/* No comment provided by engineer. */
+"Reward customers with cashback (€) or discount (%):" = "Premia a los clientes con cashback (€) o descuentos (%):";
+
+/* CheckoutView: button title */
+"Reward purchase amount" = "Recompensa la compra";
+
+/* CheckoutView: button title */
+"Reward visit" = "Recompensa la visita";
+
+/* CampaignsView: section title */
+"Reward visits" = "Recompensa visitas";
+
+/* No comment provided by engineer. */
+"Rewards" = "Saldo de campañas";
 
 /* PaymentTransaction.TransactionType */
 "Sale" = "Venta";
 
-/* No comment provided by engineer. */
+/* MainView tab title */
 "Sales" = "Ventas";
 
 /* No comment provided by engineer. */
 "Save" = "Guardar";
 
+/* CheckoutView: button title */
+"Scan customer QR" = "Escanea QR";
+
+/* navigationBarTitle */
+"Scan QR" = "Escanea QR";
+
 /* No comment provided by engineer. */
-"Select another month:" = "Selecciona otro mes:";
+"Select another month:" = "Escoge otro mes:";
+
+/* CheckinView: Order from product catalogue option */
+"Select products" = "Escoge productos";
+
+/* No comment provided by engineer. */
+"Sell your own digital giftcard. Customers pay you, you scan card, and top it up." = "Vende tu propia tarjeta regalo digital. Los clientes te pre-pagan el saldo, y luego la usan en sus compras";
 
 /* No comment provided by engineer. */
 "Send" = "Enviar";
@@ -316,29 +541,32 @@
 /* month of the year */
 "September" = "Septiembre";
 
-/* No comment provided by engineer. */
+/* MainView tab title */
 "Settings" = "Configuración";
 
 /* No comment provided by engineer. */
-"shopping cart description" = "descripción en la cesta de compras";
+"Shopping cart" = "Cesta de compra";
 
 /* No comment provided by engineer. */
 "Sign in" = "Iniciar sesión";
 
 /* No comment provided by engineer. */
+"Skip" = "Saltar";
+
+/* CampaignsView: section title */
+"Stamp" = "Sello";
+
+/* No comment provided by engineer. */
+"Stamps granted" = "Sellos otorgados";
+
+/* No comment provided by engineer. */
+"Support" = "Soporte";
+
+/* No comment provided by engineer. */
 "System error" = "Error del sistema";
 
-/* No comment provided by engineer. */
-"Test get consent" = "Probar obtener consentimiento";
-
 /* User message: confirmationEmailHelpMessage */
-"The 4-digit confirmation code was emailed to: (email). Please enter it here" = "Código de confirmación fue enviado a: (email). Por favor escríbelo aquí";
-
-/* No comment provided by engineer. */
-"There are no accounts" = "No hay cuentas";
-
-/* No comment provided by engineer. */
-"There are no merchants" = "No hay entidades";
+"The 4-digit confirmation code was emailed to: (email). Please enter it here" = "La clave de confirmación fue enviada a: (email). Ingrésala";
 
 /* No comment provided by engineer. */
 "This month" = "Este mes";
@@ -346,36 +574,60 @@
 /* User message: forgotPassword title */
 "To finish the PIN change" = "Para finalizar el cambio de PIN";
 
+/* AmountViewOption action buttonTitle
+   AmountViewOption title
+   CheckinView: Enter amount */
+"Top up" = "Recarga";
+
 /* PaymentTransaction.TransactionType */
 "Top-up" = "Recarga";
 
 /* No comment provided by engineer. */
 "Top-up: %@" = "Recarga: %@";
 
+/* CampaignDetailView: campaign transactions
+   TransactionsView section header */
+"Transactions" = "Operaciones";
+
 /* No comment provided by engineer. */
-"Transactions" = "Movimientos";
+"Transactions list" = "Operaciones";
 
 /* User message: Login error during authentication */
-"Try again, if problem persists contact us at support@wayapp.com" = "Intenta otra vez. Si no se soliciona el problema contáctanos a support@wayapp.com";
+"Try again, if problem persists contact us at support@wayapp.com" = "Intenta otra vez, si no encuentras solución contacta a support@wayapp.com";
+
+/* No comment provided by engineer. */
+"Try again. If not found again, contact support@wayapp.com" = "Intenta otra vez, si no encuentras solución contacta a support@wayapp.com";
+
+/* No comment provided by engineer. */
+"Try again. If problem persists contact support@wayapp.com" = "Intenta otra vez, si no encuentras solución contacta a support@wayapp.com";
 
 /* User message: registrationFailed: registration error during registration */
-"Try another email address, if problem persists contact us at support@wayapp.com" = "Intenta otro correo electrónico. Si no se soliciona el problema contáctanos a support@wayapp.com";
+"Try another email address, if problem persists contact us at support@wayapp.com" = "Intenta con otro email, si no encuentras solución contacta a support@wayapp.com";
 
 /* User message: passwordChangeFailed: registration error during registration */
-"Try your current PIN again, if problem persists contact us at support@wayapp.com" = "Intenta tu PIN otra vez. Si no se soliciona el problema contáctanos a support@wayapp.com";
+"Try your current PIN again, if problem persists contact us at support@wayapp.com" = "Intenta tu PIN otra vez, si no encuentras solución contacta a support@wayapp.com";
 
-/* No comment provided by engineer. */
-"Type" = "Tipo";
+/* SettingsView: OnboardingView option */
+"Tutorial" = "Tutorial";
 
 /* HTTPCall: Error: invalidData */
-"Unexpected server data" = "Formato de datos inesperado del servidor";
+"Unexpected server data" = "Unexpected server data";
 
 /* Default PaymentTransaction.TransactionType */
-"Unspecified" = "Desconocido";
+"Unspecified" = "Sin especificar";
 
 /* No comment provided by engineer. */
-"What is your favorite color?" = "¿Cuál es tu color favorito?";
+"Update POINT" = "Update POINT";
 
 /* No comment provided by engineer. */
-"Write token" = "Grabar token de pago";
+"Update STAMP" = "Update STAMP";
+
+/* No comment provided by engineer. */
+"Visits to get prize: " = "Número de visitas a premiar: ";
+
+/* No comment provided by engineer. */
+"Your customers can scan this QR directly from their mobile Wallet pass to make payment" = "Tus clientes escanean el Checkout QR desde el reverso de su pase para pagar";
+
+/* No comment provided by engineer. */
+"Your customers can scan this QR from any QR code reader and install their mobile Wallet pass" = "Tus clientes escanean el Registration QR desde su móvil, se registran, e instalan su propio QR en el wallet del móvil";
 

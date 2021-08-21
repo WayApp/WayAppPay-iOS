@@ -42,7 +42,7 @@ struct StampNewView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .background(
                         RoundedRectangle(cornerRadius: 4, style: .continuous)
-                            .stroke(Color("MintGreen"), lineWidth: 0.5)
+                            .stroke(Color.green, lineWidth: 0.5)
                     )
             }
             Section(header: Label("Configuration", systemImage: "gearshape")

@@ -36,9 +36,9 @@ extension WayPay {
             var amountSymbol: String {
                 switch self {
                 case .CASHBACK:
-                    return NSLocalizedString("€", comment: "Prize amountTitle")
+                    return Locale.current.currencySymbol ?? "€"
                 case .COUPON:
-                    return NSLocalizedString("%", comment: "Prize amountTitle")
+                    return "%"
                 }
             }
 

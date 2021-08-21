@@ -1,16 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "LogoIconGreen.png",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "LogoIconGreen.png"
     }
   ],
   "info" : {
-    "author" : "xcode",
-    "version" : 1
+    "version" : 1,
+    "author" : "xcode"
   },
   "properties" : {
-    "localizable" : true,
-    "preserves-vector-representation" : true
+    "preserves-vector-representation" : true,
+    "localizable" : true
   }
 }

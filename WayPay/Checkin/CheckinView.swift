@@ -87,9 +87,9 @@ struct CheckinView: View {
     var body: some View {
         if (showQRScanner && (session.checkin == nil)) {
             CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
-                .navigationBarTitle("Scan QR")
+                .navigationBarTitle(NSLocalizedString("Scan QR", comment: "navigationBarTitle"))
         } else if isAPICallOngoing {
-            ProgressView(NSLocalizedString("Please wait…", comment: "Activity indicator"))
+            ProgressView(NSLocalizedString(WayPay.UserMessage.progressView.alert.title, comment: "Activity indicator"))
                 .progressViewStyle(WayPay.WayPayProgressViewStyle())
                 .alert(isPresented: $scanError) {
                     Alert(title: Text("QR not found"),
@@ -191,11 +191,13 @@ struct CheckinView: View {
                     }
                 }
                 Section(header:
-                            Label(NSLocalizedString("Payment", comment: "CheckinView: section title"), systemImage: "eurosign.square.fill")
+                            Label(NSLocalizedString("Order", comment: "CheckinView: section title"), systemImage: "cart.fill.badge.plus")
                             .font(.callout)) {
+                    /*
                     NavigationLink(destination: AmountView()) {
                         Label(NSLocalizedString("Enter amount", comment: "CheckinView: Enter amount"), systemImage: "square.grid.3x3")
                     }
+ */
                     NavigationLink(destination: OrderView()) {
                         Label(NSLocalizedString("Select products", comment: "CheckinView: Order from product catalogue option"), systemImage: "filemenu.and.selection")
                     }
