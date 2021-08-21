@@ -128,10 +128,8 @@ struct TransactionsView: View {
                             }
                         }
                         .onChange(of: monthSelection, perform: { month in
-                            WayAppUtils.Log.message("initialDate=\(Month(rawValue: monthSelection)?.firstDay), finalDate=\(Month(rawValue: monthSelection)?.lastDay), monthSelection=\(monthSelection)")
                             if let accountUUID = session.accountUUID {
                                 session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: Month(rawValue: monthSelection)?.firstDay, finalDate: Month(rawValue: monthSelection)?.lastDay) { transactions, error in
-                                    WayAppUtils.Log.message("TRANSACTIONS COUNT=\(transactions?.count)")
                                     if let transactions = transactions {
                                         DispatchQueue.main.async {
                                             self.transactions.setToInOrder(transactions, by:

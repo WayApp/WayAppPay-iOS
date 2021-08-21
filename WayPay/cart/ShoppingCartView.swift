@@ -20,16 +20,6 @@ struct ShoppingCartView: View {
         }
         .listStyle(GroupedListStyle())
         .navigationBarTitle(WayPay.formatPrice(session.amount))
-        .navigationBarItems(trailing:
-            NavigationLink(destination: PaymentOptionsView()) {
-                Image(systemName: "qrcode.viewfinder")
-                .resizable()
-                .frame(width: 30, height: 30, alignment: .center)
-            }
-            .foregroundColor(Color("MintGreen"))
-            .aspectRatio(contentMode: .fit)
-            .padding(.trailing, 16)
-        )
     }
     
     func delete(at offsets: IndexSet) {

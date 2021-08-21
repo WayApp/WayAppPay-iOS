@@ -33,28 +33,20 @@ struct OrderView: View {
     @EnvironmentObject private var session: WayPay.Session
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(session.products) { product in
-                    OrderRowView(product: product)
-                }
+        List {
+            ForEach(session.products) { product in
+                OrderRowView(product: product)
             }
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle("Order")
-            .navigationBarItems(trailing:
-                HStack {
-                    Button(action: {
-                        ShoppingCartView()
-                    }, label: {
-                        Label("Cart", systemImage: "cart")
-                            .accessibility(label: Text("Cart"))
-                    })
-                    .overlay(Badge())
-                }
-                .foregroundColor(Color("MintGreen"))
-                .frame(height: 30)
-            )
         }
+        .listStyle(GroupedListStyle())
+        .navigationBarTitle("Order")
+        .navigationBarItems(trailing:
+                                Button(action: {
+                                }) {
+                                    Image(systemName: "cart")
+                                }
+                                .overlay(Badge())
+        )
     }
     
     func delete(at offsets: IndexSet) {

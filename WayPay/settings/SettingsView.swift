@@ -325,7 +325,7 @@ struct SettingsView: View {
     private func redeem() {
         // PAN Marzo31Superpapelería: 2CCFDE3A-10BC-40C5-AEAC-A7E74557F9BF
         let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
-        let C10 =  "c040399e-ab0b-4b25-ae55-cc12f9bb3c18"
+//        let C10 =  "c040399e-ab0b-4b25-ae55-cc12f9bb3c18"
         let C1 = "e5154471-ca71-448a-82d2-7b28712b88aa"
         let transaction = WayPay.PaymentTransaction(amount: 100, token: activeToken)
         let campaignIDs = [C1]
@@ -345,8 +345,7 @@ struct SettingsView: View {
         //        let issuerUUIDAsCancelas = "65345945-0e04-47b2-ae08-c5e7022a71aa"
         //        let issuerUUIDParquesur = "12412d65-411b-4629-a9ce-b5fb281b11bd"
         WayPay.Issuer.expireCards(issuerUUID: issuerUUIDLasRozas) { issuers, error in
-            WayAppUtils.Log.message("Issuers name: \(issuers?.debugDescription)")
-            if let issuers = issuers {
+            if let _ = issuers {
                 WayAppUtils.Log.message("Issuer name: ")
             } else if let error = error  {
                 WayAppUtils.Log.message("%%%%%%%%%%%%%% Expire ERROR: \(error.localizedDescription)")

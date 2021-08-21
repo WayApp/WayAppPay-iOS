@@ -73,7 +73,6 @@ extension WayPay {
         }
         
         static func prizesForReward(_ reward: Reward) -> [Prize] {
-            WayAppUtils.Log.message("CampaignID : \(reward.campaignID), sponsorUUID: \(reward.sponsorUUID)")
             var wonPrizes = [Prize]()
             if let balance = reward.balance,
                let prize = session.stamps[reward.campaignID]?.prize {
