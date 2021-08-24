@@ -36,7 +36,7 @@ struct ScanView: View {
                         title: Text(wasTransactionSuccessful ? "✅" : "🚫")
                             .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
                             .font(.title),
-                        message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
+                        message: Text("Scan" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
                         dismissButton: .default(
                             Text("OK"),
                             action: goBack)
@@ -50,7 +50,7 @@ struct ScanView: View {
         self.presentationMode.wrappedValue.dismiss()
     }
     
-    private func transactionResult(accepted: Bool) {
+    private func scanResult(accepted: Bool) {
         self.scannedCode = nil
         DispatchQueue.main.async {
             self.showTransactionResult = true
@@ -59,7 +59,7 @@ struct ScanView: View {
     }
     
     private func handleScan() {
-        WayAppUtils.Log.message("Scanned success")
+        WayAppUtils.Log.message("QR was svanned")
         guard let code = scannedCode,
               let value = value else {
             WayAppUtils.Log.message("Missing scannedCode")
@@ -73,12 +73,12 @@ struct ScanView: View {
                 if let transactions = transactions,
                    let transaction = transactions.first {
                     DispatchQueue.main.async {
-                        transactionResult(accepted: transaction.result == .ACCEPTED)
+                        scanResult(accepted: transaction.result == .ACCEPTED)
                     }
                     WayAppUtils.Log.message("Checkin success: \(transaction)")
                 } else {
                     DispatchQueue.main.async {
-                        transactionResult(accepted: false)
+                        scanResult(accepted: false)
                     }
                     WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
                 }
@@ -95,9 +95,9 @@ struct ScanView: View {
                     WayAppUtils.Log.message("Scan success: \(checkin)")
                 } else {
                     DispatchQueue.main.async {
-                        self.goBack()  
+                        self.scanResult(accepted: false)
                     }
-                    WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+                    WayAppUtils.Log.message("Checkin error. More info: \(error != nil ? error!.localizedDescription : "not available")")
                 }
             }
 

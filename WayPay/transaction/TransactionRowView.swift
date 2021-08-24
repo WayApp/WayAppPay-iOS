@@ -33,6 +33,7 @@ struct TransactionRowView: View {
     var body: some View {
         HStack {
             Image(systemName: transaction.type?.icon ?? "questionmark.square.fill")
+                .foregroundColor(Color.green)
             VStack(alignment: .leading, spacing: 8) {
                 Text(transaction.type?.title ?? WayPay.PaymentTransaction.TransactionType.defaultTitle)
                 Text(transaction.lastUpdateDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.lastUpdateDate!) : "no date")

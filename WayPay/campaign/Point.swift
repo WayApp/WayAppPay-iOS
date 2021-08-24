@@ -10,16 +10,16 @@ import Foundation
 
 extension WayPay {
     class Point: Campaign {
-        var paymentAmountConvertibleToRewardUnit: Int?
+        var paymentAmountConvertibleToPrize: Int?
         var prizes: [Prize]?
         private enum CodingKeys: String, CodingKey {
-            case paymentAmountConvertibleToRewardUnit
+            case paymentAmountConvertibleToPrize
             case prizes
         }
         
-        init(campaign: Campaign, paymentAmountConvertibleToRewardUnit: Int, prizes: [Prize]) {
+        init(campaign: Campaign, paymentAmountConvertibleToPrize: Int, prizes: [Prize]) {
             super.init(campaign: campaign)
-            self.paymentAmountConvertibleToRewardUnit = paymentAmountConvertibleToRewardUnit
+            self.paymentAmountConvertibleToPrize = paymentAmountConvertibleToPrize
             self.prizes = prizes
         }
 
@@ -27,10 +27,10 @@ extension WayPay {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             try super.init(from: decoder)
             do {
-                paymentAmountConvertibleToRewardUnit = try container.decode(Int.self, forKey: .paymentAmountConvertibleToRewardUnit)
+                paymentAmountConvertibleToPrize = try container.decode(Int.self, forKey: .paymentAmountConvertibleToPrize)
                 prizes = try container.decode([Prize].self, forKey: .prizes)
             } catch {
-                WayAppUtils.Log.message("Missing paymentAmountConvertibleToRewardUnit or prizes")
+                WayAppUtils.Log.message("Missing paymentAmountConvertibleToPrize or prizes")
             }
 
         }
@@ -38,11 +38,11 @@ extension WayPay {
         override func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             do {
-                try container.encode(paymentAmountConvertibleToRewardUnit, forKey: .paymentAmountConvertibleToRewardUnit)
+                try container.encode(paymentAmountConvertibleToPrize, forKey: .paymentAmountConvertibleToPrize)
                 try container.encode(prizes, forKey: .prizes)
                 try super.encode(to: encoder)
             } catch {
-                WayAppUtils.Log.message("Missing paymentAmountConvertibleToRewardUnit or prizes")
+                WayAppUtils.Log.message("Missing paymentAmountConvertibleToPrize or prizes")
             }
         }
         

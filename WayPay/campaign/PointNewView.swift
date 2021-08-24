@@ -99,12 +99,12 @@ struct PointNewView: View {
                                                       expirationDate: expirationDate, state: .ACTIVE)
                     prize.name = prizeName
                     prize.value = Int(prizeAmount)
-                    prize.amountToGetIt = Int(threshold) ?? 0
+                    prize.amountToGetIt = (Int(threshold) ?? 0) * 100
                     prize.message = WayPay.Prize.winnningMessage
 
                     let pointCampaign: WayPay.Point =
                         WayPay.Point(campaign: campaign,
-                                           paymentAmountConvertibleToRewardUnit: 100,
+                                           paymentAmountConvertibleToPrize: (Int(threshold) ?? 0) * 100,
                                            prizes: [prize])
                     WayPay.Point.create(pointCampaign) { campaigns, error in
                         if let campaigns = campaigns {

@@ -180,15 +180,19 @@ struct SettingsView: View {
                     Label(NSLocalizedString("Product catalogue", comment: "SettingsView: merchants products"), systemImage: "list.bullet.rectangle")
                 }
                 NavigationLink(destination: CustomerQRView()) {
-                    Label(NSLocalizedString("Customer registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.crop.circle.fill.badge.checkmark")
+                    Label(NSLocalizedString("Customer registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
                 }
             }
             .listItemTint(Color.green)
-            Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person.2.circle")
+            Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person")
                         .accessibility(label: Text("My account"))
                         .font(.callout)) {
+                if let email = session.email {
+                    Text(email)
+                        .bold()
+                }
                 NavigationLink(destination: OnboardingView(fromSettings: true)) {
-                    Label(NSLocalizedString("Tutorial", comment: "SettingsView: OnboardingView option"), systemImage: "questionmark.video.fill")
+                    Label(NSLocalizedString("Tutorial", comment: "SettingsView: OnboardingView option"), systemImage: "questionmark.video")
                 }
                 Button {
                     self.changePIN = true
@@ -303,7 +307,21 @@ struct SettingsView: View {
         .edgesIgnoringSafeArea(.all)
         .navigationBarTitle("Settings")
     }
-    
+}
+
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        //SettingsView()
+        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
+            SettingsView()
+                .previewDevice(PreviewDevice(rawValue: deviceName))
+                .previewDisplayName(deviceName)
+        }
+        .environmentObject(WayPay.session)
+    }
+}
+
+extension SettingsView {
     private func reward() {
         // PAN Marzo31Superpapelería: 2CCFDE3A-10BC-40C5-AEAC-A7E74557F9BF
         let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
@@ -463,16 +481,5 @@ struct SettingsView: View {
     private func deleteAccount() {
         WayPay.Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
     }
-}
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        //SettingsView()
-        ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
-            SettingsView()
-                .previewDevice(PreviewDevice(rawValue: deviceName))
-                .previewDisplayName(deviceName)
-        }
-        .environmentObject(WayPay.session)
-    }
 }

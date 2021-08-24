@@ -41,7 +41,7 @@ struct CheckinView: View {
         return session.amount
     }
     
-    private func displayScanner() {
+    private func reset() {
         self.showTransactionResult = false
         self.wasTransactionSuccessful = false
         self.selectedPrize = -1
@@ -62,7 +62,7 @@ struct CheckinView: View {
             .buttonStyle(WayPay.WideButtonModifier())
             Button(action: {
                 DispatchQueue.main.async {
-                    self.displayScanner()
+                    self.reset()
                 }
             }) {
                 Text("Cancel")
@@ -96,7 +96,7 @@ struct CheckinView: View {
                           message: Text("Try again. If not found again, contact support@wayapp.com"),
                           dismissButton: .default(
                             Text("OK"),
-                            action: displayScanner)
+                            action: reset)
                     )}
         } else if let checkin = session.checkin {
             Form {
@@ -184,7 +184,7 @@ struct CheckinView: View {
                     }
                 }
                 Section(header:
-                            Label(NSLocalizedString("Activity", comment: "CheckinView: section title"), systemImage: "person.fill.viewfinder")
+                            Label(NSLocalizedString("Activity", comment: "CheckinView: section title"), systemImage: "list.bullet.rectangle")
                             .font(.callout)) {
                     NavigationLink(destination: TransactionsView(accountUUID: checkin.accountUUID)) {
                         Label(NSLocalizedString("Recent purchases", comment: "CheckinView: Transactions"), systemImage: "calendar")
@@ -207,6 +207,9 @@ struct CheckinView: View {
                 }
                 actionButtons
             }
+            .onDisappear {
+                self.reset()
+            }
             .edgesIgnoringSafeArea(.all)
             .navigationBarTitle(fullname)
             .alert(isPresented: $showTransactionResult) {
@@ -217,7 +220,7 @@ struct CheckinView: View {
                     message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
                     dismissButton: .default(
                         Text("OK"),
-                        action: displayScanner)
+                        action: reset)
                 )
             }
         }

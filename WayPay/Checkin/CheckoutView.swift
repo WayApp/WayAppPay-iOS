@@ -75,6 +75,7 @@ struct CheckoutView: View {
             .background(!WayPay.Point.isPointCampaignActive() ? Color.blue.opacity(0.50) : Color.green)
             .cornerRadius(6)
             .foregroundColor(.white)
+            .clipShape(Capsule())
             .alert(isPresented: $displayPromotionAlert) {
                 Alert(
                     title: Text("Premium feature")
@@ -106,7 +107,6 @@ struct CheckoutView: View {
                         action: {})
                 )
             }
-
             Button(action: {
                 if let stampCampaign = stampCampaign {
                     rewardLoyalty(campaign: stampCampaign)
@@ -157,21 +157,30 @@ struct CheckoutView: View {
             return
         }
         isAPICallOngoing = true
-        let transaction = WayPay.PaymentTransaction(amount: purchaseAmountValue, token: token, type: .REWARD)
+        let transaction = WayPay.PaymentTransaction(amount: purchaseAmountValue, purchaseDetail: nil, prizes: selectedPrizes(), token: token, type: .REWARD)
         WayPay.Campaign.reward(transaction: transaction, campaign: campaign) { transactions, error in
             if let transactions = transactions,
                let transaction = transactions.first {
                 DispatchQueue.main.async {
                     transactionResult(accepted: transaction.result == .ACCEPTED)
                 }
-                WayAppUtils.Log.message("Checkin success: \(transaction)")
+                WayAppUtils.Log.message("rewardLoyalty success: \(transaction)")
             } else {
                 DispatchQueue.main.async {
                     transactionResult(accepted: false)
                 }
-                WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+                WayAppUtils.Log.message("rewardLoyalty error. More info: \(error != nil ? error!.localizedDescription : "not available")")
             }
         }
+    }
+    
+    private func selectedPrizes() -> [WayPay.Prize] {
+        var prizes = [WayPay.Prize]()
+        if session.selectedPrize != -1,
+           let prize = session.checkin?.prizes?[session.selectedPrize] {
+            prizes.append(prize)
+        }
+        return prizes
     }
     
     private func processPayment(amount: Int) {
@@ -181,12 +190,7 @@ struct CheckoutView: View {
             return
         }
         let merchantUUID = session.merchants[session.seletectedMerchant].merchantUUID
-        var prizes = [WayPay.Prize]()
-        if session.selectedPrize != -1,
-           let prize = session.checkin?.prizes?[session.selectedPrize] {
-            prizes.append(prize)
-        }
-        let payment = WayPay.PaymentTransaction(amount: amount, purchaseDetail: nil, prizes: prizes, token: token)
+        let payment = WayPay.PaymentTransaction(amount: amount, purchaseDetail: nil, prizes: selectedPrizes(), token: token)
         isAPICallOngoing = true
         WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
             switch response {
@@ -218,11 +222,19 @@ struct CheckoutView: View {
             ScrollView {
                 VStack {
                     VStack(alignment: .center, spacing: 4) {
-                        if session.imageDownloader?.image != nil {
-                            Image(uiImage: session.imageDownloader!.image!)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: 80, maxHeight: 80)
+                        if session.imageDownloader != nil {
+                            if let image = session.imageDownloader!.image {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: 80, maxHeight: 80)
+                                    .clipShape(Circle())
+                            } else {
+                                Image("WayPay-Hands")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: 80, maxHeight: 80)
+                            }
                         } else {
                             Image("WayPay-Hands")
                                 .resizable()
@@ -364,10 +376,9 @@ struct PrizeRow: View {
             }
         }) {
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(prize.displayAs)
-                        .font(.headline)
-                }
+                Text(prize.displayAs)
+                    .font(.body)
+                    .multilineTextAlignment(.leading)
                 Spacer()
                 Toggle("Complete", isOn: $checked)
             }
