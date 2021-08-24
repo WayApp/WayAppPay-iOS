@@ -82,7 +82,6 @@ struct WayPay {
         func makeBody(configuration: Configuration) -> some View {
             ProgressView(configuration)
                 .progressViewStyle(CircularProgressViewStyle())
-                .foregroundColor(.primary)
                 .padding()
                 .background(Color.green.opacity(0.25))
                 .cornerRadius(8)

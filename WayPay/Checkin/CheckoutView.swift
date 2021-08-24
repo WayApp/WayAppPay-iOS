@@ -19,26 +19,30 @@ struct CheckoutView: View {
     @State private var isAPICallOngoing = false
     @State private var displayPromotionAlert = false
     let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
-
+    
     var purchaseAmountValueToDisplay: Int {
-        var amount = WayAppUtils.composeIntPriceFromString(purchaseAmount)
+        WayAppUtils.Log.message("**********$$$$$$$$$$$ purchaseAmountValueToDisplay")
+        var amount = purchaseAmountValue
         if let checkin = session.checkin {
             if session.selectedPrize != -1,
                let prizes = checkin.prizes {
                 amount = prizes[session.selectedPrize].applyToAmount(amount)
-            }
-            if let balance = checkin.prepaidBalance {
-                return min(balance, amount)
             }
         }
         return amount
     }
     
     var purchaseAmountValue: Int {
-        let amount = WayAppUtils.composeIntPriceFromString(purchaseAmount)
+        WayAppUtils.Log.message("**********$$$$$$$$$$$ purchaseAmountValue")
+        var amount = WayAppUtils.composeIntPriceFromString(purchaseAmount)
+        WayAppUtils.Log.message("purchaseAmount TextFielValue=\(amount)")
+        if session.amount > 0 {
+            amount = session.amount
+        }
+        WayAppUtils.Log.message("purchaseAmount TextFielValue + session.amount=\(amount)")
         if let checkin = session.checkin,
            let balance = checkin.prepaidBalance {
-               return min(balance, amount)
+            return min(balance, amount)
         }
         return amount
     }
@@ -57,7 +61,7 @@ struct CheckoutView: View {
             self.wasTransactionSuccessful = accepted
         }
     }
-
+    
     private var awardButtons: some View {
         VStack {
             Button(action: {
@@ -122,15 +126,17 @@ struct CheckoutView: View {
         .listRowInsets(EdgeInsets())
         .padding(.horizontal)
     }
-
+    
     private func reset() {
         purchaseAmount = ""
+        session.shoppingCart.empty()
         session.checkin = nil
         session.selectedPrize = -1
         isAPICallOngoing = false
     }
     
     private var waypayButtonTitle: String {
+        WayAppUtils.Log.message("Entering")
         var title: String = "WayPay Payment"
         if let checkin = session.checkin {
             if let type = checkin.type,
@@ -152,6 +158,7 @@ struct CheckoutView: View {
     }
     
     private func rewardLoyalty(campaign: WayPay.Campaign) {
+        WayAppUtils.Log.message("Entering")
         guard let token = session.checkin?.token else {
             WayAppUtils.Log.message("Missing checkin.token")
             return
@@ -216,7 +223,7 @@ struct CheckoutView: View {
             }
         }
     }
-
+    
     var body: some View {
         ZStack {
             ScrollView {
@@ -241,20 +248,21 @@ struct CheckoutView: View {
                                 .scaledToFit()
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
-                        Text("Enter purchase amount:")
-                            .font(.caption)
-                            .padding(.top)
-                        HStack {
-                            TextField("\(purchaseAmount)", text: $purchaseAmount)
-                                .font(.title)
-                                .frame(width: 120, height: 40)
-                                .keyboardType(.decimalPad)
-                                .disabled(session.checkin != nil)
-                                .modifier(WayPay.TextFieldModifier(padding: 10, lineWidth: 1))
-                            Text(Locale.current.currencySymbol ?? "")
+                        if (session.shoppingCart.isEmpty) {
+                            Text("Enter purchase amount:")
+                                .font(.caption)
+                                .padding(.top)
+                            HStack {
+                                TextField(WayPay.formatAmount(purchaseAmountValue), text: $purchaseAmount)
+                                    .font(.title)
+                                    .frame(width: 120, height: 40)
+                                    .keyboardType(.decimalPad)
+                                    .modifier(WayPay.TextFieldModifier(padding: 10, lineWidth: 1))
+                                Text(Locale.current.currencySymbol ?? "")
+                            }
+                            .padding()
                         }
-                        .padding()
-                        if (!purchaseAmount.isEmpty && session.checkin == nil) {
+                        if (purchaseAmountValue > 0 && session.checkin == nil) {
                             Button {
                                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 self.navigationSelection = 0
@@ -265,7 +273,7 @@ struct CheckoutView: View {
                             .buttonStyle(WayPay.WideButtonModifier())
                             .padding(.horizontal)
                         }
-                        if (!purchaseAmount.isEmpty) {
+                        if (purchaseAmountValue > 0) {
                             Divider()
                         }
                         if let checkin = session.checkin {
@@ -308,7 +316,7 @@ struct CheckoutView: View {
                                 Divider()
                             }
                         }
-                        if (!purchaseAmount.isEmpty || session.checkin != nil) {
+                        if (purchaseAmountValue > 0 || session.checkin != nil) {
                             Button {
                                 reset()
                             } label: {
@@ -324,10 +332,16 @@ struct CheckoutView: View {
                     }
                 } // VStack
                 .padding()
-                .frame(minWidth: 200, idealWidth: 400, maxWidth: 400)
-                .frame(maxWidth: .infinity)
             } // Scrollview
-            .navigationTitle(purchaseAmount.isEmpty ? NSLocalizedString("Amount", comment: "CheckoutView: navigationTitle") : WayPay.formatPrice(purchaseAmountValueToDisplay))
+            .navigationTitle(WayPay.formatPrice(purchaseAmountValueToDisplay))
+            // purchaseAmount.isEmpty ? NSLocalizedString("Amount", comment: "CheckoutView: navigationTitle") : WayPay.formatPrice(purchaseAmountValueToDisplay)
+            .navigationBarItems(trailing:
+                                    NavigationLink(destination: OrderView()) {
+                                        Image(systemName: "cart.badge.plus")
+                                            .imageScale(.large)
+                                     }
+                                    .overlay(Badge())
+            )
             .gesture(DragGesture().onChanged { _ in hideKeyboard() })
             if isAPICallOngoing {
                 ProgressView(WayPay.UserMessage.progressView.alert.title)
@@ -365,9 +379,9 @@ struct PrizeRow: View {
     @EnvironmentObject var session: WayPay.Session
     var prize: WayPay.Prize
     var index: Int = -1
-
+    
     @State private var checked = false
-            
+    
     var body: some View {
         Button(action: {
             if (session.selectedPrize == -1 || session.selectedPrize == index) {

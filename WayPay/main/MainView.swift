@@ -30,7 +30,7 @@ struct MainView: View {
         var icon: String {
             switch self {
             case .checkout: return "qrcode.viewfinder"
-            case .checkin: return "person.fill.questionmark"
+            case .checkin: return "person.fill"
             case .reports: return "chart.bar.xaxis"
             case .settings: return "gearshape.fill"
             }

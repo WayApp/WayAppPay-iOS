@@ -16,8 +16,6 @@ struct CheckinView: View {
     @State private var scannedCode: String? = nil
     @State private var isAPICallOngoing = false
     @State private var scanError = false
-    @State private var showTransactionResult = false
-    @State private var wasTransactionSuccessful = false
     @State private var wasScanSuccessful: Bool = false
     @State private var selectedPrize: Int = -1
 
@@ -28,51 +26,12 @@ struct CheckinView: View {
         return ""
     }
     
-    private var shoppingCartMenuOption: String {
-        let count = session.shoppingCart.count
-        return NSLocalizedString("Shopping cart", comment: "") + (count > 0 ? " (\(count))" : "")
-    }
-    
-    private var transactionAmount: Int {
-        if selectedPrize != -1,
-           let prizes = session.checkin?.prizes {
-            return prizes[selectedPrize].applyToAmount(session.amount)
-        }
-        return session.amount
-    }
-    
     private func reset() {
-        self.showTransactionResult = false
-        self.wasTransactionSuccessful = false
         self.selectedPrize = -1
         session.checkin = nil
         isAPICallOngoing = false
         // TODO: checking shoppingcart
         self.showQRScanner = true
-    }
-    
-    private var actionButtons: some View {
-        VStack {
-            Button {
-                handleQRScanPayment()
-            } label: {
-                Text("Charge \(WayPay.formatPrice(transactionAmount))")
-                    .padding()
-            }
-            .buttonStyle(WayPay.WideButtonModifier())
-            Button(action: {
-                DispatchQueue.main.async {
-                    self.reset()
-                }
-            }) {
-                Text("Cancel")
-                    .padding()
-            }
-            .buttonStyle(WayPay.CancelButtonModifier())
-
-        }
-        .listRowInsets(EdgeInsets())
-        .padding(.horizontal)
     }
     
     private func getRewardBalanceForCampaign(_ id: String) -> Int? {
@@ -190,47 +149,17 @@ struct CheckinView: View {
                         Label(NSLocalizedString("Recent purchases", comment: "CheckinView: Transactions"), systemImage: "calendar")
                     }
                 }
-                Section(header:
-                            Label(NSLocalizedString("Order", comment: "CheckinView: section title"), systemImage: "cart.fill.badge.plus")
-                            .font(.callout)) {
-                    /*
-                    NavigationLink(destination: AmountView()) {
-                        Label(NSLocalizedString("Enter amount", comment: "CheckinView: Enter amount"), systemImage: "square.grid.3x3")
+                Button(action: {
+                    DispatchQueue.main.async {
+                        self.reset()
                     }
- */
-                    NavigationLink(destination: OrderView()) {
-                        Label(NSLocalizedString("Select products", comment: "CheckinView: Order from product catalogue option"), systemImage: "filemenu.and.selection")
-                    }
-                    NavigationLink(destination: ShoppingCartView()) {
-                        Label(shoppingCartMenuOption, systemImage: "cart")
-                    }
+                }) {
+                    Text("Cancel")
+                        .padding()
                 }
-                actionButtons
+                .buttonStyle(WayPay.CancelButtonModifier())
             }
-            .onDisappear {
-                self.reset()
-            }
-            .edgesIgnoringSafeArea(.all)
             .navigationBarTitle(fullname)
-            .alert(isPresented: $showTransactionResult) {
-                Alert(
-                    title: Text(wasTransactionSuccessful ? "✅" : "🚫")
-                        .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
-                        .font(.title),
-                    message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
-                    dismissButton: .default(
-                        Text("OK"),
-                        action: reset)
-                )
-            }
-        }
-    }
-    
-    private func transactionResult(accepted: Bool) {
-        self.scannedCode = nil
-        DispatchQueue.main.async {
-            self.showTransactionResult = true
-            self.wasTransactionSuccessful = accepted
         }
     }
     
@@ -259,50 +188,6 @@ struct CheckinView: View {
             }
         }
     }
-    
-    func handleQRScanPayment() {
-        guard let merchantUUID = session.merchantUUID,
-              let accountUUID = session.accountUUID,
-              let code = scannedCode else {
-            WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
-            return
-        }
-        var prizes = [WayPay.Prize]()
-        if selectedPrize != -1,
-           let prize = session.checkin?.prizes?[selectedPrize] {
-            prizes.append(prize)
-        }
-        let payment = WayPay.PaymentTransaction(amount: session.amount, purchaseDetail: session.shoppingCart.arrayOfCartItems, prizes: prizes, token: code)
-        WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: \(payment)")
-        isAPICallOngoing = true
-        WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
-            DispatchQueue.main.async {
-                isAPICallOngoing = false
-            }
-            switch response {
-            case .success(let response?):
-                WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: SUCCESS")
-                if let transactions = response.result,
-                   let transaction = transactions.first {
-                    DispatchQueue.main.async {
-                        self.transactionResult(accepted: transaction.result == .ACCEPTED)
-                        self.session.transactions.addAsFirst(transaction)
-                    }
-                } else {
-                    WayAppUtils.Log.message("INVALID_SERVER_DATA")
-                    self.transactionResult(accepted: false)
-                }
-            case .failure(let error):
-                WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: FAILED")
-                WayAppUtils.Log.message(error.localizedDescription)
-                self.transactionResult(accepted: false)
-            default:
-                self.transactionResult(accepted: false)
-                WayAppUtils.Log.message("INVALID_SERVER_DATA")
-            }
-        }
-    }
-    
 }
 
 struct CheckinView_Previews: PreviewProvider {
