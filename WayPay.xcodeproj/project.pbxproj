@@ -20,7 +20,7 @@
 		B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F695123EC8C85005C880A /* ShoppingCart.swift */; };
 		B12DE95023AA638500C02657 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE94F23AA638500C02657 /* Account.swift */; };
 		B12DE95323AA643E00C02657 /* WayPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95223AA643E00C02657 /* WayPay.swift */; };
-		B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95423AA654E00C02657 /* UserMessage.swift */; };
+		B12DE95523AA654E00C02657 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95423AA654E00C02657 /* AlertMessage.swift */; };
 		B12DE95823AA66F700C02657 /* DefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95723AA66F700C02657 /* DefaultKeys.swift */; };
 		B12DE95A23AA694F00C02657 /* TermsAndConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95923AA694F00C02657 /* TermsAndConditions.swift */; };
 		B12DE95E23AA6C1300C02657 /* DefaultKeyPersistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12DE95D23AA6C1300C02657 /* DefaultKeyPersistance.swift */; };
@@ -106,7 +106,7 @@
 		B11F695123EC8C85005C880A /* ShoppingCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCart.swift; sourceTree = "<group>"; };
 		B12DE94F23AA638500C02657 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B12DE95223AA643E00C02657 /* WayPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayPay.swift; sourceTree = "<group>"; };
-		B12DE95423AA654E00C02657 /* UserMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessage.swift; sourceTree = "<group>"; };
+		B12DE95423AA654E00C02657 /* AlertMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
 		B12DE95723AA66F700C02657 /* DefaultKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultKeys.swift; sourceTree = "<group>"; };
 		B12DE95923AA694F00C02657 /* TermsAndConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditions.swift; sourceTree = "<group>"; };
 		B12DE95D23AA6C1300C02657 /* DefaultKeyPersistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultKeyPersistance.swift; sourceTree = "<group>"; };
@@ -244,7 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				B12DE95223AA643E00C02657 /* WayPay.swift */,
-				B12DE95423AA654E00C02657 /* UserMessage.swift */,
+				B12DE95423AA654E00C02657 /* AlertMessage.swift */,
 				B12DE95723AA66F700C02657 /* DefaultKeys.swift */,
 				B12DE95923AA694F00C02657 /* TermsAndConditions.swift */,
 				B19E370726D4DA8000B82B0D /* BadgeView.swift */,
@@ -590,7 +590,7 @@
 				B165F48926B3F55500104E1F /* StampNewView.swift in Sources */,
 				B1E792EA23E9CCE2001296F2 /* KeychainHandler.swift in Sources */,
 				B19E370826D4DA8000B82B0D /* BadgeView.swift in Sources */,
-				B12DE95523AA654E00C02657 /* UserMessage.swift in Sources */,
+				B12DE95523AA654E00C02657 /* AlertMessage.swift in Sources */,
 				B1E7A58023E4482D00CC2E04 /* ShoppingCartView.swift in Sources */,
 				B17C97C8268E28B9007C652C /* Stamp.swift in Sources */,
 				B12DE95023AA638500C02657 /* Account.swift in Sources */,
@@ -772,7 +772,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WayPay/WayPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"WayPay/Preview Content\"";
 				DEVELOPMENT_TEAM = KY762H7M37;
 				ENABLE_PREVIEWS = YES;
@@ -799,7 +799,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WayPay/WayPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"WayPay/Preview Content\"";
 				DEVELOPMENT_TEAM = KY762H7M37;
 				ENABLE_PREVIEWS = YES;

@@ -130,6 +130,10 @@ extension WayPay {
             return paymentId != nil && follow != nil
         }
         
+        var wasSuccessful: Bool {
+            return result == .ACCEPTED
+        }
+        
         func walletPayment() {
             guard let merchantUUID = self.merchantUUID,
                 let accountUUID = self.accountUUID else {
@@ -153,7 +157,7 @@ extension WayPay {
             }
         }
 
-        func processRefund() -> Void {
+        func processRefund(completion: @escaping (PaymentTransaction?, Error?) -> Void) -> Void {
             guard let merchantUUID = self.merchantUUID,
                 let accountUUID = self.accountUUID,
                 let transactionUUID = self.transactionUUID else {
@@ -166,13 +170,15 @@ extension WayPay {
                         let transaction = transactions.first {
                         DispatchQueue.main.async {
                             WayPay.session.transactions.addAsFirst(transaction)
+                            completion(transaction, nil)
                         }
-                        WayAppUtils.Log.message("REFUND HECHO!!!!=\(transaction)")
                     } else {
                         WayPay.API.reportError(response)
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
+                    completion(nil, error)
                 }
             }
         }

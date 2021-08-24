@@ -84,7 +84,7 @@ class NFCScannerViewController: UIViewController {
                     message: "This device doesn't support tag scanning.",
                     preferredStyle: .alert
                 )
-                let dismissAction = UIAlertAction(title: "OK", style: .default) {_ in
+                let dismissAction = UIAlertAction(title: WayPay.SingleMessage.OK.text, style: .default) {_ in
                     self.delegate?.didFail()
                 }
                 alertController.addAction(dismissAction)

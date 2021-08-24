@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension WayPay {
-    enum UserMessage {
+    enum AlertMessage {
         case error(String, String)
         case titleAndText(String, String)
         case closeTo(String, String)
@@ -22,9 +22,12 @@ extension WayPay {
         case passwordChangeFailed
         case forgotPassword(String)
         case forgotPasswordError(String)
-        case progressView
+        case premiumFeature
+        case needsSetup
+        case refund(Bool)
+        case transaction(Bool)
 
-        var alert: (title: String, message: String) {
+        var text: (title: String, message: String) {
             switch self {
             case .error(let title, let text): return (title, text)
             case .titleAndText(let title, let text): return (title, text)
@@ -38,8 +41,30 @@ extension WayPay {
             case .passwordChangeFailed: return (NSLocalizedString("PIN was not changed", comment: "User message: passwordChangeFailed title"), NSLocalizedString("Try your current PIN again, if problem persists contact us at support@wayapp.com", comment: "User message: passwordChangeFailed: registration error during registration"))
             case .forgotPassword(let email): return (NSLocalizedString("To finish the PIN change", comment: "User message: forgotPassword title"), NSLocalizedString("Follow instructions emailed to: ", comment: "User message: forgotPassword") + email)
             case .forgotPasswordError(let email): return (NSLocalizedString("Email address not valid", comment: "User message: forgotPasswordError title"), NSLocalizedString("Email address \(email) is not registered", comment: "User message: forgotPasswordError"))
-            case .progressView: return (NSLocalizedString("Processing...", comment: "ProgressView title message"),"")
+            case .premiumFeature: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
+            case .needsSetup: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
+            case .refund(let success):
+                return (SingleMessage.success(success).text,
+                                               NSLocalizedString(success ? "Refund was successful" : "Refund failed", comment: "User message: refund result"))
+            case .transaction(let success):
+                return (SingleMessage.success(success).text,
+                                               NSLocalizedString(success ? "Transaction was successful" : "Transaction failed", comment: "User message: transaction result"))
             }
         }
+    }
+    
+    enum SingleMessage {
+        case progressView
+        case success(Bool)
+        case OK
+
+        var text: String {
+            switch self {
+            case .progressView: return NSLocalizedString("Processing...", comment: "SingleMessage: ProgressView text")
+            case .success(let success): return success ? "✅" : "🚫"
+            case .OK: return NSLocalizedString("OK", comment: "SingleMessage: OK text")
+            }
+        }
+
     }
 }

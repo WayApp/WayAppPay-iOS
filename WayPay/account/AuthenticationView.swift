@@ -83,7 +83,7 @@ struct AuthenticationView: View {
             .alert(isPresented: $loginError) {
                 Alert(title: Text("Login error"),
                       message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
-                      dismissButton: .default(Text("OK")))
+                      dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
             }
             NavigationLink(destination: RegistrationView()) {
                 Text("New account")

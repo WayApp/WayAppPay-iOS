@@ -155,7 +155,7 @@ struct EnterOTP: View {
                 .alert(isPresented: $showChangeResultAlert) {
                     Alert(title: Text("System error"),
                           message: Text("PIN could not be changed. Try again later. If problem persists contact support@wayapp.com"),
-                          dismissButton: .default(Text("OK")))
+                          dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
                 }
             }
         }

@@ -22,15 +22,15 @@ struct ProductDetailView: View {
     @State var newPrice: String = ""
     
     @State private var showImagePicker: Bool = false
-    @State private var newImage: UIImage? = nil
+    @State private var newImage: UIImage? = UIImage(named: "logoPlaceholder")
     
     var shouldSaveButtonBeDisabled: Bool {
         if product == nil {
             // creation
-            return newName.isEmpty || newPrice.isEmpty || newImage == nil
+            return newName.isEmpty || newPrice.isEmpty
         } else {
             // update
-            return newName.isEmpty && newPrice.isEmpty && newImage == nil
+            return newName.isEmpty && newPrice.isEmpty
         }
     }
         
@@ -47,12 +47,17 @@ struct ProductDetailView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: WayPay.UI.verticalSeparation) {
-            if newImage == nil {
+            if product != nil {
                 ImageView(withURL: product?.image)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 160)
+                    .padding()
             } else {
                 Image(uiImage:newImage!)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .frame(height: 160)
+                    .padding()
             }
             Button(action: {
                 self.showImagePicker = true
@@ -62,7 +67,7 @@ struct ProductDetailView: View {
                     .frame(width: 40, height: 30)
             })
             if isAPICallOngoing {
-                ProgressView(WayPay.UserMessage.progressView.alert.title)
+                ProgressView(WayPay.SingleMessage.progressView.text)
                     .progressViewStyle(WayPay.WayPayProgressViewStyle())
             }
             VStack(alignment: .trailing) {
@@ -119,7 +124,7 @@ struct ProductDetailView: View {
             .alert(isPresented: $showUpdateResultAlert) {
                 Alert(title: Text("System error"),
                       message: Text("Product could not be updated. Try again later. If problem persists contact support@wayapp.com"),
-                      dismissButton: .default(Text("OK")))
+                      dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
             }
         .disabled(shouldSaveButtonBeDisabled)
         )

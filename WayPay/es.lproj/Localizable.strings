@@ -84,9 +84,6 @@
 /* No comment provided by engineer. */
 "business name" = "nombre del comercio";
 
-/* Campaign */
-"Campaign" = "Campaña";
-
 /* No comment provided by engineer. */
 "Campaign expires on" = "Campaña caduca en";
 
@@ -95,9 +92,6 @@
 
 /* No comment provided by engineer. */
 "Cancel" = "Cancelar";
-
-/* No comment provided by engineer. */
-"Cart" = "Cesta";
 
 /* Prize format title */
 "Cashback" = "Cashback";
@@ -110,18 +104,6 @@
 
 /* No comment provided by engineer. */
 "Change PIN" = "Cambiar PIN";
-
-/* Charge */
-"Charge" = "Cobrar";
-
-/* No comment provided by engineer. */
-"Charge %@" = "Cobrar %@";
-
-/* No comment provided by engineer. */
-"Charge: %@" = "Cobrar: %@";
-
-/* No comment provided by engineer. */
-"Check rewards" = "Saldos";
 
 /* PaymentTransaction.TransactionType */
 "Checkin" = "Checkin";
@@ -177,9 +159,6 @@
 "Deduct" = "Cobrar";
 
 /* No comment provided by engineer. */
-"Delete" = "Borrar";
-
-/* No comment provided by engineer. */
 "Delete account" = "Borrar cuenta";
 
 /* Prize amountTitle
@@ -221,9 +200,6 @@
 
 /* User message: invalidEmail message */
 "Enter a valid email address for this account" = "Escribe un email válido para la cuenta";
-
-/* CheckinView: Enter amount */
-"Enter amount" = "Escribe el importe";
 
 /* No comment provided by engineer. */
 "Enter OTP received:" = "Escribe la clave reciba";
@@ -334,7 +310,7 @@
 "Needs setup in Settings" = "Activa la campaña en Configuración";
 
 /* No comment provided by engineer. */
-"New" = "Nueva";
+"New" = "Nuevo";
 
 /* No comment provided by engineer. */
 "New account" = "Cuenta nueva";
@@ -371,18 +347,6 @@
 
 /* No comment provided by engineer. */
 "OK" = "OK";
-
-/* Scanning transaction type */
-"Operation" = "Operación";
-
-/* CheckinView: section title */
-"Order" = "Pedido";
-
-/* Other options */
-"Other options" = "Otras opciones";
-
-/* No comment provided by engineer. */
-"Payment" = "Pago";
 
 /* No comment provided by engineer. */
 "Pending prizes" = "Premios disponibles";
@@ -429,8 +393,7 @@
 /* ProgressView title message */
 "Processing..." = "Procesando...";
 
-/* Order from product catalogue
-   SettingsView: merchants products */
+/* SettingsView: merchants products */
 "Product catalogue" = "Catálogo de productos";
 
 /* No comment provided by engineer. */
@@ -508,9 +471,6 @@
 /* CampaignsView: section title */
 "Reward visits" = "Recompensa visitas";
 
-/* No comment provided by engineer. */
-"Rewards" = "Saldo de campañas";
-
 /* PaymentTransaction.TransactionType */
 "Sale" = "Venta";
 
@@ -529,9 +489,6 @@
 /* No comment provided by engineer. */
 "Select another month:" = "Escoge otro mes:";
 
-/* CheckinView: Order from product catalogue option */
-"Select products" = "Escoge productos";
-
 /* No comment provided by engineer. */
 "Sell your own digital giftcard. Customers pay you, you scan card, and top it up." = "Vende tu propia tarjeta regalo digital. Los clientes te pre-pagan el saldo, y luego la usan en sus compras";
 
@@ -543,9 +500,6 @@
 
 /* MainView tab title */
 "Settings" = "Configuración";
-
-/* No comment provided by engineer. */
-"Shopping cart" = "Cesta de compra";
 
 /* No comment provided by engineer. */
 "Sign in" = "Iniciar sesión";
@@ -581,9 +535,6 @@
 
 /* PaymentTransaction.TransactionType */
 "Top-up" = "Recarga";
-
-/* No comment provided by engineer. */
-"Top-up: %@" = "Recarga: %@";
 
 /* CampaignDetailView: campaign transactions
    TransactionsView section header */

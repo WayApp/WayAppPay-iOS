@@ -82,14 +82,13 @@ struct TransactionsView: View {
 
     @State var monthSelection = Calendar.current.component(.month, from: Date()) - 1
     @State private var isAPICallOngoing = false
-    @State private var transactions = Container<WayPay.PaymentTransaction>()
     @State private var reportID = WayPay.ReportID()
     @State private var refundState: RefundState = .none
     var accountUUID: String?
 
     private func fillReportID() {
         reportID.reset()
-        for transaction in transactions where transaction.result == .ACCEPTED {
+        for transaction in session.transactions where transaction.result == .ACCEPTED {
             switch transaction.type {
             case .SALE:
                 reportID.totalSales! += (transaction.amount ?? 0)
@@ -132,8 +131,8 @@ struct TransactionsView: View {
                                 session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: Month(rawValue: monthSelection)?.firstDay, finalDate: Month(rawValue: monthSelection)?.lastDay) { transactions, error in
                                     if let transactions = transactions {
                                         DispatchQueue.main.async {
-                                            self.transactions.setToInOrder(transactions, by:
-                                                { ($0.lastUpdateDate ?? Date.distantPast) > ($1.lastUpdateDate ?? Date.distantPast) })
+                                            session.transactions.setToInOrder(transactions, by:
+                                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                                             fillReportID()
                                         }
                                     }
@@ -145,7 +144,7 @@ struct TransactionsView: View {
                 }
                 Section(header: Text(isCustomerDisplayMode ? "" : NSLocalizedString("Transactions", comment: "TransactionsView section header"))) {
                     List {
-                        ForEach(transactions.filter(satisfying: {
+                        ForEach(session.transactions.filter(satisfying: {
                             if let transactiondate = $0.creationDate {
                                 return (((Calendar.current.component(.month, from: transactiondate) - 1) == self.monthSelection) &&
                                             (Calendar.current.component(.year, from: transactiondate) == Calendar.current.component(.year, from: Date())))
@@ -170,7 +169,7 @@ struct TransactionsView: View {
                                                                                                        initialDate: firstDayOfMonth, finalDate: lastDayOfMonth) { transactions, error in
                             if let transactions = transactions {
                                 DispatchQueue.main.async {
-                                    self.transactions.setToInOrder(transactions, by:
+                                    session.transactions.setToInOrder(transactions, by:
                                         { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                                     fillReportID()
                                 }
@@ -191,7 +190,7 @@ struct TransactionsView: View {
                     .frame(width: WayPay.UI.paymentResultImageSize, height: WayPay.UI.paymentResultImageSize, alignment: .center)
             }
             if isAPICallOngoing {
-                ProgressView(NSLocalizedString(WayPay.UserMessage.progressView.alert.title, comment: "Activity indicator"))
+                ProgressView(NSLocalizedString(WayPay.SingleMessage.progressView.text, comment: "Activity indicator"))
                     .progressViewStyle(WayPay.WayPayProgressViewStyle())
             }
         }
@@ -214,8 +213,8 @@ struct TransactionsView: View {
                     if let transactions = transactions {
                         WayAppUtils.Log.message("TRANSACTIONS COUNT=\(transactions.count)")
                         DispatchQueue.main.async {
-                            self.transactions.setToInOrder(transactions, by:
-                                { ($0.lastUpdateDate ?? Date.distantPast) > ($1.lastUpdateDate ?? Date.distantPast) })
+                            session.transactions.setToInOrder(transactions, by:
+                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                         }
                     }
             }

@@ -127,7 +127,7 @@ struct AmountView: View {
                     .font(.title),
                 message: Text(displayOption.buttonTitle + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
                 dismissButton: .default(
-                                Text("OK"),
+                                Text(WayPay.SingleMessage.OK.text),
                                 action: dismissView)
             )
         }
@@ -147,7 +147,7 @@ struct AmountView: View {
     func handleTopup() {
         WayAppUtils.Log.message("Topping up: \(total)")
         guard let code = scannedCode else {
-            WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
+            WayAppUtils.Log.message("Missing scannedCode")
             return
         }
         let topup = WayPay.PaymentTransaction(amount: Int(total + amount), token: code, type: .TOPUP)

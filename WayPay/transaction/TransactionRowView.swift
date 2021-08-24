@@ -12,9 +12,9 @@ struct TransactionRowView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var session: WayPay.Session
     var transaction: WayPay.PaymentTransaction
-    
+    @State private var refundResultAlert = false
+    @State private var wasTransactionSuccessful = false
     @State private var send = false
-    
     @State var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? ""
 
     static var dateFormatter: DateFormatter = {
@@ -47,7 +47,14 @@ struct TransactionRowView: View {
             }.contextMenu {
                 if ((transaction.type == WayPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
                     Button {
-                        transaction.processRefund()
+                        transaction.processRefund() { transaction, error in
+                            if let transaction = transaction {
+                                self.wasTransactionSuccessful = transaction.wasSuccessful
+                            } else {
+                                self.wasTransactionSuccessful = false
+                            }
+                            self.refundResultAlert = true
+                        }
                     } label: {
                         Label("Refund", systemImage: "arrowshape.turn.up.left")
                             .accessibility(label: Text("Refund"))
@@ -66,6 +73,16 @@ struct TransactionRowView: View {
                     Label("Repeat", systemImage: "repeat")
                         .accessibility(label: Text("Repeat"))
                 }
+            }
+            .alert(isPresented: $refundResultAlert) {
+                Alert(
+                    title: Text(WayPay.AlertMessage.refund(wasTransactionSuccessful).text.title)
+                        .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
+                        .font(.title),
+                    message: Text(WayPay.AlertMessage.refund(wasTransactionSuccessful).text.message),
+                    dismissButton: .default(
+                        Text(WayPay.SingleMessage.OK.text))
+                )
             }
             Spacer()
             Text(WayPay.formatPrice(transaction.amount))

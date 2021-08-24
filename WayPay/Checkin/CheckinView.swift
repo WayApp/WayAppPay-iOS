@@ -48,13 +48,13 @@ struct CheckinView: View {
             CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
                 .navigationBarTitle(NSLocalizedString("Scan QR", comment: "navigationBarTitle"))
         } else if isAPICallOngoing {
-            ProgressView(NSLocalizedString(WayPay.UserMessage.progressView.alert.title, comment: "Activity indicator"))
+            ProgressView(NSLocalizedString(WayPay.SingleMessage.progressView.text, comment: "Activity indicator"))
                 .progressViewStyle(WayPay.WayPayProgressViewStyle())
                 .alert(isPresented: $scanError) {
                     Alert(title: Text("QR not found"),
                           message: Text("Try again. If not found again, contact support@wayapp.com"),
                           dismissButton: .default(
-                            Text("OK"),
+                            Text(WayPay.SingleMessage.OK.text),
                             action: reset)
                     )}
         } else if let checkin = session.checkin {
@@ -72,6 +72,7 @@ struct CheckinView: View {
                         }
                     }
                     if let merchant = session.merchant,
+                       let scannedCode = scannedCode,
                        merchant.allowsGiftcard {
                         NavigationLink(destination: AmountView(scannedCode: scannedCode, displayOption: AmountView.DisplayOption.topup)) {
                             Label(NSLocalizedString("Top up", comment: "CheckinView: Enter amount"), systemImage: "plus.app.fill")
@@ -172,12 +173,15 @@ struct CheckinView: View {
         let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
         isAPICallOngoing = true
         WayPay.Account.checkin(transaction) { checkins, error in
-            //self.scannedCode = nil
+            DispatchQueue.main.async {
+                showQRScanner = true
+                //self.scannedCode = nil
+                isAPICallOngoing = false
+            }
             if let checkins = checkins,
                let checkin = checkins.first {
                 DispatchQueue.main.async {
                     session.checkin = checkin
-                    isAPICallOngoing = false
                 }
                 WayAppUtils.Log.message("Checkin success: \(checkin)")
             } else {

@@ -133,7 +133,7 @@ struct PointNewView: View {
                 .alert(isPresented: $campaignCreateError) {
                     Alert(title: Text("Error creating the campaign"),
                           message: Text("Try again. If problem persists contact support@wayapp.com"),
-                          dismissButton: .default(Text("OK")))
+                          dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
                 }
                 Spacer()
             }

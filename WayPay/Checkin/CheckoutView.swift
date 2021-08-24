@@ -21,7 +21,6 @@ struct CheckoutView: View {
     let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
     
     var purchaseAmountValueToDisplay: Int {
-        WayAppUtils.Log.message("**********$$$$$$$$$$$ purchaseAmountValueToDisplay")
         var amount = purchaseAmountValue
         if let checkin = session.checkin {
             if session.selectedPrize != -1,
@@ -33,13 +32,10 @@ struct CheckoutView: View {
     }
     
     var purchaseAmountValue: Int {
-        WayAppUtils.Log.message("**********$$$$$$$$$$$ purchaseAmountValue")
         var amount = WayAppUtils.composeIntPriceFromString(purchaseAmount)
-        WayAppUtils.Log.message("purchaseAmount TextFielValue=\(amount)")
         if session.amount > 0 {
             amount = session.amount
         }
-        WayAppUtils.Log.message("purchaseAmount TextFielValue + session.amount=\(amount)")
         if let checkin = session.checkin,
            let balance = checkin.prepaidBalance {
             return min(balance, amount)
@@ -82,11 +78,11 @@ struct CheckoutView: View {
             .clipShape(Capsule())
             .alert(isPresented: $displayPromotionAlert) {
                 Alert(
-                    title: Text("Premium feature")
+                    title: Text(WayPay.AlertMessage.premiumFeature.text.title)
                         .font(.title),
-                    message: Text("Contact sales@wayapp.com to enable"),
+                    message: Text(WayPay.AlertMessage.premiumFeature.text.message),
                     dismissButton: .default(
-                        Text("OK"),
+                        Text(WayPay.SingleMessage.OK.text),
                         action: {})
                 )
             }
@@ -103,11 +99,11 @@ struct CheckoutView: View {
             .buttonStyle(WayPay.WideButtonModifier())
             .alert(isPresented: $showStampHelp) {
                 Alert(
-                    title: Text("Needs setup in Settings")
+                    title: Text(WayPay.AlertMessage.needsSetup.text.title)
                         .font(.title),
                     message: Text("Needs activation on the Settings tab. Contact support@wayapp.com for help"),
                     dismissButton: .default(
-                        Text("OK"),
+                        Text(WayPay.SingleMessage.OK.text),
                         action: {})
                 )
             }
@@ -136,7 +132,6 @@ struct CheckoutView: View {
     }
     
     private var waypayButtonTitle: String {
-        WayAppUtils.Log.message("Entering")
         var title: String = "WayPay Payment"
         if let checkin = session.checkin {
             if let type = checkin.type,
@@ -170,6 +165,7 @@ struct CheckoutView: View {
                let transaction = transactions.first {
                 DispatchQueue.main.async {
                     transactionResult(accepted: transaction.result == .ACCEPTED)
+                    self.session.transactions.addAsFirst(transaction)
                 }
                 WayAppUtils.Log.message("rewardLoyalty success: \(transaction)")
             } else {
@@ -224,30 +220,25 @@ struct CheckoutView: View {
         }
     }
     
+    private var logo: Image {
+        if session.imageDownloader != nil,
+           let image = session.imageDownloader!.image {
+            return Image(uiImage: image)
+        } else {
+            return Image("WayPay-Hands")
+        }
+    }
+    
     var body: some View {
         ZStack {
             ScrollView {
                 VStack {
                     VStack(alignment: .center, spacing: 4) {
-                        if session.imageDownloader != nil {
-                            if let image = session.imageDownloader!.image {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: 80, maxHeight: 80)
-                                    .clipShape(Circle())
-                            } else {
-                                Image("WayPay-Hands")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: 80, maxHeight: 80)
-                            }
-                        } else {
-                            Image("WayPay-Hands")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: 80, maxHeight: 80)
-                        }
+                        logo
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 80, maxHeight: 80)
+                            .clipShape(Circle())
                         if (session.shoppingCart.isEmpty) {
                             Text("Enter purchase amount:")
                                 .font(.caption)
@@ -276,7 +267,8 @@ struct CheckoutView: View {
                         if (purchaseAmountValue > 0) {
                             Divider()
                         }
-                        if let checkin = session.checkin {
+                        if let checkin = session.checkin,
+                           purchaseAmountValue > 0 {
                             if let prizes = checkin.prizes,
                                !prizes.isEmpty {
                                 VStack {
@@ -339,21 +331,21 @@ struct CheckoutView: View {
                                     NavigationLink(destination: OrderView()) {
                                         Image(systemName: "cart.badge.plus")
                                             .imageScale(.large)
-                                     }
+                                    }
                                     .overlay(Badge())
             )
             .gesture(DragGesture().onChanged { _ in hideKeyboard() })
             if isAPICallOngoing {
-                ProgressView(WayPay.UserMessage.progressView.alert.title)
+                ProgressView(WayPay.SingleMessage.progressView.text)
                     .progressViewStyle(WayPay.WayPayProgressViewStyle())
                     .alert(isPresented: $showTransactionResult) {
                         Alert(
-                            title: Text(wasTransactionSuccessful ? "✅" : "🚫")
+                            title: Text(WayPay.AlertMessage.transaction(wasTransactionSuccessful).text.title)
                                 .foregroundColor(wasTransactionSuccessful ? Color.green : Color.red)
                                 .font(.title),
-                            message: Text("Transaction" + " " + (wasTransactionSuccessful ? "was successful" : "failed")),
+                            message: Text(WayPay.AlertMessage.transaction(wasTransactionSuccessful).text.message),
                             dismissButton: .default(
-                                Text("OK"),
+                                Text(WayPay.SingleMessage.OK.text),
                                 action: reset)
                         )
                     }
