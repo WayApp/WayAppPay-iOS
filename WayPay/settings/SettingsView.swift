@@ -124,6 +124,8 @@ struct SettingsView: View {
                         })
                     }
                 }  else {
+                    Text("Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get.")
+                        .font(.caption)
                     if let merchant = session.merchant {
                         if merchant.allowsPointCampaign {
                             NavigationLink(destination: PointNewView(campaign: nil)) {
@@ -131,8 +133,6 @@ struct SettingsView: View {
                                     .accessibility(label: Text("Configure"))
                             }
                         } else {
-                            Text("Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get.")
-                                .font(.caption)
                             Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request points campaign feature"), destination: URL(string: "mailto:sales@wayapp.com?subject=Reward by € consumption&body=Hello, I am interested in using this feature. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!)
                                 .font(.caption)
                                 .foregroundColor(Color.blue)

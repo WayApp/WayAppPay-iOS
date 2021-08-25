@@ -134,7 +134,8 @@
 "Congratulations. You got the prize!" = "¡Enhorabuena! Alcanzaste el premio";
 
 /* Request giftcard feature
-   Request points campaign feature */
+   Request points campaign feature
+   User message: needsSetup */
 "Contact sales@wayapp.com to enable" = "Contacta a sales@wayapp.com para activar";
 
 /* No comment provided by engineer. */
@@ -291,6 +292,9 @@
 /* No comment provided by engineer. */
 "Merchant" = "Comercio";
 
+/* No comment provided by engineer. */
+"Month:" = "Mes:";
+
 /* SettingsView: section title */
 "My account" = "Mi cuenta";
 
@@ -305,9 +309,6 @@
 
 /* No comment provided by engineer. */
 "Needs activation on the Settings tab. Contact support@wayapp.com for help" = "Activa la campaña en Configuración. Contacta a support@wayapp.com si necesitas ayuda";
-
-/* No comment provided by engineer. */
-"Needs setup in Settings" = "Activa la campaña en Configuración";
 
 /* No comment provided by engineer. */
 "New" = "Nuevo";
@@ -345,7 +346,7 @@
 /* month of the year */
 "October" = "Octubre";
 
-/* No comment provided by engineer. */
+/* SingleMessage: OK text */
 "OK" = "OK";
 
 /* No comment provided by engineer. */
@@ -375,7 +376,7 @@
 /* CampaignsView: section title */
 "Point" = "Puntos";
 
-/* No comment provided by engineer. */
+/* User message: needsSetup */
 "Premium feature" = "Funcionalidad premium";
 
 /* No comment provided by engineer. */
@@ -390,7 +391,7 @@
 /* No comment provided by engineer. */
 "Prizes redeemed" = "Premios canjeados";
 
-/* ProgressView title message */
+/* SingleMessage: ProgressView text */
 "Processing..." = "Procesando...";
 
 /* SettingsView: merchants products */
@@ -451,10 +452,10 @@
 "Reward" = "Saldo de campaña";
 
 /* CampaignsView: section title */
-"Reward consumption" = "Premia el importe de las compras";
+"Reward consumption" = "Recompensa compras";
 
 /* No comment provided by engineer. */
-"Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get." = "Premia a los clientes por el importe de sus compras. Cada compra cuenta para ganar cashback o descuentos";
+"Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get." = "Recompensa a  clientes por el importe de sus compras. Cada compra cuenta para ganar cashback o descuentos";
 
 /* No comment provided by engineer. */
 "Reward customers by number of visits. The more they visit, the more cashbask or discounts they get." = "Premia a los clientes por sus vistas. Cada visita cuenta para ganar cashback o descuentos";
@@ -485,9 +486,6 @@
 
 /* navigationBarTitle */
 "Scan QR" = "Escanea QR";
-
-/* No comment provided by engineer. */
-"Select another month:" = "Escoge otro mes:";
 
 /* No comment provided by engineer. */
 "Sell your own digital giftcard. Customers pay you, you scan card, and top it up." = "Vende tu propia tarjeta regalo digital. Los clientes te pre-pagan el saldo, y luego la usan en sus compras";

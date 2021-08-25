@@ -114,14 +114,17 @@ struct TransactionsView: View {
                                 Label("Sales", systemImage: "plus.square")
                                     .accessibility(label: Text("Sales"))
                                 Text("\(WayPay.formatPrice(reportID.totalSales ?? 0))")
+                                    .bold()
                             }
                             HStack {
                                 Label("Refunds", systemImage: "minus.square")
                                     .accessibility(label: Text("Refunds"))
                                 Text("\(WayPay.formatPrice(reportID.totalRefund ?? 0))")
+                                    .bold()
+                                    .foregroundColor(Color.red)
                             }
                         }
-                        Picker(selection: $monthSelection, label: Text("Select another month:")) {
+                        Picker(selection: $monthSelection, label: Text("Month" + ":")) {
                             ForEach(0..<Month.allCases.count) {
                                 Text(Month(rawValue: $0)?.title ?? "month")
                             }

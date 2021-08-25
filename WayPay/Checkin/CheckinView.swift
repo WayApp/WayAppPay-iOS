@@ -93,7 +93,7 @@ struct CheckinView: View {
                                let amountToGetIt = stampCampaign.prize?.amountToGetIt {
                                 Label {
                                     Text(stampCampaign.name + ": ") +
-                                    Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0))
+                                        Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green) +
                                     Text(" / " + "\(amountToGetIt)")
                                 } icon: {
@@ -104,7 +104,7 @@ struct CheckinView: View {
                             if let pointCampaign = session.activePointCampaign() {
                                 Label {
                                     Text(pointCampaign.name + ": ") +
-                                    Text(String(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                                    Text(WayPay.formatAmount(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green)
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))

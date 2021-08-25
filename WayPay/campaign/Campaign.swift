@@ -64,7 +64,7 @@ extension WayPay {
             case .CASHBACK:
                 return "\(name ?? "-"): \(WayPay.formatPrice(value))"
             case .COUPON:
-                return "\(name ?? "-"): \(value ?? 0)%"
+                return "\(name ?? "-"): \(WayPay.formatAmount(value))%"
             }
         }
         
@@ -73,11 +73,13 @@ extension WayPay {
         }
         
         func applyToAmount(_ amount: Int) -> Int {
+            WayAppUtils.Log.message("amount=\(amount)")
             switch format {
             case .CASHBACK:
                 return max(amount - (value ?? 0),0)
             case .COUPON:
-                return Int(Double(amount)*((value != nil) ? (1.0 - Double(value!)/100.0) : 1))
+                WayAppUtils.Log.message("amount=\(Int(Double(amount)*((value != nil) ? (1.0 - (Double(value! / 100) / 100)) : 1)))")
+                return Int(Double(amount)*((value != nil) ? (1.0 - (Double(value! / 100) / 100)) : 1))
             }
         }
     }

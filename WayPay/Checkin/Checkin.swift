@@ -25,7 +25,7 @@ extension WayPay {
         var issuerStampCampaigns: [WayPay.Stamp]?
         
         var isWayPayPaymentAvailable: Bool {
-            return type == .POSTPAID || (prepaidBalance ?? -1 > 0)
+            return type == .POSTPAID || (prepaidBalance ?? 0 > 0)
         }
     }
 }

@@ -98,7 +98,7 @@ struct PointNewView: View {
                                                       format: .POINT,
                                                       expirationDate: expirationDate, state: .ACTIVE)
                     prize.name = prizeName
-                    prize.value = Int(prizeAmount)
+                    prize.value = (Int(prizeAmount) ?? 0) * 100
                     prize.amountToGetIt = (Int(threshold) ?? 0) * 100
                     prize.message = WayPay.Prize.winnningMessage
 

@@ -108,7 +108,7 @@ struct StampNewView: View {
                                                    format: .STAMP,
                                                    expirationDate: expirationDate, state: .ACTIVE)
                     prize.name = prizeName
-                    prize.value = Int(prizeAmount)
+                    prize.value = (Int(prizeAmount) ?? 0) * 100
                     prize.amountToGetIt = Int(amountToPrize)
                     prize.message = WayPay.Prize.winnningMessage
                     let stampCampaign: WayPay.Stamp =

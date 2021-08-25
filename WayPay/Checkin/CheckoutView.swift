@@ -31,16 +31,16 @@ struct CheckoutView: View {
         return amount
     }
     
-    var purchaseAmountValue: Int {
-        var amount = WayAppUtils.composeIntPriceFromString(purchaseAmount)
-        if session.amount > 0 {
-            amount = session.amount
-        }
+    var waypayPaymentAmount: Int {
         if let checkin = session.checkin,
            let balance = checkin.prepaidBalance {
-            return min(balance, amount)
+            return min(balance, purchaseAmountValue)
         }
-        return amount
+        return 0
+    }
+    
+    var purchaseAmountValue: Int {
+        return session.amount > 0 ? session.amount : WayAppUtils.composeIntPriceFromString(purchaseAmount)
     }
     
     var pointCampaign: WayPay.Campaign? {
@@ -229,6 +229,44 @@ struct CheckoutView: View {
         }
     }
     
+    private var allowsInputAmount: Bool {
+        return (session.shoppingCart.isEmpty && session.checkin == nil)
+    }
+    
+    private var allowsScan: Bool {
+        return (purchaseAmountValue > 0 && session.checkin == nil)
+    }
+
+    private var showsCancel: Bool {
+        return (purchaseAmountValue > 0 || session.checkin != nil)
+    }
+    
+    private var allowsWayPayPayment: Bool {
+        if let checkin = session.checkin,
+           checkin.isWayPayPaymentAvailable && purchaseAmountValue > 0 {
+            return true
+        }
+        return false
+    }
+    
+    private var showsPrizes: Bool {
+        if let checkin = session.checkin,
+           let prizes = checkin.prizes,
+            !prizes.isEmpty {
+            return true
+        }
+        return false
+    }
+
+    private var showsAwardButtons: Bool {
+        if session.checkin != nil,
+           purchaseAmountValue > 0 {
+            return true
+        }
+        return false
+    }
+
+
     var body: some View {
         ZStack {
             ScrollView {
@@ -239,7 +277,7 @@ struct CheckoutView: View {
                             .scaledToFit()
                             .frame(maxWidth: 80, maxHeight: 80)
                             .clipShape(Circle())
-                        if (session.shoppingCart.isEmpty) {
+                        if (allowsInputAmount) {
                             Text("Enter purchase amount:")
                                 .font(.caption)
                                 .padding(.top)
@@ -253,7 +291,7 @@ struct CheckoutView: View {
                             }
                             .padding()
                         }
-                        if (purchaseAmountValue > 0 && session.checkin == nil) {
+                        if (allowsScan) {
                             Button {
                                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 self.navigationSelection = 0
@@ -267,48 +305,47 @@ struct CheckoutView: View {
                         if (purchaseAmountValue > 0) {
                             Divider()
                         }
-                        if let checkin = session.checkin,
-                           purchaseAmountValue > 0 {
-                            if let prizes = checkin.prizes,
-                               !prizes.isEmpty {
+                        if showsPrizes,
+                           let prizes = session.checkin?.prizes {
+                            VStack {
+                                Text("Redeem prize" + ":")
+                                    .font(Font.headline)
+                                    .foregroundColor(.secondary)
                                 VStack {
-                                    Text("Redeem prize" + ":")
-                                        .font(Font.headline)
-                                        .foregroundColor(.secondary)
-                                    VStack {
-                                        ForEach(0 ..< prizes.count) { index in
-                                            PrizeRow(prize: prizes[index], index: index)
-                                                .padding(.horizontal)
-                                            if index < prizes.count - 1 {
-                                                Divider()
-                                            }
+                                    ForEach(0 ..< prizes.count) { index in
+                                        PrizeRow(prize: prizes[index], index: index)
+                                            .padding(.horizontal)
+                                        if index < prizes.count - 1 {
+                                            Divider()
                                         }
                                     }
-                                    .background(Rectangle().fill(BackgroundStyle()))
-                                    .clipShape(shape)
-                                    .overlay(
-                                        shape
-                                            .inset(by: 0.5)
-                                            .stroke(Color.primary.opacity(0.1), lineWidth: 1)
-                                    )
                                 }
-                                Divider()
+                                .background(Rectangle().fill(BackgroundStyle()))
+                                .clipShape(shape)
+                                .overlay(
+                                    shape
+                                        .inset(by: 0.5)
+                                        .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+                                )
                             }
+                            Divider()
+                        }
+                        if (showsAwardButtons) {
                             awardButtons
                             Divider()
-                            if (checkin.isWayPayPaymentAvailable && purchaseAmountValue > 0) {
-                                Button {
-                                    processPayment(amount: purchaseAmountValue)
-                                } label: {
-                                    Text(waypayButtonTitle)
-                                        .padding()
-                                }
-                                .buttonStyle(WayPay.WideButtonModifier())
-                                .padding(.horizontal)
-                                Divider()
-                            }
                         }
-                        if (purchaseAmountValue > 0 || session.checkin != nil) {
+                        if (allowsWayPayPayment) {
+                            Button {
+                                processPayment(amount: waypayPaymentAmount)
+                            } label: {
+                                Text(waypayButtonTitle)
+                                    .padding()
+                            }
+                            .buttonStyle(WayPay.WideButtonModifier())
+                            .padding(.horizontal)
+                            Divider()
+                        }
+                        if (showsCancel) {
                             Button {
                                 reset()
                             } label: {
@@ -316,7 +353,7 @@ struct CheckoutView: View {
                                     .padding()
                             }
                             .buttonStyle(WayPay.CancelButtonModifier())
-                            .padding(.horizontal)
+                            .padding()
                         }
                     }
                     NavigationLink(destination: ScanView(campaign: nil, value: purchaseAmountValue), tag: 0, selection: $navigationSelection) {
