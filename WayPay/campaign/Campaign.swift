@@ -41,7 +41,6 @@ extension WayPay {
                     return "%"
                 }
             }
-
         }
         
         var campaignID: String
@@ -73,12 +72,10 @@ extension WayPay {
         }
         
         func applyToAmount(_ amount: Int) -> Int {
-            WayAppUtils.Log.message("amount=\(amount)")
             switch format {
             case .CASHBACK:
                 return max(amount - (value ?? 0),0)
             case .COUPON:
-                WayAppUtils.Log.message("amount=\(Int(Double(amount)*((value != nil) ? (1.0 - (Double(value! / 100) / 100)) : 1)))")
                 return Int(Double(amount)*((value != nil) ? (1.0 - (Double(value! / 100) / 100)) : 1))
             }
         }
@@ -97,7 +94,6 @@ extension WayPay {
         var id: String {
             return campaignID
         }
-
     }
     
     class Campaign: Hashable, Codable, Identifiable, Equatable, ContainerProtocol {

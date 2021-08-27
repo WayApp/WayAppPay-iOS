@@ -39,7 +39,7 @@ struct CampaignsView: View {
                                     }
                                 })
                                 .labelsHidden()
-                                .toggleStyle(SwitchToggleStyle(tint: Color("MintGreen")))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.green))
                             Spacer()
                             if (!inputAmount) {
                                 Button {
@@ -128,7 +128,7 @@ struct CampaignsView: View {
                                     }
                                 })
                                 .labelsHidden()
-                                .toggleStyle(SwitchToggleStyle(tint: Color("MintGreen")))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.green))
                             Spacer()
                             Button {
                                 self.navigationSelection = 0

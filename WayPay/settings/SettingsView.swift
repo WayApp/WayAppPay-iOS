@@ -75,7 +75,7 @@ struct SettingsView: View {
                     NavigationLink(destination: StampNewView(campaign: nil)) {
                         Label(NSLocalizedString("Get started, is free!", comment: "CampaignAction button label") , systemImage: "checkmark.seal.fill")
                             .accessibility(label: Text("Configure"))
-                            .foregroundColor(Color("MintGreen"))
+                            .foregroundColor(Color.green)
                     }
                 }
             } // Section STAMP
@@ -150,7 +150,7 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundColor(Color.blue)
             } // Section Giftcard
-            .listItemTint(Color("MintGreen"))
+            .listItemTint(Color.green)
             Section(header:
                         Label(NSLocalizedString("My business", comment: "SettingsView: section title"), systemImage: "cart")
                         .font(.callout)) {
@@ -303,8 +303,6 @@ struct SettingsView: View {
                 .listItemTint(Color.red)
             }
         } // Form
-        .accentColor(.primary)
-        .edgesIgnoringSafeArea(.all)
         .navigationBarTitle("Settings")
     }
 }

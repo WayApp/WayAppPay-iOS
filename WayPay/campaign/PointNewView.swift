@@ -23,7 +23,8 @@ struct PointNewView: View {
     @State private var amountToPrize: Double = 10.0
     @State var campaignCreateError: Bool = false
     @State private var threshold: String = "0"
-
+    @State private var becomeFirstResponder = false
+        
     let campaign: WayPay.Campaign?
 
     private var shouldSaveButtonBeDisabled: Bool {
@@ -62,27 +63,23 @@ struct PointNewView: View {
             Section(header: Label("Prize", systemImage: "person.2.circle")
                         .accessibility(label: Text("Prize"))
                         .font(.caption)) {
-                if ((threshold as NSString).doubleValue > 0) {
-                    VStack(alignment: .leading) {
-                        Text("Reward customers with cashback (€) or discount (%):")
-                        HStack {
-                            Picker(selection: $prize.format, label: Text("Prize format" + " -> ")) {
-                                ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
-                                    Text(format.title)
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-                            Text(prize.format.title)
+                VStack(alignment: .leading) {
+                    Text("Reward customers with:")
+                    Picker(NSLocalizedString("Prize format", comment: "WayPay.Prize.Format.") + " -> ", selection: $prize.format) {
+                        ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
+                            Text(format.title)
                         }
-                        HStack {
-                            Text(prize.format.amountTitle)
-                            TextField("\(prizeAmount)", text: $prizeAmount)
-                                .frame(width: 80)
-                                .keyboardType(.numberPad)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                            Text(" " + prize.format.amountSymbol)
-                            Spacer()
-                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .foregroundColor(Color.green)
+                    HStack {
+                        Text(prize.format.amountTitle) + Text(":")
+                        TextField("\(prizeAmount)", text: $prizeAmount)
+                            .frame(width: 80)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        Text(" " + prize.format.amountSymbol)
+                        Spacer()
                     }
                 }
             }
@@ -109,7 +106,6 @@ struct PointNewView: View {
                     WayPay.Point.create(pointCampaign) { campaigns, error in
                         if let campaigns = campaigns {
                             for campaign in campaigns {
-                                WayAppUtils.Log.message("Campaign: \(campaign)")
                                 DispatchQueue.main.async {
                                     session.points.add(campaign)
                                     session.campaigns.addAsFirst(campaign)
@@ -137,8 +133,11 @@ struct PointNewView: View {
                 }
                 Spacer()
             }
-        }
-        .navigationBarTitle(Text("New campaign"), displayMode: .inline)
+        } // Form
+        .onAppear(perform: {
+            newName = session.merchant?.name ?? ""
+        })
+        .navigationBarTitle(Text("Setup"), displayMode: .inline)
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     } // body
 }

@@ -45,7 +45,11 @@ extension WayPay {
         }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                if !merchants.isEmpty && doesAccountHasMerchants {
+                if (seletectedMerchant >= merchants.count) {
+                    // Safe check in case change of users
+                    seletectedMerchant = 0
+                }
+                 if !merchants.isEmpty && doesAccountHasMerchants {
                     imageDownloader = ImageDownloader(imageURL: merchant?.logo, addToCache: true)
                     Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
                         if let products = products {
@@ -145,6 +149,7 @@ extension WayPay {
             if let account = Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
             }
+            
         }
         
         var amount: Int {

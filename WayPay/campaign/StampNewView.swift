@@ -70,7 +70,7 @@ struct StampNewView: View {
                         .accessibility(label: Text("Prize"))
                         .font(.caption)) {
                 VStack(alignment: .leading) {
-                    Text("Visits to get prize" + ": ") + Text(" \(Int(amountToPrize))").bold().foregroundColor(Color("MintGreen"))
+                    Text("Visits to get prize" + ": ") + Text(" \(Int(amountToPrize))").bold().foregroundColor(Color.green)
                             
                     Slider(value: $amountToPrize, in: 1...25, step: 1)
                 }

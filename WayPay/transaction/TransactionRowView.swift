@@ -112,7 +112,7 @@ struct TransactionRowView: View {
                          .foregroundColor(.white)
                  }
                 .frame(maxWidth: .infinity, minHeight: WayPay.UI.buttonHeight)
-                .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color("MintGreen"))
+                .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color.green)
                 .cornerRadius(WayPay.UI.buttonCornerRadius)
                 .padding(.bottom, self.keyboardObserver.keyboardHeight)
                 .disabled(self.shouldSendEmailButtonBeDisabled)

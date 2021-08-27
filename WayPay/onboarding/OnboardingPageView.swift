@@ -16,6 +16,7 @@ struct OnboardingPageView: View {
             Image(page.image)
                 .resizable()
                 .scaledToFit()
+                .background(Color.white) // Necessary for Dark Mode
                 .padding(.horizontal)
             Text(page.title)
                 .font(.title2)

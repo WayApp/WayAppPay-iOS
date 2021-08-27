@@ -52,7 +52,7 @@ struct AuthenticationView: View {
                     self.forgotPIN = true
                 }) {
                     Text("Forgot PIN")
-                        .foregroundColor(Color("MintGreen"))
+                        .foregroundColor(Color.green)
                 }
                 .sheet(isPresented: self.$forgotPIN) {
                     EnterOTP()
@@ -87,7 +87,7 @@ struct AuthenticationView: View {
             }
             NavigationLink(destination: RegistrationView()) {
                 Text("New account")
-                    .foregroundColor(Color("MintGreen"))
+                    .foregroundColor(Color.green)
             }
         } // Form
         .padding()

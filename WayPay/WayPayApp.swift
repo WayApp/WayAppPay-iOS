@@ -12,7 +12,7 @@ import SwiftUI
 struct WayPayApp: App {
     
     init() {
-        UITableView.appearance().backgroundColor = UIColor.white
+        UITableView.appearance().backgroundColor = UIColor.clear // Necessary for Light Mode removal of grayish background
     }
     
     var body: some Scene {

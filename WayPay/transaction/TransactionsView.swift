@@ -184,8 +184,6 @@ struct TransactionsView: View {
                 }
             })
             .navigationBarTitle("Transactions")
-            .background(Color("CornSilk"))
-            .edgesIgnoringSafeArea(.all)
             if refundState != .none {
                 Image(systemName: refundState == .success ? WayPay.UI.paymentResultSuccessImage : WayPay.UI.paymentResultFailureImage)
                     .resizable()

@@ -114,7 +114,7 @@ struct WayPay {
                 configuration.label
                     .font(.headline)
                     .background(isEnabled ?
-                                    (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
+                                    (configuration.isPressed ? Color.orange : Color.green)
                                     : Color.gray)
                     .cornerRadius(WayPay.cornerRadius)
                     .foregroundColor(.white)
@@ -135,7 +135,7 @@ struct WayPay {
                 configuration.label
                     .font(.headline)
                     .background(isEnabled ?
-                                    (configuration.isPressed ? Color("SunrayOrange") : Color("MintGreen"))
+                                    (configuration.isPressed ? Color.orange : Color.green)
                                     : Color.gray)
                     .cornerRadius(12)
                     .foregroundColor(.white)
@@ -179,7 +179,7 @@ struct WayPay {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .background(isEnabled ?
-                                    (configuration.isPressed ? Color("SunrayOrange") : .red)
+                                    (configuration.isPressed ? Color.orange : .red)
                                     : Color.gray)
                     .cornerRadius(6)
                     .foregroundColor(.white)
@@ -235,7 +235,7 @@ struct WayPay {
           .assign(to: \.keyboardHeight, on: self)
       }
     }
-       
+    
     struct ClearButton: ViewModifier {
         @Binding var text: String
          
