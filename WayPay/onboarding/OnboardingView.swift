@@ -23,18 +23,22 @@ struct OnboardingView: View {
                             .tag(1)
                         OnboardingPageView(page: .THREE)
                             .tag(2)
+                        OnboardingPageView(page: .FOUR)
+                            .tag(3)
+                        OnboardingPageView(page: .FIVE)
+                            .tag(4)
                     })
                 .tabViewStyle(PageTabViewStyle())
                 .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
                 .padding(.horizontal)
-            if !fromSettings {
+            if !fromSettings && OnboardingPage.displayButton(tab: currentTab) {
                 VStack {
                     Button(action: {
                         session.skipOnboarding = true
                         UserDefaults.standard.set(true, forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
                         UserDefaults.standard.synchronize()
                     }, label: {
-                        Text("Skip")
+                        Text("Get started")
                             .padding()
                     })
                     .buttonStyle(WayPay.WideButtonModifier())

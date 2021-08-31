@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct NumberButtonView: View {
-    
     let number: Int
     var completion: (Int) -> Void = { i in }
     
@@ -21,7 +20,7 @@ struct NumberButtonView: View {
         }
         .font(.largeTitle)
         .frame(minWidth: 100.0, idealWidth: 150.00, maxWidth: 300.0, minHeight: 40.0, idealHeight: 60.0, maxHeight: 80.0, alignment: .center)
-        .border(Color.black, width: 0.5)
+        .border(Color.primary, width: 0.50)
     }
 }
 

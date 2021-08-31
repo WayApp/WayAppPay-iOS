@@ -18,6 +18,7 @@ struct CheckoutView: View {
     @State private var wasTransactionSuccessful = false
     @State private var isAPICallOngoing = false
     @State private var displayPromotionAlert = false
+
     let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
     
     var purchaseAmountValueToDisplay: Int {
@@ -230,7 +231,7 @@ struct CheckoutView: View {
     }
     
     private var allowsInputAmount: Bool {
-        return (session.shoppingCart.isEmpty && session.checkin == nil)
+        return (session.shoppingCart.isEmpty)
     }
     
     private var allowsScan: Bool {

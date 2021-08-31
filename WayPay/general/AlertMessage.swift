@@ -26,6 +26,10 @@ extension WayPay {
         case needsSetup
         case refund(Bool)
         case transaction(Bool)
+        case addProducts
+        case shoppingCartEmpty
+        case requestGiftcard
+        case requestPoints
 
         var text: (title: String, message: String) {
             switch self {
@@ -44,11 +48,15 @@ extension WayPay {
             case .premiumFeature: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
             case .needsSetup: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
             case .refund(let success):
-                return (SingleMessage.success(success).text,
-                                               NSLocalizedString(success ? "Refund was successful" : "Refund failed", comment: "User message: refund result"))
+                return (SingleMessage.success(success).text, success ? NSLocalizedString("Refund was successful", comment: "User message: refund result") :
+                        NSLocalizedString("Refund failed", comment: "User message: refund result"))
             case .transaction(let success):
-                return (SingleMessage.success(success).text,
-                                               NSLocalizedString(success ? "Transaction was successful" : "Transaction failed", comment: "User message: transaction result"))
+                return (SingleMessage.success(success).text, success ? NSLocalizedString("Transaction was successful", comment: "User message: Transaction result") :
+                            NSLocalizedString("Transaction failed", comment: "User message: Transaction result"))
+            case .addProducts: return (NSLocalizedString("Product catalogue empty", comment: "User message: addProducts"), NSLocalizedString("Go to Settings and add your products", comment: "User message: addProducts"))
+            case .shoppingCartEmpty: return (NSLocalizedString("Shopping cart empty", comment: "User message: addProducts"), NSLocalizedString("Add products to the order", comment: "User message: addProducts"))
+            case .requestGiftcard: return (NSLocalizedString("My own giftcard", comment: "User message: requestGiftcard"), NSLocalizedString("Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks.", comment: "User message: requestGiftcard"))
+            case .requestPoints: return (NSLocalizedString("Reward by € consumption", comment: "User message: requestPoints"), NSLocalizedString("Hello, I am interested in using this feature. Please contact me. Thanks.", comment: "User message: requestPoints"))
             }
         }
     }
@@ -57,14 +65,17 @@ extension WayPay {
         case progressView
         case success(Bool)
         case OK
+        case requestGiftcard
+        case requestPoints
 
         var text: String {
             switch self {
             case .progressView: return NSLocalizedString("Processing...", comment: "SingleMessage: ProgressView text")
             case .success(let success): return success ? "✅" : "🚫"
             case .OK: return NSLocalizedString("OK", comment: "SingleMessage: OK text")
+            case .requestGiftcard: return NSLocalizedString("mailto:sales@wayapp.com?subject=My own giftcard&body=Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!, comment: "SingleMessage: requestGiftcard")
+            case .requestPoints: return NSLocalizedString("mailto:sales@wayapp.com?subject=Reward by € consumption&body=Hello, I am interested in using this feature. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!, comment: "SingleMessage: requestPoints")
             }
         }
-
     }
 }

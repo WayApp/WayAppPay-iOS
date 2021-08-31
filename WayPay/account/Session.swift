@@ -45,10 +45,6 @@ extension WayPay {
         }
         @Published var seletectedMerchant: Int = 0 {
             didSet {
-                if (seletectedMerchant >= merchants.count) {
-                    // Safe check in case change of users
-                    seletectedMerchant = 0
-                }
                  if !merchants.isEmpty && doesAccountHasMerchants {
                     imageDownloader = ImageDownloader(imageURL: merchant?.logo, addToCache: true)
                     Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
@@ -199,7 +195,6 @@ extension WayPay {
             showAuthenticationView = true
             doesAccountHasMerchants = false
             account = nil
-            seletectedMerchant = 0
             merchants.empty()
             transactions.empty()
             products.empty()

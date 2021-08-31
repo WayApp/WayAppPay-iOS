@@ -11,13 +11,17 @@ import SwiftUI
 
 struct OrderView: View {
     @EnvironmentObject private var session: WayPay.Session
-    
+    @State private var isProductCalogueEmpty = false
+
     var body: some View {
         List {
             ForEach(session.products) { product in
                 OrderRowView(product: product)
             }
         }
+        .onAppear(perform: {
+            isProductCalogueEmpty = session.products.isEmpty
+        })
         .listStyle(GroupedListStyle())
         .navigationBarTitle("Order")
         .navigationBarItems(trailing:
@@ -26,7 +30,18 @@ struct OrderView: View {
                                         .imageScale(.large)
                                 }
                                 .overlay(Badge())
+                                .disabled(session.shoppingCart.isEmpty)
         )
+        .alert(isPresented: $isProductCalogueEmpty) {
+            Alert(
+                title: Text(WayPay.AlertMessage.addProducts.text.title)
+                    .font(.title),
+                message: Text(WayPay.AlertMessage.addProducts.text.message),
+                dismissButton: .default(
+                    Text(WayPay.SingleMessage.OK.text),
+                    action: {})
+            )
+        }
     }
     
     func delete(at offsets: IndexSet) {

@@ -133,7 +133,7 @@ struct SettingsView: View {
                                     .accessibility(label: Text("Configure"))
                             }
                         } else {
-                            Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request points campaign feature"), destination: URL(string: "mailto:sales@wayapp.com?subject=Reward by € consumption&body=Hello, I am interested in using this feature. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!)
+                            Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request points campaign feature"), destination: URL(string: WayPay.SingleMessage.requestPoints.text)!)
                                 .font(.caption)
                                 .foregroundColor(Color.blue)
                         }
@@ -146,7 +146,7 @@ struct SettingsView: View {
                         .font(.callout)) {
                 Text("Sell your own digital giftcard. Customers pay you, you scan card, and top it up.")
                     .font(.caption)
-                Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: "mailto:sales@wayapp.com?subject=My own giftcard&body=Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!)
+                Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: WayPay.SingleMessage.requestGiftcard.text)!)
                     .font(.caption)
                     .foregroundColor(Color.blue)
             } // Section Giftcard
@@ -477,7 +477,8 @@ extension SettingsView {
     }
     
     private func deleteAccount() {
-        WayPay.Account.delete("1e7e11a2-7d9a-4afa-bb66-66d874c9c136")
+        WayPay.Account.delete("47cc234f-b5e0-4f28-97e3-dceeec305523")
+        WayPay.Account.delete("aa729ae3-400b-44e1-bc83-6bdac5f6f8ed")
     }
 
 }

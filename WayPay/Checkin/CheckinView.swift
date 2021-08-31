@@ -64,7 +64,7 @@ struct CheckinView: View {
                             .font(.callout)) {
                     if let prepaidBalance = checkin.prepaidBalance {
                         Label {
-                            Text("Balance" + ": ") +
+                            Text("Balance") + Text(": ")
                             Text(WayPay.formatPrice(prepaidBalance))
                                 .bold().foregroundColor(Color.green)
                         } icon: {
@@ -78,7 +78,7 @@ struct CheckinView: View {
                             Label(NSLocalizedString("Top up", comment: "CheckinView: Enter amount"), systemImage: "plus.app.fill")
                         }
                     } else {
-                        Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: "mailto:sales@wayapp.com?subject=My own giftcard&body=Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!)
+                        Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: WayPay.SingleMessage.requestGiftcard.text)!)
                             .font(.caption)
                             .foregroundColor(Color.blue)
                     }
@@ -173,17 +173,13 @@ struct CheckinView: View {
         let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
         isAPICallOngoing = true
         WayPay.Account.checkin(transaction) { checkins, error in
-            DispatchQueue.main.async {
-                showQRScanner = true
-                //self.scannedCode = nil
-                isAPICallOngoing = false
-            }
             if let checkins = checkins,
                let checkin = checkins.first {
                 DispatchQueue.main.async {
                     session.checkin = checkin
+                    showQRScanner = true
+                    isAPICallOngoing = false
                 }
-                WayAppUtils.Log.message("Checkin success: \(checkin)")
             } else {
                 DispatchQueue.main.async {
                     self.scanError = true

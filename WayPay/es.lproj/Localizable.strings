@@ -241,6 +241,9 @@
 /* No comment provided by engineer. */
 "Get campaigns" = "Mis campañas";
 
+/* OnboardingPage: title */
+"Get started" = "Comenzar";
+
 /* CampaignAction button label */
 "Get started, is free!" = "Inicia tu campaña, ¡es gratis!";
 
@@ -250,6 +253,15 @@
 /* No comment provided by engineer. */
 "Hello" = "Hola";
 
+/* User message: requestGiftcard */
+"Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks." = "Hola, me interesa vender mi propia tarjeta regalo. Contáctame.";
+
+/* User message: requestPoints */
+"Hello, I am interested in using this feature. Please contact me. Thanks." = "Hola, me interesa usar esta funcionalidad. Contáctame.";
+
+/* OnboardingPage: explanation */
+"In the Setting section you will find a QR that your customers can scan to install the loyalty card on the Wallet app of their phone (no app necessary)" = "En el menú de Configuración encontrarás el QR que tu clientes escanean para instalar su tarjeta de lealtad en la app Wallet de su móvil (no hace falta descargar app)";
+
 /* HTTPCall: Error: invalidRequest */
 "Invalid API request. Check URL" = "Invalid API request. Check URL";
 
@@ -258,6 +270,9 @@
 
 /* HTTPCall: Error: invalidServerResponse */
 "Invalid server response" = "Invalid server response";
+
+/* OnboardingPage: title */
+"It is free" = "Es gratis";
 
 /* month of the year */
 "January" = "Enero";
@@ -300,6 +315,9 @@
 
 /* SettingsView: section title */
 "My business" = "Mi comercio";
+
+/* User message: requestGiftcard */
+"My own giftcard" = "Mi propia tarjeta regalo";
 
 /* Placeholder name for new product */
 "name" = "nombre";
@@ -349,6 +367,9 @@
 /* SingleMessage: OK text */
 "OK" = "OK";
 
+/* OnboardingPage: title */
+"Onboard your customers" = "Registra a tus clientes";
+
 /* No comment provided by engineer. */
 "Pending prizes" = "Premios disponibles";
 
@@ -378,6 +399,9 @@
 
 /* User message: needsSetup */
 "Premium feature" = "Funcionalidad premium";
+
+/* OnboardingPage: title */
+"Premium features" = "Funcionalidad paga";
 
 /* No comment provided by engineer. */
 "Price" = "Precio";
@@ -424,6 +448,12 @@
 /* PaymentTransaction.TransactionType */
 "Refund" = "Reembolso";
 
+/* User message: refund result */
+"Refund failed" = "Reembolso falló";
+
+/* User message: refund result */
+"Refund was successful" = "Se ha hecho el reembolso";
+
 /* No comment provided by engineer. */
 "Refunds" = "Reembolsos";
 
@@ -435,6 +465,9 @@
 
 /* CheckoutQRView title */
 "Registration QR" = "QR de registro";
+
+/* OnboardingPage: explanation */
+"Remember, go to Settings to setup the punch card campaign, display the registration QR to your customers, and start scanning to reward them" = "Recuerda, ve al menú de Configuración para activar la campaña de sellos, muestra el QR de registro a tus clientes, y empieza a escanear para recompensar a tus clientes";
 
 /* No comment provided by engineer. */
 "Remove all" = "Elimina todos";
@@ -451,8 +484,14 @@
 /* PaymentTransaction.TransactionType */
 "Reward" = "Saldo de campaña";
 
+/* User message: requestPoints */
+"Reward by € consumption" = "Recompensa el importe de consumo";
+
 /* CampaignsView: section title */
 "Reward consumption" = "Recompensa compras";
+
+/* OnboardingPage: title */
+"Reward customer visits" = "Recompensa las visitas de tus clientes";
 
 /* No comment provided by engineer. */
 "Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get." = "Recompensa a  clientes por el importe de sus compras. Cada compra cuenta para ganar cashback o descuentos";
@@ -462,6 +501,9 @@
 
 /* No comment provided by engineer. */
 "Reward customers with cashback (€) or discount (%):" = "Premia a los clientes con cashback (€) o descuentos (%):";
+
+/* No comment provided by engineer. */
+"Reward customers with:" = "Recompensa clientes con:";
 
 /* CheckoutView: button title */
 "Reward purchase amount" = "Recompensa la compra";
@@ -499,17 +541,20 @@
 /* MainView tab title */
 "Settings" = "Configuración";
 
-/* No comment provided by engineer. */
-"Sign in" = "Iniciar sesión";
+/* OnboardingPage: explanation */
+"Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)" = "Configura tu campaña de tarjeta de sellos digital en un clic. Escoge el número de visitas (sellos) a premiar, y el premio (cashback o descuento)";
 
 /* No comment provided by engineer. */
-"Skip" = "Saltar";
+"Sign in" = "Iniciar sesión";
 
 /* CampaignsView: section title */
 "Stamp" = "Sello";
 
 /* No comment provided by engineer. */
 "Stamps granted" = "Sellos otorgados";
+
+/* OnboardingPage: explanation */
+"Start using WayPay completely free. Contact us to enable premium features" = "Comienza a usar WayPay completamente gratis. Contáctanos para activar más funcionalidad";
 
 /* No comment provided by engineer. */
 "Support" = "Soporte";
@@ -533,6 +578,12 @@
 
 /* PaymentTransaction.TransactionType */
 "Top-up" = "Recarga";
+
+/* User message: Transaction result */
+"Transaction failed" = "Operación falló";
+
+/* User message: Transaction result */
+"Transaction was successful" = "Operación hecha";
 
 /* CampaignDetailView: campaign transactions
    TransactionsView section header */
@@ -573,6 +624,9 @@
 
 /* No comment provided by engineer. */
 "Visits to get prize: " = "Número de visitas a premiar: ";
+
+/* OnboardingPage: explanation */
+"You can also reward customers by how much they spend, and sell your own digital giftcard. Contact us" = "También puedes recompensar a tus clientes por lo que gastan, y vender tu propia tarjeta regalo digital";
 
 /* No comment provided by engineer. */
 "Your customers can scan this QR directly from their mobile Wallet pass to make payment" = "Tus clientes escanean el Checkout QR desde el reverso de su pase para pagar";

@@ -59,8 +59,7 @@ struct AmountView: View {
                 Spacer()
                 Text(WayPay.currencyFormatter.string(for: Double((Double(amount) / 100)))!)
                     .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .bold()
                     .padding()
                     .onTapGesture {
                         self.delete()
