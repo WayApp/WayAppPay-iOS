@@ -114,6 +114,7 @@ extension WayPay {
         case getSEPA(Day, Day, String, String) // GET
         // Issuers
         case getIssuers // GET
+        case editIssuer(Issuer) // PATCH
         case getIssuerTransactions(String, Day, Day) // GET
         case expireIssuerCards(String) // GET
         // Banks
@@ -182,6 +183,7 @@ extension WayPay {
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
             // Issuers
             case .getIssuers: return "/issuers/"
+            case .editIssuer(let issuer): return "/issuers/\(issuer.issuerUUID)/"
             case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
             case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
             // Banks
@@ -253,6 +255,7 @@ extension WayPay {
             case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
             // Issuers
             case .getIssuers: return ""
+            case .editIssuer(let issuer): return issuer.issuerUUID
             case .getIssuerTransactions(let issuerUUID, _, _): return issuerUUID
             case .expireIssuerCards(let issuerUUID): return issuerUUID
             // Banks
@@ -308,7 +311,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .updateProduct, .editAccount, .editCard:
+            case .updateProduct, .editAccount, .editCard, .editIssuer:
                 HTTPCall.PATCH(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -522,6 +525,12 @@ extension WayPay {
                 }
                 if let parts = parts {
                     let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .editIssuer(let issuer):
+                if let part = HTTPCall.BodyPart(issuer, name: "issuer") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }
                 return nil

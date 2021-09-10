@@ -33,7 +33,7 @@ struct StampNewView: View {
     
     var body: some View {
         Form {
-            Section(header: Label("campaign name", systemImage: "checkmark.seal.fill")
+            Section(header: Label(NSLocalizedString("Campaign name", comment: "StampNewView section header"), systemImage: "checkmark.seal.fill")
                         .accessibility(label: Text("Name"))
                         .font(.caption)) {
                 TextField(session.merchant?.name ?? "", text: $newName)
@@ -45,13 +45,13 @@ struct StampNewView: View {
                             .stroke(Color.green, lineWidth: 0.5)
                     )
             }
-            Section(header: Label("Configuration", systemImage: "gearshape")
+            Section(header: Label(NSLocalizedString("Configuration", comment: "StampNewView"), systemImage: "gearshape")
                         .accessibility(label: Text("Configuration"))
                         .font(.caption)) {
-                Toggle("Minimum purchase required?", isOn: $minimumPurchaseAmountRequired)
+                Toggle(NSLocalizedString("Minimum purchase required?", comment: "StampNewView"), isOn: $minimumPurchaseAmountRequired)
                 if minimumPurchaseAmountRequired {
                     HStack {
-                        Text("Amount" + ": ")
+                        Text("Amount") + Text(": ")
                         TextField("\(threshold)", text: $threshold)
                             .frame(width: 80)
                             .keyboardType(.numberPad)
@@ -59,25 +59,24 @@ struct StampNewView: View {
                         Text(" €")
                     }
                 }
-                Toggle("Expires?", isOn: $expires)
+                Toggle(NSLocalizedString("Expires?", comment: "StampNewView"), isOn: $expires)
                 if expires {
                     DatePicker(selection: $expirationDate, in: Date()..., displayedComponents: .date) {
                         Text("Expires on")
                     }
                 }
             }
-            Section(header: Label("Prize", systemImage: "gift")
+            Section(header: Label(NSLocalizedString("Prize", comment: "StampNewView"), systemImage: "gift")
                         .accessibility(label: Text("Prize"))
                         .font(.caption)) {
                 VStack(alignment: .leading) {
-                    Text("Visits to get prize" + ": ") + Text(" \(Int(amountToPrize))").bold().foregroundColor(Color.green)
-                            
+                    Text("Visits to get prize") + Text(": ") + Text(" \(Int(amountToPrize))").bold().foregroundColor(Color.green)
                     Slider(value: $amountToPrize, in: 1...25, step: 1)
                 }
                 VStack(alignment: .leading) {
                     Text("Reward customers with cashback (€) or discount (%):")
                     HStack {
-                        Picker(selection: $prize.format, label: Text("Prize format" + " -> ")) {
+                        Picker(selection: $prize.format, label: Text("Prize format") + Text(" -> ")) {
                             ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
                                 Text(format.title)
                             }

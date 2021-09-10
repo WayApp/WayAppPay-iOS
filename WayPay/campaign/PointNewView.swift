@@ -46,13 +46,13 @@ struct PointNewView: View {
                         .font(.caption)) {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Amount to reach prize:")
+                        Text("Amount to reach prize") + Text(":")
                         TextField("\(threshold)", text: $threshold)
                             .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .frame(width: 80)
                     }
-                    Toggle("Has expiration date", isOn: $expires)
+                    Toggle(NSLocalizedString("Expires?", comment: "PointNewView"), isOn: $expires)
                     if expires {
                         DatePicker(selection: $expirationDate, in: Date()..., displayedComponents: .date) {
                             Text("Campaign expires on")
@@ -64,7 +64,7 @@ struct PointNewView: View {
                         .accessibility(label: Text("Prize"))
                         .font(.caption)) {
                 VStack(alignment: .leading) {
-                    Text("Reward customers with:")
+                    Text("Reward customers with") + Text(":")
                     Picker(NSLocalizedString("Prize format", comment: "WayPay.Prize.Format.") + " -> ", selection: $prize.format) {
                         ForEach(WayPay.Prize.Format.allCases, id: \.self) { format in
                             Text(format.title)
@@ -125,7 +125,7 @@ struct PointNewView: View {
                         .foregroundColor(Color.white)
                 }
                 .disabled(shouldSaveButtonBeDisabled)
-                .buttonStyle(WayPay.ButtonModifier())
+                .buttonStyle(WayPay.WideButtonModifier())
                 .alert(isPresented: $campaignCreateError) {
                     Alert(title: Text("Error creating the campaign"),
                           message: Text("Try again. If problem persists contact support@wayapp.com"),
@@ -137,7 +137,7 @@ struct PointNewView: View {
         .onAppear(perform: {
             newName = session.merchant?.name ?? ""
         })
-        .navigationBarTitle(Text("Setup"), displayMode: .inline)
+        .navigationBarTitle(NSLocalizedString("Setup", comment: "PointNewView"), displayMode: .inline)
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     } // body
 }

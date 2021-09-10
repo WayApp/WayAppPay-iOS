@@ -32,6 +32,33 @@ extension WayPay {
             return issuerUUID
         }
                 
+        
+        static func get(completion: @escaping ([Issuer]?, Error?) -> Void) {
+            WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func edit(issuer: Issuer, completion: @escaping ([Issuer]?, Error?) -> Void) {
+            WayPay.API.editIssuer(issuer).fetch(type: [Issuer].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
         static func expireCards(issuerUUID: String, completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.expireIssuerCards(issuerUUID).fetch(type: [Issuer].self) { response in
                 switch response {

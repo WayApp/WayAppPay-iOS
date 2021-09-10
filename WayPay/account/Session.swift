@@ -90,6 +90,7 @@ extension WayPay {
         }
                       
         //TODO: review the need to use @Published for these variables
+        @Published var issuers = Container<Issuer>()
         @Published var campaigns = Container<Campaign>()
         @Published var products = Container<Product>()
         @Published var points = Container<Point>()

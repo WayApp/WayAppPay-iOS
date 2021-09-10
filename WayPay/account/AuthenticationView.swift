@@ -36,13 +36,11 @@ struct AuthenticationView: View {
                 Spacer()
             }
             TextField("email", text: self.$email)
-                .font(.body)
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
                 .textContentType(.emailAddress)
                 .keyboardType(.emailAddress)
             SecureField("4-digit PIN", text: self.$pin)
-                .font(.body)
                 .frame(width: 100)
                 .textContentType(.password)
                 .keyboardType(.numberPad)

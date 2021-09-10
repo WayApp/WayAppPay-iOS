@@ -101,11 +101,15 @@ struct CheckinView: View {
                                 }
                                 Divider()
                             }
-                            if let pointCampaign = session.activePointCampaign() {
+                            if let pointCampaign = session.activePointCampaign(),
+                               let prizes = pointCampaign.prizes,
+                               let prize = prizes.first,
+                               let amountToGetIt = prize.amountToGetIt {
                                 Label {
                                     Text(pointCampaign.name + ": ") +
-                                    Text(WayPay.formatAmount(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                                    Text(WayPay.formatPrice(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green)
+                                    Text(" / " + "\(WayPay.formatPrice(amountToGetIt))")
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))
                                 }

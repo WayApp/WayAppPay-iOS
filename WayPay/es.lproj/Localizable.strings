@@ -58,10 +58,7 @@
 "Amount" = "Importe";
 
 /* No comment provided by engineer. */
-"Amount to reach prize:" = "Importe para alcanzar premio:";
-
-/* No comment provided by engineer. */
-"Amount: " = "Importe: ";
+"Amount to reach prize" = "Importe para alcanzar premio";
 
 /* month of the year */
 "April" = "Abril";
@@ -71,6 +68,9 @@
 
 /* No comment provided by engineer. */
 "Award points" = "Otorgar puntos";
+
+/* No comment provided by engineer. */
+"Balance" = "Saldo";
 
 /* No comment provided by engineer. */
 "Balance: " = "Saldo: ";
@@ -86,6 +86,9 @@
 
 /* No comment provided by engineer. */
 "Campaign expires on" = "Campaña caduca en";
+
+/* StampNewView section header */
+"Campaign name" = "Nombre";
 
 /* CheckinView: section title */
 "Campaigns" = "Campañas";
@@ -118,7 +121,7 @@
 /* CheckoutView: button title */
 "Community campaign" = "Campaña de comunidad";
 
-/* No comment provided by engineer. */
+/* StampNewView */
 "Configuration" = "Configuración";
 
 /* CampaignAction button label */
@@ -159,9 +162,6 @@
 /* waypayButtonTitle */
 "Deduct" = "Cobrar";
 
-/* No comment provided by engineer. */
-"Delete account" = "Borrar cuenta";
-
 /* Prize amountTitle
    Prize format title */
 "Discount" = "Descuento";
@@ -200,13 +200,13 @@
 "Email receipt to:" = "Envía recibo a:";
 
 /* User message: invalidEmail message */
-"Enter a valid email address for this account" = "Escribe un email válido para la cuenta";
+"Enter a valid email address for this account" = "Ingresa un email válido para la cuenta";
 
 /* No comment provided by engineer. */
-"Enter OTP received:" = "Escribe la clave reciba";
+"Enter OTP received:" = "Ingresa la clave reciba";
 
 /* No comment provided by engineer. */
-"Enter purchase amount:" = "Escribe el importe de la compra:";
+"Enter purchase amount:" = "Ingresa el importe de la compra:";
 
 /* Product description for entered amount */
 "Entered amount" = "Importe ingresado";
@@ -217,11 +217,12 @@
 /* No comment provided by engineer. */
 "Error creating the campaign" = "Error en la creación de la campaña";
 
-/* No comment provided by engineer. */
-"Expire" = "Caduca";
-
 /* CampaignDetailView: campaign expires on */
 "Expires on" = "Caduca en";
+
+/* PointNewView
+   StampNewView */
+"Expires?" = "¿Caduca?";
 
 /* month of the year */
 "February" = "Febrero";
@@ -234,12 +235,6 @@
 
 /* waypayButtonTitle */
 "from giftcard" = "de tarjeta regalo";
-
-/* No comment provided by engineer. */
-"Generate SEPA file" = "Genera fichero SEPA";
-
-/* No comment provided by engineer. */
-"Get campaigns" = "Mis campañas";
 
 /* OnboardingPage: title */
 "Get started" = "Comenzar";
@@ -306,6 +301,9 @@
 
 /* No comment provided by engineer. */
 "Merchant" = "Comercio";
+
+/* StampNewView */
+"Minimum purchase required?" = "¿Requiere compra mínima?";
 
 /* No comment provided by engineer. */
 "Month:" = "Mes:";
@@ -406,11 +404,11 @@
 /* No comment provided by engineer. */
 "Price" = "Precio";
 
-/* No comment provided by engineer. */
+/* StampNewView */
 "Prize" = "Premio";
 
-/* No comment provided by engineer. */
-"Prize format -> " = "Formato de premio -> ";
+/* WayPay.Prize.Format. */
+"Prize format" = "Formato de premio";
 
 /* No comment provided by engineer. */
 "Prizes redeemed" = "Premios canjeados";
@@ -440,9 +438,6 @@
 "Rechargable giftcard" = "Tarjeta regalo recargable";
 
 /* No comment provided by engineer. */
-"Redeem" = "Canjea";
-
-/* No comment provided by engineer. */
 "Redeem prize:" = "Canjea premio:";
 
 /* PaymentTransaction.TransactionType */
@@ -456,9 +451,6 @@
 
 /* No comment provided by engineer. */
 "Refunds" = "Reembolsos";
-
-/* No comment provided by engineer. */
-"Register account" = "Regístrate";
 
 /* User message: registrationFailed title */
 "Registration attempt failed" = "Error en el registro";
@@ -502,9 +494,6 @@
 /* No comment provided by engineer. */
 "Reward customers with cashback (€) or discount (%):" = "Premia a los clientes con cashback (€) o descuentos (%):";
 
-/* No comment provided by engineer. */
-"Reward customers with:" = "Recompensa clientes con:";
-
 /* CheckoutView: button title */
 "Reward purchase amount" = "Recompensa la compra";
 
@@ -541,6 +530,9 @@
 /* MainView tab title */
 "Settings" = "Configuración";
 
+/* PointNewView */
+"Setup" = "Configuración";
+
 /* OnboardingPage: explanation */
 "Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)" = "Configura tu campaña de tarjeta de sellos digital en un clic. Escoge el número de visitas (sellos) a premiar, y el premio (cashback o descuento)";
 
@@ -555,9 +547,6 @@
 
 /* OnboardingPage: explanation */
 "Start using WayPay completely free. Contact us to enable premium features" = "Comienza a usar WayPay completamente gratis. Contáctanos para activar más funcionalidad";
-
-/* No comment provided by engineer. */
-"Support" = "Soporte";
 
 /* No comment provided by engineer. */
 "System error" = "Error del sistema";
@@ -617,13 +606,7 @@
 "Unspecified" = "Sin especificar";
 
 /* No comment provided by engineer. */
-"Update POINT" = "Update POINT";
-
-/* No comment provided by engineer. */
-"Update STAMP" = "Update STAMP";
-
-/* No comment provided by engineer. */
-"Visits to get prize: " = "Número de visitas a premiar: ";
+"Visits to get prize" = "Visitas a premiar";
 
 /* OnboardingPage: explanation */
 "You can also reward customers by how much they spend, and sell your own digital giftcard. Contact us" = "También puedes recompensar a tus clientes por lo que gastan, y vender tu propia tarjeta regalo digital";

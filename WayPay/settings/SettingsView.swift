@@ -216,89 +216,88 @@ struct SettingsView: View {
             .listItemTint(Color.green)
             if (OperationalEnvironment.isSettingsSupportFunctionsActive) {
                 Section(header: Label("Support", systemImage: "ladybug")
-                            .accessibility(label: Text("Support"))
                             .font(.callout)) {
-                    Button {
-                        DispatchQueue.main.async {
-                            self.updatePoint()
+                    Group {
+                        Button {
+                            DispatchQueue.main.async {
+                                self.updatePoint()
+                            }
+                        } label: {
+                            Label("Update POINT", systemImage: "plus.viewfinder")
                         }
-                    } label: {
-                        Label("Update POINT", systemImage: "plus.viewfinder")
-                            .accessibility(label: Text("Update POINT"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.updateStamp()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.updateStamp()
+                            }
+                        } label: {
+                            Label("Update STAMP", systemImage: "plus.viewfinder")
                         }
-                    } label: {
-                        Label("Update STAMP", systemImage: "plus.viewfinder")
-                            .accessibility(label: Text("Update STAMP"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.getCampaigns()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.getCampaigns()
+                            }
+                        } label: {
+                            Label("Get campaigns", systemImage: "plus.viewfinder")
                         }
-                    } label: {
-                        Label("Get campaigns", systemImage: "plus.viewfinder")
-                            .accessibility(label: Text("Get campaigns"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayPay.Campaign.Format.POINT)
+                        Button {
+                            DispatchQueue.main.async {
+                                self.getCampaign(id: "2275f746-ddaa-436e-9ceb-9b0a5ed3d6cb", sponsorUUID: "bd2b99d0-cf03-4d60-b1b8-ac050ed5614b", format: WayPay.Campaign.Format.POINT)
+                            }
+                        } label: {
+                            Label("Get campaign detail", systemImage: "plus.viewfinder")
                         }
-                    } label: {
-                        Label("Get campaign detail", systemImage: "plus.viewfinder")
-                            .accessibility(label: Text("Get campaigns"))
                     }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.reward()
+                    Group {
+                        Button {
+                            DispatchQueue.main.async {
+                                self.reward()
+                            }
+                        } label: {
+                            Label("Reward", systemImage: "plus.viewfinder")
                         }
-                    } label: {
-                        Label("Reward", systemImage: "plus.viewfinder")
-                            .accessibility(label: Text("Reward"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.redeem()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.redeem()
+                            }
+                        } label: {
+                            Label("Redeem", systemImage: "minus.square")
                         }
-                    } label: {
-                        Label("Redeem", systemImage: "minus.square")
-                            .accessibility(label: Text("Redeem"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.expire()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.expire()
+                            }
+                        } label: {
+                            Label("Expire", systemImage: "calendar.badge.exclamationmark")
                         }
-                    } label: {
-                        Label("Expire", systemImage: "calendar.badge.exclamationmark")
-                            .accessibility(label: Text("Expire"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.registerAccount()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.registerAccount()
+                            }
+                        } label: {
+                            Label("Register account", systemImage: "arrow.up.and.person.rectangle.portrait")
                         }
-                    } label: {
-                        Label("Register account", systemImage: "arrow.up.and.person.rectangle.portrait")
-                            .accessibility(label: Text("Register account"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.deleteAccount()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.deleteAccount()
+                            }
+                        } label: {
+                            Label("Delete account", systemImage: "trash")
                         }
-                    } label: {
-                        Label("Delete account", systemImage: "trash")
-                            .accessibility(label: Text("Delete account"))
-                    }
-                    Button {
-                        DispatchQueue.main.async {
-                            self.newSEPAs()
+                        Button {
+                            DispatchQueue.main.async {
+                                self.newSEPAs()
+                            }
+                        } label: {
+                            Label("Generate SEPA file", systemImage: "banknote")
                         }
-                    } label: {
-                        Label("Generate SEPA file", systemImage: "banknote")
-                            .accessibility(label: Text("Generate SEPA file"))
+                        Button {
+                            DispatchQueue.main.async {
+                                self.editIssuer()
+                            }
+                        } label: {
+                            Label("Edit issuer", systemImage: "banknote")
+                        }
                     }
-                    
                 }
                 .listItemTint(Color.red)
             }
@@ -320,6 +319,31 @@ struct SettingsView_Previews: PreviewProvider {
 }
 
 extension SettingsView {
+    private func editIssuer() {
+        let issuerUUID = "3a825be4-c97c-4592-a61e-aa729d1fca74"
+        WayPay.Issuer.get() { issuers, error in
+            if let issuers = issuers {
+                session.issuers.setTo(issuers)
+                if let waypay = session.issuers[issuerUUID] {
+                    WayPay.Issuer.edit(issuer: waypay) { issuers, error in
+                        if let issuers = issuers,
+                           !issuers.isEmpty {
+                            WayAppUtils.Log.message("Success: Issuer: \(issuers[0])")
+                        } else {
+                            WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: -------------")
+                        }
+                    }
+                } else {
+                    WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: issuerUUID not found")
+                }
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: -------------")
+            }
+        }
+    }
+
     private func reward() {
         // PAN Marzo31Superpapelería: 2CCFDE3A-10BC-40C5-AEAC-A7E74557F9BF
         let activeToken = "fGeIaln34rMMWO7xcwMGjZs-pi505orJgcKlbXm2e30=.fx7ZiW5S682i2iVUCGtHW7kMb3w+v8sICkq1x+Ykbylcn76-qNC84f3lJuZFzPIk+xm8-RgKFV-gEklxE1Q+NajNRHGvQwROtGe-KT0KeHQ=.13cd55e3c0e836c06a734f8705382d3d5a76b9bfec498934eb92971f9b96f66c"
