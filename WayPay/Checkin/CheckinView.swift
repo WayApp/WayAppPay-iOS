@@ -18,14 +18,7 @@ struct CheckinView: View {
     @State private var scanError = false
     @State private var wasScanSuccessful: Bool = false
     @State private var selectedPrize: Int = -1
-
-    private var fullname: String {
-        if let checkin = session.checkin {
-            return (checkin.firstName ?? "") + (checkin.lastName != nil ? " " + checkin.lastName! : "")
-        }
-        return ""
-    }
-    
+        
     private func reset() {
         self.selectedPrize = -1
         session.checkin = nil
@@ -43,11 +36,15 @@ struct CheckinView: View {
         return nil
     }
     
+    private var areAPIcallsDisabled: Bool {
+        return isAPICallOngoing
+    }
+    
     var body: some View {
         if (showQRScanner && (session.checkin == nil)) {
             CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
-                .navigationBarTitle(NSLocalizedString("Scan QR", comment: "navigationBarTitle"))
-        } else if isAPICallOngoing {
+                .navigationBarTitle(NSLocalizedString("Scan customer QR", comment: "navigationBarTitle"))
+        } else if areAPIcallsDisabled {
             ProgressView(NSLocalizedString(WayPay.SingleMessage.progressView.text, comment: "Activity indicator"))
                 .progressViewStyle(WayPay.WayPayProgressViewStyle())
                 .alert(isPresented: $scanError) {
@@ -77,6 +74,7 @@ struct CheckinView: View {
                         NavigationLink(destination: AmountView(scannedCode: scannedCode, displayOption: AmountView.DisplayOption.topup)) {
                             Label(NSLocalizedString("Top up", comment: "CheckinView: Enter amount"), systemImage: "plus.app.fill")
                         }
+                        .disabled(areAPIcallsDisabled)
                     } else {
                         Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: WayPay.SingleMessage.requestGiftcard.text)!)
                             .font(.caption)
@@ -95,7 +93,7 @@ struct CheckinView: View {
                                     Text(stampCampaign.name + ": ") +
                                         Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green) +
-                                    Text(" / " + "\(amountToGetIt)")
+                                        Text(" / " + "\(amountToGetIt)")
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .STAMP))
                                 }
@@ -107,18 +105,17 @@ struct CheckinView: View {
                                let amountToGetIt = prize.amountToGetIt {
                                 Label {
                                     Text(pointCampaign.name + ": ") +
-                                    Text(WayPay.formatPrice(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                                        Text(WayPay.formatPrice(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green)
                                     Text(" / " + "\(WayPay.formatPrice(amountToGetIt))")
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))
                                 }
-                                Divider()
                             }
                             if let issuerPointCampaign = session.activeIssuerPointCampaign() {
                                 Label {
                                     Text(issuerPointCampaign.name + ": ") +
-                                    Text(String(getRewardBalanceForCampaign(issuerPointCampaign.id) ?? 0))
+                                        Text(String(getRewardBalanceForCampaign(issuerPointCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green)
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))
@@ -128,7 +125,7 @@ struct CheckinView: View {
                             if let issuerStampCampaign = session.activeIssuerStampCampaign() {
                                 Label {
                                     Text(issuerStampCampaign.name + ": ") +
-                                    Text(String(getRewardBalanceForCampaign(issuerStampCampaign.id) ?? 0))
+                                        Text(String(getRewardBalanceForCampaign(issuerStampCampaign.id) ?? 0))
                                         .bold().foregroundColor(Color.green)
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .STAMP))
@@ -139,10 +136,14 @@ struct CheckinView: View {
                     } else {
                         Text("No campaigns")
                     }
+                }
+                Section(header:
+                            Label(NSLocalizedString("Prizes", comment: "CheckinView: section title"), systemImage: "checkmark.seal.fill")
+                            .font(.callout)) {
                     if let prizes = checkin.prizes,
                        !prizes.isEmpty {
                         ForEach(0..<prizes.count) {
-                            Text(prizes[$0].displayAs)
+                            Text((session.campaigns[prizes[$0].campaignID]?.name ?? "-") + ": " + prizes[$0].displayAs)
                                 .font(Font.body)
                         }
                     }
@@ -164,18 +165,17 @@ struct CheckinView: View {
                 }
                 .buttonStyle(WayPay.CancelButtonModifier())
             }
-            .navigationBarTitle(fullname)
+            .navigationBarTitle(WayPay.fullname)
         }
     }
     
     private func handleScan() {
-        WayAppUtils.Log.message("Checking in")
         guard let code = scannedCode else {
             WayAppUtils.Log.message("Missing scannedCode")
             return
         }
-        let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
         isAPICallOngoing = true
+        let transaction = WayPay.PaymentTransaction(amount: 0, token: code, type: .CHECKIN)
         WayPay.Account.checkin(transaction) { checkins, error in
             if let checkins = checkins,
                let checkin = checkins.first {
@@ -189,6 +189,9 @@ struct CheckinView: View {
                     self.scanError = true
                 }
                 WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+            }
+            DispatchQueue.main.async {
+                isAPICallOngoing = false
             }
         }
     }

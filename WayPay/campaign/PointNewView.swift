@@ -24,11 +24,12 @@ struct PointNewView: View {
     @State var campaignCreateError: Bool = false
     @State private var threshold: String = "0"
     @State private var becomeFirstResponder = false
-        
+    @State private var isAPICallOngoing = false
+
     let campaign: WayPay.Campaign?
 
-    private var shouldSaveButtonBeDisabled: Bool {
-        return (newName.isEmpty || threshold == "0")
+    private var areAPIcallsDisabled: Bool {
+        return isAPICallOngoing || newName.isEmpty
     }
 
     var body: some View {
@@ -86,45 +87,13 @@ struct PointNewView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    if (!expires) {
-                        expirationDate = Date.distantFuture
-                    }
-                    let campaign = WayPay.Campaign(name: newName,
-                                                      description: "",
-                                                      sponsorUUID: session.merchantUUID!,
-                                                      format: .POINT,
-                                                      expirationDate: expirationDate, state: .ACTIVE)
-                    prize.name = prizeName
-                    prize.value = (Int(prizeAmount) ?? 0) * 100
-                    prize.amountToGetIt = (Int(threshold) ?? 0) * 100
-                    prize.message = WayPay.Prize.winnningMessage
-
-                    let pointCampaign: WayPay.Point =
-                        WayPay.Point(campaign: campaign,
-                                           paymentAmountConvertibleToPrize: (Int(threshold) ?? 0) * 100,
-                                           prizes: [prize])
-                    WayPay.Point.create(pointCampaign) { campaigns, error in
-                        if let campaigns = campaigns {
-                            for campaign in campaigns {
-                                DispatchQueue.main.async {
-                                    session.points.add(campaign)
-                                    session.campaigns.addAsFirst(campaign)
-                                    self.presentationMode.wrappedValue.dismiss()
-                                }
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                campaignCreateError = true
-                            }
-                            WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
-                        }
-                    }
+                    createCampaign()
                 }) {
                     Text("Activate")
                         .padding()
                         .foregroundColor(Color.white)
                 }
-                .disabled(shouldSaveButtonBeDisabled)
+                .disabled(areAPIcallsDisabled)
                 .buttonStyle(WayPay.WideButtonModifier())
                 .alert(isPresented: $campaignCreateError) {
                     Alert(title: Text("Error creating the campaign"),
@@ -140,6 +109,46 @@ struct PointNewView: View {
         .navigationBarTitle(NSLocalizedString("Setup", comment: "PointNewView"), displayMode: .inline)
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     } // body
+    
+    private func createCampaign() {
+        isAPICallOngoing = true
+        if (!expires) {
+            expirationDate = Date.distantFuture
+        }
+        let campaign = WayPay.Campaign(name: newName,
+                                          description: "",
+                                          sponsorUUID: session.merchantUUID!,
+                                          format: .POINT,
+                                          expirationDate: expirationDate, state: .ACTIVE)
+        prize.name = prizeName
+        prize.value = (Int(prizeAmount) ?? 0) * 100
+        prize.amountToGetIt = (Int(threshold) ?? 0) * 100
+        prize.message = WayPay.Prize.winnningMessage
+
+        let pointCampaign: WayPay.Point =
+            WayPay.Point(campaign: campaign,
+                               paymentAmountConvertibleToPrize: (Int(threshold) ?? 0) * 100,
+                               prizes: [prize])
+        WayPay.Point.create(pointCampaign) { campaigns, error in
+            if let campaigns = campaigns {
+                for campaign in campaigns {
+                    DispatchQueue.main.async {
+                        session.points.add(campaign)
+                        session.campaigns.addAsFirst(campaign)
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    campaignCreateError = true
+                }
+                WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+            }
+            DispatchQueue.main.async {
+                isAPICallOngoing.toggle()
+            }
+        }
+    }
 }
 
 struct PointView_Previews: PreviewProvider {

@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct RegistrationView: View {
+struct MerchantRegistrationView: View {
     @EnvironmentObject private var session: WayPay.Session
     @State private var email: String = String(){
         didSet {
@@ -148,7 +148,7 @@ struct RegistrationView: View {
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
-            RegistrationView()
+            MerchantRegistrationView()
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }

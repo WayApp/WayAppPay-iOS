@@ -310,4 +310,11 @@ struct WayPay {
     struct Constant {
     }
     
+    static var fullname: String {
+        if let checkin = session.checkin {
+            return (checkin.firstName ?? "") + (checkin.lastName != nil ? " " + checkin.lastName! : "")
+        }
+        return ""
+    }
+
 }

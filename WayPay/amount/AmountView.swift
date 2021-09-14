@@ -52,6 +52,10 @@ struct AmountView: View {
     func delete() {
         amount = 0
     }
+    
+    private var areAPIcallsDisabled: Bool {
+        return (isAPICallOngoing || (total + amount) <= 0)
+    }
         
     var body: some View {
         VStack(alignment: .trailing) {
@@ -115,7 +119,7 @@ struct AmountView: View {
                     .foregroundColor(Color.white)
             }
             .buttonStyle(WayPay.WideButtonModifier())
-            .disabled((total + amount) <= 0)
+            .disabled(areAPIcallsDisabled)
             .padding()
         } // VStack
         .navigationBarTitle(displayOption.title)
@@ -144,17 +148,13 @@ struct AmountView: View {
     }
     
     func handleTopup() {
-        WayAppUtils.Log.message("Topping up: \(total)")
         guard let code = scannedCode else {
             WayAppUtils.Log.message("Missing scannedCode")
             return
         }
-        let topup = WayPay.PaymentTransaction(amount: Int(total + amount), token: code, type: .TOPUP)
         isAPICallOngoing = true
+        let topup = WayPay.PaymentTransaction(amount: Int(total + amount), token: code, type: .TOPUP)
         WayPay.API.topup(topup).fetch(type: [WayPay.PaymentTransaction].self) { response in
-            DispatchQueue.main.async {
-                isAPICallOngoing = false
-            }
             switch response {
             case .success(let response?):
                 WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: SUCCESS")
@@ -180,6 +180,9 @@ struct AmountView: View {
             default:
                 self.transactionResult(accepted: false)
                 WayAppUtils.Log.message("INVALID_SERVER_DATA")
+            }
+            DispatchQueue.main.async {
+                isAPICallOngoing = false
             }
         }
     }

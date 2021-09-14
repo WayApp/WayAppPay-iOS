@@ -14,14 +14,14 @@ extension WayPay {
         case titleAndText(String, String)
         case closeTo(String, String)
         case invalidEmail
-        case invalidPassword
-        case passwordsDoNotMatch
+        case invalidPIN
+        case pinsDontMatch
         case confirmationEmailHelp(String)
         case loginFailed
         case registrationFailed
-        case passwordChangeFailed
-        case forgotPassword(String)
-        case forgotPasswordError(String)
+        case pinChangeFailed
+        case forgotPIN(String)
+        case forgotPINerror(String)
         case premiumFeature
         case needsSetup
         case refund(Bool)
@@ -30,6 +30,10 @@ extension WayPay {
         case shoppingCartEmpty
         case requestGiftcard
         case requestPoints
+        case consumerAccountCreationError
+        case consumerAccountCreationSuccess
+        case accountWithoutMerchants
+
 
         var text: (title: String, message: String) {
             switch self {
@@ -37,14 +41,14 @@ extension WayPay {
             case .titleAndText(let title, let text): return (title, text)
             case .closeTo(let title, let body): return (title, body)
             case .invalidEmail: return (NSLocalizedString("Invalid email address", comment: "User message: invalidEmail title"), NSLocalizedString("Enter a valid email address for this account", comment: "User message: invalidEmail message"))
-            case .invalidPassword: return (NSLocalizedString("PIN not valid", comment: "User message: invalidPassword title"), NSLocalizedString("PIN must have \(WayPay.Account.PINLength) digits", comment: "User message: password minimum length requirement"))
-            case .passwordsDoNotMatch: return (NSLocalizedString("PIN does not match", comment: "User message: passwordsDoNotMatch title"), NSLocalizedString("Both entered PINs must match", comment: "User message: passwords do not match"))
+            case .invalidPIN: return (NSLocalizedString("PIN not valid", comment: "User message: invalidPassword title"), NSLocalizedString("PIN must be", comment: "User message: pin minimum length requirement") + " " + WayPay.Account.PINLength.description + " " + NSLocalizedString("digits", comment: "User message: pin minimum length requirement"))
+            case .pinsDontMatch: return (NSLocalizedString("PIN does not match", comment: "User message: pinsDontMatch title"), NSLocalizedString("Both entered PINs must match", comment: "User message: pins do not match"))
             case .confirmationEmailHelp(let email): return (NSLocalizedString("Confirmation code", comment: "User message: confirmationEmailHelpTitle"), NSLocalizedString("The 4-digit confirmation code was emailed to: \(email). Please enter it here", comment: "User message: confirmationEmailHelpMessage"))
             case .loginFailed: return (NSLocalizedString("Login attempt failed", comment: "User message: loginFailed title"), NSLocalizedString("Try again, if problem persists contact us at support@wayapp.com", comment: "User message: Login error during authentication"))
             case .registrationFailed: return (NSLocalizedString("Registration attempt failed", comment: "User message: registrationFailed title"), NSLocalizedString("Try another email address, if problem persists contact us at support@wayapp.com", comment: "User message: registrationFailed: registration error during registration"))
-            case .passwordChangeFailed: return (NSLocalizedString("PIN was not changed", comment: "User message: passwordChangeFailed title"), NSLocalizedString("Try your current PIN again, if problem persists contact us at support@wayapp.com", comment: "User message: passwordChangeFailed: registration error during registration"))
-            case .forgotPassword(let email): return (NSLocalizedString("To finish the PIN change", comment: "User message: forgotPassword title"), NSLocalizedString("Follow instructions emailed to: ", comment: "User message: forgotPassword") + email)
-            case .forgotPasswordError(let email): return (NSLocalizedString("Email address not valid", comment: "User message: forgotPasswordError title"), NSLocalizedString("Email address \(email) is not registered", comment: "User message: forgotPasswordError"))
+            case .pinChangeFailed: return (NSLocalizedString("PIN not changed", comment: "User message: pinChangeFailed title"), NSLocalizedString("Try your current PIN again, if problem persists contact us at support@wayapp.com", comment: "User message: pinChangeFailed: registration error during registration"))
+            case .forgotPIN(let email): return (NSLocalizedString("To finish PIN change", comment: "User message: forgotPIN title"), NSLocalizedString("Follow instructions emailed to" + ": ", comment: "User message: forgotPIN") + email)
+            case .forgotPINerror(let email): return (NSLocalizedString("Email not found", comment: "User message: forgotPINerror title"), NSLocalizedString("Email \(email) is not registered", comment: "User message: forgotPINerror"))
             case .premiumFeature: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
             case .needsSetup: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
             case .refund(let success):
@@ -57,6 +61,9 @@ extension WayPay {
             case .shoppingCartEmpty: return (NSLocalizedString("Shopping cart empty", comment: "User message: addProducts"), NSLocalizedString("Add products to the order", comment: "User message: addProducts"))
             case .requestGiftcard: return (NSLocalizedString("My own giftcard", comment: "User message: requestGiftcard"), NSLocalizedString("Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks.", comment: "User message: requestGiftcard"))
             case .requestPoints: return (NSLocalizedString("Reward by € consumption", comment: "User message: requestPoints"), NSLocalizedString("Hello, I am interested in using this feature. Please contact me. Thanks.", comment: "User message: requestPoints"))
+            case .consumerAccountCreationError: return (NSLocalizedString("Registration error", comment: "User message: consumerAccountCreationError"), NSLocalizedString("Email already registered, try a different email. If problem continues, contact support@wayapp.com", comment: "User message: consumerAccountCreationError"))
+            case .consumerAccountCreationSuccess: return (NSLocalizedString("Account created", comment: "User message: consumerAccountCreationSuccess"), NSLocalizedString("Email sent to customer with QR to install on the phone", comment: "User message: consumerAccountCreationSuccess"))
+            case .accountWithoutMerchants: return (NSLocalizedString("Login failed", comment: "User message: accountWithoutMerchants"), NSLocalizedString("App only available to registered merchants. Register a merchant and try again", comment: "User message: accountWithoutMerchants"))
             }
         }
     }

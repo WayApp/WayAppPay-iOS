@@ -122,6 +122,7 @@ struct CheckoutView: View {
         .animation(.easeInOut(duration: 0.3))
         .listRowInsets(EdgeInsets())
         .padding(.horizontal)
+        .disabled(areAPIcallsDisabled)
     }
     
     private func reset() {
@@ -154,7 +155,6 @@ struct CheckoutView: View {
     }
     
     private func rewardLoyalty(campaign: WayPay.Campaign) {
-        WayAppUtils.Log.message("Entering")
         guard let token = session.checkin?.token else {
             WayAppUtils.Log.message("Missing checkin.token")
             return
@@ -199,7 +199,6 @@ struct CheckoutView: View {
         WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
             switch response {
             case .success(let response?):
-                WayAppUtils.Log.message("++++++++++ WayAppPay.PaymentTransaction: SUCCESS")
                 if let transactions = response.result,
                    let transaction = transactions.first {
                     DispatchQueue.main.async {
@@ -219,6 +218,10 @@ struct CheckoutView: View {
                 WayAppUtils.Log.message("INVALID_SERVER_DATA")
             }
         }
+    }
+        
+    private var areAPIcallsDisabled: Bool {
+        return isAPICallOngoing
     }
     
     private var logo: Image {
@@ -278,6 +281,10 @@ struct CheckoutView: View {
                             .scaledToFit()
                             .frame(maxWidth: 80, maxHeight: 80)
                             .clipShape(Circle())
+                        if (!WayPay.fullname.isEmpty) {
+                            Text(WayPay.fullname)
+                                .font(.headline)
+                        }
                         if (allowsInputAmount) {
                             Text("Enter purchase amount:")
                                 .font(.caption)
@@ -302,6 +309,7 @@ struct CheckoutView: View {
                             }
                             .buttonStyle(WayPay.WideButtonModifier())
                             .padding(.horizontal)
+                            .disabled(areAPIcallsDisabled)
                         }
                         if (purchaseAmountValue > 0) {
                             Divider()
@@ -344,6 +352,7 @@ struct CheckoutView: View {
                             }
                             .buttonStyle(WayPay.WideButtonModifier())
                             .padding(.horizontal)
+                            .disabled(areAPIcallsDisabled)
                             Divider()
                         }
                         if (showsCancel) {
@@ -373,7 +382,7 @@ struct CheckoutView: View {
                                     .overlay(Badge())
             )
             .gesture(DragGesture().onChanged { _ in hideKeyboard() })
-            if isAPICallOngoing {
+            if areAPIcallsDisabled {
                 ProgressView(WayPay.SingleMessage.progressView.text)
                     .progressViewStyle(WayPay.WayPayProgressViewStyle())
                     .alert(isPresented: $showTransactionResult) {

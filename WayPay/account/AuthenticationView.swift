@@ -19,10 +19,10 @@ struct AuthenticationView: View {
     @State private var pin: String = ""
     @State private var forgotPIN = false
     @State var loginError: Bool = false
-
+    @State private var isAPICallOngoing = false
         
     private var shouldSigninButtonBeDisabled: Bool {
-        return (!WayAppUtils.validateEmail(email) || pin.count != WayPay.Account.PINLength)
+        return (!WayAppUtils.validateEmail(email) || pin.count != WayPay.Account.PINLength) || isAPICallOngoing
     }
     
     var body: some View {
@@ -57,20 +57,13 @@ struct AuthenticationView: View {
                 }
 
             }
+            .alert(isPresented: $session.showAccountHasNoMerchantsAlerts) {
+                Alert(title: Text(WayPay.AlertMessage.accountWithoutMerchants.text.title),
+                      message: Text(WayPay.AlertMessage.accountWithoutMerchants.text.message),
+                      dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
+            }
             Button(action: {
-                WayPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
-                    if let accounts = accounts,
-                       let account = accounts.first {
-                        DispatchQueue.main.async {
-                            session.account = account
-                            session.saveLoginData(pin: pin)
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            loginError = true
-                        }
-                    }
-                }
+                getAccount()
             }) {
                 Text("Sign in")
                     .padding()
@@ -79,17 +72,37 @@ struct AuthenticationView: View {
             .buttonStyle(WayPay.WideButtonModifier())
             .animation(.easeInOut(duration: 0.3))
             .alert(isPresented: $loginError) {
-                Alert(title: Text("Login error"),
-                      message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
+                Alert(title: Text(WayPay.AlertMessage.loginFailed.text.title),
+                      message: Text(WayPay.AlertMessage.loginFailed.text.message),
                       dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
             }
-            NavigationLink(destination: RegistrationView()) {
+            NavigationLink(destination: MerchantRegistrationView()) {
                 Text("New account")
                     .foregroundColor(Color.green)
             }
         } // Form
         .padding()
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
+    } // body
+    
+    private func getAccount() {
+        isAPICallOngoing = true
+        WayPay.Account.load(email: self.email.lowercased(), pin: self.pin) { accounts, error in
+            if let accounts = accounts,
+               let account = accounts.first {
+                DispatchQueue.main.async {
+                    session.account = account
+                    session.saveLoginData(pin: pin)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    loginError = true
+                }
+            }
+            DispatchQueue.main.async {
+                isAPICallOngoing.toggle()
+            }
+        }
     }
 }
 

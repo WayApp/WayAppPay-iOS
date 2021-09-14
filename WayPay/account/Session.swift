@@ -18,18 +18,29 @@ extension WayPay {
         @Published var imageDownloader: ImageDownloader?
         @Published var showAuthenticationView: Bool = true
         @AppStorage("skipOnboarding") var skipOnboarding: Bool = UserDefaults.standard.bool(forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
-        var doesAccountHasMerchants: Bool = false
+        @Published var doesAccountHasMerchants: Bool = false
+        @Published var showAccountHasNoMerchantsAlerts: Bool = false
         @Published var account: Account? {
             didSet {
                 if let account = account {
+                    /*
                     DispatchQueue.main.async {
                         self.showAuthenticationView = false
                     }
+ */
                     Merchant.getMerchantsForAccount(account.accountUUID) { merchants, error in
-                        if let merchants = merchants {
+                        if let merchants = merchants,
+                           !merchants.isEmpty {
                             DispatchQueue.main.async {
+                                self.showAuthenticationView = false
+                                self.doesAccountHasMerchants = true
                                 session.merchants.setTo(merchants)
                             }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.showAccountHasNoMerchantsAlerts = true
+                            }
+                            WayAppUtils.Log.message("No merchants")
                         }
                     }
                 }
@@ -38,7 +49,6 @@ extension WayPay {
         @Published var merchants = Container<Merchant>() {
             didSet {
                 DispatchQueue.main.async {
-                    self.doesAccountHasMerchants = !self.merchants.isEmpty
                     self.seletectedMerchant = UserDefaults.standard.integer(forKey: WayPay.DefaultKey.MERCHANT.rawValue)
                 }
             }
@@ -178,7 +188,6 @@ extension WayPay {
                 UserDefaults.standard.set(account.email, forKey: WayPay.DefaultKey.EMAIL.rawValue)
                 // Saves password
                 do {
-                    WayAppUtils.Log.message("*********SAVING PIN=\(pin)")
                     try Account.savePassword(pin, forEmail: email)
                 } catch {
                     WayAppUtils.Log.message(error.localizedDescription)
@@ -196,10 +205,14 @@ extension WayPay {
             showAuthenticationView = true
             doesAccountHasMerchants = false
             account = nil
+            checkin = nil
             merchants.empty()
             transactions.empty()
             products.empty()
             shoppingCart.empty()
+            points.empty()
+            stamps.empty()
+            campaigns.empty()
         }
         
         func logout() {

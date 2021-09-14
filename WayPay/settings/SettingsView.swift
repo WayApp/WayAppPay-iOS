@@ -21,10 +21,10 @@ struct SettingsView: View {
     @State private var authURL: String? = nil
     @State var isStampCampaignActive: Bool = true
     @State var isPointCampaignActive: Bool = true
-    @State var navigationSelection: Int?
     @State private var purchaseAmount: String = ""
     @State private var shouldStampCampaignToggleCallAPI = false
     @State private var shouldPointCampaignToggleCallAPI = false
+    @State var consumerRegistrationSelection: Int?
 
     var body: some View {
         Form {
@@ -174,13 +174,16 @@ struct SettingsView: View {
                     })
                 }
                 NavigationLink(destination: CheckoutQRView()) {
-                    Label(NSLocalizedString("Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
+                    Label(NSLocalizedString("Print Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
                 }
                 NavigationLink(destination: ProductGalleryView()) {
                     Label(NSLocalizedString("Product catalogue", comment: "SettingsView: merchants products"), systemImage: "list.bullet.rectangle")
                 }
+                NavigationLink(destination: ConsumerRegistrationView()) {
+                    Label(NSLocalizedString("Register customer", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
+                }
                 NavigationLink(destination: CustomerQRView()) {
-                    Label(NSLocalizedString("Customer registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
+                    Label(NSLocalizedString("Print Registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "printer.dotmatrix")
                 }
             }
             .listItemTint(Color.green)
@@ -501,8 +504,8 @@ extension SettingsView {
     }
     
     private func deleteAccount() {
-        WayPay.Account.delete("47cc234f-b5e0-4f28-97e3-dceeec305523")
-        WayPay.Account.delete("aa729ae3-400b-44e1-bc83-6bdac5f6f8ed")
+        WayPay.Account.delete("b358f597-fb93-47e7-818e-85941de48934")
+        WayPay.Account.delete("76f8eef0-52ea-4436-a874-cf4a88087a6a")
     }
 
 }

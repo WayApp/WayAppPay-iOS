@@ -24,13 +24,14 @@ struct StampNewView: View {
     @State private var amountToPrize: Double = 10.0
     @State var campaignCreateError: Bool = false
     @State private var threshold: String = "0"
-    
+    @State private var isAPICallOngoing = false
+
     let campaign: WayPay.Campaign?
     
-    private var shouldSaveButtonBeDisabled: Bool {
-        return (newName.isEmpty)
+    private var areAPIcallsDisabled: Bool {
+        return isAPICallOngoing || newName.isEmpty
     }
-    
+
     var body: some View {
         Form {
             Section(header: Label(NSLocalizedString("Campaign name", comment: "StampNewView section header"), systemImage: "checkmark.seal.fill")
@@ -81,7 +82,8 @@ struct StampNewView: View {
                                 Text(format.title)
                             }
                         }
-                        .pickerStyle(MenuPickerStyle())
+                        .pickerStyle(SegmentedPickerStyle())
+                        .foregroundColor(Color.green)
                         Text(prize.format.title)
                     }
                     HStack {
@@ -98,44 +100,13 @@ struct StampNewView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    if (!expires) {
-                        expirationDate = Date.distantFuture
-                    }
-                    let campaign = WayPay.Campaign(name: newName,
-                                                   description: "",
-                                                   sponsorUUID: session.merchantUUID!,
-                                                   format: .STAMP,
-                                                   expirationDate: expirationDate, state: .ACTIVE)
-                    prize.name = prizeName
-                    prize.value = (Int(prizeAmount) ?? 0) * 100
-                    prize.amountToGetIt = Int(amountToPrize)
-                    prize.message = WayPay.Prize.winnningMessage
-                    let stampCampaign: WayPay.Stamp =
-                        WayPay.Stamp(campaign: campaign,
-                                     minimumPaymentAmountToGetStamp: minimumPurchaseAmountRequired ? (Int(threshold) ?? 0) * 100: 0,
-                                     prize: prize)
-                    WayPay.Stamp.create(stampCampaign) { campaigns, error in
-                        if let campaigns = campaigns,
-                           let campaign = campaigns.first {
-                            WayAppUtils.Log.message("Campaign: name: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
-                            DispatchQueue.main.async {
-                                session.stamps.add(campaign)
-                                session.campaigns.addAsFirst(campaign)
-                                self.presentationMode.wrappedValue.dismiss()
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                campaignCreateError = true
-                            }
-                            WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
-                        }
-                    }
+                    createCampaign()
                 }) {
                     Text("Activate")
                         .padding()
                         .foregroundColor(Color.white)
                 }
-                .disabled(shouldSaveButtonBeDisabled)
+                .disabled(areAPIcallsDisabled)
                 .buttonStyle(WayPay.WideButtonModifier())
                 .alert(isPresented: $campaignCreateError) {
                     Alert(title: Text("Error creating campaign"),
@@ -148,6 +119,46 @@ struct StampNewView: View {
         .navigationBarTitle(Text("New campaign"), displayMode: .inline)
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
     } // body
+    
+    func createCampaign() {
+        isAPICallOngoing = true
+        if (!expires) {
+            expirationDate = Date.distantFuture
+        }
+        let campaign = WayPay.Campaign(name: newName,
+                                       description: "",
+                                       sponsorUUID: session.merchantUUID!,
+                                       format: .STAMP,
+                                       expirationDate: expirationDate, state: .ACTIVE)
+        prize.name = prizeName
+        prize.value = (Int(prizeAmount) ?? 0) * 100
+        prize.amountToGetIt = Int(amountToPrize)
+        prize.message = WayPay.Prize.winnningMessage
+        let stampCampaign: WayPay.Stamp =
+            WayPay.Stamp(campaign: campaign,
+                         minimumPaymentAmountToGetStamp: minimumPurchaseAmountRequired ? (Int(threshold) ?? 0) * 100: 0,
+                         prize: prize)
+        WayPay.Stamp.create(stampCampaign) { campaigns, error in
+            if let campaigns = campaigns,
+               let campaign = campaigns.first {
+                WayAppUtils.Log.message("Campaign: name: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
+                DispatchQueue.main.async {
+                    session.stamps.add(campaign)
+                    session.campaigns.addAsFirst(campaign)
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    campaignCreateError = true
+                }
+                WayAppUtils.Log.message("Campaign creation error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+            }
+            DispatchQueue.main.async {
+                isAPICallOngoing.toggle()
+            }
+        }
+
+    }
 }
 
 struct StampView_Previews: PreviewProvider {

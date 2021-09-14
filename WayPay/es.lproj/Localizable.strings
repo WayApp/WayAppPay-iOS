@@ -2,6 +2,9 @@
 " " = " ";
 
 /* No comment provided by engineer. */
+" -> " = " -> ";
+
+/* No comment provided by engineer. */
 " / %@" = " / %@";
 
 /* No comment provided by engineer. */
@@ -12,6 +15,12 @@
 
 /* No comment provided by engineer. */
 "-" = "-";
+
+/* No comment provided by engineer. */
+"-: " = "-: ";
+
+/* No comment provided by engineer. */
+":" = ":";
 
 /* No comment provided by engineer. */
 ": " = ": ";
@@ -29,10 +38,13 @@
 "4-digit" = "4 dígitos";
 
 /* No comment provided by engineer. */
-"4-digit PIN" = "PIN (4 dígitos)";
+"4-digit PIN" = "PIN";
 
 /* No comment provided by engineer. */
 "4-digits" = "4 dígitos";
+
+/* User message: consumerAccountCreationSuccess */
+"Account created" = "Cuenta creada";
 
 /* No comment provided by engineer. */
 "Activate" = "Activar";
@@ -49,6 +61,9 @@
 /* No comment provided by engineer. */
 "Add one" = "Añadir 1";
 
+/* User message: addProducts */
+"Add products to the order" = "Añadir productos al pedido";
+
 /* AmountViewOption action buttonTitle */
 "Add to cart" = "Añadir a cesta";
 
@@ -59,6 +74,9 @@
 
 /* No comment provided by engineer. */
 "Amount to reach prize" = "Importe para alcanzar premio";
+
+/* User message: accountWithoutMerchants */
+"App only available to registered merchants. Register a merchant and try again" = "App sólo disponible para comercios registrados. Registra un comercio e intenta de nuevo";
 
 /* month of the year */
 "April" = "Abril";
@@ -78,7 +96,7 @@
 /* waypayButtonTitle */
 "Bank account payment" = "Pago de cuenta bancaria";
 
-/* User message: passwords do not match */
+/* User message: pins do not match */
 "Both entered PINs must match" = "Ambos PIN deben ser iguales";
 
 /* No comment provided by engineer. */
@@ -114,8 +132,7 @@
 /* MainView tab title */
 "Checkout" = "Checkout";
 
-/* CheckoutQRView title
-   SettingsView: CheckoutQRView option */
+/* CheckoutQRView title */
 "Checkout QR" = "Checkout QR";
 
 /* CheckoutView: button title */
@@ -144,11 +161,9 @@
 /* No comment provided by engineer. */
 "Current" = "Actual";
 
-/* MainView tab title */
+/* MainView tab title
+   SettingsView: section title */
 "Customer" = "Cliente";
-
-/* SettingsView: CheckoutQRView option */
-"Customer registration QR" = "QR de registro";
 
 /* CampaignDetailView: campaign customers */
 "Customers" = "Clientes";
@@ -161,6 +176,9 @@
 
 /* waypayButtonTitle */
 "Deduct" = "Cobrar";
+
+/* User message: pin minimum length requirement */
+"digits" = "dígitos";
 
 /* Prize amountTitle
    Prize format title */
@@ -178,17 +196,20 @@
 /* No comment provided by engineer. */
 "Email" = "Email";
 
+/* User message: forgotPINerror */
+"Email (email) is not registered" = "Email (email) no registrado";
+
 /* No comment provided by engineer. */
 "email address" = "email";
 
-/* User message: forgotPasswordError */
-"Email address (email) is not registered" = "Email no registrado";
-
-/* User message: forgotPasswordError title */
-"Email address not valid" = "Email no es válida";
+/* User message: consumerAccountCreationError */
+"Email already registered, try a different email. If problem continues, contact support@wayapp.com" = "Email ya registrada, intenta un email distinto. Si el problema continúa, contacta support@wayapp.com";
 
 /* No comment provided by engineer. */
 "Email new PIN to:" = "Email nuevo PIN a:";
+
+/* User message: forgotPINerror title */
+"Email not found" = "Email no encontrado";
 
 /* No comment provided by engineer. */
 "Email or PIN invalid. Try again. If problem persists contact support@wayapp.com" = "Email o PIN inválido. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
@@ -198,6 +219,9 @@
 
 /* No comment provided by engineer. */
 "Email receipt to:" = "Envía recibo a:";
+
+/* User message: consumerAccountCreationSuccess */
+"Email sent to customer with QR to install on the phone" = "Se envió email al cliente con QR a instalar en el móvil";
 
 /* User message: invalidEmail message */
 "Enter a valid email address for this account" = "Ingresa un email válido para la cuenta";
@@ -227,7 +251,7 @@
 /* month of the year */
 "February" = "Febrero";
 
-/* User message: forgotPassword */
+/* User message: forgotPIN */
 "Follow instructions emailed to: " = "Sigue las instrucciones enviadas a: ";
 
 /* No comment provided by engineer. */
@@ -244,6 +268,9 @@
 
 /* CheckinView: section title */
 "Giftcard" = "Tarjeta regalo";
+
+/* User message: addProducts */
+"Go to Settings and add your products" = "Ve a Configuración y añade productos";
 
 /* No comment provided by engineer. */
 "Hello" = "Hola";
@@ -286,6 +313,9 @@
 
 /* No comment provided by engineer. */
 "Login error" = "Error en inicio de sesión";
+
+/* User message: accountWithoutMerchants */
+"Login failed" = "Error en iniciar sesión";
 
 /* business logo */
 "Logo" = "Logo";
@@ -380,17 +410,17 @@
 /* No comment provided by engineer. */
 "PIN could not be changed. Try again later. If problem persists contact support@wayapp.com" = "Error cambiando el PIN. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
 
-/* User message: passwordsDoNotMatch title */
+/* User message: pinsDontMatch title */
 "PIN does not match" = "Los PIN no son iguales";
 
-/* User message: password minimum length requirement */
-"PIN must have (WayPay.Account.PINLength) digits" = "PIN debe ser de (WayPay.Account.PINLength) dígitos";
+/* User message: pin minimum length requirement */
+"PIN must be" = "PIN debe ser";
+
+/* User message: pinChangeFailed title */
+"PIN not changed" = "PIN no cambiado";
 
 /* User message: invalidPassword title */
 "PIN not valid" = "PIN no es correcto";
-
-/* User message: passwordChangeFailed title */
-"PIN was not changed" = "No se pudo cambiar el PIN";
 
 /* CampaignsView: section title */
 "Point" = "Puntos";
@@ -404,11 +434,20 @@
 /* No comment provided by engineer. */
 "Price" = "Precio";
 
+/* SettingsView: CheckoutQRView option */
+"Print Checkout QR" = "Imprimir Checkout QR";
+
+/* SettingsView: CheckoutQRView option */
+"Print Registration QR" = "Imprimir QR de registro de cliente";
+
 /* StampNewView */
 "Prize" = "Premio";
 
 /* WayPay.Prize.Format. */
 "Prize format" = "Formato de premio";
+
+/* CheckinView: section title */
+"Prizes" = "Premios";
 
 /* No comment provided by engineer. */
 "Prizes redeemed" = "Premios canjeados";
@@ -418,6 +457,9 @@
 
 /* SettingsView: merchants products */
 "Product catalogue" = "Catálogo de productos";
+
+/* User message: addProducts */
+"Product catalogue empty" = "Catálogo de productos vacío";
 
 /* No comment provided by engineer. */
 "Product could not be updated. Try again later. If problem persists contact support@wayapp.com" = "Error actualizando producto. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
@@ -452,8 +494,17 @@
 /* No comment provided by engineer. */
 "Refunds" = "Reembolsos";
 
+/* No comment provided by engineer. */
+"Register" = "Registrar";
+
+/* SettingsView: CheckoutQRView option */
+"Register customer" = "Registrar cliente";
+
 /* User message: registrationFailed title */
 "Registration attempt failed" = "Error en el registro";
+
+/* User message: consumerAccountCreationError */
+"Registration error" = "Error de registro";
 
 /* CheckoutQRView title */
 "Registration QR" = "QR de registro";
@@ -492,6 +543,9 @@
 "Reward customers by number of visits. The more they visit, the more cashbask or discounts they get." = "Premia a los clientes por sus vistas. Cada visita cuenta para ganar cashback o descuentos";
 
 /* No comment provided by engineer. */
+"Reward customers with" = "Recompensa clientes con";
+
+/* No comment provided by engineer. */
 "Reward customers with cashback (€) or discount (%):" = "Premia a los clientes con cashback (€) o descuentos (%):";
 
 /* CheckoutView: button title */
@@ -512,11 +566,9 @@
 /* No comment provided by engineer. */
 "Save" = "Guardar";
 
-/* CheckoutView: button title */
-"Scan customer QR" = "Escanea QR";
-
-/* navigationBarTitle */
-"Scan QR" = "Escanea QR";
+/* CheckoutView: button title
+   navigationBarTitle */
+"Scan customer QR" = "Escanea QR cliente";
 
 /* No comment provided by engineer. */
 "Sell your own digital giftcard. Customers pay you, you scan card, and top it up." = "Vende tu propia tarjeta regalo digital. Los clientes te pre-pagan el saldo, y luego la usan en sus compras";
@@ -535,6 +587,9 @@
 
 /* OnboardingPage: explanation */
 "Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)" = "Configura tu campaña de tarjeta de sellos digital en un clic. Escoge el número de visitas (sellos) a premiar, y el premio (cashback o descuento)";
+
+/* User message: addProducts */
+"Shopping cart empty" = "Cesta de compra vacía";
 
 /* No comment provided by engineer. */
 "Sign in" = "Iniciar sesión";
@@ -557,8 +612,8 @@
 /* No comment provided by engineer. */
 "This month" = "Este mes";
 
-/* User message: forgotPassword title */
-"To finish the PIN change" = "Para finalizar el cambio de PIN";
+/* User message: forgotPIN title */
+"To finish PIN change" = "Para cambiar el PIN";
 
 /* AmountViewOption action buttonTitle
    AmountViewOption title
@@ -593,7 +648,7 @@
 /* User message: registrationFailed: registration error during registration */
 "Try another email address, if problem persists contact us at support@wayapp.com" = "Intenta con otro email, si no encuentras solución contacta a support@wayapp.com";
 
-/* User message: passwordChangeFailed: registration error during registration */
+/* User message: pinChangeFailed: registration error during registration */
 "Try your current PIN again, if problem persists contact us at support@wayapp.com" = "Intenta tu PIN otra vez, si no encuentras solución contacta a support@wayapp.com";
 
 /* SettingsView: OnboardingView option */

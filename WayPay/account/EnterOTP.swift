@@ -23,16 +23,18 @@ struct EnterOTP: View {
     @State private var confirmationPIN = String()
     @State private var showChangeResultAlert = false
 
+    var shouldChangePINbuttonBeDisabled: Bool {
+        return (otp.count < WayPay.Account.PINLength) ||
+            (otp.count > WayPay.Account.PINLength) ||
+            (otp.count == WayPay.Account.PINLength && otp != otpReceived) ||
+            isAPICallOngoing ||
+            !WayAppUtils.validateEmail(email)
+    }
+
     var shouldSendEmailButtonBeDisabled: Bool {
         return isAPICallOngoing || !WayAppUtils.validateEmail(email)
     }
 
-    var shouldChangePINbuttonBeDisabled: Bool {
-        return (otp.count < WayPay.Account.PINLength) ||
-            (otp.count > WayPay.Account.PINLength) ||
-            (otp.count == WayPay.Account.PINLength && otp != otpReceived)
-    }
-    
     private var isUserInputValid: Bool {
         return (newPIN.count == WayPay.Account.PINLength) &&
                 (confirmationPIN.count == WayPay.Account.PINLength) &&
@@ -57,24 +59,7 @@ struct EnterOTP: View {
                     .cornerRadius(WayPay.cornerRadius)
                     .padding()
                 Button(action: {
-                    DispatchQueue.main.async {
-                        self.isAPICallOngoing = true
-                    }
-                    WayPay.Account.forgotPIN(self.email) { otps, error in
-                        DispatchQueue.main.async {
-                            self.isAPICallOngoing = false
-                        }
-                        if let otps = otps,
-                           let otp = otps.first {
-                            DispatchQueue.main.async {
-                                self.otpReceived = otp.otp
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                self.showResetResultAlert = true
-                            }
-                        }
-                    }
+                    forgotPIN()
                  }) {
                      Text("Send")
                         .padding()
@@ -82,6 +67,11 @@ struct EnterOTP: View {
                  }
                 .disabled(shouldSendEmailButtonBeDisabled)
                 .buttonStyle(WayPay.WideButtonModifier())
+                .alert(isPresented: $showResetResultAlert) {
+                    Alert(title: Text(WayPay.AlertMessage.pinChangeFailed.text.title),
+                          message: Text(WayPay.AlertMessage.pinChangeFailed.text.message),
+                          dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
+                }
             }
         } else if otpReceived != nil && shouldChangePINbuttonBeDisabled {
             Form {
@@ -125,26 +115,7 @@ struct EnterOTP: View {
                 }
                 .padding()
                 Button(action: {
-                    DispatchQueue.main.async {
-                        self.isAPICallOngoing = true
-                    }
-                    WayPay.Account.changePIN(self.email, newPIN: self.newPIN) { accounts, error in
-                        DispatchQueue.main.async {
-                            self.isAPICallOngoing = false
-                        }
-                        if let accounts = accounts,
-                           let account = accounts.first {
-                            DispatchQueue.main.async {
-                                session.account = account
-                                session.saveLoginData(pin: newPIN)
-                                self.presentationMode.wrappedValue.dismiss()
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                self.showChangeResultAlert = true
-                            }
-                        }
-                    }
+                    changePIN()
                 }) {
                     Text("Change")
                         .padding()
@@ -153,10 +124,50 @@ struct EnterOTP: View {
                 .disabled(shouldChangeButtonBeDisabled)
                 .buttonStyle(WayPay.WideButtonModifier())
                 .alert(isPresented: $showChangeResultAlert) {
-                    Alert(title: Text("System error"),
-                          message: Text("PIN could not be changed. Try again later. If problem persists contact support@wayapp.com"),
+                    Alert(title: Text(WayPay.AlertMessage.pinChangeFailed.text.title),
+                          message: Text(WayPay.AlertMessage.pinChangeFailed.text.message),
                           dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
                 }
+            }
+        }
+    } // body
+    
+    private func forgotPIN() {
+        isAPICallOngoing = true
+        WayPay.Account.forgotPIN(self.email) { otps, error in
+            if let otps = otps,
+               let otp = otps.first {
+                DispatchQueue.main.async {
+                    self.otpReceived = otp.otp
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.showResetResultAlert = true
+                }
+            }
+            DispatchQueue.main.async {
+                self.isAPICallOngoing = false
+            }
+        }
+    }
+    
+    private func changePIN() {
+        isAPICallOngoing = true
+        WayPay.Account.changePIN(self.email, newPIN: self.newPIN) { accounts, error in
+            if let accounts = accounts,
+               let account = accounts.first {
+                DispatchQueue.main.async {
+                    session.account = account
+                    session.saveLoginData(pin: newPIN)
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.showChangeResultAlert = true
+                }
+            }
+            DispatchQueue.main.async {
+                self.isAPICallOngoing = false
             }
         }
     }

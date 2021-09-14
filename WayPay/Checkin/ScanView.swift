@@ -27,7 +27,7 @@ struct ScanView: View {
     var body: some View {
         if (showQRScanner) {
             CodeCaptureView(showCodePicker: self.$showQRScanner, code: self.$scannedCode, codeTypes: WayPay.acceptedPaymentCodes, completion: self.handleScan)
-                .navigationBarTitle(NSLocalizedString("Scan QR", comment: "navigationBarTitle"))
+                .navigationBarTitle(NSLocalizedString("Scan customer QR", comment: "navigationBarTitle"))
         } else if isAPICallOngoing {
             ProgressView(NSLocalizedString(WayPay.SingleMessage.progressView.text, comment: "Activity indicator"))
                 .progressViewStyle(WayPay.WayPayProgressViewStyle())
