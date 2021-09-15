@@ -13,8 +13,8 @@ enum OnboardingPage: CaseIterable {
     
     var title: String {
         switch self {
-        case .ONE: return NSLocalizedString("It is free", comment: "OnboardingPage: title")
-        case .TWO: return NSLocalizedString("Reward customer visits", comment: "OnboardingPage: title")
+        case .ONE: return NSLocalizedString("Reward customer visits", comment: "OnboardingPage: title")
+        case .TWO: return NSLocalizedString("It is free", comment: "OnboardingPage: title")
         case .THREE: return NSLocalizedString("Premium features", comment: "OnboardingPage: title")
         case .FOUR: return NSLocalizedString("Onboard your customers", comment: "OnboardingPage: title")
         case .FIVE: return NSLocalizedString("Get started", comment: "OnboardingPage: title")
@@ -23,8 +23,8 @@ enum OnboardingPage: CaseIterable {
     
     var image: String {
         switch self {
-        case .ONE: return "Peace"
-        case .TWO: return "Trophy"
+        case .ONE: return "Trophy"
+        case .TWO: return "Peace"
         case .THREE: return "Pig"
         case .FOUR: return "Rooster"
         case .FIVE: return "Hand"
@@ -33,11 +33,11 @@ enum OnboardingPage: CaseIterable {
     
     var explanation: String {
         switch self {
-        case .ONE: return NSLocalizedString("Start using WayPay completely free. Contact us to enable premium features", comment: "OnboardingPage: explanation")
-        case .TWO: return NSLocalizedString("Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)", comment: "OnboardingPage: explanation")
+        case .ONE: return NSLocalizedString("Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)", comment: "OnboardingPage: explanation")
+        case .TWO: return NSLocalizedString("Start using WayPay completely free. Contact us to enable premium features", comment: "OnboardingPage: explanation")
         case .THREE: return NSLocalizedString("You can also reward customers by how much they spend, and sell your own digital giftcard. Contact us", comment: "OnboardingPage: explanation")
-        case .FOUR: return NSLocalizedString("In the Setting section you will find a QR that your customers can scan to install the loyalty card on the Wallet app of their phone (no app necessary)", comment: "OnboardingPage: explanation")
-        case .FIVE: return NSLocalizedString("Remember, go to Settings to setup the punch card campaign, display the registration QR to your customers, and start scanning to reward them", comment: "OnboardingPage: explanation")
+        case .FOUR: return NSLocalizedString("In the Setting section you can register your customers directly. You can also print the registration QR for customers to scan and self-register", comment: "OnboardingPage: explanation")
+        case .FIVE: return NSLocalizedString("Start by going to Settings to setup your first punch card campaign, register your customers, and start scanning to reward them", comment: "OnboardingPage: explanation")
         }
     }
     

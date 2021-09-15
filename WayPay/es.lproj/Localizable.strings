@@ -282,7 +282,7 @@
 "Hello, I am interested in using this feature. Please contact me. Thanks." = "Hola, me interesa usar esta funcionalidad. Contáctame.";
 
 /* OnboardingPage: explanation */
-"In the Setting section you will find a QR that your customers can scan to install the loyalty card on the Wallet app of their phone (no app necessary)" = "En el menú de Configuración encontrarás el QR que tu clientes escanean para instalar su tarjeta de lealtad en la app Wallet de su móvil (no hace falta descargar app)";
+"In the Setting section you can register your customers directly. You can also print the registration QR for customers to scan and self-register" = "Ve a Configuración y registra directamente a tus clientes. También puedes imprimir el QR de registro que tus clientes escanean para registrarse";
 
 /* HTTPCall: Error: invalidRequest */
 "Invalid API request. Check URL" = "Invalid API request. Check URL";
@@ -429,7 +429,7 @@
 "Premium feature" = "Funcionalidad premium";
 
 /* OnboardingPage: title */
-"Premium features" = "Funcionalidad paga";
+"Premium features" = "Funcionalidad premium";
 
 /* No comment provided by engineer. */
 "Price" = "Precio";
@@ -510,7 +510,7 @@
 "Registration QR" = "QR de registro";
 
 /* OnboardingPage: explanation */
-"Remember, go to Settings to setup the punch card campaign, display the registration QR to your customers, and start scanning to reward them" = "Recuerda, ve al menú de Configuración para activar la campaña de sellos, muestra el QR de registro a tus clientes, y empieza a escanear para recompensar a tus clientes";
+"Start by going to Settings to setup your first punch card campaign, register your customers, and start scanning to reward them" = "Empieza yendo a Configuración y activando tu primera campaña de sellos. Luego registra a tus clientes y empieza a recompensar su fidelidad";
 
 /* No comment provided by engineer. */
 "Remove all" = "Elimina todos";
@@ -586,7 +586,7 @@
 "Setup" = "Configuración";
 
 /* OnboardingPage: explanation */
-"Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)" = "Configura tu campaña de tarjeta de sellos digital en un clic. Escoge el número de visitas (sellos) a premiar, y el premio (cashback o descuento)";
+"Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)" = "Configura tu tarjeta de sellos digital en un clic. Escoge el número de sellos (visitas) y el premio (cashback o descuento)";
 
 /* User message: addProducts */
 "Shopping cart empty" = "Cesta de compra vacía";
@@ -601,7 +601,7 @@
 "Stamps granted" = "Sellos otorgados";
 
 /* OnboardingPage: explanation */
-"Start using WayPay completely free. Contact us to enable premium features" = "Comienza a usar WayPay completamente gratis. Contáctanos para activar más funcionalidad";
+"Start using WayPay completely free. Contact us to enable premium features" = "Comienza a usar WayPay completamente gratis. Contáctanos para activar más funcionalidades";
 
 /* No comment provided by engineer. */
 "System error" = "Error del sistema";
@@ -664,7 +664,7 @@
 "Visits to get prize" = "Visitas a premiar";
 
 /* OnboardingPage: explanation */
-"You can also reward customers by how much they spend, and sell your own digital giftcard. Contact us" = "También puedes recompensar a tus clientes por lo que gastan, y vender tu propia tarjeta regalo digital";
+"You can also reward customers by how much they spend, and sell your own digital giftcard. Contact us" = "También puedes recompensar a tus clientes por lo que gastan y vender tu propia tarjeta regalo digital";
 
 /* No comment provided by engineer. */
 "Your customers can scan this QR directly from their mobile Wallet pass to make payment" = "Tus clientes escanean el Checkout QR desde el reverso de su pase para pagar";
