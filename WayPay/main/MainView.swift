@@ -88,6 +88,10 @@ struct MainView: View {
                 }
                 .tag(Tab.settings)
             } // TabView
+            .onAppear(perform: {
+                WayAppUtils.Log.message("****** onAppear")
+                session.storeManager.validateAutoReneawableSubscriptions()
+            })
         ) // AnyView
     }
 

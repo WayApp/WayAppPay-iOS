@@ -9,12 +9,14 @@
 import Network
 import SwiftUI
 import PassKit
+import StoreKit
 
 extension WayPay {
     
     static var session = Session()
     
     final class Session: ObservableObject {
+        @Published var storeManager: StoreManager = StoreManager()
         @Published var imageDownloader: ImageDownloader?
         @Published var showAuthenticationView: Bool = true
         @AppStorage("skipOnboarding") var skipOnboarding: Bool = UserDefaults.standard.bool(forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
@@ -150,13 +152,15 @@ extension WayPay {
         var passes = [PKPass]()
 
         init() {
+            storeManager.receiptValidation()
             self.networkMonitor.pathUpdateHandler = { path in
                 self.isNetworkAvailable = (path.status == .satisfied)
             }
             if let account = Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
                 self.account = account
             }
-            
+            SKPaymentQueue.default().add(storeManager)
+            storeManager.getProducts(productIDs: StoreManager.ProductID.allIDs)
         }
         
         var amount: Int {

@@ -15,6 +15,9 @@
 		B1066B9C26CBD4E2000A3DB5 /* AccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1066B9B26CBD4E2000A3DB5 /* AccountRequest.swift */; };
 		B108CB2C26A5B3440071346D /* Checkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B108CB2B26A5B3440071346D /* Checkin.swift */; };
 		B10F838825DBCA8000F4B528 /* WayPayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F838725DBCA8000F4B528 /* WayPayApp.swift */; };
+		B118F96226F4E7C500A53E98 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B118F96126F4E7C500A53E98 /* StoreManager.swift */; };
+		B118F96426F4ED9500A53E98 /* StoreProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B118F96326F4ED9500A53E98 /* StoreProductsView.swift */; };
+		B118F96726F5D57000A53E98 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B118F96626F5D57000A53E98 /* StoreKit.framework */; };
 		B11B6A4C26CFB1C600E516DD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B11B6A4E26CFB1C600E516DD /* Localizable.strings */; };
 		B11F695023EC83DF005C880A /* ShoppingCartRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */; };
 		B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F695123EC8C85005C880A /* ShoppingCart.swift */; };
@@ -101,6 +104,9 @@
 		B1066B9B26CBD4E2000A3DB5 /* AccountRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRequest.swift; sourceTree = "<group>"; };
 		B108CB2B26A5B3440071346D /* Checkin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkin.swift; sourceTree = "<group>"; };
 		B10F838725DBCA8000F4B528 /* WayPayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayPayApp.swift; sourceTree = "<group>"; };
+		B118F96126F4E7C500A53E98 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		B118F96326F4ED9500A53E98 /* StoreProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreProductsView.swift; sourceTree = "<group>"; };
+		B118F96626F5D57000A53E98 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		B11B6A4F26CFB2DA00E516DD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B11B6A5326D12E2600E516DD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B11F694F23EC83DF005C880A /* ShoppingCartRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartRowView.swift; sourceTree = "<group>"; };
@@ -189,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B164A70D24A4C13B0020ACAB /* PassKit.framework in Frameworks */,
+				B118F96726F5D57000A53E98 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +209,23 @@
 				AF3A376323E844FC00E437CA /* AddProductButtonView.swift */,
 			);
 			path = main;
+			sourceTree = "<group>";
+		};
+		B118F96026F4E7A800A53E98 /* StoreManager */ = {
+			isa = PBXGroup;
+			children = (
+				B118F96126F4E7C500A53E98 /* StoreManager.swift */,
+				B118F96326F4ED9500A53E98 /* StoreProductsView.swift */,
+			);
+			path = StoreManager;
+			sourceTree = "<group>";
+		};
+		B118F96526F5D57000A53E98 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B118F96626F5D57000A53E98 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		B12DE94C23AA632400C02657 /* account */ = {
@@ -358,6 +382,7 @@
 				B19ACCB7238B092A009FF084 /* WayPay */,
 				B12DE95623AA66A600C02657 /* utilities */,
 				B19ACCB6238B092A009FF084 /* Products */,
+				B118F96526F5D57000A53E98 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -372,6 +397,7 @@
 		B19ACCB7238B092A009FF084 /* WayPay */ = {
 			isa = PBXGroup;
 			children = (
+				B118F96026F4E7A800A53E98 /* StoreManager */,
 				B10F838725DBCA8000F4B528 /* WayPayApp.swift */,
 				B1D0D8BF26CCF844009171A7 /* onboarding */,
 				B13B688E26A5DC6500271515 /* Checkin */,
@@ -544,6 +570,7 @@
 				B12DE95323AA643E00C02657 /* WayPay.swift in Sources */,
 				B11F695223EC8C85005C880A /* ShoppingCart.swift in Sources */,
 				B1E7A58A23E44E3E00CC2E04 /* ProductDetailView.swift in Sources */,
+				B118F96426F4ED9500A53E98 /* StoreProductsView.swift in Sources */,
 				B12DE97423AA718300C02657 /* Card.swift in Sources */,
 				B1BA480925D7EFF200ED31EF /* SendEmail.swift in Sources */,
 				B1066B9C26CBD4E2000A3DB5 /* AccountRequest.swift in Sources */,
@@ -561,6 +588,7 @@
 				B1D0D8C126CCFA09009171A7 /* OnboardingPage.swift in Sources */,
 				B12DE96E23AA709700C02657 /* Transaction.swift in Sources */,
 				B16ECCC225E66D5D007A9115 /* AfterBanks.swift in Sources */,
+				B118F96226F4E7C500A53E98 /* StoreManager.swift in Sources */,
 				B1E7A58823E44A1B00CC2E04 /* ProductRowView.swift in Sources */,
 				B13B11E926F0B783004382C2 /* ConsumerRegistrationView.swift in Sources */,
 				B1E7A58D23E5860100CC2E04 /* Merchant.swift in Sources */,

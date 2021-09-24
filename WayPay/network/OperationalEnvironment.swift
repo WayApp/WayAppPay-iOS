@@ -11,7 +11,7 @@ import Foundation
 enum OperationalEnvironment {
     case production, staging
     
-    static var current: OperationalEnvironment = .production
+    static var current: OperationalEnvironment = .staging
     static var isSettingsSupportFunctionsActive = false
     
     static var wayappPayAPIBaseURL: String {
@@ -89,6 +89,19 @@ enum OperationalEnvironment {
         case .staging:
             return "s2be1zyaihpmhgzy"
         }
+    }
+
+    static var receiptValidationURL: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "https://buy.itunes.apple.com/verifyReceipt"
+        case .staging:
+            return "https://sandbox.itunes.apple.com/verifyReceipt"
+        }
+    }
+    
+    static var inPurchaseSharedKey: String {
+        return "376642c3165444a2950632ea6f7c52ea"
     }
 
     static var afterBanksToken: String {

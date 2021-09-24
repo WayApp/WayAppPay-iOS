@@ -153,10 +153,12 @@ enum HTTPCall {
         WayAppUtils.Log.message("urlRequest url: \(urlRequest.url?.absoluteString ?? "no URL")")
         URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) -> Void in
             // First check needs to be with error (not data), as data can be nil in successful responses
+            /*
             if let data = data,
                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 WayAppUtils.Log.message("Data-jsonResponse: \(jsonResponse)")
             }
+             */
             if let error = error {
                 WayAppUtils.Log.message("HTTP_response: \(response.debugDescription)")
                 result(nil, .unhandled(error))
@@ -164,7 +166,7 @@ enum HTTPCall {
                       let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                       let objectResponse = try? WayPay.jsonDecoder.decode(decodingType, from: data),
                       let code = jsonResponse["code"] as? Int {
-                WayAppUtils.Log.message("\nurlRequest: \(urlRequest)\nData: \(objectResponse)")
+                //WayAppUtils.Log.message("\nurlRequest: \(urlRequest)\nData: \(objectResponse)")
                 
                 if self.endpoint.isSuccessStatusCodeWithJSONResponse(code) {
                     result(objectResponse, nil)

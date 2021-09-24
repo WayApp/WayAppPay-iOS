@@ -78,7 +78,6 @@ extension WayPay {
         // Merchant
         case createMerchant(Merchant) // POST
         case createMerchantForAccount(String, Merchant, UIImage?) // POST
-        case accountAndMerchant(Account, Merchant) // POST
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
@@ -149,7 +148,6 @@ extension WayPay {
             // Merchants
             case .createMerchant(_): return "/merchants/"
             case .createMerchantForAccount(let accountUUID, _, _): return "/accounts/\(accountUUID)/merchants/"
-            case .accountAndMerchant(_ , _): return "/merchants/"
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
@@ -221,7 +219,6 @@ extension WayPay {
             // Merchant
             case .createMerchant: return ""
             case .createMerchantForAccount(let accountUUID, _, _): return accountUUID
-            case .accountAndMerchant(_ , _): return ""
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
@@ -295,7 +292,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .accountAndMerchant, .createAccount, .createMerchant, .createMerchantForAccount:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -482,19 +479,6 @@ extension WayPay {
                 if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
                     parts = [part]
                     if let part = HTTPCall.BodyPart(campaign, name: "campaign") {
-                        parts?.append(part)
-                    }
-                }
-                if let parts = parts {
-                    let multipart = HTTPCall.BodyPart.multipart(parts)
-                    return (multipart.contentType, multipart.data)
-                }
-                return nil
-            case .accountAndMerchant(let account, let merchant):
-                var parts: [HTTPCall.BodyPart]?
-                if let part = HTTPCall.BodyPart(account, name: "account") {
-                    parts = [part]
-                    if let part = HTTPCall.BodyPart(merchant, name: "merchant") {
                         parts?.append(part)
                     }
                 }

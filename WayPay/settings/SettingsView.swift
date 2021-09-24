@@ -149,6 +149,9 @@ struct SettingsView: View {
                 Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: WayPay.SingleMessage.requestGiftcard.text)!)
                     .font(.caption)
                     .foregroundColor(Color.blue)
+                NavigationLink(destination: StoreProductsView()) {
+                    Label(NSLocalizedString("Purchase premium", comment: "SettingsView: CheckoutQRView option"), systemImage: "applelogo")
+                }
             } // Section Giftcard
             .listItemTint(Color.green)
             Section(header:
