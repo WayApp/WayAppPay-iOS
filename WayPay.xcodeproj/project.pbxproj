@@ -56,6 +56,7 @@
 		B17C97C8268E28B9007C652C /* Stamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17C97C7268E28B9007C652C /* Stamp.swift */; };
 		B183449B23E40E76006D414D /* WayAppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B183449A23E40E76006D414D /* WayAppUtils.swift */; };
 		B1843DBF26A96EE000C4F832 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1843DBE26A96EE000C4F832 /* Assets.xcassets */; };
+		B189995C270C7027002A6730 /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B189995B270C7027002A6730 /* PushNotification.swift */; };
 		B198BA4E26C165D8007BE2EF /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B198BA4D26C165D8007BE2EF /* CheckoutView.swift */; };
 		B19ACCBD238B092A009FF084 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBC238B092A009FF084 /* MainView.swift */; };
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
@@ -147,6 +148,7 @@
 		B17C97C7268E28B9007C652C /* Stamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stamp.swift; sourceTree = "<group>"; };
 		B183449A23E40E76006D414D /* WayAppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayAppUtils.swift; sourceTree = "<group>"; };
 		B1843DBE26A96EE000C4F832 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B189995B270C7027002A6730 /* PushNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		B198BA4D26C165D8007BE2EF /* CheckoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WayPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCBC238B092A009FF084 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 			isa = PBXGroup;
 			children = (
 				B1E7A58C23E5860100CC2E04 /* Merchant.swift */,
+				B189995B270C7027002A6730 /* PushNotification.swift */,
 			);
 			path = merchant;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				B198BA4E26C165D8007BE2EF /* CheckoutView.swift in Sources */,
 				B1B3818925066D8D0008BC78 /* Consent.swift in Sources */,
 				B108CB2C26A5B3440071346D /* Checkin.swift in Sources */,
+				B189995C270C7027002A6730 /* PushNotification.swift in Sources */,
 				B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */,
 				B17C97C6268E2762007C652C /* Point.swift in Sources */,
 				B1F4157A26011A7E00511B6D /* Registration.swift in Sources */,

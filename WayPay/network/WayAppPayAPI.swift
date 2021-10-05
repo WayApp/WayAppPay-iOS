@@ -83,6 +83,7 @@ extension WayPay {
         case getMerchantAccounts(String) // GET
         case getMerchantAccountDetail(String, String) // GET
         case deleteMerchant(String) // GET
+        case sendPushNotificationForMerchant(String, PushNotification) // POST
         // Product
         case getProducts(String) // GET
         case addProduct(String, Product, UIImage?) // POST
@@ -134,6 +135,7 @@ extension WayPay {
         case rewardCampaign(PaymentTransaction, Campaign) // POST
         case redeemCampaigns(PaymentTransaction, Array<String>) // POST
         case getCampaignsForIssuer(String, String, Campaign.Format) // GET
+        case sendPushNotificationForCampaign(String, PushNotification) // POST
 
         private var path: String {
             switch self {
@@ -153,6 +155,7 @@ extension WayPay {
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/"
             case .deleteMerchant(let merchantUUID): return "/merchants/\(merchantUUID)/"
+            case .sendPushNotificationForMerchant(let merchantUUID, _): return "/merchants/\(merchantUUID)/messages/"
             // Products
             case .getProducts(let merchantUUID): return "/merchants/\(merchantUUID)/products/"
             case .addProduct(let merchantUUID, _, _): return "/merchants/\(merchantUUID)/products/"
@@ -202,6 +205,7 @@ extension WayPay {
             case .rewardCampaign( _, _): return "/campaigns/rewards/"
             case .redeemCampaigns( _, _): return "/campaigns/redeems/"
             case .getCampaignsForIssuer(let merchantUUID, let issuerUUID, _): return "/campaigns/merchants/\(merchantUUID)/issuers/\(issuerUUID)/"
+            case .sendPushNotificationForCampaign(let campaignID, _): return "/campaigns/\(campaignID)/messages/"
             // TRASH
             case .account: return "/accounts/"
             case .editAccount: return "/accounts/\(WayPay.session.accountUUID!)/"
@@ -224,6 +228,7 @@ extension WayPay {
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
             case .deleteMerchant(let merchantUUID): return merchantUUID
+            case .sendPushNotificationForMerchant(let merchantUUID, _): return merchantUUID
             // Product
             case .getProducts(let merchantUUID): return merchantUUID
             case .addProduct(let merchantUUID, _, _): return merchantUUID
@@ -273,6 +278,7 @@ extension WayPay {
             case .rewardCampaign: return ""
             case .redeemCampaigns: return ""
             case .getCampaignsForIssuer(let merchantUUID, let issuerUUID, _): return merchantUUID + "/" + issuerUUID
+            case .sendPushNotificationForCampaign(let campaignID, _): return campaignID
             default: return ""
             }
         }
@@ -292,7 +298,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -371,6 +377,16 @@ extension WayPay {
             case .refundTransaction(_, _, _, let transaction):
                 if let part = HTTPCall.BodyPart(transaction, name: "transaction") {
                     return (part.contentType, part.data)
+                }
+                return nil
+            case .sendPushNotificationForMerchant(_ , let pushNotification), .sendPushNotificationForCampaign(_ , let pushNotification):
+                var parts: [HTTPCall.BodyPart]?
+                if let part = HTTPCall.BodyPart(pushNotification, name: "pushNotification") {
+                    parts = [part]
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
                 }
                 return nil
             case .addProduct(_, let product, let picture):

@@ -89,6 +89,21 @@ extension WayPay {
             }
         }
 
+        func sendPushNotification(pushNotification: PushNotification, completion: @escaping ([PushNotification]?, Error?) -> Void) {
+            WayAppUtils.Log.message("Sending pushNotification with text: \(pushNotification.text)")
+            WayPay.API.sendPushNotificationForMerchant(merchantUUID, pushNotification).fetch(type: [PushNotification].self) { response in
+                WayAppUtils.Log.message("Merchant: sendPushNotification: responded: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
 
         func getTransactionsForAccount(_ accountUUID: String) {
             WayPay.API.getMerchantAccountTransactions(merchantUUID, accountUUID).fetch(type: [PaymentTransaction].self) { response in

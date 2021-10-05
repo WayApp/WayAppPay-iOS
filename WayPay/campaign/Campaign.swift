@@ -280,6 +280,23 @@ extension WayPay {
             }
         }
         
+        func sendPushNotification(pushNotification: PushNotification, completion: @escaping ([PushNotification]?, Error?) -> Void) {
+            WayAppUtils.Log.message("Sending campaign pushNotification with text: \(pushNotification.text)")
+            WayPay.API.sendPushNotificationForCampaign(self.id, pushNotification).fetch(type: [PushNotification].self) { response in
+                WayAppUtils.Log.message("Campaign: sendPushNotification: responded: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+
+        
         static func delete(at offsets: IndexSet) {
             WayAppUtils.Log.message("Entering")
             for offset in offsets {

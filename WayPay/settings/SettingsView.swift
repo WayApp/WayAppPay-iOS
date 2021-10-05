@@ -226,6 +226,20 @@ struct SettingsView: View {
                     Group {
                         Button {
                             DispatchQueue.main.async {
+                                self.sendPushNotificationToMerchant()
+                            }
+                        } label: {
+                            Label("Send push", systemImage: "message.fill")
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.sendPushNotificationToCampaign()
+                            }
+                        } label: {
+                            Label("Send push", systemImage: "message")
+                        }
+                        Button {
+                            DispatchQueue.main.async {
                                 self.updatePoint()
                             }
                         } label: {
@@ -509,6 +523,38 @@ extension SettingsView {
     private func deleteAccount() {
         WayPay.Account.delete("b358f597-fb93-47e7-818e-85941de48934")
         WayPay.Account.delete("76f8eef0-52ea-4436-a874-cf4a88087a6a")
+    }
+
+    private func sendPushNotificationToMerchant() {
+        let pushNotification = WayPay.PushNotification(text: "Hello José, Welcome to WayPay's Push Notifications")
+        WayAppUtils.Log.message("Sending merchant pushNotification with text: \(pushNotification.text)")
+        session.merchant?.sendPushNotification(pushNotification: pushNotification) { pushNotifications, error in
+            if let pushNotifications = pushNotifications,
+               let resultPush = pushNotifications.first {
+                WayAppUtils.Log.message("PushNotification text: \(resultPush.text)")
+            } else if let error = error  {
+                WayAppUtils.Log.message("PushNotification ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("PushNotification ERROR is NIL")
+            }
+        }
+
+    }
+
+    private func sendPushNotificationToCampaign() {
+        let pushNotification = WayPay.PushNotification(text: "Campaign announcement")
+        WayAppUtils.Log.message("Sending campaign pushNotification with text: \(pushNotification.text)")
+        session.merchant?.sendPushNotification(pushNotification: pushNotification) { pushNotifications, error in
+            if let pushNotifications = pushNotifications,
+               let resultPush = pushNotifications.first {
+                WayAppUtils.Log.message("PushNotification text: \(resultPush.text)")
+            } else if let error = error  {
+                WayAppUtils.Log.message("PushNotification ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("PushNotification ERROR is NIL")
+            }
+        }
+
     }
 
 }
