@@ -283,9 +283,9 @@ struct WayPay {
         return ""
     }
 
-    static func formatAmount(_ price: Int?) -> String {
-        if let price = price,
-            let formatted = WayPay.amountFormatter.string(for: Double(price) / 100) {
+    static func formatAmount(_ amount: Int?) -> String {
+        if let amount = amount,
+            let formatted = WayPay.amountFormatter.string(for: Double(amount) / 100) {
             return formatted
         }
         return ""

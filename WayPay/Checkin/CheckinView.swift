@@ -27,13 +27,13 @@ struct CheckinView: View {
         self.showQRScanner = true
     }
     
-    private func getRewardBalanceForCampaign(_ id: String) -> Int? {
+    private func getRewardBalanceForCampaign(_ id: String) -> String {
         if let rewards = session.checkin?.rewards {
             for reward in rewards where reward.campaignID == id {
-                return reward.balance
+                return reward.getFormattedBalance
             }
         }
-        return nil
+        return ""
     }
     
     private var areAPIcallsDisabled: Bool {
@@ -91,7 +91,7 @@ struct CheckinView: View {
                                let amountToGetIt = stampCampaign.prize?.amountToGetIt {
                                 Label {
                                     Text(stampCampaign.name + ": ") +
-                                        Text(String(getRewardBalanceForCampaign(stampCampaign.id) ?? 0))
+                                        Text(getRewardBalanceForCampaign(stampCampaign.id))
                                         .bold().foregroundColor(Color.green) +
                                         Text(" / " + "\(amountToGetIt)")
                                 } icon: {
@@ -105,9 +105,9 @@ struct CheckinView: View {
                                let amountToGetIt = prize.amountToGetIt {
                                 Label {
                                     Text(pointCampaign.name + ": ") +
-                                        Text(WayPay.formatPrice(getRewardBalanceForCampaign(pointCampaign.id) ?? 0))
+                                        Text(getRewardBalanceForCampaign(pointCampaign.id))
                                         .bold().foregroundColor(Color.green)
-                                    Text(" / " + "\(WayPay.formatPrice(amountToGetIt))")
+                                    Text(" / " + "\(amountToGetIt / 100)")
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))
                                 }
@@ -115,7 +115,7 @@ struct CheckinView: View {
                             if let issuerPointCampaign = session.activeIssuerPointCampaign() {
                                 Label {
                                     Text(issuerPointCampaign.name + ": ") +
-                                        Text(String(getRewardBalanceForCampaign(issuerPointCampaign.id) ?? 0))
+                                        Text(getRewardBalanceForCampaign(issuerPointCampaign.id))
                                         .bold().foregroundColor(Color.green)
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))
@@ -125,7 +125,7 @@ struct CheckinView: View {
                             if let issuerStampCampaign = session.activeIssuerStampCampaign() {
                                 Label {
                                     Text(issuerStampCampaign.name + ": ") +
-                                        Text(String(getRewardBalanceForCampaign(issuerStampCampaign.id) ?? 0))
+                                        Text(getRewardBalanceForCampaign(issuerStampCampaign.id))
                                         .bold().foregroundColor(Color.green)
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .STAMP))

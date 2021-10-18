@@ -229,14 +229,14 @@ struct SettingsView: View {
                                 self.sendPushNotificationToMerchant()
                             }
                         } label: {
-                            Label("Send push", systemImage: "message.fill")
+                            Label("Send merchant push", systemImage: "message.fill")
                         }
                         Button {
                             DispatchQueue.main.async {
                                 self.sendPushNotificationToCampaign()
                             }
                         } label: {
-                            Label("Send push", systemImage: "message")
+                            Label("Send campaign push", systemImage: "message")
                         }
                         Button {
                             DispatchQueue.main.async {
@@ -544,7 +544,7 @@ extension SettingsView {
     private func sendPushNotificationToCampaign() {
         let pushNotification = WayPay.PushNotification(text: "Campaign announcement")
         WayAppUtils.Log.message("Sending campaign pushNotification with text: \(pushNotification.text)")
-        session.merchant?.sendPushNotification(pushNotification: pushNotification) { pushNotifications, error in
+        WayPay.Campaign.sendPushNotification(id: "bea4f43c-712b-4769-9b1a-8812062c28da", pushNotification: pushNotification) { pushNotifications, error in
             if let pushNotifications = pushNotifications,
                let resultPush = pushNotifications.first {
                 WayAppUtils.Log.message("PushNotification text: \(resultPush.text)")
