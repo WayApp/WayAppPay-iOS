@@ -18,7 +18,7 @@ struct CheckoutView: View {
     @State private var wasTransactionSuccessful = false
     @State private var isAPICallOngoing = false
     @State private var displayPromotionAlert = false
-
+    
     let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
     
     var purchaseAmountValueToDisplay: Int {
@@ -60,7 +60,7 @@ struct CheckoutView: View {
     }
     
     private var awardButtons: some View {
-        VStack {
+        HStack {
             Button(action: {
                 if let pointCampaign = pointCampaign {
                     rewardLoyalty(campaign: pointCampaign)
@@ -68,7 +68,7 @@ struct CheckoutView: View {
                     displayPromotionAlert = true
                 }
             }) {
-                Label(NSLocalizedString("Reward purchase amount", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .POINT))
+                Label(NSLocalizedString("Points", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .POINT))
                     .padding()
             }
             .font(.headline)
@@ -94,7 +94,7 @@ struct CheckoutView: View {
                     showStampHelp = true
                 }
             }) {
-                Label(NSLocalizedString("Reward visit", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
+                Label(NSLocalizedString("Stamp", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
                     .padding()
             }
             .buttonStyle(WayPay.WideButtonModifier())
@@ -108,18 +108,8 @@ struct CheckoutView: View {
                         action: {})
                 )
             }
-            Button(action: {
-                if let stampCampaign = stampCampaign {
-                    rewardLoyalty(campaign: stampCampaign)
-                }
-            }) {
-                Label(NSLocalizedString("Community campaign", comment: "CheckoutView: button title"), systemImage: "network")
-                    .padding()
-            }
-            .buttonStyle(WayPay.WideButtonModifier())
-            .disabled(!WayPay.Stamp.isIssuerStampCampaignActive() && !WayPay.Point.isIssuerPointCampaignActive())
         }
-        .animation(.easeInOut(duration: 0.3))
+        .animation(.easeInOut(duration: 1))
         .listRowInsets(EdgeInsets())
         .padding(.horizontal)
         .disabled(areAPIcallsDisabled)
@@ -141,13 +131,11 @@ struct CheckoutView: View {
                 title = NSLocalizedString("Bank account payment", comment: "waypayButtonTitle")
             } else if let balance = checkin.prepaidBalance {
                 if balance >= purchaseAmountValue {
-                    title = NSLocalizedString("Deduct", comment: "waypayButtonTitle") + " "
-                        + "\(WayPay.formatPrice(purchaseAmountValueToDisplay))" + " "
-                        + NSLocalizedString("from giftcard", comment: "waypayButtonTitle")
+                    title = NSLocalizedString("Charge", comment: "waypayButtonTitle") + " "
+                    + "\(WayPay.formatPrice(purchaseAmountValueToDisplay))"
                 } else {
-                    title = NSLocalizedString("Deduct", comment: "waypayButtonTitle") + " " +
-                        "\(WayPay.formatPrice(balance)) of \(WayPay.formatPrice(purchaseAmountValueToDisplay))" + " "
-                        + NSLocalizedString("from giftcard", comment: "waypayButtonTitle")
+                    title = NSLocalizedString("Charge", comment: "waypayButtonTitle") + " " +
+                    "\(WayPay.formatPrice(balance)) of \(WayPay.formatPrice(purchaseAmountValueToDisplay))"
                 }
             }
         }
@@ -190,9 +178,9 @@ struct CheckoutView: View {
     private func processPayment(amount: Int) {
         guard let token = session.checkin?.token,
               let accountUUID = session.accountUUID else {
-            WayAppUtils.Log.message("Missing checkin.token")
-            return
-        }
+                  WayAppUtils.Log.message("Missing checkin.token")
+                  return
+              }
         let merchantUUID = session.merchants[session.seletectedMerchant].merchantUUID
         let payment = WayPay.PaymentTransaction(amount: amount, purchaseDetail: nil, prizes: selectedPrizes(), token: token)
         isAPICallOngoing = true
@@ -219,18 +207,21 @@ struct CheckoutView: View {
             }
         }
     }
-        
+    
     private var areAPIcallsDisabled: Bool {
         return isAPICallOngoing
     }
     
     private var logo: Image {
+        /*
         if session.imageDownloader != nil,
            let image = session.imageDownloader!.image {
             return Image(uiImage: image)
         } else {
             return Image("WayPay-Hands")
         }
+        */
+        return Image("WayPay-Hands")
     }
     
     private var allowsInputAmount: Bool {
@@ -238,11 +229,7 @@ struct CheckoutView: View {
     }
     
     private var allowsScan: Bool {
-        return (purchaseAmountValue > 0 && session.checkin == nil)
-    }
-
-    private var showsCancel: Bool {
-        return (purchaseAmountValue > 0 || session.checkin != nil)
+        return (session.checkin == nil)
     }
     
     private var allowsWayPayPayment: Bool {
@@ -256,12 +243,12 @@ struct CheckoutView: View {
     private var showsPrizes: Bool {
         if let checkin = session.checkin,
            let prizes = checkin.prizes,
-            !prizes.isEmpty {
+           !prizes.isEmpty {
             return true
         }
         return false
     }
-
+    
     private var showsAwardButtons: Bool {
         if session.checkin != nil,
            purchaseAmountValue > 0 {
@@ -269,33 +256,52 @@ struct CheckoutView: View {
         }
         return false
     }
-
-
+    
+    private var showCustomerCheckin: Bool {
+        if session.checkin == nil,
+           purchaseAmountValue == 0 {
+            return true
+        }
+        return false
+    }
+    
+    
     var body: some View {
         ZStack {
             ScrollView {
                 VStack {
                     VStack(alignment: .center, spacing: 4) {
-                        logo
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 80, maxHeight: 80)
-                            .clipShape(Circle())
-                        if (!WayPay.fullname.isEmpty) {
-                            Text(WayPay.fullname)
-                                .font(.headline)
+                        Spacer()
+                        Group {
+                            logo
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxHeight: 40)
+                            if (!WayPay.fullname.isEmpty) {
+                                Text(WayPay.fullname)
+                                    .font(.headline)
+                            }
                         }
                         if (allowsInputAmount) {
-                            Text("Enter purchase amount:")
-                                .font(.caption)
-                                .padding(.top)
-                            HStack {
+                            HStack(alignment: .center) {
+                                Text("Purchase amount:")
+                                    .font(.body)
                                 TextField(WayPay.formatAmount(purchaseAmountValue), text: $purchaseAmount)
                                     .font(.title)
                                     .frame(width: 120, height: 40)
                                     .keyboardType(.decimalPad)
                                     .modifier(WayPay.TextFieldModifier(padding: 10, lineWidth: 1))
+                                    .multilineTextAlignment(.trailing)
                                 Text(Locale.current.currencySymbol ?? "")
+                                    .padding(.trailing)
+                                Button(action: {
+                                    reset()
+                                }) {
+                                    Image(systemName: "delete.left.fill")
+                                        .resizable()
+                                        .frame(width: 36.0, height: 30.0)
+                                        .foregroundColor(Color.red)
+                                }
                             }
                             .padding()
                         }
@@ -304,26 +310,35 @@ struct CheckoutView: View {
                                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 self.navigationSelection = 0
                             } label: {
-                                Label(NSLocalizedString("Scan customer QR", comment: "CheckoutView: button title"), systemImage: "qrcode.viewfinder")
+                                Text("Charge")
                                     .padding()
                             }
                             .buttonStyle(WayPay.WideButtonModifier())
                             .padding(.horizontal)
-                            .disabled(areAPIcallsDisabled)
+                            .disabled(areAPIcallsDisabled || purchaseAmountValue == 0)
                         }
-                        if (purchaseAmountValue > 0) {
-                            Divider()
+                        if (showCustomerCheckin) {
+                            Button {
+                                self.navigationSelection = 1
+                            } label: {
+                                Label(NSLocalizedString("Balance", comment: "CheckoutView: button title"), systemImage: "qrcode.viewfinder")
+                                    .padding()
+                            }
+                            .buttonStyle(WayPay.WideButtonModifier())
+                            .padding(.horizontal)
+                            .padding(.top)
                         }
                         if showsPrizes,
                            let prizes = session.checkin?.prizes {
-                            VStack {
+                            HStack(alignment: .center) {
                                 Text("Redeem prize" + ":")
-                                    .font(Font.headline)
-                                    .foregroundColor(.secondary)
+                                    .font(.body)
+                                    .multilineTextAlignment(.leading)
                                 VStack {
                                     ForEach(0 ..< prizes.count) { index in
                                         PrizeRow(prize: prizes[index], index: index)
                                             .padding(.horizontal)
+                                            .padding(.vertical, 6)
                                         if index < prizes.count - 1 {
                                             Divider()
                                         }
@@ -333,15 +348,17 @@ struct CheckoutView: View {
                                 .clipShape(shape)
                                 .overlay(
                                     shape
-                                        .inset(by: 0.5)
-                                        .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+                                        .inset(by: 0.75)
+                                        .stroke(Color.primary.opacity(1.0), lineWidth: 0.75)
                                 )
                             }
                             Divider()
+                                .padding()
                         }
                         if (showsAwardButtons) {
                             awardButtons
                             Divider()
+                                .padding()
                         }
                         if (allowsWayPayPayment) {
                             Button {
@@ -353,20 +370,12 @@ struct CheckoutView: View {
                             .buttonStyle(WayPay.WideButtonModifier())
                             .padding(.horizontal)
                             .disabled(areAPIcallsDisabled)
-                            Divider()
-                        }
-                        if (showsCancel) {
-                            Button {
-                                reset()
-                            } label: {
-                                Text("Cancel")
-                                    .padding()
-                            }
-                            .buttonStyle(WayPay.CancelButtonModifier())
-                            .padding()
                         }
                     }
                     NavigationLink(destination: ScanView(campaign: nil, value: purchaseAmountValue), tag: 0, selection: $navigationSelection) {
+                        EmptyView()
+                    }
+                    NavigationLink(destination: CheckinView(), tag: 1, selection: $navigationSelection) {
                         EmptyView()
                     }
                 } // VStack
@@ -374,13 +383,16 @@ struct CheckoutView: View {
             } // Scrollview
             .navigationTitle(WayPay.formatPrice(purchaseAmountValueToDisplay))
             // purchaseAmount.isEmpty ? NSLocalizedString("Amount", comment: "CheckoutView: navigationTitle") : WayPay.formatPrice(purchaseAmountValueToDisplay)
-            .navigationBarItems(trailing:
-                                    NavigationLink(destination: OrderView()) {
-                                        Image(systemName: "cart.badge.plus")
-                                            .imageScale(.large)
-                                    }
-                                    .overlay(Badge())
-            )
+            .navigationBarItems(leading:
+                                    NavigationLink(destination: SettingsView()) {
+                Image(systemName: "gearshape.fill")
+                    .imageScale(.large)
+            }
+                                , trailing:
+                                    NavigationLink(destination: TransactionsView()) {
+                Image(systemName: "chart.bar.xaxis")
+                    .imageScale(.large)
+            })
             .gesture(DragGesture().onChanged { _ in hideKeyboard() })
             if areAPIcallsDisabled {
                 ProgressView(WayPay.SingleMessage.progressView.text)

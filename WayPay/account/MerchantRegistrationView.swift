@@ -36,12 +36,13 @@ struct MerchantRegistrationView: View {
     @State private var confirmationPIN = String()
     @State var loginError: Bool = false
     @State private var businessName = String()
+    @State private var communityID = String()
     @State private var phoneNumber = String()
     @State private var logo: UIImage? = UIImage(named: WayPay.Merchant.defaultLogo)
     @State private var showImagePicker: Bool = false
 
     private var shouldRegistrationButtonBeDisabled: Bool {
-        return (!WayAppUtils.validateEmail(email) || newPIN.count != WayPay.Account.PINLength) || businessName.isEmpty
+        return (!WayAppUtils.validateEmail(email) || newPIN.count != WayPay.Account.PINLength) || businessName.isEmpty || communityID.isEmpty
     }
     
     var body: some View {
@@ -100,12 +101,19 @@ struct MerchantRegistrationView: View {
                         .frame(minHeight: 10, maxHeight: 80)
                 }
             }
+            Section(header:
+                        Label(NSLocalizedString("My community", comment: "SettingsView: section title"), systemImage: "building.2.fill")
+                        .font(.callout)) {
+                TextField("community id", text: self.$communityID)
+                    .disableAutocorrection(true)
+                    .textContentType(.oneTimeCode)
+            }
             Button(action: {
                 let account = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN(newPIN), phone: phoneNumber, user: email)
                 WayPay.Account.createAccount(account: account) { accounts, error in
                     if let accounts = accounts,
                        let account = accounts.first {
-                        let merchant = WayPay.Merchant(name: businessName, email: email)
+                        let merchant = WayPay.Merchant(name: businessName, email: email, communityID: communityID)
                         WayPay.Merchant.createMerchantForAccount(accountUUID: account.accountUUID, merchant: merchant, logo: logo) { merchants, error in
                             if let merchants = merchants,
                                let merchant = merchants.first {

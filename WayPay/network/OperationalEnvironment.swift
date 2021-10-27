@@ -111,4 +111,14 @@ enum OperationalEnvironment {
     static var afterBanksIBANs: [String] {
         return["ES8401826450000201500191", "ES1801822200120201933578", "ES2501822200160201933547", "ES4901822200110201933554", "ES7301826208302012068108"]
     }
+    
+    static var defaultCommunityID: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "3a825be4-c97c-4592-a61e-aa729d1fca74"
+        case .staging:
+            return "f01ffb3f-5b16-4238-abf0-215c2c2c4c74"
+        }
+    }
+
 }

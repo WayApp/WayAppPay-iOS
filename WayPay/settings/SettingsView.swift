@@ -29,132 +29,6 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section(header:
-                        Label(NSLocalizedString("Reward visits", comment: "CampaignsView: section title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
-                        .font(.callout)) {
-                if let stampCampaign = session.activeStampCampaign() {
-                    Text(stampCampaign.name)
-                    HStack {
-                        Toggle("", isOn: $isStampCampaignActive)
-                            .onChange(of: isStampCampaignActive, perform: {value in
-                                if shouldStampCampaignToggleCallAPI {
-                                    stampCampaign.toggleState() { campaigns, error in
-                                        if let campaigns = campaigns,
-                                           let campaign = campaigns.first {
-                                            session.campaigns[campaign.id]?.state = campaign.state
-                                            session.stamps[campaign.id]?.state = campaign.state
-                                        }
-                                    }
-                                }
-                                shouldStampCampaignToggleCallAPI = true
-                            })
-                            .labelsHidden()
-                            .toggleStyle(SwitchToggleStyle(tint: Color.green))
-                        Spacer()
-                        Button {
-                            WayPay.Campaign.delete(id: stampCampaign.id, sponsorUUID: stampCampaign.sponsorUUID, format: .STAMP) { result, error in
-                                if error == nil {
-                                    DispatchQueue.main.async {
-                                        session.stamps.remove(stampCampaign)
-                                        session.campaigns.remove(stampCampaign)
-                                    }
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "trash.circle.fill")
-                                .resizable()
-                                .frame(width: 48.0, height: 48.0)
-                                .foregroundColor(Color.red)
-                        }
-                    }
-                    .onAppear(perform: {
-                        isStampCampaignActive = session.activeStampCampaign()?.state == .ACTIVE
-                    })
-                } else {
-                    Text("Reward customers by number of visits. The more they visit, the more cashbask or discounts they get.")
-                        .font(.caption)
-                    NavigationLink(destination: StampNewView(campaign: nil)) {
-                        Label(NSLocalizedString("Get started, is free!", comment: "CampaignAction button label") , systemImage: "checkmark.seal.fill")
-                            .accessibility(label: Text("Configure"))
-                            .foregroundColor(Color.green)
-                    }
-                }
-            } // Section STAMP
-            .listItemTint(Color.green)
-            Section(header:
-                        Label(NSLocalizedString("Reward consumption", comment: "CampaignsView: section title"), systemImage: WayPay.Campaign.icon(format: .POINT))
-                        .font(.callout)) {
-                if !session.points.isEmpty {
-                    if let pointCampaign = session.activePointCampaign() {
-                        Text(pointCampaign.name)
-                        HStack {
-                            Toggle("", isOn: $isPointCampaignActive)
-                                .onChange(of: isPointCampaignActive, perform: {value in
-                                    if shouldPointCampaignToggleCallAPI {
-                                        pointCampaign.toggleState() { campaigns, error in
-                                            if let campaigns = campaigns,
-                                               let campaign = campaigns.first {
-                                                session.campaigns[campaign.id]?.state = campaign.state
-                                                session.points[campaign.id]?.state = campaign.state
-                                            }
-                                        }
-                                    }
-                                    self.shouldPointCampaignToggleCallAPI = true
-                                })
-                                .labelsHidden()
-                                .toggleStyle(SwitchToggleStyle(tint: Color.green))
-                            Spacer()
-                            Button {
-                                WayPay.Campaign.delete(id: pointCampaign.id, sponsorUUID: pointCampaign.sponsorUUID, format: .POINT) { result, error in
-                                    if error == nil {
-                                        DispatchQueue.main.async {
-                                            session.points.remove(pointCampaign)
-                                            session.campaigns.remove(pointCampaign)
-                                        }
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: "trash.circle.fill")
-                                    .resizable()
-                                    .frame(width: 48.0, height: 48.0)
-                                    .foregroundColor(Color.red)
-                            }
-                        }
-                        .onAppear(perform: {
-                            isPointCampaignActive = session.activePointCampaign()?.state == .ACTIVE
-                        })
-                    }
-                }  else {
-                    Text("Reward customers by amount of accumulated purchases. The more they spend, the more cashbask or discounts they get.")
-                        .font(.caption)
-                    if let merchant = session.merchant {
-                        if merchant.allowsPointCampaign {
-                            NavigationLink(destination: PointNewView(campaign: nil)) {
-                                Label(NSLocalizedString("Configure", comment: "CampaignAction button label") , systemImage: "checkmark.seal.fill")
-                                    .accessibility(label: Text("Configure"))
-                            }
-                        } else {
-                            Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request points campaign feature"), destination: URL(string: WayPay.SingleMessage.requestPoints.text)!)
-                                .font(.caption)
-                                .foregroundColor(Color.blue)
-                        }
-                    }
-                }
-            } // Section POINT
-            .listItemTint(Color.green)
-            Section(header:
-                        Label(NSLocalizedString("Rechargable giftcard", comment: "SettingsView: section title"), systemImage: "gift")
-                        .font(.callout)) {
-                Text("Sell your own digital giftcard. Customers pay you, you scan card, and top it up.")
-                    .font(.caption)
-                Link(NSLocalizedString("Contact sales@wayapp.com to enable", comment: "Request giftcard feature"), destination: URL(string: WayPay.SingleMessage.requestGiftcard.text)!)
-                    .font(.caption)
-                    .foregroundColor(Color.blue)
-                NavigationLink(destination: StoreProductsView()) {
-                    Label(NSLocalizedString("Purchase premium", comment: "SettingsView: CheckoutQRView option"), systemImage: "applelogo")
-                }
-            } // Section Giftcard
-            .listItemTint(Color.green)
-            Section(header:
                         Label(NSLocalizedString("My business", comment: "SettingsView: section title"), systemImage: "cart")
                         .font(.callout)) {
                 if session.merchants.isEmpty {
@@ -178,9 +52,6 @@ struct SettingsView: View {
                 }
                 NavigationLink(destination: CheckoutQRView()) {
                     Label(NSLocalizedString("Print Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
-                }
-                NavigationLink(destination: ProductGalleryView()) {
-                    Label(NSLocalizedString("Product catalogue", comment: "SettingsView: merchants products"), systemImage: "list.bullet.rectangle")
                 }
                 NavigationLink(destination: ConsumerRegistrationView()) {
                     Label(NSLocalizedString("Register customer", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
@@ -302,6 +173,13 @@ struct SettingsView: View {
                             }
                         } label: {
                             Label("Delete account", systemImage: "trash")
+                        }
+                        Button {
+                            DispatchQueue.main.async {
+                                self.deleteMerchant()
+                            }
+                        } label: {
+                            Label("Delete merchant", systemImage: "trash")
                         }
                         Button {
                             DispatchQueue.main.async {
@@ -521,8 +399,13 @@ extension SettingsView {
     }
     
     private func deleteAccount() {
-        WayPay.Account.delete("b358f597-fb93-47e7-818e-85941de48934")
-        WayPay.Account.delete("76f8eef0-52ea-4436-a874-cf4a88087a6a")
+        WayPay.Account.delete("35f4d239-496e-4563-a055-16c628254977")
+        WayPay.Account.delete("e31ca5ea-42fc-44ce-827a-eb7e4367da6a")
+    }
+
+    private func deleteMerchant() {
+        WayPay.Merchant.delete("898c3025-b974-4779-8d4a-4222bcc7993d")
+        WayPay.Merchant.delete("64c47062-5ade-4ad2-b6bf-72e9840f6a2e")
     }
 
     private func sendPushNotificationToMerchant() {

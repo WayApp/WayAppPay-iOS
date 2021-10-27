@@ -25,11 +25,6 @@ extension WayPay {
         @Published var account: Account? {
             didSet {
                 if let account = account {
-                    /*
-                    DispatchQueue.main.async {
-                        self.showAuthenticationView = false
-                    }
- */
                     Merchant.getMerchantsForAccount(account.accountUUID) { merchants, error in
                         if let merchants = merchants,
                            !merchants.isEmpty {
@@ -48,6 +43,7 @@ extension WayPay {
                 }
             }
         }
+        
         @Published var merchants = Container<Merchant>() {
             didSet {
                 DispatchQueue.main.async {
@@ -55,20 +51,13 @@ extension WayPay {
                 }
             }
         }
+        
         @Published var seletectedMerchant: Int = 0 {
             didSet {
                  if !merchants.isEmpty && doesAccountHasMerchants {
                     imageDownloader = ImageDownloader(imageURL: merchant?.logo, addToCache: true)
-                    Product.get(merchants[seletectedMerchant].merchantUUID) {products, error in
-                        if let products = products {
-                            DispatchQueue.main.async {
-                                session.products.setTo(products)
-                            }
-                        } else {
-                            WayAppUtils.Log.message("Could not fetch products")
-                        }
-                    }
-                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Point.self, format: .POINT) {points, error in
+                    WayAppUtils.Log.message("#### communityID: \(merchants[seletectedMerchant].communityID ?? "No communityID")")
+                    Campaign.get(merchantUUID: nil, issuerUUID: merchants[seletectedMerchant].communityID, campaignType: Point.self, format: .POINT) {points, error in
                         if let points = points {
                             DispatchQueue.main.async {
                                 session.points.setTo(points)
@@ -79,7 +68,7 @@ extension WayPay {
                             WayAppUtils.Log.message("Could not fetch POINT campaigns")
                         }
                     }
-                    Campaign.get(merchantUUID: merchants[seletectedMerchant].merchantUUID, issuerUUID: nil, campaignType: Stamp.self, format: .STAMP) {stamps, error in
+                    Campaign.get(merchantUUID: nil, issuerUUID: merchants[seletectedMerchant].communityID, campaignType: Stamp.self, format: .STAMP) {stamps, error in
                         if let stamps = stamps {
                             DispatchQueue.main.async {
                                 session.stamps.setTo(stamps)

@@ -128,7 +128,7 @@ extension WayPay {
         case updateStampCampaign(Stamp)
         case getRewards(PaymentTransaction) // POST
         case toggleCampaignState(String, String, Campaign.Format)
-        case getCampaigns(String, String?, Campaign.Format) // GET
+        case getCampaigns(String?, String?, Campaign.Format) // GET
         case getCampaign(String, String, Campaign.Format) // GET
         case deleteCampaign(String, String, Campaign.Format) // DELETE
         case rewardCampaigns(PaymentTransaction, Array<String>) // POST
@@ -344,9 +344,9 @@ extension WayPay {
             case .getSEPA(let initialDate, let finalDate, let fieldName, let fieldValue):
                 return "?initialDate=\(initialDate)&finalDate=\(finalDate)&fieldName=\(fieldName)&fieldValue=\(fieldValue)"
             case .getCampaigns(let merchantUUID, let issuerUUID, let format):
-                return issuerUUID != nil ?
-                    "?merchantUUID=\(merchantUUID)&issuerUUID=\(issuerUUID!)&format=\(format.rawValue)" :
-                    "?merchantUUID=\(merchantUUID)&format=\(format.rawValue)"
+                let merchantQuery: String = merchantUUID == nil ? "" : "&merchantUUID=\(merchantUUID!)"
+                let issuerQuery: String = issuerUUID == nil ? "" : "&issuerUUID=\(issuerUUID!)"
+                return "?format=\(format.rawValue)" + merchantQuery + issuerQuery
             case .toggleCampaignState(_, _, let format), .getCampaign(_, _, let format), .deleteCampaign(_, _, let format), .getCampaignsForIssuer(_, _, let format):
                 return "?format=\(format.rawValue)"
             default:

@@ -36,12 +36,14 @@ extension WayPay {
         var lastUpdateDate: Date?
         var currency: Currency?
         var level: Level?
+        var communityID: String?
         
-        init(name: String, email: String, level: Level = .ONE) {
+        init(name: String, email: String, level: Level = .ONE, communityID: String = OperationalEnvironment.defaultCommunityID) {
             self.merchantUUID = ""
             self.name = name
             self.email = email
             self.level = level
+            self.communityID = communityID
             self.currency = Currency.init(rawValue: Locale.current.currencyCode)
         }
 

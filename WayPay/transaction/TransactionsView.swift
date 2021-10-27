@@ -74,7 +74,6 @@ enum Month: Int, CaseIterable {
         case .December: return yearString + "-12-31"
         }
     }
-
 }
 
 struct TransactionsView: View {
@@ -84,11 +83,13 @@ struct TransactionsView: View {
     @State private var isAPICallOngoing = false
     @State private var reportID = WayPay.ReportID()
     @State private var refundState: RefundState = .none
+    @State private var transactions = Container<WayPay.PaymentTransaction>()
+
     var accountUUID: String?
 
     private func fillReportID() {
         reportID.reset()
-        for transaction in session.transactions where transaction.result == .ACCEPTED {
+        for transaction in self.transactions where transaction.result == .ACCEPTED {
             switch transaction.type {
             case .SALE:
                 reportID.totalSales! += (transaction.amount ?? 0)
@@ -134,7 +135,7 @@ struct TransactionsView: View {
                                 session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: Month(rawValue: monthSelection)?.firstDay, finalDate: Month(rawValue: monthSelection)?.lastDay) { transactions, error in
                                     if let transactions = transactions {
                                         DispatchQueue.main.async {
-                                            session.transactions.setToInOrder(transactions, by:
+                                            self.transactions.setToInOrder(transactions, by:
                                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                                             fillReportID()
                                         }
@@ -147,7 +148,7 @@ struct TransactionsView: View {
                 }
                 Section(header: Text(isCustomerDisplayMode ? "" : NSLocalizedString("Transactions", comment: "TransactionsView section header"))) {
                     List {
-                        ForEach(session.transactions.filter(satisfying: {
+                        ForEach(self.transactions.filter(satisfying: {
                             if let transactiondate = $0.creationDate {
                                 return (((Calendar.current.component(.month, from: transactiondate) - 1) == self.monthSelection) &&
                                             (Calendar.current.component(.year, from: transactiondate) == Calendar.current.component(.year, from: Date())))
@@ -172,7 +173,7 @@ struct TransactionsView: View {
                                                                                                        initialDate: firstDayOfMonth, finalDate: lastDayOfMonth) { transactions, error in
                             if let transactions = transactions {
                                 DispatchQueue.main.async {
-                                    session.transactions.setToInOrder(transactions, by:
+                                    self.transactions.setToInOrder(transactions, by:
                                         { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                                     fillReportID()
                                 }
@@ -214,7 +215,7 @@ struct TransactionsView: View {
                     if let transactions = transactions {
                         WayAppUtils.Log.message("TRANSACTIONS COUNT=\(transactions.count)")
                         DispatchQueue.main.async {
-                            session.transactions.setToInOrder(transactions, by:
+                            self.transactions.setToInOrder(transactions, by:
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                         }
                     }

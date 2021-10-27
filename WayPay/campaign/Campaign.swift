@@ -88,7 +88,7 @@ extension WayPay {
             self.state = State.ACTIVE
         }
         
-        static func get<T: Campaign>(merchantUUID: String, issuerUUID: String?, campaignType: T.Type, format: Format, completion: @escaping ([T]?, Error?) -> Void) {
+        static func get<T: Campaign>(merchantUUID: String?, issuerUUID: String?, campaignType: T.Type, format: Format, completion: @escaping ([T]?, Error?) -> Void) {
             WayPay.API.getCampaigns(merchantUUID, issuerUUID, format).fetch(type: [T].self) { response in
                     switch response {
                     case .success(let response?):
@@ -249,9 +249,9 @@ extension WayPay {
         static func icon(format: Format) -> String {
             switch format {
             case .POINT:
-                return "banknote"
+                return "plus.rectangle.fill"
             case .STAMP:
-                return "circle.grid.3x3"
+                return "square.grid.3x3.topleft.filled"
             }
         }
 
