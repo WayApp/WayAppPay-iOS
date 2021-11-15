@@ -399,13 +399,15 @@ extension SettingsView {
     }
     
     private func deleteAccount() {
-        WayPay.Account.delete("35f4d239-496e-4563-a055-16c628254977")
-        WayPay.Account.delete("e31ca5ea-42fc-44ce-827a-eb7e4367da6a")
+        WayPay.Account.delete("a9848fbc-0707-421b-b732-9455a6b9184b")
+        WayPay.Account.delete("ed59f42e-5ee1-4b40-ba25-684bdd80384e")
+        WayPay.Account.delete("616a8d5d-31e6-44c6-a654-a843fd9ca269")
+        WayPay.Account.delete("6ff8b581-14ad-4d3c-b4d8-c609e0356309")
     }
 
     private func deleteMerchant() {
-        WayPay.Merchant.delete("898c3025-b974-4779-8d4a-4222bcc7993d")
-        WayPay.Merchant.delete("64c47062-5ade-4ad2-b6bf-72e9840f6a2e")
+        WayPay.Merchant.delete("a3b4226a-f4b1-4638-8964-067b32c850bb")
+        WayPay.Merchant.delete("f68108e9-347c-4cc9-97db-c7c86eb311cd")
     }
 
     private func sendPushNotificationToMerchant() {

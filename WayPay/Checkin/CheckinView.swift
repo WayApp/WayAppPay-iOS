@@ -22,9 +22,8 @@ struct CheckinView: View {
         
     private func reset() {
         self.selectedPrize = -1
-        session.checkin = nil
+        checkin = nil
         isAPICallOngoing = false
-        // TODO: checking shoppingcart
         self.showQRScanner = true
     }
     

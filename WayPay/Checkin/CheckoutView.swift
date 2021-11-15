@@ -14,10 +14,8 @@ struct CheckoutView: View {
     @State var inputAmount: Bool = false
     @State private var purchaseAmount: String = ""
     @State private var showTransactionResult = false
-    @State private var showStampHelp = false
     @State private var wasTransactionSuccessful = false
     @State private var isAPICallOngoing = false
-    @State private var displayPromotionAlert = false
     
     let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
     
@@ -64,55 +62,26 @@ struct CheckoutView: View {
             Button(action: {
                 if let pointCampaign = pointCampaign {
                     rewardLoyalty(campaign: pointCampaign)
-                } else {
-                    displayPromotionAlert = true
                 }
             }) {
                 Label(NSLocalizedString("Points", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .POINT))
                     .padding()
             }
-            .font(.headline)
-            .frame(maxWidth: .infinity)
-            .background(!WayPay.Point.isPointCampaignActive() ? Color.blue.opacity(0.50) : Color.green)
-            .cornerRadius(6)
-            .foregroundColor(.white)
-            .clipShape(Capsule())
-            .alert(isPresented: $displayPromotionAlert) {
-                Alert(
-                    title: Text(WayPay.AlertMessage.premiumFeature.text.title)
-                        .font(.title),
-                    message: Text(WayPay.AlertMessage.premiumFeature.text.message),
-                    dismissButton: .default(
-                        Text(WayPay.SingleMessage.OK.text),
-                        action: {})
-                )
-            }
+            .disabled(areAPIcallsDisabled || pointCampaign == nil)
             Button(action: {
                 if let stampCampaign = stampCampaign {
                     rewardLoyalty(campaign: stampCampaign)
-                } else {
-                    showStampHelp = true
                 }
             }) {
                 Label(NSLocalizedString("Stamp", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
                     .padding()
             }
-            .buttonStyle(WayPay.WideButtonModifier())
-            .alert(isPresented: $showStampHelp) {
-                Alert(
-                    title: Text(WayPay.AlertMessage.needsSetup.text.title)
-                        .font(.title),
-                    message: Text("Needs activation on the Settings tab. Contact support@wayapp.com for help"),
-                    dismissButton: .default(
-                        Text(WayPay.SingleMessage.OK.text),
-                        action: {})
-                )
-            }
+            .disabled(areAPIcallsDisabled || stampCampaign == nil)
         }
+        .buttonStyle(WayPay.WideButtonModifier())
         .animation(.easeInOut(duration: 1))
         .listRowInsets(EdgeInsets())
         .padding(.horizontal)
-        .disabled(areAPIcallsDisabled)
     }
     
     private func reset() {
@@ -213,14 +182,6 @@ struct CheckoutView: View {
     }
     
     private var logo: Image {
-        /*
-        if session.imageDownloader != nil,
-           let image = session.imageDownloader!.image {
-            return Image(uiImage: image)
-        } else {
-            return Image("WayPay-Hands")
-        }
-        */
         return Image("WayPay-Hands")
     }
     
@@ -310,7 +271,7 @@ struct CheckoutView: View {
                                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 self.navigationSelection = 0
                             } label: {
-                                Text("Charge")
+                                Text("Charge or reward")
                                     .padding()
                             }
                             .buttonStyle(WayPay.WideButtonModifier())
@@ -321,7 +282,7 @@ struct CheckoutView: View {
                             Button {
                                 self.navigationSelection = 1
                             } label: {
-                                Label(NSLocalizedString("Balance", comment: "CheckoutView: button title"), systemImage: "qrcode.viewfinder")
+                                Label(NSLocalizedString("Only scan", comment: "CheckoutView: button title"), systemImage: "qrcode.viewfinder")
                                     .padding()
                             }
                             .buttonStyle(WayPay.WideButtonModifier())

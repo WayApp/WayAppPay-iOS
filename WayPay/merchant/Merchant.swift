@@ -19,6 +19,7 @@ extension WayPay {
         static let defaultImageName = "questionmark.square"
         static let defaultName = "missing name"
         static let defaultLogo = "logoPlaceholder"
+        static let minimumCommunityIDLength = 4
 
         enum Level: String, Codable {
             case ONE, TWO, THREE
@@ -80,6 +81,20 @@ extension WayPay {
         static func createMerchantForAccount(accountUUID: String, merchant: Merchant, logo: UIImage?, completion: @escaping ([Merchant]?, Error?) -> Void) {
             WayPay.API.createMerchantForAccount(accountUUID, merchant, logo).fetch(type: [Merchant].self) { response in
                 WayAppUtils.Log.message("Merchant: createMerchantForAccount: response: \(response)")
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func createAccountAndMerchant(accountRequest: AccountRequest, merchant: Merchant, logo: UIImage?, completion: @escaping ([Merchant]?, Error?) -> Void) {
+            WayPay.API.createAccountAndMerchant(accountRequest, merchant, logo).fetch(type: [Merchant].self) { response in
+                WayAppUtils.Log.message("Merchant: createAccountAndMerchant: response: \(response)")
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)

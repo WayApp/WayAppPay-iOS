@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MerchantRegistrationView: View {
     @EnvironmentObject private var session: WayPay.Session
+    @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var email: String = String(){
         didSet {
             UserDefaults.standard.set(email, forKey: WayPay.DefaultKey.EMAIL.rawValue)
@@ -31,18 +32,20 @@ struct MerchantRegistrationView: View {
         }
         return "-"
     }
-
+    
     @State private var newPIN = String()
     @State private var confirmationPIN = String()
-    @State var loginError: Bool = false
+    @State var registrationError: Bool = false
+    @State var registrationSuccess: Bool = false
     @State private var businessName = String()
     @State private var communityID = String()
     @State private var phoneNumber = String()
     @State private var logo: UIImage? = UIImage(named: WayPay.Merchant.defaultLogo)
     @State private var showImagePicker: Bool = false
+    @State private var isAPIcalled: Bool = false
 
     private var shouldRegistrationButtonBeDisabled: Bool {
-        return (!WayAppUtils.validateEmail(email) || newPIN.count != WayPay.Account.PINLength) || businessName.isEmpty || communityID.isEmpty
+        return (!WayAppUtils.validateEmail(email) || newPIN.count != WayPay.Account.PINLength) || businessName.isEmpty || communityID.count < WayPay.Merchant.minimumCommunityIDLength || isAPIcalled
     }
     
     var body: some View {
@@ -92,9 +95,9 @@ struct MerchantRegistrationView: View {
                         Label(NSLocalizedString("Logo", comment: "business logo"), systemImage: "camera.fill")
                             .padding()
                     })
-                    .sheet(isPresented: self.$showImagePicker) {
-                        PhotoCaptureView(showImagePicker: self.$showImagePicker, image: self.$logo)
-                    }
+                        .sheet(isPresented: self.$showImagePicker) {
+                            PhotoCaptureView(showImagePicker: self.$showImagePicker, image: self.$logo)
+                        }
                     Image(uiImage:logo!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -106,36 +109,27 @@ struct MerchantRegistrationView: View {
                         .font(.callout)) {
                 TextField("community id", text: self.$communityID)
                     .disableAutocorrection(true)
+                    .autocapitalization(.none)
                     .textContentType(.oneTimeCode)
             }
             Button(action: {
-                let account = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN(newPIN), phone: phoneNumber, user: email)
-                WayPay.Account.createAccount(account: account) { accounts, error in
-                    if let accounts = accounts,
-                       let account = accounts.first {
-                        let merchant = WayPay.Merchant(name: businessName, email: email, communityID: communityID)
-                        WayPay.Merchant.createMerchantForAccount(accountUUID: account.accountUUID, merchant: merchant, logo: logo) { merchants, error in
-                            if let merchants = merchants,
-                               let merchant = merchants.first {
-                                WayAppUtils.Log.message("Merchant: \(merchant)")
-                                DispatchQueue.main.async {
-                                    session.account = account
-                                    session.saveLoginData(pin: newPIN)
-                                    session.merchants.setTo(merchants)
-                                }
-                            } else {
-                                DispatchQueue.main.async {
-                                    loginError = true
-                                }
-                            }
+                isAPIcalled = true
+                let accountRequest = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN(newPIN), phone: phoneNumber, user: email)
+                let merchant = WayPay.Merchant(name: businessName, email: email, communityID: communityID)
+                WayPay.Merchant.createAccountAndMerchant(accountRequest: accountRequest, merchant: merchant, logo: logo) { merchants, error in
+                    isAPIcalled = false
+                    if let merchants = merchants,
+                       let merchant = merchants.first {
+                        WayAppUtils.Log.message("Merchant: \(merchant)")
+                        DispatchQueue.main.async {
+                            registrationSuccess = true
                         }
                     } else {
                         DispatchQueue.main.async {
-                            loginError = true
+                            registrationError = true
                         }
                     }
                 }
-                
             }) {
                 Text("Activate")
                     .padding()
@@ -143,12 +137,19 @@ struct MerchantRegistrationView: View {
             .disabled(shouldRegistrationButtonBeDisabled)
             .buttonStyle(WayPay.WideButtonModifier())
             .animation(.easeInOut(duration: 0.3))
-            .alert(isPresented: $loginError) {
-                Alert(title: Text("Login error"),
-                      message: Text("Email or PIN invalid. Try again. If problem persists contact support@wayapp.com"),
+            .alert(isPresented: $registrationError) {
+                Alert(title: Text("Registration error"),
+                      message: Text("Merchant registration error. Please check The community ID and and try again. If problem continues contact support@wayapp.com"),
                       dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
             }
         } // Form
+        .alert(isPresented: $registrationSuccess) {
+            Alert(title: Text("Registration success"),
+                  message: Text("Almost set! You will be contacted by WayPay to get your bank account information"),
+                  dismissButton: .default(Text(WayPay.SingleMessage.OK.text), action: {
+                self.presentationMode.wrappedValue.dismiss() })
+            )
+        }
         .padding()
     }
 }
@@ -160,6 +161,6 @@ struct RegistrationView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-
+        
     }
 }

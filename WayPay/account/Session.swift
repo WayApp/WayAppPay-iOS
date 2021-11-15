@@ -79,6 +79,18 @@ extension WayPay {
                             WayAppUtils.Log.message("Could not fetch STAMP campaigns")
                         }
                     }
+                     Campaign.get(merchantUUID: nil, issuerUUID: merchants[seletectedMerchant].communityID, campaignType: Point.self, format: .POINT) {points, error in
+                         if let points = points {
+                             DispatchQueue.main.async {
+                                 session.points.setTo(points)
+                                 session.campaigns.add(points)
+                                 session.campaigns.sort(by: <)
+                             }
+                         } else {
+                             WayAppUtils.Log.message("Could not fetch STAMP campaigns")
+                         }
+                     }
+
                 }
             }
         }

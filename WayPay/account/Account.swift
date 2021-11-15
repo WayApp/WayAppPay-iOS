@@ -53,12 +53,12 @@ extension WayPay {
         var creationDate: Date?
         var lastUpdateDate: Date?
         
-        init(firstName: String, lastName: String, phone: String, email: String) {
+        init(firstName: String, lastName: String, phone: String, email: String, accountUUID: String = "") {
             self.firstName = firstName
             self.lastName = lastName
             self.phone = phone
             self.email = email
-            self.accountUUID = ""
+            self.accountUUID = accountUUID
         }
         
         // DefaultKeyPersistence

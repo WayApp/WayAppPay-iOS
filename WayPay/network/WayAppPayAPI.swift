@@ -78,6 +78,7 @@ extension WayPay {
         // Merchant
         case createMerchant(Merchant) // POST
         case createMerchantForAccount(String, Merchant, UIImage?) // POST
+        case createAccountAndMerchant(AccountRequest, Merchant, UIImage?) // POST
         case getMerchants(String) // GET
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
@@ -150,6 +151,7 @@ extension WayPay {
             // Merchants
             case .createMerchant(_): return "/merchants/"
             case .createMerchantForAccount(let accountUUID, _, _): return "/accounts/\(accountUUID)/merchants/"
+            case .createAccountAndMerchant(_, _, _): return "/merchants/accounts/"
             case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
@@ -223,6 +225,7 @@ extension WayPay {
             // Merchant
             case .createMerchant: return ""
             case .createMerchantForAccount(let accountUUID, _, _): return accountUUID
+            case .createAccountAndMerchant(_, _, _): return ""
             case .getMerchants(let accountUUID): return accountUUID
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
@@ -298,7 +301,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign:
+            case .addProduct, .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .getConsent, .topup, .registrationAccount, .createPointCampaign, .createStampCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -519,6 +522,20 @@ extension WayPay {
                 var parts: [HTTPCall.BodyPart]?
                 if let part = HTTPCall.BodyPart(merchant, name: "merchant") {
                     parts = [part]
+                    if let logo = logo {
+                        parts?.append(HTTPCall.BodyPart.image(name: "logo", image: logo))
+                    }
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createAccountAndMerchant(let accountRequest, let merchant, let logo):
+                var parts: [HTTPCall.BodyPart]?
+                if let partMerchant = HTTPCall.BodyPart(merchant, name: "merchant"),
+                    let partAccount = HTTPCall.BodyPart(accountRequest, name: "account") {
+                    parts = [partMerchant, partAccount]
                     if let logo = logo {
                         parts?.append(HTTPCall.BodyPart.image(name: "logo", image: logo))
                     }
