@@ -58,7 +58,10 @@ extension WayPay {
         var expirationDate: Date?
         var creationDate: Date?
         var lastUpdateDate: Date?
-                
+        var paymentAmountConvertibleToUnit: Int? // payment amount that accounts to 1 point or 1 euro
+        var minimumPaymentAmountRequired: Int? // specifies a minimum payment necessary to get a unit of prize
+        var prize: Prize?
+
         init(name: String, description: String = "", sponsorUUID: String, format: Format, expirationDate: Date = Date.distantFuture, state: State = .ACTIVE) {
             self.id = UUID().uuidString
             self.name = name
@@ -87,9 +90,48 @@ extension WayPay {
             self.format = Format.POINT
             self.state = State.ACTIVE
         }
-        
-        static func get<T: Campaign>(merchantUUID: String?, issuerUUID: String?, campaignType: T.Type, format: Format, completion: @escaping ([T]?, Error?) -> Void) {
-            WayPay.API.getCampaigns(merchantUUID, issuerUUID, format).fetch(type: [T].self) { response in
+    
+        static func create(_ campaign: Campaign, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayPay.API.createCampaign(campaign).fetch(type: [Campaign].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func update(_ campaign: Campaign, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayPay.API.updateCampaign(campaign).fetch(type: [Campaign].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        static func prizesForReward(_ reward: Reward) -> [Prize] {
+            var wonPrizes = [Prize]()
+            if let balance = reward.balance,
+               let campaign = session.campaigns[reward.campaignID],
+               let prize = campaign.prize {
+                WayAppUtils.Log.message("Balance: \(balance), prize.amountToGetIt: \(prize.amountToGetIt)")
+                if prize.amountToGetIt <= balance {
+                    wonPrizes.append(prize)
+                }
+            }
+            return wonPrizes
+        }
+
+        static func get(merchantUUID: String?, issuerUUID: String?, completion: @escaping ([Campaign]?, Error?) -> Void) {
+            WayPay.API.getCampaigns(merchantUUID, issuerUUID).fetch(type: [Campaign].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
@@ -102,7 +144,7 @@ extension WayPay {
         }
 
         static func get(campaignID: String, sponsorUUID: String, format: Format, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayPay.API.getCampaign(campaignID, sponsorUUID, format).fetch(type: [Campaign].self) { response in
+            WayPay.API.getCampaign(campaignID, sponsorUUID).fetch(type: [Campaign].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
@@ -115,7 +157,7 @@ extension WayPay {
         }
         
         static func getForIssuer(merchantUUID: String, issuerUUID: String, format: Format, completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayPay.API.getCampaignsForIssuer(merchantUUID, issuerUUID, format).fetch(type: [Campaign].self) { response in
+            WayPay.API.getCampaignsForIssuer(merchantUUID, issuerUUID).fetch(type: [Campaign].self) { response in
                     switch response {
                     case .success(let response?):
                         completion(response.result, nil)
@@ -154,7 +196,6 @@ extension WayPay {
             }
         }
 
-
         static func redeem(transaction: PaymentTransaction, campaignIDs: Array<String>, completion: @escaping ([Campaign]?, Error?) -> Void) {
             WayPay.API.redeemCampaigns(transaction, campaignIDs).fetch(type: [Campaign].self) { response in
                 switch response {
@@ -169,7 +210,7 @@ extension WayPay {
         }
 
         func toggleState(completion: @escaping ([Campaign]?, Error?) -> Void) {
-            WayPay.API.toggleCampaignState(self.id, self.sponsorUUID, self.format).fetch(type: [Campaign].self) { response in
+            WayPay.API.toggleCampaignState(self.id, self.sponsorUUID).fetch(type: [Campaign].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
@@ -181,15 +222,12 @@ extension WayPay {
             }
         }
         
-        static func delete(id: String, sponsorUUID: String, format: Format, completion: @escaping ([String]?, Error?) -> Void) {
-            WayPay.API.deleteCampaign(id, sponsorUUID, format).fetch(type: [String].self) { response in
-                switch response {
-                case .success(let response?):
-                    completion(response.result, nil)
-                case .failure(let error):
-                    completion(nil, error)
-                default:
-                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+        static func delete(id: String, sponsorUUID: String) {
+            WayPay.API.deleteCampaign(id, sponsorUUID).fetch(type: [String].self) { response in
+                if case .success(_) = response {
+                    WayAppUtils.Log.message("Campaign with ID=\(id) successfully deleted")
+                } else if case .failure(let error) = response {
+                    WayAppUtils.Log.message(error.localizedDescription)
                 }
             }
         }
@@ -208,44 +246,7 @@ extension WayPay {
                 }
             }
         }
-
-
-        
-        static func delete(at offsets: IndexSet) {
-            WayAppUtils.Log.message("Entering")
-            for offset in offsets {
-                WayPay.Campaign.delete(id: session.campaigns[offset].id, sponsorUUID: session.campaigns[offset].sponsorUUID, format: session.campaigns[offset].format) { strings, error in
-                    if let error = error {
-                        WayAppUtils.Log.message("Campaign: \(session.campaigns[offset].name) could not be . Error: \(error.localizedDescription)")
-                    } else {
-                        WayAppUtils.Log.message("DELETED SUCCESSFULLY")
-                        WayAppUtils.Log.message("Campaign: \(session.campaigns[offset].name) deleted successfully")
-                        DispatchQueue.main.async {
-                            WayAppUtils.Log.message("Before total stamps: \(session.campaigns.count)")
-                            session.campaigns.remove(session.campaigns[offset])
-                            // TODO: remove from POINTS and STAMPS containers
-                            WayAppUtils.Log.message("After total stamps: \(session.campaigns.count)")
-                        }
-                    }
-                }
-            }
-        }
-        
-        static func prizesForRewards(_ rewards: [Reward]) -> [Prize] {
-            var prizes = [Prize]()
-            for reward in rewards {
-                if let format = session.campaigns[reward.campaignID]?.format {
-                    switch format {
-                    case .POINT:
-                        prizes.append(contentsOf: Point.prizesForReward(reward))
-                    case .STAMP:
-                        prizes.append(contentsOf: Stamp.prizesForReward(reward))
-                    }
-                }
-            }
-            return prizes
-        }
-
+                
         static func icon(format: Format) -> String {
             switch format {
             case .POINT:
@@ -257,6 +258,16 @@ extension WayPay {
 
         func icon() -> String {
             Campaign.icon(format: format)
+        }
+
+        static func activeCampaignWithFormat(_ format: Campaign.Format, campaigns: Container<Campaign>?) -> Campaign? {
+            guard let campaigns = campaigns else {
+                return nil
+            }
+            for campaign in campaigns where campaign.format == format {
+                return campaign
+            }
+            return nil
         }
 
     }

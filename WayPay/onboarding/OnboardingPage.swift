@@ -13,31 +13,31 @@ enum OnboardingPage: CaseIterable {
     
     var title: String {
         switch self {
-        case .ONE: return NSLocalizedString("Reward customer visits", comment: "OnboardingPage: title")
+        case .ONE: return NSLocalizedString("Registration", comment: "OnboardingPage: title")
         case .TWO: return NSLocalizedString("It is free", comment: "OnboardingPage: title")
-        case .THREE: return NSLocalizedString("Premium features", comment: "OnboardingPage: title")
-        case .FOUR: return NSLocalizedString("Onboard your customers", comment: "OnboardingPage: title")
+        case .THREE: return NSLocalizedString("Community QR", comment: "OnboardingPage: title")
+        case .FOUR: return NSLocalizedString("Payment and loyalty", comment: "OnboardingPage: title")
         case .FIVE: return NSLocalizedString("Get started", comment: "OnboardingPage: title")
         }
     }
     
     var image: String {
         switch self {
-        case .ONE: return "Trophy"
+        case .ONE: return "Account"
         case .TWO: return "Peace"
-        case .THREE: return "Pig"
-        case .FOUR: return "Rooster"
+        case .THREE: return "CommunityQR"
+        case .FOUR: return "Trophy"
         case .FIVE: return "Hand"
         }
     }
     
     var explanation: String {
         switch self {
-        case .ONE: return NSLocalizedString("Setup your digital punch card campaign in one-click. Choose the amount of visits and the reward (cashback or coupon)", comment: "OnboardingPage: explanation")
-        case .TWO: return NSLocalizedString("Start using WayPay completely free. Contact us to enable premium features", comment: "OnboardingPage: explanation")
-        case .THREE: return NSLocalizedString("You can also reward customers by how much they spend, and sell your own digital giftcard. Contact us", comment: "OnboardingPage: explanation")
-        case .FOUR: return NSLocalizedString("In the Setting section you can register your customers directly. You can also print the registration QR for customers to scan and self-register", comment: "OnboardingPage: explanation")
-        case .FIVE: return NSLocalizedString("Start by going to Settings to setup your first punch card campaign, register your customers, and start scanning to reward them", comment: "OnboardingPage: explanation")
+        case .ONE: return NSLocalizedString("Setup your new account. To complete registration, you will need the Community Code given to you by the WayPay team. If you have questions contact us at support@wayapp.com", comment: "OnboardingPage: explanation")
+        case .TWO: return NSLocalizedString("Start using WayPay completely free. Buying local is now eaiser, cheaper and more fun", comment: "OnboardingPage: explanation")
+        case .THREE: return NSLocalizedString("Scan the Community QR from your customers' mobile phone. They need to register with the Community and install the QR on their mobile phone", comment: "OnboardingPage: explanation")
+        case .FOUR: return NSLocalizedString("Introduce the amount of every purchase to charge or reward your customers", comment: "OnboardingPage: explanation")
+        case .FIVE: return NSLocalizedString("Register and start scanning the Community QR", comment: "OnboardingPage: explanation")
         }
     }
     

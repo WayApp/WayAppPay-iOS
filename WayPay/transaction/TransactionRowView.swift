@@ -66,13 +66,6 @@ struct TransactionRowView: View {
                     Label("Email receipt", systemImage: "envelope")
                         .accessibility(label: Text("Email receipt"))
                 }
-                Button {
-                    session.shoppingCart.add(merchantUUID: session.merchantUUID ?? "", cartItems: transaction.purchaseDetail ?? [])
-                    self.presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Label("Repeat", systemImage: "repeat")
-                        .accessibility(label: Text("Repeat"))
-                }
             }
             .alert(isPresented: $refundResultAlert) {
                 Alert(

@@ -76,21 +76,7 @@ extension WayPay {
             self.issuerUUID = UUID().uuidString
             self.accountUUID = UUID().uuidString
         }
-        
-        init(alias: String = String(), issuerUUID: String, type: PaymentFormat, consent: AfterBanks.Consent?, selectedIBAN: Int, limitPerOperation: Int) {
-            self.pan = ""
-            self.issuerUUID = issuerUUID
-            self.accountUUID = session.accountUUID ?? ""
-            self.alias = alias
-            self.type = type
-            if let consent = consent {
-                self.consentId = consent.consentId
-                self.iban = consent.globalPosition[selectedIBAN].iban
-            }
-            self.limitPerOperation = limitPerOperation
-            self.dailyLimit = limitPerOperation * 4
-        }
-                        
+                                
         
     } // Card
 }

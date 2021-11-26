@@ -10,7 +10,12 @@ import UIKit
 
 extension WayPay {
     
-    struct Merchant: Codable, Identifiable, ContainerProtocol, Equatable, Hashable {
+    struct Merchant: Codable, DefaultKeyPersistence, Identifiable, ContainerProtocol, Equatable, Hashable {
+
+        // DefaultKeyPersistence
+        var defaultKey: String {
+            return WayPay.DefaultKey.MERCHANT.rawValue
+        }
         
         static func ==(ls: Merchant, rs: Merchant) -> Bool {
             return ls.merchantUUID == rs.merchantUUID
@@ -23,6 +28,10 @@ extension WayPay {
 
         enum Level: String, Codable {
             case ONE, TWO, THREE
+        }
+        
+        enum Status: String, Codable {
+           case CREATED, ENABLED, DISABLED
         }
 
         var merchantUUID: String
@@ -37,14 +46,16 @@ extension WayPay {
         var lastUpdateDate: Date?
         var currency: Currency?
         var level: Level?
-        var communityID: String?
+        var issuerUUID: String?
+        var status: Status?
+
         
         init(name: String, email: String, level: Level = .ONE, communityID: String = OperationalEnvironment.defaultCommunityID) {
             self.merchantUUID = ""
             self.name = name
             self.email = email
             self.level = level
-            self.communityID = communityID
+            self.issuerUUID = communityID
             self.currency = Currency.init(rawValue: Locale.current.currencyCode)
         }
 
@@ -61,6 +72,10 @@ extension WayPay {
             return (level == nil) || (level != Level.ONE)
         }
 
+        var isActive: Bool {
+            return status == .ENABLED
+        }
+        
         func getPayerForTransaction(accountUUID: String, transactionUUID: String) {
         }
         
@@ -281,11 +296,6 @@ extension WayPay {
             WayPay.API.deleteMerchant(merchantUUID).fetch(type: [String].self) { response in
                 if case .success(_) = response {
                     WayAppUtils.Log.message("Merchant with UUID=\(merchantUUID) successfully deleted")
-                    DispatchQueue.main.async {
-                        if let merchant = session.merchants[merchantUUID] {
-                            session.merchants.remove(merchant)
-                        }
-                    }
                 } else if case .failure(let error) = response {
                     WayAppUtils.Log.message(error.localizedDescription)
                 }

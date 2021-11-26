@@ -32,7 +32,7 @@ struct AuthenticationView: View {
                 Image("WayPay-Logo")
                     .resizable()
                     .scaledToFit()
-                    .padding(.horizontal)
+                    .padding()
                 Spacer()
             }
             TextField("email", text: self.$email)
@@ -83,6 +83,11 @@ struct AuthenticationView: View {
         } // Form
         .padding()
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
+        .alert(isPresented: $session.showAccountPendingActivationAlert) {
+            Alert(title: Text(WayPay.AlertMessage.accountPendingActivation.text.title),
+                  message: Text(WayPay.AlertMessage.accountPendingActivation.text.message),
+                  dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
+        }
     } // body
     
     private func getAccount() {

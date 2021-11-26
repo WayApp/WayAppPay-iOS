@@ -21,11 +21,18 @@ extension WayPay {
         var prepaidBalance: Int?
         var token: String?
         var issuerUUID: String?
-        var issuerPointCampaigns: [WayPay.Point]?
-        var issuerStampCampaigns: [WayPay.Stamp]?
+        var issuerCampaigns: [WayPay.Campaign]?
         
         var isWayPayPaymentAvailable: Bool {
             return type == .POSTPAID || (prepaidBalance ?? 0 > 0)
+        }
+        
+        var communityCampaigns: Container<Campaign> {
+            var campaigns = Container<Campaign>()
+            if let issuerCampaigns = issuerCampaigns {
+                campaigns.setTo(issuerCampaigns)
+            }
+            return campaigns
         }
     }
 }

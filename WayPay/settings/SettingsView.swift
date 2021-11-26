@@ -19,8 +19,6 @@ struct SettingsView: View {
     @State private var changePIN = false
     @State private var showBankAuthenticationView = false
     @State private var authURL: String? = nil
-    @State var isStampCampaignActive: Bool = true
-    @State var isPointCampaignActive: Bool = true
     @State private var purchaseAmount: String = ""
     @State private var shouldStampCampaignToggleCallAPI = false
     @State private var shouldPointCampaignToggleCallAPI = false
@@ -31,34 +29,23 @@ struct SettingsView: View {
             Section(header:
                         Label(NSLocalizedString("My business", comment: "SettingsView: section title"), systemImage: "cart")
                         .font(.callout)) {
-                if session.merchants.isEmpty {
-                    Text("No merchant registered")
-                } else if session.merchants.count == 1,
-                          let merchant = session.merchant {
+                if let merchant = session.merchant {
                     Text(merchant.name ?? "-")
                         .bold()
                 } else {
-                    Picker(selection: $session.seletectedMerchant, label: Label("Merchant", systemImage: "building")
-                            .accessibility(label: Text("Merchant"))) {
-                        ForEach(0..<session.merchants.count) {
-                            Text(self.session.merchants[$0].name ?? "no name")
-                                .font(Font.caption)
-                                .fontWeight(.light)
-                        }
-                    }
-                    .onChange(of: session.seletectedMerchant, perform: { merchant in
-                        session.saveSelectedMerchant()
-                    })
+                    Text("No merchant registered")
                 }
                 NavigationLink(destination: CheckoutQRView()) {
                     Label(NSLocalizedString("Print Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
                 }
+                /*
                 NavigationLink(destination: ConsumerRegistrationView()) {
                     Label(NSLocalizedString("Register customer", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
                 }
                 NavigationLink(destination: CustomerQRView()) {
                     Label(NSLocalizedString("Print Registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "printer.dotmatrix")
                 }
+                 */
             }
             .listItemTint(Color.green)
             Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person")
@@ -111,17 +98,10 @@ struct SettingsView: View {
                         }
                         Button {
                             DispatchQueue.main.async {
-                                self.updatePoint()
+                                self.updateCampaign()
                             }
                         } label: {
-                            Label("Update POINT", systemImage: "plus.viewfinder")
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.updateStamp()
-                            }
-                        } label: {
-                            Label("Update STAMP", systemImage: "plus.viewfinder")
+                            Label("Update CAMPAIGN", systemImage: "plus.viewfinder")
                         }
                         Button {
                             DispatchQueue.main.async {
@@ -169,6 +149,15 @@ struct SettingsView: View {
                         }
                         Button {
                             DispatchQueue.main.async {
+                                self.getCheckin()
+                            }
+                        } label: {
+                            Label("Alcázar checkin", systemImage: "arrow.up.and.person.rectangle.portrait")
+                        }
+                    }
+                    Group {
+                        Button {
+                            DispatchQueue.main.async {
                                 self.deleteAccount()
                             }
                         } label: {
@@ -183,17 +172,17 @@ struct SettingsView: View {
                         }
                         Button {
                             DispatchQueue.main.async {
+                                self.deleteCampaign()
+                            }
+                        } label: {
+                            Label("Delete campaign", systemImage: "trash")
+                        }
+                        Button {
+                            DispatchQueue.main.async {
                                 self.newSEPAs()
                             }
                         } label: {
                             Label("Generate SEPA file", systemImage: "banknote")
-                        }
-                        Button {
-                            DispatchQueue.main.async {
-                                self.editIssuer()
-                            }
-                        } label: {
-                            Label("Edit issuer", systemImage: "banknote")
                         }
                     }
                 }
@@ -217,30 +206,6 @@ struct SettingsView_Previews: PreviewProvider {
 }
 
 extension SettingsView {
-    private func editIssuer() {
-        let issuerUUID = "3a825be4-c97c-4592-a61e-aa729d1fca74"
-        WayPay.Issuer.get() { issuers, error in
-            if let issuers = issuers {
-                session.issuers.setTo(issuers)
-                if let waypay = session.issuers[issuerUUID] {
-                    WayPay.Issuer.edit(issuer: waypay) { issuers, error in
-                        if let issuers = issuers,
-                           !issuers.isEmpty {
-                            WayAppUtils.Log.message("Success: Issuer: \(issuers[0])")
-                        } else {
-                            WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: -------------")
-                        }
-                    }
-                } else {
-                    WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: issuerUUID not found")
-                }
-            } else if let error = error  {
-                WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: \(error.localizedDescription)")
-            } else {
-                WayAppUtils.Log.message("%%%%%%%%%%%%%% editIssuer ERROR: -------------")
-            }
-        }
-    }
 
     private func reward() {
         // PAN Marzo31Superpapelería: 2CCFDE3A-10BC-40C5-AEAC-A7E74557F9BF
@@ -307,10 +272,12 @@ extension SettingsView {
         }
     }
     
-    private func updatePoint() {
-        let campaign = session.points.first;
-        campaign?.name = "UpdatedNameForPoint"
-        WayPay.Point.update(campaign!) { campaigns, error in
+    private func updateCampaign() {
+        guard let campaign = session.campaigns.first else {
+            return
+        }
+        campaign.name = "UpdatedNameForCAMPAIGN"
+        WayPay.Campaign.update(campaign) { campaigns, error in
             if let campaigns = campaigns {
                 for campaign in campaigns {
                     WayAppUtils.Log.message("Campaign: \(campaign.name)")
@@ -324,26 +291,8 @@ extension SettingsView {
 
     }
     
-    private func updateStamp() {
-        if let campaign = session.stamps.first {
-            WayAppUtils.Log.message("Campaign: name BEFORE UPDATE: \(campaign.name), prize name: \(campaign.prize?.name ?? "no prize name")")
-            campaign.name = "UPDATEDNameForStamp"
-            WayPay.Stamp.update(campaign) { campaigns, error in
-                if let campaigns = campaigns {
-                    for campaign in campaigns {
-                        WayAppUtils.Log.message("Campaign: \(campaign.name)")
-                    }
-                } else if let error = error  {
-                    WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: \(error.localizedDescription)")
-                } else {
-                    WayAppUtils.Log.message("%%%%%%%%%%%%%% Campaign ERROR: -------------")
-                }
-            }
-        }
-    }
-    
     private func getCampaigns() {
-        WayPay.Campaign.get(merchantUUID: "sponsorUUID004", issuerUUID: nil, campaignType: WayPay.Stamp.self, format: .STAMP) { campaigns, error in
+        WayPay.Campaign.get(merchantUUID: nil, issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a") { campaigns, error in
             if let campaigns = campaigns {
                 WayAppUtils.Log.message("Campaigns count: \(campaigns.count)")
                 for campaign in campaigns {
@@ -392,22 +341,31 @@ extension SettingsView {
     }
     
     private func registerAccount() {
-        /*
         WayPay.Account.register(registration:
-                                    WayPay.Registration(email: "coco@wayapp.com", issuerUUID: "f157c0c5-49b4-445a-ad06-70727030b38a"))
- */
+                                    WayPay.Registration(email: "coco@wayapp.com", issuerUUID: "7373d487-239e-4966-8988-8d2c81b83251")) { registrations, error in
+            if let registrations = registrations,
+               let registration = registrations.first {
+                WayAppUtils.Log.message("Registration: \(registration)")
+            } else if let error = error  {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Registration ERROR: \(error.localizedDescription)")
+            } else {
+                WayAppUtils.Log.message("%%%%%%%%%%%%%% Registration ERROR: -------------")
+            }
+        }
+
     }
     
     private func deleteAccount() {
-        WayPay.Account.delete("a9848fbc-0707-421b-b732-9455a6b9184b")
-        WayPay.Account.delete("ed59f42e-5ee1-4b40-ba25-684bdd80384e")
-        WayPay.Account.delete("616a8d5d-31e6-44c6-a654-a843fd9ca269")
-        WayPay.Account.delete("6ff8b581-14ad-4d3c-b4d8-c609e0356309")
+        WayPay.Account.delete("40e53480-fd9d-495f-abf8-4ff6bebae6aa")
     }
 
     private func deleteMerchant() {
         WayPay.Merchant.delete("a3b4226a-f4b1-4638-8964-067b32c850bb")
         WayPay.Merchant.delete("f68108e9-347c-4cc9-97db-c7c86eb311cd")
+    }
+
+    private func deleteCampaign() {
+        WayPay.Campaign.delete(id: "LasRozasPoint0001", sponsorUUID: "f157c0c5-49b4-445a-ad06-70727030b38a")
     }
 
     private func sendPushNotificationToMerchant() {
@@ -440,6 +398,18 @@ extension SettingsView {
             }
         }
 
+    }
+
+    private func getCheckin() {
+        WayPay.Account.getCheckin(acccountUUID: "d7531225-a57f-4767-b0c8-70303b69cef9", issuerUUID: "7373d487-239e-4966-8988-8d2c81b83251") { checkins, error in
+            if let checkins = checkins,
+               let checkin = checkins.first {
+                WayAppUtils.Log.message("Checkin: \(checkin)")
+            } else {
+                WayAppUtils.Log.message("Checkin error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+            }
+        }
+        
     }
 
 }

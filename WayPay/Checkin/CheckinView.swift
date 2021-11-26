@@ -79,7 +79,7 @@ struct CheckinView: View {
                     if let rewards = checkin.rewards,
                        !rewards.isEmpty {
                         VStack(alignment: .leading) {
-                            if let stampCampaign = session.activeStampCampaign(),
+                            if let stampCampaign = WayPay.Campaign.activeCampaignWithFormat(.STAMP, campaigns: checkin.communityCampaigns),
                                let amountToGetIt = stampCampaign.prize?.amountToGetIt {
                                 Label {
                                     Text(stampCampaign.name + ": ") +
@@ -91,9 +91,8 @@ struct CheckinView: View {
                                 }
                                 Divider()
                             }
-                            if let pointCampaign = session.activePointCampaign(),
-                               let prizes = pointCampaign.prizes,
-                               let prize = prizes.first,
+                            if let pointCampaign = WayPay.Campaign.activeCampaignWithFormat(.POINT, campaigns: checkin.communityCampaigns),
+                               let prize = pointCampaign.prize,
                                let amountToGetIt = prize.amountToGetIt {
                                 Label {
                                     Text(pointCampaign.name + ": ") +
@@ -103,26 +102,6 @@ struct CheckinView: View {
                                 } icon: {
                                     Image(systemName: WayPay.Campaign.icon(format: .POINT))
                                 }
-                            }
-                            if let issuerPointCampaign = session.activeIssuerPointCampaign() {
-                                Label {
-                                    Text(issuerPointCampaign.name + ": ") +
-                                        Text(getRewardBalanceForCampaign(issuerPointCampaign.id, checkin: checkin))
-                                        .bold().foregroundColor(Color.green)
-                                } icon: {
-                                    Image(systemName: WayPay.Campaign.icon(format: .POINT))
-                                }
-                                Divider()
-                            }
-                            if let issuerStampCampaign = session.activeIssuerStampCampaign() {
-                                Label {
-                                    Text(issuerStampCampaign.name + ": ") +
-                                    Text(getRewardBalanceForCampaign(issuerStampCampaign.id, checkin: checkin))
-                                        .bold().foregroundColor(Color.green)
-                                } icon: {
-                                    Image(systemName: WayPay.Campaign.icon(format: .STAMP))
-                                }
-                                Divider()
                             }
                         }
                     } else {
@@ -175,12 +154,11 @@ struct CheckinView: View {
                     self.checkin = checkin
                     showQRScanner = true
                 }
-            }
-            else {
+            } else {
                 DispatchQueue.main.async {
                     self.scanError = true
                 }
-                WayAppUtils.Log.message("Get rewards error. More info: \(error != nil ? error!.localizedDescription : "not available")")
+                WayAppUtils.Log.message("Checkin error. More info: \(error != nil ? error!.localizedDescription : "not available")")
             }
             DispatchQueue.main.async {
                 isAPICallOngoing = false

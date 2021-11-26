@@ -131,8 +131,9 @@ struct TransactionsView: View {
                             }
                         }
                         .onChange(of: monthSelection, perform: { month in
-                            if let accountUUID = session.accountUUID {
-                                session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: Month(rawValue: monthSelection)?.firstDay, finalDate: Month(rawValue: monthSelection)?.lastDay) { transactions, error in
+                            if let accountUUID = session.accountUUID,
+                               let merchant = session.merchant {
+                                merchant.getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: Month(rawValue: monthSelection)?.firstDay, finalDate: Month(rawValue: monthSelection)?.lastDay) { transactions, error in
                                     if let transactions = transactions {
                                         DispatchQueue.main.async {
                                             self.transactions.setToInOrder(transactions, by:
@@ -168,8 +169,9 @@ struct TransactionsView: View {
                     DispatchQueue.main.async {
                         isAPICallOngoing = false
                     }
-                    if let accountUUID = session.accountUUID {
-                        session.merchants[session.seletectedMerchant].getTransactionsForAccountByDates(accountUUID: accountUUID,
+                    if let accountUUID = session.accountUUID,
+                       let merchant = session.merchant {
+                        merchant.getTransactionsForAccountByDates(accountUUID: accountUUID,
                                                                                                        initialDate: firstDayOfMonth, finalDate: lastDayOfMonth) { transactions, error in
                             if let transactions = transactions {
                                 DispatchQueue.main.async {

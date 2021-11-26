@@ -242,6 +242,19 @@ extension WayPay {
                 }
             }
         }
+        
+        static func getCheckin(acccountUUID: String, issuerUUID: String, completion: @escaping ([WayPay.Checkin]?, Error?) -> Void) {
+            WayPay.API.getCheckin(acccountUUID, issuerUUID).fetch(type: [WayPay.Checkin].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
 
     }
 }

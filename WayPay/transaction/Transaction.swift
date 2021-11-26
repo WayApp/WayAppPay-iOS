@@ -9,6 +9,12 @@
 import SwiftUI
 
 extension WayPay {
+    struct CartItem: Codable {
+        var name: String?
+        var price: Int // defined as Int in API
+        var quantity: Int // defined as Int in API
+    }
+
     struct PaymentTransaction: Codable, ContainerProtocol, Identifiable {
         
         static let defaultCurrency = Currency.EUR
@@ -119,7 +125,7 @@ extension WayPay {
             self.authorizationCode = token
             self.paymentMethod = .WALLET
             self.type = type
-            self.currency = session.merchants.isEmpty ?  PaymentTransaction.defaultCurrency : session.merchants[session.seletectedMerchant].currency
+            self.currency = session.merchant == nil ?  PaymentTransaction.defaultCurrency : session.merchant!.currency
             self.readingType = .STANDARD
             self.accountUUID = session.accountUUID
             self.purchaseDetail = purchaseDetail

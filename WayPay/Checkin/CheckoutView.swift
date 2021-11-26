@@ -39,15 +39,7 @@ struct CheckoutView: View {
     }
     
     var purchaseAmountValue: Int {
-        return session.amount > 0 ? session.amount : WayAppUtils.composeIntPriceFromString(purchaseAmount)
-    }
-    
-    var pointCampaign: WayPay.Campaign? {
-        return session.points.first
-    }
-    
-    var stampCampaign: WayPay.Campaign? {
-        return session.stamps.first
+        return WayAppUtils.composeIntPriceFromString(purchaseAmount)
     }
     
     private func transactionResult(accepted: Bool) {
@@ -60,23 +52,23 @@ struct CheckoutView: View {
     private var awardButtons: some View {
         HStack {
             Button(action: {
-                if let pointCampaign = pointCampaign {
+                if let pointCampaign = WayPay.Campaign.activeCampaignWithFormat(.POINT, campaigns: session.checkin?.communityCampaigns) {
                     rewardLoyalty(campaign: pointCampaign)
                 }
             }) {
                 Label(NSLocalizedString("Points", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .POINT))
                     .padding()
             }
-            .disabled(areAPIcallsDisabled || pointCampaign == nil)
+            .disabled(areAPIcallsDisabled || WayPay.Campaign.activeCampaignWithFormat(.POINT, campaigns: session.checkin?.communityCampaigns) == nil)
             Button(action: {
-                if let stampCampaign = stampCampaign {
+                if let stampCampaign = WayPay.Campaign.activeCampaignWithFormat(.STAMP, campaigns: session.checkin?.communityCampaigns) {
                     rewardLoyalty(campaign: stampCampaign)
                 }
             }) {
                 Label(NSLocalizedString("Stamp", comment: "CheckoutView: button title"), systemImage: WayPay.Campaign.icon(format: .STAMP))
                     .padding()
             }
-            .disabled(areAPIcallsDisabled || stampCampaign == nil)
+            .disabled(areAPIcallsDisabled || WayPay.Campaign.activeCampaignWithFormat(.STAMP, campaigns: session.checkin?.communityCampaigns) == nil)
         }
         .buttonStyle(WayPay.WideButtonModifier())
         .animation(.easeInOut(duration: 1))
@@ -86,7 +78,6 @@ struct CheckoutView: View {
     
     private func reset() {
         purchaseAmount = ""
-        session.shoppingCart.empty()
         session.checkin = nil
         session.selectedPrize = -1
         isAPICallOngoing = false
@@ -146,11 +137,12 @@ struct CheckoutView: View {
     
     private func processPayment(amount: Int) {
         guard let token = session.checkin?.token,
-              let accountUUID = session.accountUUID else {
+              let accountUUID = session.accountUUID,
+              let merchant = session.merchant else {
                   WayAppUtils.Log.message("Missing checkin.token")
                   return
               }
-        let merchantUUID = session.merchants[session.seletectedMerchant].merchantUUID
+        let merchantUUID = merchant.merchantUUID
         let payment = WayPay.PaymentTransaction(amount: amount, purchaseDetail: nil, prizes: selectedPrizes(), token: token)
         isAPICallOngoing = true
         WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
@@ -186,7 +178,7 @@ struct CheckoutView: View {
     }
     
     private var allowsInputAmount: Bool {
-        return (session.shoppingCart.isEmpty)
+        return true
     }
     
     private var allowsScan: Bool {

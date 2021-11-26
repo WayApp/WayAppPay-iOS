@@ -43,10 +43,6 @@ struct MainView: View {
                     EmptyView()
                 }
             }
-            .onAppear(perform: {
-                WayAppUtils.Log.message("****** onAppear")
-                session.storeManager.validateAutoReneawableSubscriptions()
-            })
         ) // AnyView
     }
 

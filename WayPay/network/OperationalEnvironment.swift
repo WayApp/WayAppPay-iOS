@@ -32,6 +32,25 @@ enum OperationalEnvironment {
         }
     }
 
+    static var alcazarPublicKey: String {
+        return "2c7cae58-359c-4563-96cf-3f01b50313a6"
+    }
+
+    static var alcazarCustomerUUID: String {
+
+        return "66ec43c2-b531-4a9d-971a-af8db2f481bd"
+    }
+
+    static var alcazarPrivateKey: String {
+        switch OperationalEnvironment.current  {
+        case .production:
+            return "6eead822-8645-4af8-b56b-21aba9d39458"
+        case .staging:
+            return "614a932c-4d0e-11ec-81d3-0242ac150014"
+        }
+    }
+
+
     static var wayAppPayPrivateKey: String {
         switch OperationalEnvironment.current  {
         case .production:

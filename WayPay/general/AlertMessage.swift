@@ -33,6 +33,7 @@ extension WayPay {
         case consumerAccountCreationError
         case consumerAccountCreationSuccess
         case accountWithoutMerchants
+        case accountPendingActivation
 
 
         var text: (title: String, message: String) {
@@ -64,6 +65,7 @@ extension WayPay {
             case .consumerAccountCreationError: return (NSLocalizedString("Registration error", comment: "User message: consumerAccountCreationError"), NSLocalizedString("Email already registered, try a different email. If problem continues, contact support@wayapp.com", comment: "User message: consumerAccountCreationError"))
             case .consumerAccountCreationSuccess: return (NSLocalizedString("Account created", comment: "User message: consumerAccountCreationSuccess"), NSLocalizedString("Email sent to customer with QR to install on the phone", comment: "User message: consumerAccountCreationSuccess"))
             case .accountWithoutMerchants: return (NSLocalizedString("Login failed", comment: "User message: accountWithoutMerchants"), NSLocalizedString("App only available to registered merchants. Register a merchant and try again", comment: "User message: accountWithoutMerchants"))
+            case .accountPendingActivation: return (NSLocalizedString("Account activation needed", comment: "User message: accountPendingActivation"), NSLocalizedString("Account pending activation by Community. Contact support@wayapp.com to request activation", comment: "User message: accountPendingActivation"))
             }
         }
     }

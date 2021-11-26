@@ -16,101 +16,29 @@ extension WayPay {
     static var session = Session()
     
     final class Session: ObservableObject {
-        @Published var storeManager: StoreManager = StoreManager()
+        
+        init() {
+            self.networkMonitor.pathUpdateHandler = { path in
+                self.isNetworkAvailable = (path.status == .satisfied)
+            }
+            if let merchant = Merchant.load(defaultKey: WayPay.DefaultKey.MERCHANT.rawValue, type: Merchant.self) {
+                self.merchant = merchant
+            }
+            if let account = Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
+                self.account = account
+            }
+        }
+
         @Published var imageDownloader: ImageDownloader?
         @Published var showAuthenticationView: Bool = true
         @AppStorage("skipOnboarding") var skipOnboarding: Bool = UserDefaults.standard.bool(forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
-        @Published var doesAccountHasMerchants: Bool = false
         @Published var showAccountHasNoMerchantsAlerts: Bool = false
-        @Published var account: Account? {
-            didSet {
-                if let account = account {
-                    Merchant.getMerchantsForAccount(account.accountUUID) { merchants, error in
-                        if let merchants = merchants,
-                           !merchants.isEmpty {
-                            DispatchQueue.main.async {
-                                self.showAuthenticationView = false
-                                self.doesAccountHasMerchants = true
-                                session.merchants.setTo(merchants)
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                self.showAccountHasNoMerchantsAlerts = true
-                            }
-                            WayAppUtils.Log.message("No merchants")
-                        }
-                    }
-                }
-            }
-        }
-        
-        @Published var merchants = Container<Merchant>() {
-            didSet {
-                DispatchQueue.main.async {
-                    self.seletectedMerchant = UserDefaults.standard.integer(forKey: WayPay.DefaultKey.MERCHANT.rawValue)
-                }
-            }
-        }
-        
-        @Published var seletectedMerchant: Int = 0 {
-            didSet {
-                 if !merchants.isEmpty && doesAccountHasMerchants {
-                    imageDownloader = ImageDownloader(imageURL: merchant?.logo, addToCache: true)
-                    WayAppUtils.Log.message("#### communityID: \(merchants[seletectedMerchant].communityID ?? "No communityID")")
-                    Campaign.get(merchantUUID: nil, issuerUUID: merchants[seletectedMerchant].communityID, campaignType: Point.self, format: .POINT) {points, error in
-                        if let points = points {
-                            DispatchQueue.main.async {
-                                session.points.setTo(points)
-                                session.campaigns.add(points)
-                                session.campaigns.sort(by: <)
-                            }
-                        } else {
-                            WayAppUtils.Log.message("Could not fetch POINT campaigns")
-                        }
-                    }
-                    Campaign.get(merchantUUID: nil, issuerUUID: merchants[seletectedMerchant].communityID, campaignType: Stamp.self, format: .STAMP) {stamps, error in
-                        if let stamps = stamps {
-                            DispatchQueue.main.async {
-                                session.stamps.setTo(stamps)
-                                session.campaigns.add(stamps)
-                                session.campaigns.sort(by: <)
-                            }
-                        } else {
-                            WayAppUtils.Log.message("Could not fetch STAMP campaigns")
-                        }
-                    }
-                     Campaign.get(merchantUUID: nil, issuerUUID: merchants[seletectedMerchant].communityID, campaignType: Point.self, format: .POINT) {points, error in
-                         if let points = points {
-                             DispatchQueue.main.async {
-                                 session.points.setTo(points)
-                                 session.campaigns.add(points)
-                                 session.campaigns.sort(by: <)
-                             }
-                         } else {
-                             WayAppUtils.Log.message("Could not fetch STAMP campaigns")
-                         }
-                     }
-
-                }
-            }
-        }
-        
-        var merchant: Merchant? {
-            if (merchants.isEmpty) {
-                return nil
-            }
-            return merchants[seletectedMerchant]
-        }
-                      
-        //TODO: review the need to use @Published for these variables
-        @Published var issuers = Container<Issuer>()
-        @Published var campaigns = Container<Campaign>()
-        @Published var products = Container<Product>()
-        @Published var points = Container<Point>()
-        @Published var stamps = Container<Stamp>()
-        @Published var transactions = Container<PaymentTransaction>()
-        @Published var shoppingCart = ShoppingCart()
+        @Published var showAccountPendingActivationAlert: Bool = false
         @Published var thisMonthReportID: ReportID?
+        @Published var selectedPrize: Int = -1
+        //TODO: review the need to use @Published for these variables
+        @Published var campaigns = Container<Campaign>()
+        @Published var transactions = Container<PaymentTransaction>()
         @Published var checkin: Checkin? {
          didSet {
             if checkin == nil {
@@ -118,60 +46,61 @@ extension WayPay {
             }
          }
         }
-        @Published var selectedPrize: Int = -1
+
+        @Published var account: Account? {
+            didSet {
+                if let account = account {
+                    if merchant == nil {
+                        Merchant.getMerchantsForAccount(account.accountUUID) { merchants, error in
+                            DispatchQueue.main.async {
+                                if let merchants = merchants,
+                                   !merchants.isEmpty {
+                                    self.merchant = merchants.first
+                                    self.merchant?.save()
+                                } else {
+                                    self.showAccountHasNoMerchantsAlerts = true
+                                    WayAppUtils.Log.message("No merchants")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
-        func activeStampCampaign() -> Stamp? {
-            return stamps.first
-        }
-
-        func activePointCampaign() -> Point? {
-            return points.first
-        }
-
-        func activeIssuerPointCampaign() -> Point? {
-            if let checkin = checkin,
-               let issuerPointCampaigns = checkin.issuerPointCampaigns,
-               !issuerPointCampaigns.isEmpty {
-                return issuerPointCampaigns.first
+        @Published var merchant: Merchant? {
+            didSet {
+                guard let merchant = merchant else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    if merchant.isActive {
+                        DispatchQueue.main.async {
+                        }
+                        self.showAuthenticationView = false
+                        self.imageDownloader = ImageDownloader(imageURL: merchant.logo, addToCache: true)
+                        WayAppUtils.Log.message("#### communityID: \(merchant.issuerUUID ?? "No communityID")")
+                        Campaign.get(merchantUUID: nil, issuerUUID: merchant.issuerUUID) {campaigns, error in
+                            if let campaigns = campaigns {
+                                session.campaigns.setTo(campaigns)
+                                session.campaigns.sort(by: <)
+                            } else {
+                                WayAppUtils.Log.message("Could not fetch POINT campaigns")
+                            }
+                        }
+                    } else {
+                        self.showAccountPendingActivationAlert = true
+                    }
+                }
             }
-            return nil
         }
-
-        func activeIssuerStampCampaign() -> Stamp? {
-            if let checkin = checkin,
-               let issuerStampCampaigns = checkin.issuerStampCampaigns,
-               !issuerStampCampaigns.isEmpty {
-                return issuerStampCampaigns.first
-            }
-            return nil
-        }
-
+                
         private var networkMonitor = NWPathMonitor()
         var isNetworkAvailable = false
         
         let pkLibrary = PKPassLibrary()
         var passes = [PKPass]()
-
-        init() {
-            storeManager.receiptValidation()
-            self.networkMonitor.pathUpdateHandler = { path in
-                self.isNetworkAvailable = (path.status == .satisfied)
-            }
-            if let account = Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: Account.self) {
-                self.account = account
-            }
-            SKPaymentQueue.default().add(storeManager)
-            storeManager.getProducts(productIDs: StoreManager.ProductID.allIDs)
-        }
-        
-        var amount: Int {
-            var total: Int = 0
-            for item in shoppingCart.items {
-                total += item.cartItem.quantity * item.cartItem.price
-            }
-            return total
-        }
-        
+                
         var accountUUID: String? {
             return account?.accountUUID
         }
@@ -181,7 +110,7 @@ extension WayPay {
         }
 
         var merchantUUID: String? {
-            return merchants.isEmpty ? nil : merchants[seletectedMerchant].merchantUUID
+            return merchant?.merchantUUID
         }
         
         func saveLoginData(pin: String) {
@@ -200,23 +129,14 @@ extension WayPay {
                 UserDefaults.standard.synchronize()
             }
         }
-        
-        func saveSelectedMerchant() {
-            UserDefaults.standard.set(seletectedMerchant, forKey: WayPay.DefaultKey.MERCHANT.rawValue)
-            UserDefaults.standard.synchronize()
-        }
-        
+                
         private func reset() {
             showAuthenticationView = true
-            doesAccountHasMerchants = false
+            showAccountPendingActivationAlert = false
+            merchant = nil
             account = nil
             checkin = nil
-            merchants.empty()
             transactions.empty()
-            products.empty()
-            shoppingCart.empty()
-            points.empty()
-            stamps.empty()
             campaigns.empty()
         }
         
