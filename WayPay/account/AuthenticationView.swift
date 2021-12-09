@@ -35,13 +35,12 @@ struct AuthenticationView: View {
                     .padding()
                 Spacer()
             }
-            TextField("email", text: self.$email)
+            TextField(NSLocalizedString("email", comment: "AuthenticationView: TextField"), text: self.$email)
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
                 .textContentType(.emailAddress)
                 .keyboardType(.emailAddress)
-            SecureField("4-digit PIN", text: self.$pin)
-                .frame(width: 100)
+            SecureField(NSLocalizedString("4-digit PIN", comment: "AuthenticationView: TextField"), text: self.$pin)
                 .textContentType(.password)
                 .keyboardType(.numberPad)
             HStack {
@@ -98,6 +97,7 @@ struct AuthenticationView: View {
                 DispatchQueue.main.async {
                     session.account = account
                     session.saveLoginData(pin: pin)
+                    WayAppUtils.Log.message("Login successful")
                 }
             } else {
                 DispatchQueue.main.async {

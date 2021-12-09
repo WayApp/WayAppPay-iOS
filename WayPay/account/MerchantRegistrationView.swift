@@ -50,31 +50,23 @@ struct MerchantRegistrationView: View {
     
     var body: some View {
         Form {
-            HStack {
-                Spacer()
-                Image("WayPay-Hands")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .padding(.horizontal)
-                Spacer()
-            }
-            Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person.fill")
+            Section(header: Label(NSLocalizedString("My account", comment: "MerchantRegistrationView: section title"), systemImage: "person.fill")
                         .accessibility(label: Text("My account"))
                         .font(.callout)) {
-                TextField("name", text: self.$name)
+                TextField(NSLocalizedString("name", comment: "MerchantRegistrationView: TextField"), text: self.$name)
                     .autocapitalization(.words)
                     .disableAutocorrection(true)
                     .textContentType(.name)
-                TextField("email address", text: self.$email)
+                TextField(NSLocalizedString("email address", comment: "MerchantRegistrationView: TextField"), text: self.$email)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
-                TextField("4-digit PIN", text: self.$newPIN)
+                TextField(NSLocalizedString("4-digit PIN", comment: "MerchantRegistrationView: TextField"), text: self.$newPIN)
                     .textContentType(.oneTimeCode)
                     .keyboardType(.numberPad)
                     .foregroundColor((newPIN.count == WayPay.Account.PINLength) ? .primary : .red)
-                TextField("confirm PIN", text: self.$confirmationPIN)
+                TextField(NSLocalizedString("confirm PIN", comment: "MerchantRegistrationView: TextField"), text: self.$confirmationPIN)
                     .textContentType(.oneTimeCode)
                     .keyboardType(.numberPad)
                     .foregroundColor((confirmationPIN.count == WayPay.Account.PINLength && newPIN == confirmationPIN) ? .primary : .red)
@@ -82,10 +74,10 @@ struct MerchantRegistrationView: View {
             Section(header:
                         Label(NSLocalizedString("My business", comment: "SettingsView: section title"), systemImage: "greetingcard.fill")
                         .font(.callout)) {
-                TextField("business name", text: self.$businessName)
+                TextField(NSLocalizedString("business name", comment: "MerchantRegistrationView: TextField"), text: self.$businessName)
                     .disableAutocorrection(true)
                     .textContentType(.organizationName)
-                TextField("phone number", text: self.$phoneNumber)
+                TextField(NSLocalizedString("phone number", comment: "MerchantRegistrationView: TextField"), text: self.$phoneNumber)
                     .keyboardType(.phonePad)
                     .textContentType(.telephoneNumber)
                 HStack {
@@ -107,7 +99,7 @@ struct MerchantRegistrationView: View {
             Section(header:
                         Label(NSLocalizedString("My community", comment: "SettingsView: section title"), systemImage: "building.2.fill")
                         .font(.callout)) {
-                TextField("community id", text: self.$communityID)
+                TextField(NSLocalizedString("community id", comment: "MerchantRegistrationView: TextField"), text: self.$communityID)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .textContentType(.oneTimeCode)
@@ -131,7 +123,7 @@ struct MerchantRegistrationView: View {
                     }
                 }
             }) {
-                Text("Activate")
+                Text("Request activation")
                     .padding()
             }
             .disabled(shouldRegistrationButtonBeDisabled)
@@ -139,10 +131,11 @@ struct MerchantRegistrationView: View {
             .animation(.easeInOut(duration: 0.3))
             .alert(isPresented: $registrationError) {
                 Alert(title: Text("Registration error"),
-                      message: Text("Merchant registration error. Please check The community ID and and try again. If problem continues contact support@wayapp.com"),
+                      message: Text("Check the community ID and and try again. Your account may already exist. If problem continues contact support@wayapp.com"),
                       dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
             }
         } // Form
+        .navigationBarTitle(Text("Registration"), displayMode: .inline)
         .alert(isPresented: $registrationSuccess) {
             Alert(title: Text("Registration success"),
                   message: Text("Almost set! You will be contacted by WayPay to get your bank account information"),

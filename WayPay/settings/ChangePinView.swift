@@ -72,7 +72,7 @@ struct ChangePinView: View {
            VStack(alignment: .trailing) {
                HStack(alignment: .center) {
                    Text("Current")
-                   TextField("4-digits", text: $currentPIN)
+                   TextField(NSLocalizedString("4-digits", comment: "ChangePinView: TextField"), text: $currentPIN)
                        .textContentType(.oneTimeCode)
                        .keyboardType(.numberPad)
                        .background(Color.white)
@@ -82,7 +82,7 @@ struct ChangePinView: View {
                }
                HStack(alignment: .center) {
                    Text("New")
-                   TextField("4-digit", text: $newPIN)
+                   TextField(NSLocalizedString("4-digits", comment: "ChangePinView: TextField"), text: $newPIN)
                        .textContentType(.oneTimeCode)
                        .keyboardType(.numberPad)
                        .background(Color.white)
@@ -92,7 +92,7 @@ struct ChangePinView: View {
                }
                HStack(alignment: .center) {
                    Text("Re-enter")
-                   TextField("4-digit", text: $confirmationPIN)
+                   TextField(NSLocalizedString("4-digits", comment: "ChangePinView: TextField"), text: $confirmationPIN)
                        .textContentType(.oneTimeCode)
                        .keyboardType(.numberPad)
                        .background(Color.white)

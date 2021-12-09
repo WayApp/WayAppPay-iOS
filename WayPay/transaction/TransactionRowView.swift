@@ -45,6 +45,7 @@ struct TransactionRowView: View {
                 }
 
             }.contextMenu {
+                /*
                 if ((transaction.type == WayPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
                     Button {
                         transaction.processRefund() { transaction, error in
@@ -60,6 +61,7 @@ struct TransactionRowView: View {
                             .accessibility(label: Text("Refund"))
                     }
                 }
+                 */
                 Button {
                     self.send = true
                 } label: {
@@ -87,7 +89,7 @@ struct TransactionRowView: View {
             VStack(alignment: .center, spacing: WayPay.UI.verticalSeparation) {
                 Text("Email receipt to:")
                     .font(.title)
-                TextField("Email", text: self.$email)
+                TextField(NSLocalizedString("email", comment: "TransactionRowView: TextField"), text: self.$email)
                     .textContentType(.emailAddress)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)

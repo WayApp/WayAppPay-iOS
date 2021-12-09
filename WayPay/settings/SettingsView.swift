@@ -342,7 +342,7 @@ extension SettingsView {
     
     private func registerAccount() {
         WayPay.Account.register(registration:
-                                    WayPay.Registration(email: "coco@wayapp.com", issuerUUID: "7373d487-239e-4966-8988-8d2c81b83251")) { registrations, error in
+                                    WayPay.Registration(email: "o2@wayapp.com", issuerUUID: "65345945-0e04-47b2-ae08-c5e7022a71aa")) { registrations, error in
             if let registrations = registrations,
                let registration = registrations.first {
                 WayAppUtils.Log.message("Registration: \(registration)")
@@ -356,12 +356,12 @@ extension SettingsView {
     }
     
     private func deleteAccount() {
-        WayPay.Account.delete("40e53480-fd9d-495f-abf8-4ff6bebae6aa")
+        WayPay.Account.delete("0a3c9838-9147-4319-a092-a34d4aa6ab62")
+        WayPay.Account.delete("6ab4ab9d-7a36-4994-ba61-f47a65a9d1fc")
     }
 
     private func deleteMerchant() {
-        WayPay.Merchant.delete("a3b4226a-f4b1-4638-8964-067b32c850bb")
-        WayPay.Merchant.delete("f68108e9-347c-4cc9-97db-c7c86eb311cd")
+        WayPay.Merchant.delete("377308da-e197-4498-9ce8-535a873dadb0")
     }
 
     private func deleteCampaign() {

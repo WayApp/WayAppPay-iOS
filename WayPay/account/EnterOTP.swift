@@ -50,7 +50,7 @@ struct EnterOTP: View {
             Form {
                 Text("Email new PIN to:")
                     .font(.title)
-                TextField("Email", text: $email)
+                TextField(NSLocalizedString("Email", comment: "EnterOTP: TextField"), text: $email)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
@@ -77,7 +77,7 @@ struct EnterOTP: View {
             Form {
                 Text("Enter OTP received:")
                     .font(.title)
-                TextField("PIN", text: self.$otp)
+                TextField(NSLocalizedString("PIN", comment: "EnterOTP: TextField"), text: self.$otp)
                     .textContentType(.oneTimeCode)
                     .keyboardType(.numberPad)
                     .background(Color.white)
@@ -93,7 +93,7 @@ struct EnterOTP: View {
                 VStack(alignment: .trailing) {
                     HStack(alignment: .center) {
                         Text("New")
-                        TextField("4-digits", text: $newPIN)
+                        TextField(NSLocalizedString("4-digits", comment: "EnterOTP: TextField"), text: $newPIN)
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
@@ -103,7 +103,7 @@ struct EnterOTP: View {
                     }
                     HStack(alignment: .center) {
                         Text("Re-enter")
-                        TextField("4-digits", text: $confirmationPIN)
+                        TextField(NSLocalizedString("4-digits", comment: "EnterOTP: TextField"), text: $confirmationPIN)
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)

@@ -13,6 +13,14 @@
 /* No comment provided by engineer. */
 "%@" = "%@";
 
+/* AuthenticationView: TextField
+   MerchantRegistrationView: TextField */
+"4-digit PIN" = "PIN de 4 dígitos";
+
+/* ChangePinView: TextField
+   EnterOTP: TextField */
+"4-digits" = "4 dígitos";
+
 /* User message: accountPendingActivation */
 "Account activation needed" = "Activación";
 
@@ -21,9 +29,6 @@
 
 /* User message: accountPendingActivation */
 "Account pending activation by Community. Contact support@wayapp.com to request activation" = "La cuenta está pendiente de activación por tu comunidad. Contacta a support@wayapp.com si tienes alguna pregunta.";
-
-/* No comment provided by engineer. */
-"Activate" = "Activar";
 
 /* CheckinView: section title */
 "Activity" = "Movimientos";
@@ -39,9 +44,6 @@
 
 /* CheckoutView: navigationTitle */
 "Amount" = "Importe";
-
-/* User message: accountWithoutMerchants */
-"App only available to registered merchants. Register a merchant and try again" = "App sólo disponible para comercios registrados. Registra un comercio e intenta de nuevo";
 
 /* month of the year */
 "April" = "Abril";
@@ -60,6 +62,9 @@
 
 /* User message: pins do not match */
 "Both entered PINs must match" = "Ambos PIN deben ser iguales";
+
+/* MerchantRegistrationView: TextField */
+"business name" = "nombre de comercio";
 
 /* No comment provided by engineer. */
 "Cancel" = "Cancelar";
@@ -82,14 +87,23 @@
 /* No comment provided by engineer. */
 "Charge or reward" = "Cobrar o recompensar";
 
+/* No comment provided by engineer. */
+"Check the community ID and and try again. Your account may already exist. If problem continues contact support@wayapp.com" = "Revisa el código de la comunidad. La cuenta puede estar ya registrada. Intenta otra vez, si no encuentras solución contacta a support@wayapp.com";
+
 /* PaymentTransaction.TransactionType */
 "Checkin" = "Checkin";
 
 /* CheckoutQRView title */
 "Checkout QR" = "Checkout QR";
 
+/* MerchantRegistrationView: TextField */
+"community id" = "código de la comunidad";
+
 /* OnboardingPage: title */
 "Community QR" = "QR de la comunidad";
+
+/* MerchantRegistrationView: TextField */
+"confirm PIN" = "confirmación PIN";
 
 /* User message: confirmationEmailHelpTitle */
 "Confirmation code" = "Código de confirmación";
@@ -116,8 +130,18 @@
    Prize format title */
 "Discount" = "Descuento";
 
+/* AuthenticationView: TextField
+   TransactionRowView: TextField */
+"email" = "email";
+
+/* EnterOTP: TextField */
+"Email" = "email";
+
 /* User message: forgotPINerror */
 "Email (email) is not registered" = "Email (email) no registrado";
+
+/* MerchantRegistrationView: TextField */
+"email address" = "dirección de email";
 
 /* User message: consumerAccountCreationError */
 "Email already registered, try a different email. If problem continues, contact support@wayapp.com" = "Email ya registrada, intenta un email distinto. Si el problema continúa, contacta support@wayapp.com";
@@ -138,7 +162,7 @@
 "Email sent to customer with QR to install on the phone" = "Se envió email al cliente con QR a instalar en el móvil";
 
 /* User message: invalidEmail message */
-"Enter a valid email address for this account" = "Ingresa un email válido para la cuenta";
+"Enter a valid email address" = "Ingresa una dirección de email válida";
 
 /* No comment provided by engineer. */
 "Enter OTP received:" = "Ingresa la clave reciba";
@@ -174,7 +198,7 @@
 "Invalid API request. Check URL" = "Invalid API request. Check URL";
 
 /* User message: invalidEmail title */
-"Invalid email address" = "Email inválido";
+"Invalid email" = "Dirección de email inválida";
 
 /* HTTPCall: Error: invalidServerResponse */
 "Invalid server response" = "Invalid server response";
@@ -213,12 +237,10 @@
 "May" = "Mayo";
 
 /* No comment provided by engineer. */
-"Merchant registration error. Please check The community ID and and try again. If problem continues contact support@wayapp.com" = "Error en el registro del comercio. Revisa el identificador de la comunidad e intenta otra vez. Contacta a support@wayapp.com si tienes alguna pregunta.";
-
-/* No comment provided by engineer. */
 "Month:" = "Mes:";
 
-/* SettingsView: section title */
+/* MerchantRegistrationView: section title
+   SettingsView: section title */
 "My account" = "Mi cuenta";
 
 /* SettingsView: section title */
@@ -229,6 +251,9 @@
 
 /* User message: requestGiftcard */
 "My own giftcard" = "Mi propia tarjeta regalo";
+
+/* MerchantRegistrationView: TextField */
+"name" = "nombre";
 
 /* No comment provided by engineer. */
 "New" = "Nuevo";
@@ -265,6 +290,12 @@
 
 /* OnboardingPage: title */
 "Payment and loyalty" = "Pago y fidelización";
+
+/* MerchantRegistrationView: TextField */
+"phone number" = "número de teléfono";
+
+/* EnterOTP: TextField */
+"PIN" = "PIN";
 
 /* No comment provided by engineer. */
 "PIN could not be changed. Try again later. If problem persists contact support@wayapp.com" = "Error cambiando el PIN. Intenta otra vez. Si no encuentras solución contacta a support@wayapp.com";
@@ -324,7 +355,7 @@
 "Refund failed" = "Reembolso falló";
 
 /* User message: refund result */
-"Refund was successful" = "Se ha hecho el reembolso";
+"Refund successful" = "Reembolso exitoso";
 
 /* No comment provided by engineer. */
 "Refunds" = "Reembolsos";
@@ -352,6 +383,9 @@
 
 /* No comment provided by engineer. */
 "Registration success" = "Registro exitoso";
+
+/* No comment provided by engineer. */
+"Request activation" = "Solicitar activación";
 
 /* PaymentTransaction.TransactionType */
 "Reward" = "Saldo de campaña";
@@ -440,6 +474,9 @@
 
 /* CheckinView: section title */
 "Wallet" = "Monedero";
+
+/* User message: accountWithoutMerchants */
+"WayPay only available to registered merchants. Register or wait for account activation" = "WayPay sólo está disponible para comercios registrados. Completa el registro o espera a que tu cuenta sea activada. Contáctanos a support@wayapp.com si tienes alguna pregunta";
 
 /* No comment provided by engineer. */
 "Your customers can scan this QR directly from their mobile Wallet pass to make payment" = "Tus clientes escanean el Checkout QR desde el reverso de su pase para pagar";

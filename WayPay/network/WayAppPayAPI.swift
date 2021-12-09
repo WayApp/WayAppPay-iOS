@@ -336,11 +336,11 @@ extension WayPay {
             let timestamp = Date().timeIntervalSince1970
             let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
             let baseURL = OperationalEnvironment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
-//            return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey) + queryParameters)
+            return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey) + queryParameters)
             // Parquesur STAGING
 //            return URL(string: baseURL + "fd09220a-3a69-4dc5-afd9-19e0e6d1c747" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "c739a79b-8f73-4b7d-aca2-adad51ffa9bd") + queryParameters)
              // Alcazar STAGING
-            return URL(string: baseURL + OperationalEnvironment.alcazarPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.alcazarPrivateKey) + queryParameters)
+//            return URL(string: baseURL + OperationalEnvironment.alcazarPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.alcazarPrivateKey) + queryParameters)
         }
                 
         var body: (String, Data)? {

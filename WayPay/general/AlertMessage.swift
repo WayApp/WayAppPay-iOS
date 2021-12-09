@@ -41,7 +41,7 @@ extension WayPay {
             case .error(let title, let text): return (title, text)
             case .titleAndText(let title, let text): return (title, text)
             case .closeTo(let title, let body): return (title, body)
-            case .invalidEmail: return (NSLocalizedString("Invalid email address", comment: "User message: invalidEmail title"), NSLocalizedString("Enter a valid email address for this account", comment: "User message: invalidEmail message"))
+            case .invalidEmail: return (NSLocalizedString("Invalid email", comment: "User message: invalidEmail title"), NSLocalizedString("Enter a valid email address", comment: "User message: invalidEmail message"))
             case .invalidPIN: return (NSLocalizedString("PIN not valid", comment: "User message: invalidPassword title"), NSLocalizedString("PIN must be", comment: "User message: pin minimum length requirement") + " " + WayPay.Account.PINLength.description + " " + NSLocalizedString("digits", comment: "User message: pin minimum length requirement"))
             case .pinsDontMatch: return (NSLocalizedString("PIN does not match", comment: "User message: pinsDontMatch title"), NSLocalizedString("Both entered PINs must match", comment: "User message: pins do not match"))
             case .confirmationEmailHelp(let email): return (NSLocalizedString("Confirmation code", comment: "User message: confirmationEmailHelpTitle"), NSLocalizedString("The 4-digit confirmation code was emailed to: \(email). Please enter it here", comment: "User message: confirmationEmailHelpMessage"))
@@ -53,7 +53,7 @@ extension WayPay {
             case .premiumFeature: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
             case .needsSetup: return (NSLocalizedString("Premium feature", comment: "User message: needsSetup"), NSLocalizedString("Contact sales@wayapp.com to enable", comment: "User message: needsSetup"))
             case .refund(let success):
-                return (SingleMessage.success(success).text, success ? NSLocalizedString("Refund was successful", comment: "User message: refund result") :
+                return (SingleMessage.success(success).text, success ? NSLocalizedString("Refund successful", comment: "User message: refund result") :
                         NSLocalizedString("Refund failed", comment: "User message: refund result"))
             case .transaction(let success):
                 return (SingleMessage.success(success).text, success ? NSLocalizedString("Transaction was successful", comment: "User message: Transaction result") :
@@ -64,7 +64,7 @@ extension WayPay {
             case .requestPoints: return (NSLocalizedString("Reward by € consumption", comment: "User message: requestPoints"), NSLocalizedString("Hello, I am interested in using this feature. Please contact me. Thanks.", comment: "User message: requestPoints"))
             case .consumerAccountCreationError: return (NSLocalizedString("Registration error", comment: "User message: consumerAccountCreationError"), NSLocalizedString("Email already registered, try a different email. If problem continues, contact support@wayapp.com", comment: "User message: consumerAccountCreationError"))
             case .consumerAccountCreationSuccess: return (NSLocalizedString("Account created", comment: "User message: consumerAccountCreationSuccess"), NSLocalizedString("Email sent to customer with QR to install on the phone", comment: "User message: consumerAccountCreationSuccess"))
-            case .accountWithoutMerchants: return (NSLocalizedString("Login failed", comment: "User message: accountWithoutMerchants"), NSLocalizedString("App only available to registered merchants. Register a merchant and try again", comment: "User message: accountWithoutMerchants"))
+            case .accountWithoutMerchants: return (NSLocalizedString("Login failed", comment: "User message: accountWithoutMerchants"), NSLocalizedString("WayPay only available to registered merchants. Register or wait for account activation", comment: "User message: accountWithoutMerchants"))
             case .accountPendingActivation: return (NSLocalizedString("Account activation needed", comment: "User message: accountPendingActivation"), NSLocalizedString("Account pending activation by Community. Contact support@wayapp.com to request activation", comment: "User message: accountPendingActivation"))
             }
         }

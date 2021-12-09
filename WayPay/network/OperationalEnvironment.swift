@@ -37,8 +37,11 @@ enum OperationalEnvironment {
     }
 
     static var alcazarCustomerUUID: String {
-
         return "66ec43c2-b531-4a9d-971a-af8db2f481bd"
+    }
+
+    static var waypayProductionCustomerUUID: String {
+        return "e94ef4c9-4b6e-44b9-bab8-1f8581c3f9f8"
     }
 
     static var alcazarPrivateKey: String {
