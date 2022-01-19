@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @EnvironmentObject var session: WayPay.Session
+    @EnvironmentObject var session: WayPayApp.Session
     @State private var currentTab = 0
     var fromSettings: Bool = false
     
@@ -34,14 +34,14 @@ struct OnboardingView: View {
             if !fromSettings && OnboardingPage.displayButton(tab: currentTab) {
                 VStack {
                     Button(action: {
-                        session.skipOnboarding = true
+                        WayPayApp.skipOnboarding = true
                         UserDefaults.standard.set(true, forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
                         UserDefaults.standard.synchronize()
                     }, label: {
                         Text("Get started")
                             .padding()
                     })
-                    .buttonStyle(WayPay.WideButtonModifier())
+                    .buttonStyle(UI.WideButtonModifier())
                 }
                 .padding()
             }

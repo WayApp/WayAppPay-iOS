@@ -319,7 +319,7 @@
 "Premium feature" = "Funcionalidad premium";
 
 /* SettingsView: CheckoutQRView option */
-"Print Checkout QR" = "Imprimir Checkout QR";
+"Print Checkout QR" = "Imprimir QR de cobro";
 
 /* SettingsView: CheckoutQRView option */
 "Print Registration QR" = "Imprimir QR de registro de cliente";

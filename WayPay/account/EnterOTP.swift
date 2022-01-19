@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct EnterOTP: View {
-    @EnvironmentObject private var session: WayPay.Session
+    @EnvironmentObject private var session: WayPayApp.Session
     @State var otp: String = String()
     @State var otpReceived: String?
     @State var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? ""
@@ -17,7 +17,7 @@ struct EnterOTP: View {
     @State private var showResetResultAlert = false
 
     @SwiftUI.Environment(\.presentationMode) var presentationMode
-    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
+    @ObservedObject private var keyboardObserver = UI.KeyboardObserver()
 
     @State private var newPIN = String()
     @State private var confirmationPIN = String()
@@ -56,7 +56,7 @@ struct EnterOTP: View {
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
                     .background(Color.white)
-                    .cornerRadius(WayPay.cornerRadius)
+                    .cornerRadius(UI.Constant.cornerRadius)
                     .padding()
                 Button(action: {
                     forgotPIN()
@@ -66,7 +66,7 @@ struct EnterOTP: View {
                         .foregroundColor(Color.white)
                  }
                 .disabled(shouldSendEmailButtonBeDisabled)
-                .buttonStyle(WayPay.WideButtonModifier())
+                .buttonStyle(UI.WideButtonModifier())
                 .alert(isPresented: $showResetResultAlert) {
                     Alert(title: Text(WayPay.AlertMessage.pinChangeFailed.text.title),
                           message: Text(WayPay.AlertMessage.pinChangeFailed.text.message),
@@ -81,7 +81,7 @@ struct EnterOTP: View {
                     .textContentType(.oneTimeCode)
                     .keyboardType(.numberPad)
                     .background(Color.white)
-                    .cornerRadius(WayPay.cornerRadius)
+                    .cornerRadius(UI.Constant.cornerRadius)
                     .foregroundColor((otp.count == WayPay.Account.PINLength && otpReceived != otp) ||
                         otp.count > WayPay.Account.PINLength ? .red : .primary)
                     .padding()
@@ -97,7 +97,7 @@ struct EnterOTP: View {
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
-                            .cornerRadius(WayPay.cornerRadius)
+                            .cornerRadius(UI.Constant.cornerRadius)
                             .padding()
                             .foregroundColor(newPIN.count > WayPay.Account.PINLength ? .red : .primary)
                     }
@@ -107,7 +107,7 @@ struct EnterOTP: View {
                             .textContentType(.oneTimeCode)
                             .keyboardType(.numberPad)
                             .background(Color.white)
-                            .cornerRadius(WayPay.cornerRadius)
+                            .cornerRadius(UI.Constant.cornerRadius)
                             .padding()
                             .foregroundColor((confirmationPIN.count == WayPay.Account.PINLength && newPIN != confirmationPIN) ||
                             confirmationPIN.count > WayPay.Account.PINLength ? .red : .primary)
@@ -122,7 +122,7 @@ struct EnterOTP: View {
                         .foregroundColor(Color.white)
                 }
                 .disabled(shouldChangeButtonBeDisabled)
-                .buttonStyle(WayPay.WideButtonModifier())
+                .buttonStyle(UI.WideButtonModifier())
                 .alert(isPresented: $showChangeResultAlert) {
                     Alert(title: Text(WayPay.AlertMessage.pinChangeFailed.text.title),
                           message: Text(WayPay.AlertMessage.pinChangeFailed.text.message),

@@ -8,20 +8,24 @@
 
 import UIKit
 
-struct WayAppUtils {
-    
-    struct Log {
-        static let isOn = true
+public extension UIApplication {
+    func currentUIWindow() -> UIWindow? {
+        let connectedScenes = UIApplication.shared.connectedScenes
+            .filter({
+                $0.activationState == .foregroundActive})
+            .compactMap({$0 as? UIWindowScene})
         
-        static func message(fileName: String = #file, functionName: String = #function, _ message: String = "") {
-            if (isOn) {
-                var fileNameLastComponent = URL(fileURLWithPath: fileName)
-                fileNameLastComponent = fileNameLastComponent.deletingPathExtension()
-                print("\n\n>>\(fileNameLastComponent.lastPathComponent): \(functionName): \(message)")
-            }
-        }
+        let window = connectedScenes.first?
+            .windows
+            .first { $0.isKeyWindow }
+
+        return window
+        
     }
-    
+}
+
+struct WayAppUtils {
+        
 }
 
 extension WayAppUtils {

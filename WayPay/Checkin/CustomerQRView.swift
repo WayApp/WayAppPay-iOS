@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CustomerQRView: View {
-    @EnvironmentObject private var session: WayPay.Session
+    @EnvironmentObject private var session: WayPayApp.Session
     
     var qr: UIImage {
         if let code = WayAppUtils.generateQR(from: "https://pay.staging.wayapp.com/sign-up") {
@@ -44,7 +44,7 @@ struct CustomerQRView: View {
     
     func actionSheet() {
         let activityVC = UIActivityViewController(activityItems: [qr], applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
+        UIApplication.shared.currentUIWindow()?.rootViewController?.present(activityVC, animated: true, completion: nil)
     }    
 }
 

@@ -19,7 +19,7 @@ extension WayPay {
         var transaction: PaymentTransaction?
         
         init(merchantUUID: String, transactionUUID: String, sendTo: String, transaction: PaymentTransaction, body: String = "valor por defecto", subject: String = "subject por defecto") {
-            self.merchantUUID = WayPay.session.merchantUUID
+            self.merchantUUID = WayPayApp.session.merchantUUID
             self.transactionUUID = transactionUUID
             self.sendTo = sendTo
             self.transaction = transaction
@@ -36,14 +36,14 @@ extension WayPay {
         static func process(transaction: PaymentTransaction, sendTo: String) {
             let sendEmail = SendEmail(transaction: transaction, sendTo: sendTo)
             guard let merchantUUID = transaction.merchantUUID, let transactionUUID = transaction.transactionUUID else {
-                WayAppUtils.Log.message("Missing merchantUUID or transactionUUID")
+                Logger.message("Missing merchantUUID or transactionUUID")
                 return
             }
             WayPay.API.sendEmail(merchantUUID, transactionUUID, sendEmail).fetch(type: [SendEmail].self) { response in
                 if case .success(let response?) = response {
-                    WayAppUtils.Log.message("Email sent !!!!=\(response)")
+                    Logger.message("Email sent !!!!=\(response)")
                 } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                    Logger.message(error.localizedDescription)
                 }
             }
         }

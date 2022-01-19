@@ -42,7 +42,7 @@ extension WayPay {
         }
         
         static func reportError<T: Decodable>(_ response: Response<T>) {
-            WayAppUtils.Log.message("Code=\(response.code ?? 0) , Status=\(response.status ?? "no status"), moreInfo=\(response.moreInfo ?? "no more info")")
+            Logger.message("Code=\(response.code ?? 0) , Status=\(response.status ?? "no status"), moreInfo=\(response.moreInfo ?? "no more info")")
         }
         
         static func errorFromResponse<T: Decodable>(_ response: Response<T>) -> Swift.Error {
@@ -116,6 +116,7 @@ extension WayPay {
         // Banks
         case getBanks(String) // GET
         case getConsentDetail(String) // GET
+        case getConsent(String, AfterBanks.ConsentRequest) // POST
         // Campaign
         case createCampaign(Campaign)
         case updateCampaign(Campaign)
@@ -176,9 +177,10 @@ extension WayPay {
             case .editIssuer(let issuer): return "/issuers/\(issuer.issuerUUID)/"
             case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
             case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
-            // Banks
+            // Account2Account
             case .getBanks: return "/banks/lists/"
             case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
+            case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
             // Campaign
             case .createCampaign: return "/campaigns/"
             case .updateCampaign: return "/campaigns/"
@@ -194,7 +196,7 @@ extension WayPay {
             case .sendPushNotificationForCampaign(let campaignID, _): return "/campaigns/\(campaignID)/messages/"
             // TRASH
             case .account: return "/accounts/"
-            case .editAccount: return "/accounts/\(WayPay.session.accountUUID!)/"
+            case .editAccount: return "/accounts/\(WayPayApp.session.accountUUID!)/"
             }
         }
         
@@ -245,6 +247,7 @@ extension WayPay {
             // Banks
             case .getBanks: return ""
             case .getConsentDetail(let consentId): return consentId
+            case .getConsent(let accountUUID, _): return accountUUID
             // Campaign
             case .createCampaign: return ""
             case .updateCampaign: return ""
@@ -277,7 +280,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant:
+            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .getConsent:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -335,8 +338,8 @@ extension WayPay {
         var url: URL? {
             let timestamp = Date().timeIntervalSince1970
             let signatureTimestamped = signature.isEmpty ? signature.appending(String(timestamp)) : signature.appending("/" + String(timestamp))
-            let baseURL = OperationalEnvironment.wayappPayAPIBaseURL + path + String(timestamp) + "/"
-            return URL(string: baseURL + OperationalEnvironment.wayAppPayPublicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationalEnvironment.wayAppPayPrivateKey) + queryParameters)
+            let baseURL = OperationEnvironment.WayPayAPI.baseURL + path + String(timestamp) + "/"
+            return URL(string: baseURL + OperationEnvironment.WayPayAPI.publicKey + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: OperationEnvironment.WayPayAPI.privateKey) + queryParameters)
             // Parquesur STAGING
 //            return URL(string: baseURL + "fd09220a-3a69-4dc5-afd9-19e0e6d1c747" + "/" + signatureTimestamped.digest(algorithm: .SHA256, key: "c739a79b-8f73-4b7d-aca2-adad51ffa9bd") + queryParameters)
              // Alcazar STAGING
@@ -486,6 +489,12 @@ extension WayPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
+            case .getConsent(_, let consentRequest):
+                if let part = HTTPCall.BodyPart(consentRequest, name: "consentRequest") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
             default:
                 return nil
             }
@@ -498,7 +507,7 @@ extension WayPay {
                 // Parquesur
 //                return ["User-Agent": "9062358b-c0b3-45ff-84db-b452c9ac1289"]
                 // Alcazar
-                return ["User-Agent": OperationalEnvironment.alcazarCustomerUUID]
+                return ["User-Agent": OperationEnvironment.alcazarCustomerUUID]
             default:
                 return nil
             }

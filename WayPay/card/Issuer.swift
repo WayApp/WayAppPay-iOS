@@ -33,15 +33,34 @@ extension WayPay {
         }
                 
         
-        static func get(completion: @escaping ([Issuer]?, Error?) -> Void) {
+        static func get() {
             WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
-                switch response {
-                case .success(let response?):
-                    completion(response.result, nil)
-                case .failure(let error):
-                    completion(nil, error)
-                default:
-                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                if case .success(let response?) = response {
+                    if let issuers = response.result {
+                        DispatchQueue.main.async {
+                            WayPayApp.session.issuers.setTo(issuers)
+                        }
+                    } else {
+                        WayPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    Logger.message(error.localizedDescription)
+                }
+            }
+        }
+
+        static func getCards(for accountUUID: String) {
+            WayPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
+                if case .success(let response?) = response {
+                    if let cards = response.result {
+                        DispatchQueue.main.async {
+                            WayPayApp.session.cards.setTo(cards)
+                        }
+                    } else {
+                        WayPay.API.reportError(response)
+                    }
+                } else if case .failure(let error) = response {
+                    Logger.message(error.localizedDescription)
                 }
             }
         }

@@ -18,7 +18,7 @@ extension WayPay {
         } catch WayAppUtils.KeychainHandler.Error.duplicateItem {
             try WayAppUtils.KeychainHandler.updateQuery(query, password: password)
         } catch {
-            WayAppUtils.Log.message(error.localizedDescription)
+            Logger.message(error.localizedDescription)
             throw error
         }
     }
@@ -48,7 +48,7 @@ extension WayPay {
         do {
             password = try WayAppUtils.KeychainHandler.searchGenericPasswordQuery(account: forEmail, service: WayPay.appName)
         } catch {
-            WayAppUtils.Log.message(error.localizedDescription)
+            Logger.message(error.localizedDescription)
         }
         return password
     }

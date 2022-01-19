@@ -119,15 +119,15 @@ extension WayPay {
                 
         // Payment with Wallet card
         init(amount: Int, purchaseDetail: [CartItem]? = nil, prizes: [Prize]? = nil, token: String = String(), type: TransactionType = .SALE) {
-            self.accountUUID = session.accountUUID
-            self.merchantUUID = session.merchantUUID
+            self.accountUUID = WayPayApp.session.accountUUID
+            self.merchantUUID = WayPayApp.session.merchantUUID
             self.amount = amount
             self.authorizationCode = token
             self.paymentMethod = .WALLET
             self.type = type
-            self.currency = session.merchant == nil ?  PaymentTransaction.defaultCurrency : session.merchant!.currency
+            self.currency = WayPayApp.session.merchant == nil ?  PaymentTransaction.defaultCurrency : WayPayApp.session.merchant!.currency
             self.readingType = .STANDARD
-            self.accountUUID = session.accountUUID
+            self.accountUUID = WayPayApp.session.accountUUID
             self.purchaseDetail = purchaseDetail
             self.prizes = prizes
         }
@@ -143,7 +143,7 @@ extension WayPay {
         func walletPayment() {
             guard let merchantUUID = self.merchantUUID,
                 let accountUUID = self.accountUUID else {
-                WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
+                Logger.message("missing transaction.merchantUUID or transaction.accountUUID")
                 return
             }
             WayPay.API.walletPayment(merchantUUID, accountUUID, self).fetch(type: [WayPay.PaymentTransaction].self) { response in
@@ -151,14 +151,14 @@ extension WayPay {
                     if let transactions = response.result,
                         let transaction = transactions.first {
                         DispatchQueue.main.async {
-                            session.transactions.addAsFirst(transaction)
+                            WayPayApp.session.transactions.addAsFirst(transaction)
                         }
-                        WayAppUtils.Log.message("PAGO HECHO!!!!=\(transaction)")
+                        Logger.message("PAGO HECHO!!!!=\(transaction)")
                     } else {
                         WayPay.API.reportError(response)
                     }
                 } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                    Logger.message(error.localizedDescription)
                 }
             }
         }
@@ -167,7 +167,7 @@ extension WayPay {
             guard let merchantUUID = self.merchantUUID,
                 let accountUUID = self.accountUUID,
                 let transactionUUID = self.transactionUUID else {
-                WayAppUtils.Log.message("missing transaction.merchantUUID or transaction.accountUUID")
+                Logger.message("missing transaction.merchantUUID or transaction.accountUUID")
                 return
             }
             WayPay.API.refundTransaction(merchantUUID, accountUUID, transactionUUID, self).fetch(type: [PaymentTransaction].self) { response in
@@ -175,7 +175,7 @@ extension WayPay {
                     if let transactions = response.result,
                         let transaction = transactions.first {
                         DispatchQueue.main.async {
-                            WayPay.session.transactions.addAsFirst(transaction)
+                            WayPayApp.session.transactions.addAsFirst(transaction)
                             completion(transaction, nil)
                         }
                     } else {
@@ -183,7 +183,7 @@ extension WayPay {
                         completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
                 } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                    Logger.message(error.localizedDescription)
                     completion(nil, error)
                 }
             }

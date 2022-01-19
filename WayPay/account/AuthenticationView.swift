@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @EnvironmentObject private var session: WayPay.Session
+    @EnvironmentObject private var session: WayPayApp.Session
     @State private var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? "" {
         didSet {
             UserDefaults.standard.set(email, forKey: WayPay.DefaultKey.EMAIL.rawValue)
@@ -56,7 +56,7 @@ struct AuthenticationView: View {
                 }
 
             }
-            .alert(isPresented: $session.showAccountHasNoMerchantsAlerts) {
+            .alert(isPresented: $session.showAccountHasNoMerchantsAlert) {
                 Alert(title: Text(WayPay.AlertMessage.accountWithoutMerchants.text.title),
                       message: Text(WayPay.AlertMessage.accountWithoutMerchants.text.message),
                       dismissButton: .default(Text(WayPay.SingleMessage.OK.text)))
@@ -68,8 +68,7 @@ struct AuthenticationView: View {
                     .padding()
             }
             .disabled(shouldSigninButtonBeDisabled)
-            .buttonStyle(WayPay.WideButtonModifier())
-            .animation(.easeInOut(duration: 0.3))
+            .buttonStyle(UI.WideButtonModifier())
             .alert(isPresented: $loginError) {
                 Alert(title: Text(WayPay.AlertMessage.loginFailed.text.title),
                       message: Text(WayPay.AlertMessage.loginFailed.text.message),
@@ -97,7 +96,7 @@ struct AuthenticationView: View {
                 DispatchQueue.main.async {
                     session.account = account
                     session.saveLoginData(pin: pin)
-                    WayAppUtils.Log.message("Login successful")
+                    Logger.message("Login successful")
                 }
             } else {
                 DispatchQueue.main.async {

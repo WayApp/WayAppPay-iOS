@@ -77,7 +77,7 @@ enum Month: Int, CaseIterable {
 }
 
 struct TransactionsView: View {
-    @EnvironmentObject private var session: WayPay.Session
+    @EnvironmentObject private var session: WayPayApp.Session
 
     @State var monthSelection = Calendar.current.component(.month, from: Date()) - 1
     @State private var isAPICallOngoing = false
@@ -114,13 +114,13 @@ struct TransactionsView: View {
                             HStack {
                                 Label("Sales", systemImage: "plus.square")
                                     .accessibility(label: Text("Sales"))
-                                Text("\(WayPay.formatPrice(reportID.totalSales ?? 0))")
+                                Text("\(UI.formatPrice(reportID.totalSales ?? 0))")
                                     .bold()
                             }
                             HStack {
                                 Label("Refunds", systemImage: "minus.square")
                                     .accessibility(label: Text("Refunds"))
-                                Text("\(WayPay.formatPrice(reportID.totalRefund ?? 0))")
+                                Text("\(UI.formatPrice(reportID.totalRefund ?? 0))")
                                     .bold()
                                     .foregroundColor(Color.red)
                             }
@@ -163,7 +163,7 @@ struct TransactionsView: View {
             } // Form
             .onAppear(perform: {
                 if (accountUUID == nil) {
-                    WayAppUtils.Log.message("onAppear")
+                    Logger.message("onAppear")
                     let firstDayOfMonth = Month(rawValue: monthSelection)?.firstDay
                     let lastDayOfMonth = Month(rawValue: monthSelection)?.lastDay
                     DispatchQueue.main.async {
@@ -188,34 +188,34 @@ struct TransactionsView: View {
             })
             .navigationBarTitle("Transactions")
             if refundState != .none {
-                Image(systemName: refundState == .success ? WayPay.UI.paymentResultSuccessImage : WayPay.UI.paymentResultFailureImage)
+                Image(systemName: refundState == .success ? UI.Constant.paymentResultSuccessImage : UI.Constant.paymentResultFailureImage)
                     .resizable()
                     .foregroundColor(refundState == .success ? Color.green : Color.red)
-                    .frame(width: WayPay.UI.paymentResultImageSize, height: WayPay.UI.paymentResultImageSize, alignment: .center)
+                    .frame(width: UI.Constant.paymentResultImageSize, height: UI.Constant.paymentResultImageSize, alignment: .center)
             }
             if isAPICallOngoing {
                 ProgressView(NSLocalizedString(WayPay.SingleMessage.progressView.text, comment: "Activity indicator"))
-                    .progressViewStyle(WayPay.WayPayProgressViewStyle())
+                    .progressViewStyle(UI.WayPayProgressViewStyle())
             }
         }
     }
     
     private func getTransactions() {
-        WayAppUtils.Log.message("Entering")
+        Logger.message("Entering")
         guard let merchantUUID = session.merchantUUID,
               let accountUUID = accountUUID else {
-            WayAppUtils.Log.message("Missing session.merchantUUID or session.accountUUID")
+            Logger.message("Missing session.merchantUUID or session.accountUUID")
             return
         }
         let finalDate = Date()
         let daysAgo = -3
         let initialDate = Calendar.current.date(byAdding: .day, value: daysAgo, to: finalDate)
-        WayAppUtils.Log.message("initialDate: \(WayPay.reportDateFormatter.string(from: initialDate!))")
+        Logger.message("initialDate: \(UI.reportDateFormatter.string(from: initialDate!))")
         if let initialDate = initialDate {
-            WayPay.Account.transactions(merchantUUID: merchantUUID, accountUUID: accountUUID, initialDate: WayPay.reportDateFormatter.string(from: initialDate), finalDate: WayPay.reportDateFormatter.string(from: finalDate)) {
+            WayPay.Account.transactions(merchantUUID: merchantUUID, accountUUID: accountUUID, initialDate: UI.reportDateFormatter.string(from: initialDate), finalDate: UI.reportDateFormatter.string(from: finalDate)) {
                 transactions, error in
                     if let transactions = transactions {
-                        WayAppUtils.Log.message("TRANSACTIONS COUNT=\(transactions.count)")
+                        Logger.message("TRANSACTIONS COUNT=\(transactions.count)")
                         DispatchQueue.main.async {
                             self.transactions.setToInOrder(transactions, by:
                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
@@ -235,6 +235,6 @@ struct TransactionsView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: deviceName))
                 .previewDisplayName(deviceName)
         }
-        .environmentObject(WayPay.session)
+        .environmentObject(WayPayApp.session)
     }
 }

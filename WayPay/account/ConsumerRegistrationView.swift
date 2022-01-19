@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ConsumerRegistrationView: View {
-    @EnvironmentObject private var session: WayPay.Session
+    @EnvironmentObject private var session: WayPayApp.Session
     @SwiftUI.Environment(\.presentationMode) var presentationMode
     @State private var email: String = String(){
         didSet {
@@ -87,8 +87,7 @@ struct ConsumerRegistrationView: View {
                     .padding()
             }
             .disabled(shouldRegistrationButtonBeDisabled)
-            .buttonStyle(WayPay.WideButtonModifier())
-            .animation(.easeInOut(duration: 0.3))
+            .buttonStyle(UI.WideButtonModifier())
             .alert(isPresented: $showAccountCreationAlert) {
                 Alert(title: Text(wasAccountCreatedSuccessfully ?
                                     WayPay.AlertMessage.consumerAccountCreationSuccess.text.title :

@@ -60,9 +60,9 @@ extension WayPay {
         var displayAs: String {
             switch format {
             case .CASHBACK:
-                return "\(WayPay.formatPrice(value))"
+                return "\(UI.formatPrice(value))"
             case .COUPON:
-                return "\(WayPay.formatAmount(value))%"
+                return "\(UI.formatAmount(value))%"
             }
         }
         

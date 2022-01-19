@@ -23,7 +23,7 @@ extension WayPay {
         
         init() {
             idReport = UUID().uuidString
-            merchantUUID = session.merchantUUID
+            merchantUUID = WayPayApp.session.merchantUUID
             totalSales = 0
             totalRefund = 0
             sales = [:]

@@ -120,9 +120,9 @@ extension WayPay {
         static func prizesForReward(_ reward: Reward) -> [Prize] {
             var wonPrizes = [Prize]()
             if let balance = reward.balance,
-               let campaign = session.campaigns[reward.campaignID],
+               let campaign = WayPayApp.session.campaigns[reward.campaignID],
                let prize = campaign.prize {
-                WayAppUtils.Log.message("Balance: \(balance), prize.amountToGetIt: \(prize.amountToGetIt)")
+                Logger.message("Balance: \(balance), prize.amountToGetIt: \(prize.amountToGetIt)")
                 if prize.amountToGetIt <= balance {
                     wonPrizes.append(prize)
                 }
@@ -225,17 +225,17 @@ extension WayPay {
         static func delete(id: String, sponsorUUID: String) {
             WayPay.API.deleteCampaign(id, sponsorUUID).fetch(type: [String].self) { response in
                 if case .success(_) = response {
-                    WayAppUtils.Log.message("Campaign with ID=\(id) successfully deleted")
+                    Logger.message("Campaign with ID=\(id) successfully deleted")
                 } else if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                    Logger.message(error.localizedDescription)
                 }
             }
         }
         
         static func sendPushNotification(id: String, pushNotification: PushNotification, completion: @escaping ([PushNotification]?, Error?) -> Void) {
-            WayAppUtils.Log.message("Sending campaign pushNotification with text: \(pushNotification.text)")
+            Logger.message("Sending campaign pushNotification with text: \(pushNotification.text)")
             WayPay.API.sendPushNotificationForCampaign(id, pushNotification).fetch(type: [PushNotification].self) { response in
-                WayAppUtils.Log.message("Campaign: sendPushNotification: responded: \(response)")
+                Logger.message("Campaign: sendPushNotification: responded: \(response)")
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)

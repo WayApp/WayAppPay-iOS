@@ -27,7 +27,7 @@ extension WayPay {
             if let format = format {
                 switch format {
                 case .STAMP: return String(balance ?? 0)
-                case .POINT: return WayPay.formatAmount(balance)
+                case .POINT: return UI.formatAmount(balance)
                 }
             }
             return ""

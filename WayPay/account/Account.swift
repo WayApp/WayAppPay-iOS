@@ -32,8 +32,9 @@ extension WayPay {
                 
         enum Status: String, Codable {
             case CREATED // registered but not validated
-            case ACTIVE // email validated
-            case INACTIVE // blocked by Admin
+            case ENABLED
+            case DISABLED
+            case PENDING 
         }
         
         var accountUUID: String
@@ -83,7 +84,7 @@ extension WayPay {
             } catch KeychainHandler.Error.duplicateItem {
                 try KeychainHandler.updateQuery(query, password: password)
             } catch {
-                WayAppUtils.Log.message(error.localizedDescription)
+                Logger.message(error.localizedDescription)
                 throw error
             }
         }
@@ -113,14 +114,14 @@ extension WayPay {
             do {
                 password = try KeychainHandler.searchGenericPasswordQuery(account: forEmail, service: WayPay.appName)
             } catch {
-                WayAppUtils.Log.message(error.localizedDescription)
+                Logger.message(error.localizedDescription)
             }
             return password
         }
 
         static func register(registration: Registration, completion: @escaping ([Registration]?, Error?) -> Void) {
             WayPay.API.registrationAccount(registration).fetch(type: [Registration].self) { response in
-                WayAppUtils.Log.message("Account: registerAccount: response: \(response)")
+                Logger.message("Account: registerAccount: response: \(response)")
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
@@ -134,7 +135,7 @@ extension WayPay {
 
         static func createAccount(account: AccountRequest, completion: @escaping ([Account]?, Error?) -> Void) {
             WayPay.API.createAccount(account).fetch(type: [Account].self) { response in
-                WayAppUtils.Log.message("Account: createAccount: response: \(response)")
+                Logger.message("Account: createAccount: response: \(response)")
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
@@ -202,16 +203,16 @@ extension WayPay {
             
         static func delete(_ accountUUID: String) {
             WayPay.API.deleteAccount(accountUUID).fetch(type: [String].self) { response in
-                WayAppUtils.Log.message("DELETE Response")
+                Logger.message("DELETE Response")
                 if case .failure(let error) = response {
-                    WayAppUtils.Log.message(error.localizedDescription)
+                    Logger.message(error.localizedDescription)
                 } else if case .success(let response?) = response {
-                    WayAppUtils.Log.message("DELETE Response: \(response.debugOutput())")
+                    Logger.message("DELETE Response: \(response.debugOutput())")
 
                     if response.code == 204 {
-                        WayAppUtils.Log.message("Account: \(accountUUID). DELETED.")
+                        Logger.message("Account: \(accountUUID). DELETED.")
                     } else {
-                        WayAppUtils.Log.message("Response: \(response.debugOutput())")
+                        Logger.message("Response: \(response.debugOutput())")
                     }
                 }
             }

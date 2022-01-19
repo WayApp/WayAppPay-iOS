@@ -139,7 +139,7 @@ struct NFCCodeCaptureView_Previews: PreviewProvider {
 extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
     
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
-        WayAppUtils.Log.message("****** CANCEL: didInvalidateWithError")
+        Logger.message("****** CANCEL: didInvalidateWithError")
         didFail()
 
                 // Check the invalidation reason from the returned error.
@@ -203,7 +203,7 @@ extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
                             let message = message,
                             let readMessage = self.readMessage(message) {
                             session.alertMessage = "Found 1 NDEF message"
-                            WayAppUtils.Log.message("TAG=\(readMessage)")
+                            Logger.message("TAG=\(readMessage)")
                             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
                             session.invalidate()
                             self.found(scannedCode: readMessage)
@@ -242,7 +242,7 @@ extension NFCScannerCoordinator: NFCNDEFReaderSessionDelegate {
         
     private func readMessage(_ message: NFCNDEFMessage) -> String? {
         guard !message.records.isEmpty else {
-            WayAppUtils.Log.message("message.records.isEmpty")
+            Logger.message("message.records.isEmpty")
             return nil
         }
         let payload = message.records[0]

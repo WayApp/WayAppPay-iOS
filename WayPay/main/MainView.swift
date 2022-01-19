@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject var session: WayPay.Session
+    @EnvironmentObject var session: WayPayApp.Session
     @State var navigationSelection: Int?
     
     var body: some View {
-        if !session.skipOnboarding {
+        if !WayPayApp.skipOnboarding {
             return AnyView(OnboardingView())
         } else if session.showAuthenticationView {
             return AnyView(
@@ -37,7 +37,7 @@ struct MainView: View {
                     Label(NSLocalizedString("Scan customer QR", comment: "CheckoutView: button title"), systemImage: "qrcode.viewfinder")
                         .padding()
                 }
-                .buttonStyle(WayPay.WideButtonModifier())
+                .buttonStyle(UI.WideButtonModifier())
                 .padding(.horizontal)
                 NavigationLink(destination: CheckoutView(), tag: 0, selection: $navigationSelection) {
                     EmptyView()
@@ -50,6 +50,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environmentObject(WayPay.session)
+        MainView().environmentObject(WayPayApp.session)
     }
 }

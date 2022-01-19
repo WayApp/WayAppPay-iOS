@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MerchantRegistrationView: View {
-    @EnvironmentObject private var session: WayPay.Session
+    @EnvironmentObject private var session: WayPayApp.Session
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var email: String = String(){
         didSet {
@@ -112,7 +112,7 @@ struct MerchantRegistrationView: View {
                     isAPIcalled = false
                     if let merchants = merchants,
                        let merchant = merchants.first {
-                        WayAppUtils.Log.message("Merchant: \(merchant)")
+                        Logger.message("Merchant: \(merchant)")
                         DispatchQueue.main.async {
                             registrationSuccess = true
                         }
@@ -127,8 +127,7 @@ struct MerchantRegistrationView: View {
                     .padding()
             }
             .disabled(shouldRegistrationButtonBeDisabled)
-            .buttonStyle(WayPay.WideButtonModifier())
-            .animation(.easeInOut(duration: 0.3))
+            .buttonStyle(UI.WideButtonModifier())
             .alert(isPresented: $registrationError) {
                 Alert(title: Text("Registration error"),
                       message: Text("Check the community ID and and try again. Your account may already exist. If problem continues contact support@wayapp.com"),

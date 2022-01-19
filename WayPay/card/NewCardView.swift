@@ -1,49 +1,32 @@
 //
-//  ProductDetailView.swift
-//  WayAppPay
+//  NewCardView.swift
+//  WayPay
 //
-//  Created by Oscar Anzola on 1/31/20.
-//  Copyright © 2020 WayApp. All rights reserved.
+//  Created by Oscar Anzola on 18/1/22.
+//  Copyright © 2022 WayApp. All rights reserved.
 //
 
 import SwiftUI
 
 struct NewCardView: View {
-    @EnvironmentObject private var session: WayPay.Session
-    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
-    @SwiftUI.Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var session: WayPayApp.Session
+    @ObservedObject private var keyboardObserver = UI.KeyboardObserver()
+//    @SwiftUI.Environment(\.presentationMode) var presentationMode
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
     @State private var action: Int? = 10
     @State private var selectedCardType = 0
     @State private var consent: AfterBanks.Consent?
-    @State var authenticationViewModel = WayPay.AuthenticationViewModel()
-
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
-        return formatter
-    }
-    
-    static let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-
-
-        // make sure the following are the same as that used in the API
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.locale = Locale.current
-
-        return formatter
-    }()
-
     @State private var validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
-    
-    let currencies = ["EUR", "USD", "VEF"]
     @State var selectedCurrency: Int = 0
     @State var alias: String = ""
     @State var selectedIssuer: Int = 0
     @State var selectedBank: Int = 0
     @State private var selectedIBAN = 0
+    @State private var qrCreated = false
+
+    
+    let currencies = ["EUR", "USD", "VEF"]
 
     var shouldSaveButtonBeDisabled: Bool {
         if session.accountUUID == nil {
@@ -55,18 +38,7 @@ struct NewCardView: View {
         default: return true
         }
     }
-        
-    private func apiCallCompleted(_ error: Error?) {
-        DispatchQueue.main.async {
-            self.isAPICallOngoing = false
-            if error != nil {
-                self.showUpdateResultAlert = true
-            } else {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        }
-    }
-    
+            
     private func postpaidOptions() -> some View {
         return Section(header: Text("Bank account")) {
             DatePicker(selection: $validUntil, displayedComponents: .date) {
@@ -75,7 +47,7 @@ struct NewCardView: View {
             if !session.banks.isEmpty {
                 Picker(selection: $selectedBank, label: Text("Bank")) {
                     ForEach(0..<session.banks.count) {
-                        Text(self.session.banks[$0].fullname ?? self.session.banks[$0].service)
+                        Text(self.session.banks[$0].getFullname())
                     }
                 }
             }
@@ -91,12 +63,11 @@ struct NewCardView: View {
                 Text("Grant consent")
                     .foregroundColor(.black)
                     .padding(.vertical)
-                    .frame(maxWidth: .infinity, minHeight: WayPay.UI.buttonHeight)
+                    .frame(maxWidth: .infinity, minHeight: UI.Constant.buttonHeight)
             })
             .disabled(session.banks.isEmpty || (session.accountUUID == nil))
             .background((session.banks.isEmpty || (session.accountUUID == nil)) ? Color.gray : Color.green)
             .cornerRadius(15)
-            .animation(.easeInOut(duration: 0.3))
         } // Section
     } // func
     
@@ -110,63 +81,84 @@ struct NewCardView: View {
     
     private func grantConsent(accountUUID: String) {
     }
+    
+    private func createCard(accountUUID: String) {
+        DispatchQueue.main.async {
+            self.isAPICallOngoing = true
+        }
+        WayPay.Card.create(alias: self.alias, issuerUUID: session.issuers[selectedIssuer].issuerUUID, type: WayPay.Card.PaymentFormat.allCases[selectedCardType], consent: consent, selectedIBAN: selectedIBAN) { error, card in
+            DispatchQueue.main.async {
+                self.isAPICallOngoing = false
+            }
+            if error != nil {
+                DispatchQueue.main.async {
+                    self.showUpdateResultAlert = true
+                    Logger.message("********************** \(error!.localizedDescription)")
+                }
+            } else {
+                self.qrCreated = true
+            }
+        }
+    }
             
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color.offWhite
-                Form {
-                    Section(header: Text("")) {
-                        HStack(spacing: 15) {
-                            Text("Alias")
-                            TextField("alias", text: $alias)
-                                .textContentType(.nickname)
-                                .keyboardType(.default)
-                        }
-                        Picker(selection: $selectedIssuer, label: Text("Issuer")) {
-                            ForEach(0..<session.issuers.count, id: \.self) {
-                                Text(self.session.issuers[$0].name ?? "no name")
-                            }
-                        }
-                        Picker(selection: $selectedCardType, label: Text("Type")) {
-                            ForEach(0..<WayPay.Card.PaymentFormat.allCases.count, id: \.self) {
-                                Text(WayPay.Card.PaymentFormat.allCases[$0].rawValue)
-                            }
-                        }.pickerStyle(SegmentedPickerStyle())
-                    }
-                    if isAPICallOngoing {
-                        WayPay.ActivityIndicator(isAnimating: true)
-                    }
-                    if WayPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
-                        Section(header: Text("Prepaid")) {
-                            prepaidOptions()
-                        }
-                    }
-                    if WayPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID {
-                        postpaidOptions()
+        Form {
+            Section(header: Text("General")) {
+                HStack(spacing: 15) {
+                    Text("Alias")
+                    TextField("alias", text: $alias)
+                        .textContentType(.nickname)
+                        .keyboardType(.default)
+                }
+                Picker(selection: $selectedIssuer, label: Text("Issuer")) {
+                    ForEach(0..<session.issuers.count, id: \.self) {
+                        Text(self.session.issuers[$0].name ?? "no name")
                     }
                 }
-                .background(Color.offWhite)
-                .navigationBarTitle(Text("New card"), displayMode: .inline)
-                .navigationBarItems(trailing:
-                                        Button(action: {
-                                            self.createCard(accountUUID: self.session.accountUUID!)
-                                        }, label: { Text("Save") })
-                                        .alert(isPresented: $showUpdateResultAlert) {
-                                            Alert(title: Text("System error"),
-                                                  message: Text("Card could not be created. Try again later. If problem persists contact support@wayapp.com"),
-                                                  dismissButton: .default(Text("OK")))
-                                        }
-                                        .disabled(shouldSaveButtonBeDisabled)
-                ) // navigationBarItems
-            } // Form
-        }
+                Picker(selection: $selectedCardType, label: Text("Type")) {
+                    ForEach(0..<WayPay.Card.PaymentFormat.allCases.count, id: \.self) {
+                        Text(WayPay.Card.PaymentFormat.allCases[$0].rawValue)
+                    }
+                }
+            }
+            if isAPICallOngoing {
+                HStack {
+                    Spacer()
+                    ProgressView(NSLocalizedString("Creating new QR...", comment: "NewCardView: save"))
+                    Spacer()
+                }
+            }
+            if WayPay.Card.PaymentFormat.allCases[selectedCardType] == .PREPAID {
+                Section(header: Text("Prepaid")) {
+                    prepaidOptions()
+                }
+            }
+            if WayPay.Card.PaymentFormat.allCases[selectedCardType] == .POSTPAID && qrCreated{
+                postpaidOptions()
+            }
+        } // Form
+        .onAppear(perform: {
+            AfterBanks.getBanks()
+            WayPay.Issuer.get()
+        })
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
+        .navigationBarTitle(Text("New card"), displayMode: .inline)
+        .navigationBarItems(trailing:
+                                Button(action: {
+                                    self.createCard(accountUUID: self.session.accountUUID!)
+                                }, label: { Text("Save") })
+                                .alert(isPresented: $showUpdateResultAlert) {
+                                    Alert(title: Text("System error"),
+                                          message: Text("Card could not be created. Try again later. If problem persists contact support@wayapp.com"),
+                                          dismissButton: .default(Text("OK")))
+                                }
+                                .disabled(shouldSaveButtonBeDisabled)
+        ) // navigationBarItems
     }
 }
 
 struct NewCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: WayPay.Product(merchantUUID: "",  name: "no name", price: 100))
+        NewCardView()
     }
 }

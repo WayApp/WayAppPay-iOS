@@ -1,9 +1,9 @@
 //
-//  PaymentTokenRowView.swift
-//  WayAppPay
+//  CardRowView.swift
+//  WayPay
 //
-//  Created by Oscar Anzola on 06/09/2020.
-//  Copyright © 2020 WayApp. All rights reserved.
+//  Created by Oscar Anzola on 18/1/22.
+//  Copyright © 2022 WayApp. All rights reserved.
 //
 
 import SwiftUI
@@ -14,7 +14,9 @@ struct CardRowView: View {
     
     var body: some View {
         Label {
-            Text(card.alias ?? WayPay.Card.defaultName)
+            Text(card.alias ?? WayPay.Card.defaultName) +
+            Text(" ") +
+            Text("(\(card.getType().title))").font(.footnote)
         }
         icon: {
             card.pkPass?.icon != nil ? Image(uiImage: card.pkPass!.icon) : Image(systemName: "qrcode")

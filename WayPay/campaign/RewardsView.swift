@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RewardsView: View {
-    @EnvironmentObject var session: WayPay.Session
+    @EnvironmentObject var session: WayPayApp.Session
 
     var rewards: [WayPay.Reward]
 

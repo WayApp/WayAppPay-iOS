@@ -31,7 +31,7 @@ extension WayPay {
 //            do {
 //                try deletePassword(password, forEmail: email)
 //            } catch {
-//                WayAppUtils.Log.message(error.localizedDescription)
+//                Log.message(error.localizedDescription)
 //            }
 //        }
 //        deleteBiometricsEmail()

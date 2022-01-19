@@ -178,7 +178,7 @@ struct Container<T: ContainerProtocol>: Sequence, IteratorProtocol, Codable, Ran
             do {
                 try FileManager.default.removeItem(at: Container.url.appendingPathComponent(name))
             } catch {
-                WayAppUtils.Log.message("Container: \(#function): \(error.localizedDescription)")
+                Logger.message("Container: \(#function): \(error.localizedDescription)")
             }
         }
     }
@@ -203,7 +203,7 @@ extension Container {
                 self.persistanceName = name
             }
         } catch {
-            WayAppUtils.Log.message("Container: \(#function): \(error.localizedDescription)")
+            Logger.message("Container: \(#function): \(error.localizedDescription)")
         }
         self.elements = elements
     }

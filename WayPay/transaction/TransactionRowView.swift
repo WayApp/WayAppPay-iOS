@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TransactionRowView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var session: WayPay.Session
+    @EnvironmentObject var session: WayPayApp.Session
     var transaction: WayPay.PaymentTransaction
     @State private var refundResultAlert = false
     @State private var wasTransactionSuccessful = false
@@ -28,7 +28,7 @@ struct TransactionRowView: View {
         return !WayAppUtils.validateEmail(email)
     }
 
-    @ObservedObject private var keyboardObserver = WayPay.KeyboardObserver()
+    @ObservedObject private var keyboardObserver = UI.KeyboardObserver()
 
     var body: some View {
         HStack {
@@ -80,21 +80,21 @@ struct TransactionRowView: View {
                 )
             }
             Spacer()
-            Text(WayPay.formatPrice(transaction.amount))
+            Text(UI.formatPrice(transaction.amount))
                 .bold()
                 .foregroundColor(transaction.result == .ACCEPTED ? Color.green : Color.red)
         }
         .padding()
         .sheet(isPresented: self.$send) {
-            VStack(alignment: .center, spacing: WayPay.UI.verticalSeparation) {
+            VStack(alignment: .center, spacing: UI.Constant.verticalSeparation) {
                 Text("Email receipt to:")
                     .font(.title)
                 TextField(NSLocalizedString("email", comment: "TransactionRowView: TextField"), text: self.$email)
                     .textContentType(.emailAddress)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
-                    .padding(.bottom, WayPay.UI.verticalSeparation)
-                    .modifier(WayPay.ClearButton(text: $email))
+                    .padding(.bottom, UI.Constant.verticalSeparation)
+                    .modifier(UI.ClearButton(text: $email))
                 Button(action: {
                     WayPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
                     DispatchQueue.main.async {
@@ -106,9 +106,9 @@ struct TransactionRowView: View {
                          .fontWeight(.heavy)
                          .foregroundColor(.white)
                  }
-                .frame(maxWidth: .infinity, minHeight: WayPay.UI.buttonHeight)
+                .frame(maxWidth: .infinity, minHeight: UI.Constant.buttonHeight)
                 .background(self.shouldSendEmailButtonBeDisabled ? .gray : Color.green)
-                .cornerRadius(WayPay.UI.buttonCornerRadius)
+                .cornerRadius(UI.Constant.buttonCornerRadius)
                 .padding(.bottom, self.keyboardObserver.keyboardHeight)
                 .disabled(self.shouldSendEmailButtonBeDisabled)
             }.padding()
