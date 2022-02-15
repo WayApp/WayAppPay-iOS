@@ -61,13 +61,6 @@ struct CardDetailView: View {
                         .keyboardType(.decimalPad)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
-                Button(action: {
-                    getConsent()
-                    
-                }) {
-                    Text("Test get consent")
-                }
-                
                 Picker(selection: $action, label: Text("What is your favorite color?")) {
                     Text("Grant").tag(0)
                     Text("Renew").tag(1)
@@ -76,9 +69,6 @@ struct CardDetailView: View {
                 
             } // VStack
             .padding(.bottom, keyboardObserver.keyboardHeight)
-            .onAppear(perform: {
-                Logger.message("********************** CardDetailView onAppear: WayAppPay.session.afterBanks.banks count=\(WayPayApp.session.banks.count)")
-            })
             Spacer()
         }
         .gesture(DragGesture().onChanged { _ in hideKeyboard() })
@@ -89,21 +79,6 @@ struct CardDetailView: View {
         )
         .navigationBarItems(trailing:
             Button(action: {
-                DispatchQueue.main.async {
-                    self.isAPICallOngoing = true
-                }
-                if self.card == nil {
-                    Logger.message("********************** CARD IS NIL")
-                } else {
-                    // update
-                    self.card?.edit(iban: "123456") { error in
-                        if error != nil {
-                            Logger.message("********************** \(error!.localizedDescription)")
-                        } else {
-                            Logger.message("********************** CARD EDITED SUCCESSFULLY")
-                        }
-                    }
-                }
             }, label: { Text("Save") })
             .alert(isPresented: $showUpdateResultAlert) {
                 Alert(title: Text("System error"),
@@ -112,36 +87,6 @@ struct CardDetailView: View {
             }
         .disabled(shouldSaveButtonBeDisabled)
         )
-    }
-    
-    private func getConsent() {
-        guard let card = card,
-              let accountUUID = session.accountUUID else {
-            Logger.message("Missing Card or accountUUID")
-            return
-        }
-        let validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
-        AfterBanks.getConsent(accountUUID: accountUUID,
-                              //  service: self.session.afterBanks.banks[self.selectedBank].service,
-                              service: "bbva",
-                              validUntil: AfterBanks.dateFormatter.string(from: validUntil), pan: card.pan) { error, consent in
-            if let error = error {
-                Logger.message("********************** CARD CONSENT ERROR=\(error.localizedDescription)")
-            } else if let consent = consent {
-                Logger.message("********************** CARD CONSENT SUCCESS")
-                DispatchQueue.main.async {
-                    self.authenticationViewModel.signIn(consent: consent) { error, consent in
-                        if let error = error {
-                            // Alert user
-                            Logger.message(error.localizedDescription)
-                        } else if let consent = consent {
-                            self.consent = consent
-                            Logger.message("SHOW IBANS .....FOR CONSENT=\(consent)")
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 

@@ -13,7 +13,7 @@ struct MainView: View {
     @State var navigationSelection: Int?
     
     var body: some View {
-        if !WayPayApp.skipOnboarding {
+        if !session.skipOnboarding {
             return AnyView(OnboardingView())
         } else if session.showAuthenticationView {
             return AnyView(

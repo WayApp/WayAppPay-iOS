@@ -36,7 +36,7 @@ extension WayPay {
                 let queryItems = URLComponents(string: callbackURL.absoluteString)?.queryItems
                 Logger.message("queryItems=\(queryItems?.description ?? "NO QUERY ITEMS")")
                 //  let token = queryItems?.filter({ $0.name == "token" }).first?.value
-                WayPay.API.getConsentDetail(consent.consentId).fetch(type: [AfterBanks.Consent].self) { response in
+                WayPay.API.getConsent(consent.consentId).fetch(type: [AfterBanks.Consent].self) { response in
                     if case .success(let response?) = response {
                         if let consents = response.result,
                             let consent = consents.first {

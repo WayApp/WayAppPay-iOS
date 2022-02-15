@@ -97,7 +97,7 @@ extension WayPay {
         case editCard(String, Card) // PATCH
         case refundTransaction(String, String, String, PaymentTransaction) // POST
         case topup(PaymentTransaction) // POST
-        //Report
+        //Transaction
         case getTransaction(String, String, String) // GET
         case getMonthReportID(String, String, String) // GET
         case account(Account) // POST
@@ -108,15 +108,17 @@ extension WayPay {
         case getMerchantAccountTransactionsByDates(String, String, Day, Day) // GET
         case getTransactionsForConsumerByDate(String, String, Day, Day) // GET
         case getSEPA(Day, Day, String, String) // GET
+        case saveTicket(String, String, UIImage?) // POST
         // Issuers
         case getIssuers // GET
         case editIssuer(Issuer) // PATCH
         case getIssuerTransactions(String, Day, Day) // GET
         case expireIssuerCards(String) // GET
+        case refreshIssuer(String) // GET
         // Banks
         case getBanks(String) // GET
-        case getConsentDetail(String) // GET
-        case getConsent(String, AfterBanks.ConsentRequest) // POST
+        case startConsent(AfterBanks.ConsentRequest) // POST
+        case getConsent(String) // GET
         // Campaign
         case createCampaign(Campaign)
         case updateCampaign(Campaign)
@@ -172,15 +174,17 @@ extension WayPay {
             case .getTransactionsForConsumerByDate(let merchantUUID, let accountUUID, _, _): return "/merchants/\(merchantUUID)/consumers/\(accountUUID)/transactions/"
             case .getSEPA( _, _, _, _): return "/merchants/newSEPAs/"
             case .sendEmail(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/emails/"
+            case .saveTicket(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/tickets/"
             // Issuers
             case .getIssuers: return "/issuers/"
             case .editIssuer(let issuer): return "/issuers/\(issuer.issuerUUID)/"
             case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
             case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
+            case .refreshIssuer(let issuerUUID): return "/issuers/\(issuerUUID)/refreshes/"
             // Account2Account
             case .getBanks: return "/banks/lists/"
-            case .getConsentDetail(let consentID): return "/accounts/consents/\(consentID)/"
-            case .getConsent(let accountUUID, _): return "/accounts/\(accountUUID)/consents/"
+            case .startConsent(_): return "/banks/consents/"
+            case .getConsent(let consentID): return "/banks/consents/\(consentID)/"
             // Campaign
             case .createCampaign: return "/campaigns/"
             case .updateCampaign: return "/campaigns/"
@@ -239,15 +243,17 @@ extension WayPay {
             case .getTransactionsForConsumerByDate(let merchantUUID, let accountUUID, _, _): return merchantUUID + "/" + accountUUID
             case .getSEPA: return ""
             case .sendEmail(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
+            case .saveTicket(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
             // Issuers
             case .getIssuers: return ""
             case .editIssuer(let issuer): return issuer.issuerUUID
             case .getIssuerTransactions(let issuerUUID, _, _): return issuerUUID
             case .expireIssuerCards(let issuerUUID): return issuerUUID
+            case .refreshIssuer(let issuerUUID): return issuerUUID
             // Banks
             case .getBanks: return ""
-            case .getConsentDetail(let consentId): return consentId
-            case .getConsent(let accountUUID, _): return accountUUID
+            case .getConsent(let consentId): return consentId
+            case .startConsent(_): return ""
             // Campaign
             case .createCampaign: return ""
             case .updateCampaign: return ""
@@ -272,7 +278,7 @@ extension WayPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsentDetail, .getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer, .getCheckin:
+            case .getAccount, .getConsent, .getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .refreshIssuer, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer, .getCheckin:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -280,7 +286,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .getConsent:
+            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .startConsent, .saveTicket:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -489,8 +495,15 @@ extension WayPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
-            case .getConsent(_, let consentRequest):
+            case .startConsent(let consentRequest):
                 if let part = HTTPCall.BodyPart(consentRequest, name: "consentRequest") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .saveTicket(_, _, let ticket):
+                if let ticket = ticket {
+                    let part = HTTPCall.BodyPart.image(name: "ticket", image: ticket)
                     let multipart = HTTPCall.BodyPart.multipart([part])
                     return (multipart.contentType, multipart.data)
                 }

@@ -35,9 +35,7 @@ extension WayPayApp {
                 })
             }
         }
-        var banks = Container<AfterBanks.SupportedBank>()
-        var issuers = Container<WayPay.Issuer>()
-        @Published var cards = Container<WayPay.Card>()
+        @AppStorage("skipOnboarding") var skipOnboarding: Bool = UserDefaults.standard.bool(forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
         @Published var showAuthenticationView: Bool = true
         @Published var showAccountHasNoMerchantsAlert: Bool = false
         @Published var showAccountPendingActivationAlert: Bool = false
@@ -74,7 +72,6 @@ extension WayPayApp {
                             }
                         }
                     }
-                    WayPay.Card.getCards(for: account.accountUUID)
                 }
             }
         }

@@ -233,7 +233,6 @@
 				B12DE95723AA66F700C02657 /* DefaultKeys.swift */,
 				B12DE95923AA694F00C02657 /* TermsAndConditions.swift */,
 				B13532332796EBB400DBF0AA /* UI.swift */,
-				B1353244279810D400DBF0AA /* AuthenticationViewModel.swift */,
 			);
 			path = general;
 			sourceTree = "<group>";
@@ -293,6 +292,7 @@
 		B1353224279595E800DBF0AA /* Account2Account */ = {
 			isa = PBXGroup;
 			children = (
+				B1353244279810D400DBF0AA /* AuthenticationViewModel.swift */,
 				B13532252795960800DBF0AA /* AfterBanks.swift */,
 			);
 			path = Account2Account;

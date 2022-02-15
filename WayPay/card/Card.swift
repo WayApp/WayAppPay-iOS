@@ -70,7 +70,7 @@ extension WayPay {
         }
         
         var pan: String
-        var issuerUUID: String
+        var issuerUUID: String?
         var accountUUID: String
         var alias: String?
         var expirationDate: Date?
@@ -132,18 +132,15 @@ extension WayPay {
             return type == nil ? PaymentFormat.UNKNOWN : type!
         }
         
-        static func getCards(for accountUUID: String) {
+        static func getCards(accountUUID: String, completion: @escaping ([Card]?, Error?) -> Void) {
             WayPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
-                if case .success(let response?) = response {
-                    if let cards = response.result {
-                        DispatchQueue.main.async {
-                            WayPayApp.session.cards.setTo(cards)
-                        }
-                    } else {
-                        WayPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    Logger.message(error.localizedDescription)
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                 }
             }
         }
@@ -162,10 +159,6 @@ extension WayPay {
                     if let cards = response.result,
                         let card = cards.first {
                         Logger.message("****** DOWNLOADED CARD=\(card)")
-                        DispatchQueue.main.async {
-                            WayPayApp.session.cards.add(card)
-                        }
-                        
                         completion(nil, card)
                     } else {
                         completion(WayPay.API.errorFromResponse(response), nil)
@@ -177,52 +170,25 @@ extension WayPay {
                 }
             }
         }
-
-        func edit(iban: String, completion: @escaping (Error?) -> Void)  {
-            guard let accountUUID = WayPayApp.session.accountUUID else {
-                Logger.message("missing Session.accountUUID")
-                return
-            }
-            var editedCard = self
-            editedCard.alias = "S10000"
-            //editedCard.iban = iban
-            WayPay.API.editCard(accountUUID, editedCard).fetch(type: [Card].self) { response in
-                if case .success(let response?) = response {
-                    if let cards = response.result,
-                        let card = cards.first {
-                        DispatchQueue.main.async {
-                            WayPayApp.session.cards.remove(self)
-                            WayPayApp.session.cards.add(card)
-                        }
-                        completion(nil)
-                    } else {
-                        completion(WayPay.API.errorFromResponse(response))
-                        WayPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    completion(error)
-                    Logger.message(error.localizedDescription)
-                }
-            }
-        }
         
-        static func delete(at offsets: IndexSet) {
-            guard let accountUUID = WayPayApp.session.accountUUID else {
-                Logger.message("missing Session.accountUUID")
-                return
-            }
-            for offset in offsets {
-                WayPay.API.deleteCard(accountUUID, WayPayApp.session.cards[offset].pan).fetch(type: [String].self) { response in
-                    if case .success(_) = response {
-                        DispatchQueue.main.async {
-                            WayPayApp.session.cards.remove(WayPayApp.session.cards[offset])
-                        }
-                    } else if case .failure(let error) = response {
-                        Logger.message(error.localizedDescription)
+        func hasBalance() -> Bool {
+            return (type == .PREPAID) || (type == .VOUCHER) || (type == .GIFTCARD)
+        }
+
+        mutating func addIBAN(iban: String, completion: @escaping (Card?, Error?) -> Void)  {
+            if let accountUUID = WayPayApp.session.accountUUID {
+                self.iban = iban
+                WayPay.API.editCard(accountUUID, self).fetch(type: [Card].self) { response in
+                    switch response {
+                    case .success(let response?):
+                        completion(response.result?.first, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    default:
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
                 }
             }
         }
-
     } // Card
 }

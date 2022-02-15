@@ -39,9 +39,18 @@ struct CheckoutView: View {
     }
     
     var waypayPaymentAmount: Int {
-        if let checkin = session.checkin,
-           let balance = checkin.prepaidBalance {
-            return min(balance, purchaseAmountValue)
+        guard let checkin = session.checkin,
+              let type = checkin.type else {
+            return 0
+        }
+        switch type {
+        case .POSTPAID: return purchaseAmountValue
+        case .PREPAID, .GIFTCARD:
+            if let balance = checkin.prepaidBalance {
+                return min(balance, purchaseAmountValue)
+            }
+        default:
+            return 0
         }
         return 0
     }
@@ -146,6 +155,7 @@ struct CheckoutView: View {
               }
         let merchantUUID = merchant.merchantUUID
         let payment = WayPay.PaymentTransaction(amount: amount, purchaseDetail: nil, prizes: selectedPrizes(), token: token)
+        Logger.message("Transaction: \(payment)")
         isAPICallOngoing = true
         WayPay.API.walletPayment(merchantUUID, accountUUID, payment).fetch(type: [WayPay.PaymentTransaction].self) { response in
             switch response {

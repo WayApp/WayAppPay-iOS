@@ -34,7 +34,7 @@ struct OnboardingView: View {
             if !fromSettings && OnboardingPage.displayButton(tab: currentTab) {
                 VStack {
                     Button(action: {
-                        WayPayApp.skipOnboarding = true
+                        session.skipOnboarding = true
                         UserDefaults.standard.set(true, forKey: WayPay.DefaultKey.SKIP_ONBOARDING.rawValue)
                         UserDefaults.standard.synchronize()
                     }, label: {

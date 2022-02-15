@@ -26,47 +26,47 @@ extension WayPay {
         var stripURL: String?
         var creationDate: Date?
         var lastUpdateDate: Date?
-        
+        var communityID: String?
+        var issuedPaymentTokens: Int?
+        var maxPaymentTokens: Int?
+        var whitelist: [String]?
+
         // Protocol Identifiable
         var id: String {
             return issuerUUID
         }
                 
         
-        static func get() {
+        static func get(completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
-                if case .success(let response?) = response {
-                    if let issuers = response.result {
-                        DispatchQueue.main.async {
-                            WayPayApp.session.issuers.setTo(issuers)
-                        }
-                    } else {
-                        WayPay.API.reportError(response)
+                WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
+                    switch response {
+                    case .success(let response?):
+                        completion(response.result, nil)
+                    case .failure(let error):
+                        completion(nil, error)
+                    default:
+                        completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
-                } else if case .failure(let error) = response {
-                    Logger.message(error.localizedDescription)
                 }
             }
         }
 
-        static func getCards(for accountUUID: String) {
-            WayPay.API.getCards(accountUUID).fetch(type: [Card].self) { response in
-                if case .success(let response?) = response {
-                    if let cards = response.result {
-                        DispatchQueue.main.async {
-                            WayPayApp.session.cards.setTo(cards)
-                        }
-                    } else {
-                        WayPay.API.reportError(response)
-                    }
-                } else if case .failure(let error) = response {
-                    Logger.message(error.localizedDescription)
-                }
-            }
-        }
-
-        static func edit(issuer: Issuer, completion: @escaping ([Issuer]?, Error?) -> Void) {
+        static func edit(_ issuer: Issuer, completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.editIssuer(issuer).fetch(type: [Issuer].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+        
+        static func refresh(issuerUUID: String, completion: @escaping ([Issuer]?, Error?) -> Void) {
+            WayPay.API.refreshIssuer(issuerUUID).fetch(type: [Issuer].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)

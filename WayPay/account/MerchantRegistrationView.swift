@@ -88,7 +88,7 @@ struct MerchantRegistrationView: View {
                             .padding()
                     })
                         .sheet(isPresented: self.$showImagePicker) {
-                            PhotoCaptureView(showImagePicker: self.$showImagePicker, image: self.$logo)
+                            PhotoCaptureView(showImagePicker: self.$showImagePicker, image: self.$logo) { }
                         }
                     Image(uiImage:logo!)
                         .resizable()

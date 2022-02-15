@@ -83,20 +83,15 @@ extension AfterBanks {
 }
 
 final class AfterBanks: ObservableObject {
-    static func getBanks(forCountryCode: String = "ES") {
-        Logger.message("******** STARTING getBanks")
+    static func getBanks(forCountryCode: String = "ES", completion: @escaping ([SupportedBank]?, Error?) -> Void) {
         WayPay.API.getBanks(forCountryCode).fetch(type: [SupportedBank].self) { response in
-            if case .success(let response?) = response {
-                if let banks = response.result {
-                    DispatchQueue.main.async {
-                        WayPayApp.session.banks.setTo(banks)
-                        WayPayApp.session.banks.sort(by: <)
-                    }
-                } else {
-                    WayPay.API.reportError(response)
-                }
-            } else if case .failure(let error) = response {
-                Logger.message(error.localizedDescription)
+            switch response {
+            case .success(let response?):
+                completion(response.result, nil)
+            case .failure(let error):
+                completion(nil, error)
+            default:
+                completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
             }
         }
     }
@@ -117,7 +112,7 @@ final class AfterBanks: ObservableObject {
     }
 */
     static func getConsent(id: String) {
-        WayPay.API.getConsentDetail(id).fetch(type: [Consent].self) { response in
+        WayPay.API.getConsent(id).fetch(type: [Consent].self) { response in
             if case .success(let response?) = response {
                 if let consents = response.result,
                     let consent = consents.first {
@@ -131,25 +126,18 @@ final class AfterBanks: ObservableObject {
         }
     }
 
-    static func getConsent(accountUUID: String, service: String, validUntil: String, pan: String, completion: @escaping (Error?, ConsentResponse?) -> Void) {
+    static func getConsent(service: String, validUntil: Date, pan: String, completion: @escaping (ConsentResponse?, Error?) -> Void) {
+        let formattedDate: String = AfterBanks.dateFormatter.string(from: validUntil)
         let actualService = OperationEnvironment.current == .staging ? OperationEnvironment.A2A.sandbox : service
-        Logger.message("********************** GET CONSENT")
-        let consentRequest = ConsentRequest(service: actualService, validUntil: validUntil, urlRedirect: "WAP://pay.wayapp.com", pan: pan)
-        
-        WayPay.API.getConsent(accountUUID, consentRequest).fetch(type: [ConsentResponse].self) { response in
-            if case .success(let response?) = response {
-                if let consents = response.result,
-                    let consent = consents.first {
-                    Logger.message("********************** GET CONSENT=\(consent)")
-                    completion(nil, consent)
-                } else {
-                    Logger.message("********************** GET CONSENT FAILED")
-                    completion(WayPay.API.errorFromResponse(response), nil)
-                    WayPay.API.reportError(response)
-                }
-            } else if case .failure(let error) = response {
-                completion(error, nil)
-                Logger.message(error.localizedDescription)
+        let consentRequest = ConsentRequest(service: actualService, validUntil: formattedDate, urlRedirect: "WAP://thewaypay.com", pan: pan)
+        WayPay.API.startConsent(consentRequest).fetch(type: [ConsentResponse].self) { response in
+            switch response {
+            case .success(let response?):
+                completion(response.result?.first, nil)
+            case .failure(let error):
+                completion(nil, error)
+            default:
+                completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
             }
         }
     }

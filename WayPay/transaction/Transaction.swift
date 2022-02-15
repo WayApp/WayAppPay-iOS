@@ -108,6 +108,7 @@ extension WayPay {
         var lastUpdateDate: Date?
         var paymentId: String?
         var follow: String?
+        var ticketURL: String?
 
         var id: String {
             return transactionUUID ?? UUID().uuidString
@@ -202,5 +203,21 @@ extension WayPay {
             return description
         }
     
+        func saveTicket(ticketImage: UIImage?, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
+            guard let merchantUUID = merchantUUID,
+                    let transactionUUID = transactionUUID else { return }
+            
+            WayPay.API.saveTicket(merchantUUID, transactionUUID, ticketImage).fetch(type: [PaymentTransaction].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
     }
 }

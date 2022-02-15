@@ -76,32 +76,39 @@ struct ImageView: View {
 class ImagePickerCordinator : NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     @Binding var isShown: Bool
     @Binding var image: UIImage?
+    let completion: () -> Void
+
     
-    init(isShown : Binding<Bool>, image: Binding<UIImage?>) {
+    init(isShown : Binding<Bool>, image: Binding<UIImage?>,  completion: @escaping () -> Void) {
         _isShown = isShown
         _image   = image
+        self.completion = completion
     }
     
     //Selected Image
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+        completion()
         isShown = false
     }
     
     //Image selection got cancel
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        completion()
         isShown = false
     }
 }
 
 struct ImagePicker : UIViewControllerRepresentable {
+    var withCameraOn: Bool
     @Binding var isShown: Bool
     @Binding var image: UIImage?
-    
+    let completion: () -> Void
+
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.delegate = context.coordinator
-        // FIXME needs camera support
+        picker.sourceType = withCameraOn ? .camera : .photoLibrary
         return picker
     }
 
@@ -109,21 +116,23 @@ struct ImagePicker : UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> ImagePickerCordinator {
-        return ImagePickerCordinator(isShown: $isShown, image: $image)
+        return ImagePickerCordinator(isShown: $isShown, image: $image, completion: completion)
     }
 }
 
 struct PhotoCaptureView: View {
+    var withCameraOn: Bool = false
     @Binding var showImagePicker: Bool
     @Binding var image: UIImage?
-    
+    let completion: () -> Void
+
     var body: some View {
-        ImagePicker(isShown: $showImagePicker, image: $image)
+        ImagePicker(withCameraOn: withCameraOn, isShown: $showImagePicker, image: $image, completion: completion)
     }
 }
 
 struct PhotoCaptureView_Previews: PreviewProvider {
     static var previews: some View {
-        PhotoCaptureView(showImagePicker: .constant(false), image: .constant(UIImage()))
+        PhotoCaptureView(showImagePicker: .constant(false), image: .constant(UIImage()), completion: {})
     }
 }

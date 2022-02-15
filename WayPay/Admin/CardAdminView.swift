@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+
 struct CardAdminView: View {
     var body: some View {
         Form {
@@ -29,8 +30,8 @@ struct CardAdminView: View {
             } label: {
                 Label("Alcázar checkin", systemImage: "arrow.up.and.person.rectangle.portrait")
             }
-
-        }.navigationBarTitle(Text("Card"), displayMode: .inline)
+        }
+        .navigationBarTitle(Text("Card"), displayMode: .inline)
     }
 }
 

@@ -15,7 +15,10 @@ struct TransactionRowView: View {
     @State private var refundResultAlert = false
     @State private var wasTransactionSuccessful = false
     @State private var send = false
+    @State private var showImagePicker = false
+    @State private var showTicket = false
     @State var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? ""
+    @State private var ticket: UIImage? = UIImage(named: WayPay.Merchant.defaultLogo)
 
     static var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -45,28 +48,25 @@ struct TransactionRowView: View {
                 }
 
             }.contextMenu {
-                /*
-                if ((transaction.type == WayPay.PaymentTransaction.TransactionType.SALE && !transaction.isPOSTPAID) && !transaction.isRefund) {
-                    Button {
-                        transaction.processRefund() { transaction, error in
-                            if let transaction = transaction {
-                                self.wasTransactionSuccessful = transaction.wasSuccessful
-                            } else {
-                                self.wasTransactionSuccessful = false
-                            }
-                            self.refundResultAlert = true
-                        }
-                    } label: {
-                        Label("Refund", systemImage: "arrowshape.turn.up.left")
-                            .accessibility(label: Text("Refund"))
-                    }
-                }
-                 */
                 Button {
                     self.send = true
                 } label: {
                     Label("Email receipt", systemImage: "envelope")
                         .accessibility(label: Text("Email receipt"))
+                }
+                Button(action: {
+                    self.showImagePicker = true
+                }, label: {
+                    Label(NSLocalizedString("Fotografiar ticket", comment: "photograph sales ticket"), systemImage: "camera.badge.ellipsis")
+                        .padding()
+                })
+                if transaction.ticketURL != nil {
+                    Button(action: {
+                        self.showTicket = true
+                    }, label: {
+                        Label(NSLocalizedString("Ver ticket", comment: "view sales ticket"), systemImage: "eye.circle")
+                            .padding()
+                    })
                 }
             }
             .alert(isPresented: $refundResultAlert) {
@@ -113,7 +113,43 @@ struct TransactionRowView: View {
                 .disabled(self.shouldSendEmailButtonBeDisabled)
             }.padding()
         }
+        .sheet(isPresented: self.$showImagePicker) {
+            PhotoCaptureView(withCameraOn: true, showImagePicker: self.$showImagePicker, image: self.$ticket) {
+                saveTicket()
+            }
+        }
+        .sheet(isPresented: self.$showTicket) {
+            //ImageView(withURL: transaction.ticketURL)
+            //AsyncImage(url: URL(string: transaction.ticketURL!))
+            AsyncImage(url: URL(string: transaction.ticketURL!)) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                Color.green.opacity(0.1)
+            }
+//            .frame(width: 400, height: 600)
+            .rotationEffect(.degrees(+90))
+
+        }
+
     }
+    
+    private func saveTicket() {
+        Logger.message("Completion!!!!!!")
+        transaction.saveTicket(ticketImage: ticket) { transactions, error in
+            if let transactions = transactions,
+               let transaction = transactions.first {
+                Logger.message("Transaction.transactionUUID Ticket success: \(transaction.transactionUUID ?? "")")
+            } else if let error = error  {
+                Logger.message("Transaction ticket ERROR: \(error.localizedDescription)")
+            } else {
+                Logger.message("Transaction ticket ERROR is NIL")
+            }
+        }
+
+    }
+
 }
 
 struct TransactionRowView_Previews: PreviewProvider {
