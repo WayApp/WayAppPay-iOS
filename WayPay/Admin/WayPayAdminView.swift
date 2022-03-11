@@ -11,17 +11,11 @@ import SwiftUI
 struct WayPayAdminView: View {
     var body: some View {
         Form {
-            NavigationLink(destination: AccountAdminView()) {
-                Label(NSLocalizedString("Account", comment: "WayPayAdminView: Account option"), systemImage: "questionmark.video")
+            NavigationLink(destination: AccountsView()) {
+                Label(NSLocalizedString("Accounts", comment: "WayPayAdminView: Accounts option"), systemImage: "person.fill")
             }
-            NavigationLink(destination:  CardAdminView()) {
-                Label(NSLocalizedString("Card", comment: "WayPayAdminView: Card option"), systemImage: "questionmark.video")
-            }
-            NavigationLink(destination:  IssuerAdminView()) {
-                Label(NSLocalizedString("Issuer", comment: "WayPayAdminView: Issuer option"), systemImage: "questionmark.video")
-            }
-            NavigationLink(destination:  MerchantAdminView()) {
-                Label(NSLocalizedString("Merchant", comment: "WayPayAdminView: Merchant option"), systemImage: "questionmark.video")
+            NavigationLink(destination:  CustomersView()) {
+                Label(NSLocalizedString("Customers", comment: "WayPayAdminView: Customers option"), systemImage: "signature")
             }
         }
     }

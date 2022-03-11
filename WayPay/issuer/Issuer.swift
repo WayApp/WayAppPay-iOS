@@ -26,10 +26,9 @@ extension WayPay {
         var stripURL: String?
         var creationDate: Date?
         var lastUpdateDate: Date?
-        var communityID: String?
         var issuedPaymentTokens: Int?
         var maxPaymentTokens: Int?
-        var whitelist: [String]?
+        var customerUUID: String?
 
         // Protocol Identifiable
         var id: String {
@@ -37,7 +36,7 @@ extension WayPay {
         }
                 
         
-        static func get(completion: @escaping ([Issuer]?, Error?) -> Void) {
+        static func load(completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
                 WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
                     switch response {
@@ -48,6 +47,17 @@ extension WayPay {
                     default:
                         completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
                     }
+                }
+            }
+        }
+        
+        static func delete(_ issuerUUID: String, completion: @escaping (Error?) -> Void) {
+            WayPay.API.deleteIssuer(issuerUUID).fetch(type: [String].self) { response in
+                switch response {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
                 }
             }
         }

@@ -65,7 +65,7 @@ struct NewCardView: View {
     }
 
     private func loadIssuers() {
-        WayPay.Issuer.get() { issuers, error in
+        WayPay.Issuer.load() { issuers, error in
             if issuers != nil {
                 self.issuers = issuers!
             } else {

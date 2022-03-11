@@ -140,13 +140,12 @@ enum OperationEnvironment {
         return["ES8401826450000201500191", "ES1801822200120201933578", "ES2501822200160201933547", "ES4901822200110201933554", "ES7301826208302012068108"]
     }
     
-    static var defaultCommunityID: String {
+    static var defaultCustomerUUID: String {
         switch OperationEnvironment.current  {
         case .production:
-            return "3a825be4-c97c-4592-a61e-aa729d1fca74"
+            return "e94ef4c9-4b6e-44b9-bab8-1f8581c3f9f8"
         case .staging:
-            return "f01ffb3f-5b16-4238-abf0-215c2c2c4c74"
+            return "8e261776487e170a545e2d97e3c4018321d6e116"
         }
     }
-
 }

@@ -12,7 +12,6 @@ enum RefundState {
     case none, success, failure
 }
 
-
 enum Month: Int, CaseIterable {
     case January, February, March, April, May, June, July, August, September, October, November, December
     
@@ -85,7 +84,7 @@ struct TransactionsView: View {
     @State private var refundState: RefundState = .none
     @State private var transactions = Container<WayPay.PaymentTransaction>()
 
-    var accountUUID: String?
+    var checkin: WayPay.Checkin?
 
     private func fillReportID() {
         reportID.reset()
@@ -101,14 +100,14 @@ struct TransactionsView: View {
         }
     }
     
-    private var isCustomerDisplayMode: Bool {
-        return accountUUID != nil
+    private var isCheckinDisplayMode: Bool {
+        return checkin != nil && checkin?.accountUUID != nil
     }
 
     var body: some View {
         ZStack {
             Form {
-                if (!isCustomerDisplayMode) {
+                if (!isCheckinDisplayMode) {
                     Section(header: Text("This month")) {
                         VStack(alignment: .leading) {
                             HStack {
@@ -147,10 +146,13 @@ struct TransactionsView: View {
                         })
                     }
                 }
-                Section(header: Text(isCustomerDisplayMode ? "" : NSLocalizedString("Transactions", comment: "TransactionsView section header"))) {
+                Section(header: Text(isCheckinDisplayMode ? "" : NSLocalizedString("Transactions", comment: "TransactionsView section header"))) {
                     List {
                         ForEach(self.transactions.filter(satisfying: {
-                            if let transactiondate = $0.creationDate {
+                            if (isCheckinDisplayMode) {
+                                return true
+                            }
+                            if let transactiondate = $0.lastUpdateDate {
                                 return (((Calendar.current.component(.month, from: transactiondate) - 1) == self.monthSelection) &&
                                             (Calendar.current.component(.year, from: transactiondate) == Calendar.current.component(.year, from: Date())))
                             }
@@ -162,7 +164,9 @@ struct TransactionsView: View {
                 } // Section
             } // Form
             .onAppear(perform: {
-                if (accountUUID == nil) {
+                if (isCheckinDisplayMode) {
+                    getCheckinTransactions()
+                } else {
                     Logger.message("onAppear")
                     let firstDayOfMonth = Month(rawValue: monthSelection)?.firstDay
                     let lastDayOfMonth = Month(rawValue: monthSelection)?.lastDay
@@ -171,8 +175,7 @@ struct TransactionsView: View {
                     }
                     if let accountUUID = session.accountUUID,
                        let merchant = session.merchant {
-                        merchant.getTransactionsForAccountByDates(accountUUID: accountUUID,
-                                                                                                       initialDate: firstDayOfMonth, finalDate: lastDayOfMonth) { transactions, error in
+                        merchant.getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: firstDayOfMonth, finalDate: lastDayOfMonth) { transactions, error in
                             if let transactions = transactions {
                                 DispatchQueue.main.async {
                                     self.transactions.setToInOrder(transactions, by:
@@ -182,8 +185,6 @@ struct TransactionsView: View {
                             }
                         }
                     }
-                } else {
-                    getTransactions()
                 }
             })
             .navigationBarTitle("Transactions")
@@ -200,29 +201,13 @@ struct TransactionsView: View {
         }
     }
     
-    private func getTransactions() {
-        Logger.message("Entering")
-        guard let merchantUUID = session.merchantUUID,
-              let accountUUID = accountUUID else {
-            Logger.message("Missing session.merchantUUID or session.accountUUID")
+    private func getCheckinTransactions() {
+        guard let checkin = checkin,
+              let transactions = checkin.transactions else {
             return
         }
-        let finalDate = Date()
-        let daysAgo = -3
-        let initialDate = Calendar.current.date(byAdding: .day, value: daysAgo, to: finalDate)
-        Logger.message("initialDate: \(UI.reportDateFormatter.string(from: initialDate!))")
-        if let initialDate = initialDate {
-            WayPay.Account.transactions(merchantUUID: merchantUUID, accountUUID: accountUUID, initialDate: UI.reportDateFormatter.string(from: initialDate), finalDate: UI.reportDateFormatter.string(from: finalDate)) {
-                transactions, error in
-                    if let transactions = transactions {
-                        Logger.message("TRANSACTIONS COUNT=\(transactions.count)")
-                        DispatchQueue.main.async {
-                            self.transactions.setToInOrder(transactions, by:
-                                { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
-                        }
-                    }
-            }
-        }
+        self.transactions.setToInOrder(transactions, by:
+            { ($0.lastUpdateDate ?? Date.distantPast) > ($1.lastUpdateDate ?? Date.distantPast) })
     }
 
 }

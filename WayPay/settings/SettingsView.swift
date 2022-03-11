@@ -108,7 +108,7 @@ struct SettingsView: View {
                 }
             }
         } // Form
-        .navigationBarTitle("Settings")
+        .navigationBarTitle(Text("Settings"), displayMode: .inline)
     }
 }
 

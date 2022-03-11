@@ -186,6 +186,20 @@ extension WayPay {
             }
         } // load
         
+        static func load(completion: @escaping ([Account]?, Error?) -> Void) {
+            WayPay.API.getAccounts.fetch(type: [WayPay.Account].self) { response in
+                switch response {
+                case .success(let response?):
+                    Logger.message("Accounts=\(response.result?.count ?? 0)")
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
         static func transactions(merchantUUID: String, accountUUID: String, initialDate: String, finalDate: String, completion: @escaping ([PaymentTransaction]?, Error?) -> Void) {
             WayPay.API.getTransactionsForConsumerByDate(merchantUUID, accountUUID, initialDate, finalDate)
                 .fetch(type: [PaymentTransaction].self) { response in
@@ -200,24 +214,18 @@ extension WayPay {
             }
         } // load
 
-            
-        static func delete(_ accountUUID: String) {
+        
+        static func delete(_ accountUUID: String, completion: @escaping (Error?) -> Void) {
             WayPay.API.deleteAccount(accountUUID).fetch(type: [String].self) { response in
-                Logger.message("DELETE Response")
-                if case .failure(let error) = response {
-                    Logger.message(error.localizedDescription)
-                } else if case .success(let response?) = response {
-                    Logger.message("DELETE Response: \(response.debugOutput())")
-
-                    if response.code == 204 {
-                        Logger.message("Account: \(accountUUID). DELETED.")
-                    } else {
-                        Logger.message("Response: \(response.debugOutput())")
-                    }
+                switch response {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
                 }
             }
         }
-        
+
         static func getRewards(_ transaction: PaymentTransaction, completion: @escaping ([Reward]?, Error?) -> Void) {
             WayPay.API.getRewards(transaction).fetch(type: [Reward].self) { response in
                 switch response {
@@ -263,7 +271,7 @@ extension WayPay {
 extension WayPay {
     
     enum Currency: String, Codable {
-        case CHF, CLP, COP, EUR, GBP, USD, VEF, Unknown
+        case CHF, CLP, COP, EUR, GBP, USD, VEF, VES, Unknown
         
         init?(rawValue: String?) {
             guard let rawValue = rawValue else {
@@ -275,9 +283,10 @@ extension WayPay {
             case "GBP": self = .GBP
             case "CHF": self = .CHF
             case "CLP": self = .CLP
-            case "COP": self = .GBP
-            case "USD": self = .GBP
-            case "VEF": self = .GBP
+            case "COP": self = .COP
+            case "USD": self = .USD
+            case "VEF": self = .VEF
+            case "VES": self = .VES
             default: self = .EUR
             }
         }

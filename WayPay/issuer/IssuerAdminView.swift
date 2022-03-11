@@ -10,10 +10,17 @@ import SwiftUI
 
 struct IssuerAdminView: View {
     @EnvironmentObject var session: WayPayApp.Session
-    @State private var issuers = Container<WayPay.Issuer>()
+    var issuer: WayPay.Issuer
 
     var body: some View {
         Form {
+            NavigationLink(destination: SepaView(issuer: issuer)) {
+                Label("SEPA", systemImage: "list.bullet.rectangle")
+            }
+            NavigationLink(destination: IssuerEditView(issuer: issuer)) {
+                Label("Edit", systemImage: "pencil.circle")
+            }
+            /*
             Button {
                 DispatchQueue.main.async {
                     self.reward()
@@ -58,52 +65,28 @@ struct IssuerAdminView: View {
             }
             Button {
                 DispatchQueue.main.async {
-                    self.newSEPAs()
-                }
-            } label: {
-                Label("Generate SEPA file", systemImage: "banknote")
-            }
-            Button {
-                DispatchQueue.main.async {
                     self.refresh("65345945-0e04-47b2-ae08-c5e7022a71aa")
                 }
             } label: {
                 Label("Refresh", systemImage: "arrow.clockwise.circle")
             }
-            Button {
-                DispatchQueue.main.async {
-                    self.edit("65345945-0e04-47b2-ae08-c5e7022a71aa")
-                }
-            } label: {
-                Label("Edit", systemImage: "pencil.circle")
-            }
+             */
         }
-        .onAppear(perform: {
-            loadIssuers()
-        })
-        .navigationBarTitle(Text("Issuer"), displayMode: .inline)
-        .foregroundColor(.primary)
     }
 }
 
 struct IssuerAdminView_Previews: PreviewProvider {
     static var previews: some View {
-        IssuerAdminView()
+        Text("ISSUER")
     }
 }
 
 extension IssuerAdminView {
-    private func loadIssuers() {
-        WayPay.Issuer.get() { issuers, error in
-            if let issuers = issuers {
-                self.issuers.setTo(issuers)
-            } else {
-                //TODO: alert user
-            }
-        }
+    private func create() {
+        
     }
-
-    private func newSEPAs() {
+    
+    private func SEPA() {
         WayPay.Merchant.newSEPAS(initialDate: "2021-04-15", finalDate: "2021-04-21") { transactions, error in
             if let transactions = transactions {
                 Logger.message("Transactions count: \(transactions.count)")
@@ -239,19 +222,16 @@ extension IssuerAdminView {
         }
     }
     
-    private func edit(_ issuerUUID: String) {
-        let issuer: WayPay.Issuer? = self.issuers[issuerUUID]
-        if var issuer = issuer {
-            issuer.description = issuer.description == nil ? "" : "Comunidad Ejemplo"
-            WayPay.Issuer.edit(issuer) { issuers, error in
-                if let issuers = issuers,
-                   let issuer = issuers.first {
-                    Logger.message("Issuer: \(issuer)")
-                } else if let error = error  {
-                    Logger.message("%%%%%%%%%%%%%% Issuer ERROR: \(error.localizedDescription)")
-                } else {
-                    Logger.message("%%%%%%%%%%%%%% Issuer ERROR: -------------")
-                }
+    private mutating func edit(_ issuerUUID: String) {
+        issuer.description = issuer.description == nil ? "" : "Comunidad Ejemplo"
+        WayPay.Issuer.edit(issuer) { issuers, error in
+            if let issuers = issuers,
+               let issuer = issuers.first {
+                Logger.message("Issuer: \(issuer)")
+            } else if let error = error  {
+                Logger.message("%%%%%%%%%%%%%% Issuer ERROR: \(error.localizedDescription)")
+            } else {
+                Logger.message("%%%%%%%%%%%%%% Issuer ERROR: -------------")
             }
         }
     }

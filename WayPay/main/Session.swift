@@ -88,7 +88,7 @@ extension WayPayApp {
                         Logger.message("Merchant is active")
                         DispatchQueue.main.async {
                             self.showAuthenticationView = false
-                            if let issuerUUID = merchant.communityID {
+                            if let issuerUUID = merchant.registrationCode {
                                 WayPay.Campaign.get(merchantUUID: nil, issuerUUID: issuerUUID) {campaigns, error in
                                     if let campaigns = campaigns {
                                         WayPayApp.session.campaigns.setTo(campaigns)

@@ -67,7 +67,10 @@ extension WayPay {
             }
         }
         
+        // Customer
+        case getCustomers // GET
         // Account
+        case getAccounts // GET
         case createAccount(AccountRequest) // POST
         case registrationAccount(Registration) // POST
         case getAccount(Email, PIN) // GET
@@ -80,7 +83,8 @@ extension WayPay {
         case createMerchant(Merchant) // POST
         case createMerchantForAccount(String, Merchant, UIImage?) // POST
         case createAccountAndMerchant(AccountRequest, Merchant, UIImage?) // POST
-        case getMerchants(String) // GET
+        case getMerchantsForAccount(String) // GET
+        case getMerchants // GET
         case getMerchantDetail(String) // GET
         case getMerchantAccounts(String) // GET
         case getMerchantAccountDetail(String, String) // GET
@@ -115,6 +119,7 @@ extension WayPay {
         case getIssuerTransactions(String, Day, Day) // GET
         case expireIssuerCards(String) // GET
         case refreshIssuer(String) // GET
+        case deleteIssuer(String) // DELETE
         // Banks
         case getBanks(String) // GET
         case startConsent(AfterBanks.ConsentRequest) // POST
@@ -135,7 +140,10 @@ extension WayPay {
 
         private var path: String {
             switch self {
+            // Customer
+            case .getCustomers: return "/customers/"
             // Account
+            case .getAccounts: return "/accounts/"
             case .createAccount: return "/accounts/"
             case .registrationAccount: return "/accounts/registrations/"
             case .getAccount(let email, let hashedPIN): return "/accounts/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/\(hashedPIN)/"
@@ -148,9 +156,10 @@ extension WayPay {
             case .createMerchant(_): return "/merchants/"
             case .createMerchantForAccount(let accountUUID, _, _): return "/accounts/\(accountUUID)/merchants/"
             case .createAccountAndMerchant(_, _, _): return "/merchants/accounts/"
-            case .getMerchants(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
+            case .getMerchantsForAccount(let accountUUID): return "/accounts/\(accountUUID)/merchants/"
             case .getMerchantDetail(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .getMerchantAccounts(let merchantUUID): return "/merchants/\(merchantUUID)/accounts/"
+            case .getMerchants: return "/merchants/"
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return "/merchants/\(merchantUUID)/accounts/\(accountUUID)/"
             case .deleteMerchant(let merchantUUID): return "/merchants/\(merchantUUID)/"
             case .sendPushNotificationForMerchant(let merchantUUID, _): return "/merchants/\(merchantUUID)/messages/"
@@ -181,6 +190,7 @@ extension WayPay {
             case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
             case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
             case .refreshIssuer(let issuerUUID): return "/issuers/\(issuerUUID)/refreshes/"
+            case .deleteIssuer(let issuerUUID): return "/issuers/\(issuerUUID)/"
             // Account2Account
             case .getBanks: return "/banks/lists/"
             case .startConsent(_): return "/banks/consents/"
@@ -206,7 +216,10 @@ extension WayPay {
         
         private var signature: String {
             switch self {
+            // Customer
+            case .getCustomers: return ""
             // Account
+            case .getAccounts: return ""
             case .createAccount: return ""
             case .registrationAccount: return ""
             case .getAccount(let email, let hashedPIN): return email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + "/" + hashedPIN
@@ -217,7 +230,8 @@ extension WayPay {
             case .createMerchant: return ""
             case .createMerchantForAccount(let accountUUID, _, _): return accountUUID
             case .createAccountAndMerchant(_, _, _): return ""
-            case .getMerchants(let accountUUID): return accountUUID
+            case .getMerchantsForAccount(let accountUUID): return accountUUID
+            case .getMerchants: return ""
             case .getMerchantDetail(let merchantUUID): return merchantUUID
             case .getMerchantAccounts(let merchantUUID): return merchantUUID
             case .getMerchantAccountDetail(let merchantUUID, let accountUUID): return merchantUUID + "/" + accountUUID
@@ -250,6 +264,7 @@ extension WayPay {
             case .getIssuerTransactions(let issuerUUID, _, _): return issuerUUID
             case .expireIssuerCards(let issuerUUID): return issuerUUID
             case .refreshIssuer(let issuerUUID): return issuerUUID
+            case .deleteIssuer(let issuerUUID): return issuerUUID
             // Banks
             case .getBanks: return ""
             case .getConsent(let consentId): return consentId
@@ -278,7 +293,7 @@ extension WayPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccount, .getConsent, .getMerchants, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .refreshIssuer, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer, .getCheckin:
+            case .getAccounts, .getCustomers, .getMerchants, .getAccount, .getConsent, .getMerchantsForAccount, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .refreshIssuer, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer, .getCheckin:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -310,7 +325,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .deleteAccount, .deleteCard, .deleteMerchant, .deleteCampaign:
+            case .deleteAccount, .deleteCard, .deleteMerchant, .deleteCampaign, .deleteIssuer:
                 HTTPCall.DELETE(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))

@@ -38,14 +38,14 @@ struct MerchantRegistrationView: View {
     @State var registrationError: Bool = false
     @State var registrationSuccess: Bool = false
     @State private var businessName = String()
-    @State private var communityID = String()
+    @State private var registrationCode = String()
     @State private var phoneNumber = String()
     @State private var logo: UIImage? = UIImage(named: WayPay.Merchant.defaultLogo)
     @State private var showImagePicker: Bool = false
     @State private var isAPIcalled: Bool = false
 
     private var shouldRegistrationButtonBeDisabled: Bool {
-        return (!WayAppUtils.validateEmail(email) || newPIN.count != WayPay.Account.PINLength) || businessName.isEmpty || communityID.count < WayPay.Merchant.minimumCommunityIDLength || isAPIcalled
+        return (!WayAppUtils.validateEmail(email) || newPIN.count != WayPay.Account.PINLength) || businessName.isEmpty || registrationCode.count < WayPay.Merchant.minimumRegistrationCodeLength || isAPIcalled
     }
     
     var body: some View {
@@ -99,7 +99,7 @@ struct MerchantRegistrationView: View {
             Section(header:
                         Label(NSLocalizedString("My community", comment: "SettingsView: section title"), systemImage: "building.2.fill")
                         .font(.callout)) {
-                TextField(NSLocalizedString("community id", comment: "MerchantRegistrationView: TextField"), text: self.$communityID)
+                TextField(NSLocalizedString("community id", comment: "MerchantRegistrationView: TextField"), text: self.$registrationCode)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .textContentType(.oneTimeCode)
@@ -107,7 +107,7 @@ struct MerchantRegistrationView: View {
             Button(action: {
                 isAPIcalled = true
                 let accountRequest = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN(newPIN), phone: phoneNumber, user: email)
-                let merchant = WayPay.Merchant(name: businessName, email: email, communityID: communityID)
+                let merchant = WayPay.Merchant(name: businessName, email: email, registrationCode: registrationCode)
                 WayPay.Merchant.createAccountAndMerchant(accountRequest: accountRequest, merchant: merchant, logo: logo) { merchants, error in
                     isAPIcalled = false
                     if let merchants = merchants,

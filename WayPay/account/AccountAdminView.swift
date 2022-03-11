@@ -9,30 +9,20 @@
 import SwiftUI
 
 struct AccountAdminView: View {
+    var account: WayPay.Account
+
     var body: some View {
         Form {
-            Button {
-                DispatchQueue.main.async {
-                    self.registerAccount()
-                }
-            } label: {
-                Label("Register account", systemImage: "arrow.up.and.person.rectangle.portrait")
+            NavigationLink(destination: CardsView()) {
+                Label("QRs", systemImage: "qrcode")
             }
-            Button {
-                DispatchQueue.main.async {
-                    self.deleteAccount()
-                }
-            } label: {
-                Label("Delete account", systemImage: "trash")
-            }
-
         }.navigationBarTitle(Text("Account"), displayMode: .inline)
     }
 }
 
 struct AccountAdminView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountAdminView()
+        Text("AccountAdminView_Previews")
     }
 }
 
@@ -51,11 +41,4 @@ extension AccountAdminView {
         }
 
     }
-    
-    private func deleteAccount() {
-        WayPay.Account.delete("6fa34db2-6b03-4373-81ae-7ab1d8d22998")
-        WayPay.Account.delete("a6474661-99bd-43fb-be67-a0372fd6c9e9")
-    }
-
-
 }

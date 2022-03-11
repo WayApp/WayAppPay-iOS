@@ -122,7 +122,7 @@ struct CheckinView: View {
                 Section(header:
                             Label(NSLocalizedString("Activity", comment: "CheckinView: section title"), systemImage: "list.bullet.rectangle")
                             .font(.callout)) {
-                    NavigationLink(destination: TransactionsView(accountUUID: checkin.accountUUID)) {
+                    NavigationLink(destination: TransactionsView(checkin: checkin)) {
                         Label(NSLocalizedString("Recent purchases", comment: "CheckinView: Transactions"), systemImage: "calendar")
                     }
                 }

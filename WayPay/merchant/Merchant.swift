@@ -24,11 +24,7 @@ extension WayPay {
         static let defaultImageName = "questionmark.square"
         static let defaultName = "missing name"
         static let defaultLogo = "logoPlaceholder"
-        static let minimumCommunityIDLength = 4
-
-        enum Level: String, Codable {
-            case ONE, TWO, THREE
-        }
+        static let minimumRegistrationCodeLength = 6
         
         enum Status: String, Codable {
            case CREATED, ENABLED, DISABLED
@@ -45,17 +41,16 @@ extension WayPay {
         var creationDate: Date?
         var lastUpdateDate: Date?
         var currency: Currency?
-        var level: Level?
-        var communityID: String?
+        var registrationCode: String?
         var status: Status?
+        var customerUUID: String?
 
         
-        init(name: String, email: String, level: Level = .ONE, communityID: String = OperationEnvironment.defaultCommunityID) {
+        init(name: String, email: String, registrationCode: String) {
             self.merchantUUID = ""
             self.name = name
             self.email = email
-            self.level = level
-            self.communityID = communityID
+            self.registrationCode = registrationCode
             self.currency = Currency.init(rawValue: Locale.current.currencyCode)
         }
 
@@ -65,11 +60,11 @@ extension WayPay {
         }
         
         var allowsPointCampaign: Bool {
-            return (level == nil) || (level != Level.ONE)
+            return true
         }
 
         var allowsGiftcard: Bool {
-            return (level == nil) || (level != Level.ONE)
+            return true
         }
 
         var isActive: Bool {
@@ -257,7 +252,7 @@ extension WayPay {
         }
 
         static func getMerchantsForAccount(_ accountUUID: String, completion: @escaping ([Merchant]?, Error?) -> Void) {
-            WayPay.API.getMerchants(accountUUID).fetch(type: [Merchant].self) { response in
+            WayPay.API.getMerchantsForAccount(accountUUID).fetch(type: [Merchant].self) { response in
                 switch response {
                 case .success(let response?):
                     completion(response.result, nil)
@@ -269,12 +264,27 @@ extension WayPay {
             }
         }
         
-        static func delete(_ merchantUUID: String) {
+        static func load(completion: @escaping ([Merchant]?, Error?) -> Void) {
+            WayPay.API.getMerchants.fetch(type: [Merchant].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
+        
+        static func delete(_ merchantUUID: String, completion: @escaping (Error?) -> Void) {
             WayPay.API.deleteMerchant(merchantUUID).fetch(type: [String].self) { response in
-                if case .success(_) = response {
-                    Logger.message("Merchant with UUID=\(merchantUUID) successfully deleted")
-                } else if case .failure(let error) = response {
-                    Logger.message(error.localizedDescription)
+                switch response {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
                 }
             }
         }
