@@ -10,6 +10,7 @@ import SwiftUI
 
 struct IssuerAdminView: View {
     @EnvironmentObject var session: WayPayApp.Session
+    var customer: WayPay.Customer
     var issuer: WayPay.Issuer
 
     var body: some View {
@@ -19,6 +20,9 @@ struct IssuerAdminView: View {
             }
             NavigationLink(destination: IssuerEditView(issuer: issuer)) {
                 Label("Edit", systemImage: "pencil.circle")
+            }
+            NavigationLink(destination: RoulettesView(customer: customer, issuer: issuer)) {
+                Label("Roulettes", systemImage: "dice")
             }
             /*
             Button {

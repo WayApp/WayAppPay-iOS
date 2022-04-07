@@ -120,6 +120,9 @@ extension WayPay {
         case expireIssuerCards(String) // GET
         case refreshIssuer(String) // GET
         case deleteIssuer(String) // DELETE
+        case getRoulettes(String, String) // GET
+        case getRoulette(String, String, String) // GET
+        case rouletteSpin(String, String, String, Spin) // POST
         // Banks
         case getBanks(String) // GET
         case startConsent(AfterBanks.ConsentRequest) // POST
@@ -191,6 +194,9 @@ extension WayPay {
             case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
             case .refreshIssuer(let issuerUUID): return "/issuers/\(issuerUUID)/refreshes/"
             case .deleteIssuer(let issuerUUID): return "/issuers/\(issuerUUID)/"
+            case .getRoulettes(_, let issuerUUID): return "/issuers/\(issuerUUID)/roulettes/"
+            case .getRoulette(_, let issuerUUID, let rouletteUUID): return "/issuers/\(issuerUUID)/roulettes/\(rouletteUUID)/configurations/"
+            case .rouletteSpin(_, let issuerUUID, let rouletteUUID, _): return "/issuers/\(issuerUUID)/roulettes/\(rouletteUUID)/spins/"
             // Account2Account
             case .getBanks: return "/banks/lists/"
             case .startConsent(_): return "/banks/consents/"
@@ -265,6 +271,9 @@ extension WayPay {
             case .expireIssuerCards(let issuerUUID): return issuerUUID
             case .refreshIssuer(let issuerUUID): return issuerUUID
             case .deleteIssuer(let issuerUUID): return issuerUUID
+            case .getRoulettes(_, let issuerUUID): return issuerUUID
+            case .getRoulette(_, let issuerUUID, let rouletteUUID): return issuerUUID + "/" + rouletteUUID
+            case .rouletteSpin(_, let issuerUUID, let rouletteUUID, _): return issuerUUID + "/" + rouletteUUID
             // Banks
             case .getBanks: return ""
             case .getConsent(let consentId): return consentId
@@ -293,7 +302,7 @@ extension WayPay {
 
         private func httpCall<T: Decodable>(type decodingType: T.Type, completionHandler result: @escaping (Result<T, HTTPCall.Error>) -> Void) {
             switch self {
-            case .getAccounts, .getCustomers, .getMerchants, .getAccount, .getConsent, .getMerchantsForAccount, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .refreshIssuer, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer, .getCheckin:
+            case .getAccounts, .getCustomers, .getMerchants, .getAccount, .getConsent, .getMerchantsForAccount, .getCards, .getCardDetail, .getCardTransactions, .getMerchantDetail, .getMerchantAccounts, .getMerchantAccountDetail, .getMerchantAccountTransactions, .getTransactionPayer, .getMonthReportID, .getMerchantAccountTransactionsForDay, .getTransaction, .getIssuers, .refreshIssuer, .getBanks, .getMerchantAccountTransactionsByDates, .getTransactionsForConsumerByDate, .getSEPA, .getIssuerTransactions, .getCampaigns, .getCampaign, .expireIssuerCards, .toggleCampaignState, .getCampaignsForIssuer, .getCheckin, .getRoulettes, .getRoulette:
                 HTTPCall.GET(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -301,7 +310,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .startConsent, .saveTicket:
+            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .startConsent, .saveTicket, .rouletteSpin:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -523,6 +532,12 @@ extension WayPay {
                     return (multipart.contentType, multipart.data)
                 }
                 return nil
+            case .rouletteSpin(_, _, _, let spin):
+                if let part = HTTPCall.BodyPart(spin, name: "spin") {
+                    let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
             default:
                 return nil
             }
@@ -536,6 +551,8 @@ extension WayPay {
 //                return ["User-Agent": "9062358b-c0b3-45ff-84db-b452c9ac1289"]
                 // Alcazar
                 return ["User-Agent": OperationEnvironment.alcazarCustomerUUID]
+            case .getRoulettes(let customerUUID, _), .getRoulette(let customerUUID, _, _), .rouletteSpin(let customerUUID, _, _, _):
+                return ["User-Agent": customerUUID]
             default:
                 return nil
             }

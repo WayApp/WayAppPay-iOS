@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MerchantsView: View {
     @State private var merchants = Container<WayPay.Merchant>()
+    var customer: WayPay.Customer
 
     var body: some View {
             List {

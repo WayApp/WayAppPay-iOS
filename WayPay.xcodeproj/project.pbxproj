@@ -79,6 +79,9 @@
 		B1BA480925D7EFF200ED31EF /* SendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BA480825D7EFF200ED31EF /* SendEmail.swift */; };
 		B1BA480E25D7F08200ED31EF /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BA480D25D7F08200ED31EF /* BarView.swift */; };
 		B1C07EC426CE4C37003DCB11 /* CheckoutQRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C07EC326CE4C37003DCB11 /* CheckoutQRView.swift */; };
+		B1C923CE27DF8B2B005B462B /* Roulette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C923CD27DF8B2B005B462B /* Roulette.swift */; };
+		B1C923D027DF8B37005B462B /* Spin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C923CF27DF8B37005B462B /* Spin.swift */; };
+		B1C923D227DFBD1A005B462B /* RoulettesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C923D127DFBD1A005B462B /* RoulettesView.swift */; };
 		B1D0D8BE26CCF835009171A7 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D0D8BD26CCF835009171A7 /* OnboardingView.swift */; };
 		B1D0D8C126CCFA09009171A7 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D0D8C026CCFA09009171A7 /* OnboardingPage.swift */; };
 		B1D0D8C326CCFE00009171A7 /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D0D8C226CCFE00009171A7 /* OnboardingPageView.swift */; };
@@ -172,6 +175,9 @@
 		B1BA480825D7EFF200ED31EF /* SendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendEmail.swift; sourceTree = "<group>"; };
 		B1BA480D25D7F08200ED31EF /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
 		B1C07EC326CE4C37003DCB11 /* CheckoutQRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutQRView.swift; sourceTree = "<group>"; };
+		B1C923CD27DF8B2B005B462B /* Roulette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Roulette.swift; sourceTree = "<group>"; };
+		B1C923CF27DF8B37005B462B /* Spin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spin.swift; sourceTree = "<group>"; };
+		B1C923D127DFBD1A005B462B /* RoulettesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoulettesView.swift; sourceTree = "<group>"; };
 		B1D0D8BD26CCF835009171A7 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		B1D0D8C026CCFA09009171A7 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
 		B1D0D8C226CCFE00009171A7 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
@@ -408,6 +414,7 @@
 		B19ACCB7238B092A009FF084 /* WayPay */ = {
 			isa = PBXGroup;
 			children = (
+				B1C923CC27DF6B07005B462B /* roulette */,
 				B18E586B27DB5881003D296A /* issuer */,
 				B18E586427DB4749003D296A /* customer */,
 				B13532352797145000DBF0AA /* Admin */,
@@ -441,6 +448,16 @@
 				B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B1C923CC27DF6B07005B462B /* roulette */ = {
+			isa = PBXGroup;
+			children = (
+				B1C923CD27DF8B2B005B462B /* Roulette.swift */,
+				B1C923CF27DF8B37005B462B /* Spin.swift */,
+				B1C923D127DFBD1A005B462B /* RoulettesView.swift */,
+			);
+			path = roulette;
 			sourceTree = "<group>";
 		};
 		B1D0D8BF26CCF844009171A7 /* onboarding */ = {
@@ -562,6 +579,7 @@
 				B1609567263E876000B14A43 /* Campaign.swift in Sources */,
 				B1C07EC426CE4C37003DCB11 /* CheckoutQRView.swift in Sources */,
 				B1D6990623EA22A40049E1D8 /* QRScannerView.swift in Sources */,
+				B1C923CE27DF8B2B005B462B /* Roulette.swift in Sources */,
 				B12DE98A23AA847B00C02657 /* OperationEnvironment.swift in Sources */,
 				B1E7A59123E6335100CC2E04 /* ImageDownloader.swift in Sources */,
 				B1D0D8C126CCFA09009171A7 /* OnboardingPage.swift in Sources */,
@@ -609,9 +627,11 @@
 				AF3A374323E4881F00E437CA /* AuthenticationView.swift in Sources */,
 				B19ACCBD238B092A009FF084 /* MainView.swift in Sources */,
 				B1A19ACB24026C490070E5FF /* NFCScannerView.swift in Sources */,
+				B1C923D027DF8B37005B462B /* Spin.swift in Sources */,
 				B18E587327DBA7C9003D296A /* AccountsView.swift in Sources */,
 				B12DE98023AA7B9400C02657 /* WayAppPayAPI.swift in Sources */,
 				B1899960271057BD002A6730 /* Reward.swift in Sources */,
+				B1C923D227DFBD1A005B462B /* RoulettesView.swift in Sources */,
 				B135322C2796DEA100DBF0AA /* CardRowView.swift in Sources */,
 				B1353245279810D400DBF0AA /* AuthenticationViewModel.swift in Sources */,
 				B18E586D27DB589D003D296A /* IssuersView.swift in Sources */,

@@ -13,10 +13,10 @@ struct CustomerAdminView: View {
 
     var body: some View {
         Form {
-            NavigationLink(destination:  IssuersView()) {
+            NavigationLink(destination:  IssuersView(customer: customer)) {
                 Text("Issuers")
             }
-            NavigationLink(destination:  MerchantsView()) {
+            NavigationLink(destination:  MerchantsView(customer: customer)) {
                 Text("Merchants")
             }
         }
