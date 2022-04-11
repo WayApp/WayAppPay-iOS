@@ -113,16 +113,15 @@ struct CheckinView: View {
                             .font(.callout)) {
                     if let prizes = checkin.prizes,
                        !prizes.isEmpty {
-                        ForEach(0..<prizes.count) {
+                        ForEach(0..<prizes.count,  id:\.self) {
                             Text((session.campaigns[prizes[$0].campaignID]?.name ?? "-") + ": " + prizes[$0].displayAs)
-                                .font(Font.body)
                         }
                     }
                 }
                 Section(header:
                             Label(NSLocalizedString("Activity", comment: "CheckinView: section title"), systemImage: "list.bullet.rectangle")
                             .font(.callout)) {
-                    NavigationLink(destination: TransactionsView(accountUUID: checkin.accountUUID)) {
+                    NavigationLink(destination: TransactionsView(checkin: checkin)) {
                         Label(NSLocalizedString("Recent purchases", comment: "CheckinView: Transactions"), systemImage: "calendar")
                     }
                 }
