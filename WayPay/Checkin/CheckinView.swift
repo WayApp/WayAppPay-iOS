@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-// XYZ
 struct CheckinView: View {
     @EnvironmentObject private var session: WayPayApp.Session
     
