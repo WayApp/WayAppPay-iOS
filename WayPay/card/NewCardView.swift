@@ -142,14 +142,14 @@ struct NewCardView: View {
             }
             if !banks.isEmpty {
                 Picker(selection: $selectedBank, label: Text("Bank")) {
-                    ForEach(0..<banks.count) {
+                    ForEach(0..<banks.count,  id:\.self) {
                         Text(banks[$0].getFullname())
                     }
                 }
             }
             if consent != nil {
                 Picker(selection: $selectedIBAN, label: Text("IBAN")) {
-                    ForEach(0..<consent!.globalPosition.count) {
+                    ForEach(0..<consent!.globalPosition.count,  id:\.self) {
                         Text((self.consent!.globalPosition[$0].iban ?? "missing IBAN"))
                     }
                 }

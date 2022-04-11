@@ -125,7 +125,7 @@ struct TransactionsView: View {
                             }
                         }
                         Picker(selection: $monthSelection, label: Text("Month" + ":")) {
-                            ForEach(0..<Month.allCases.count) {
+                            ForEach(0..<Month.allCases.count,  id:\.self) {
                                 Text(Month(rawValue: $0)?.title ?? "month")
                             }
                         }

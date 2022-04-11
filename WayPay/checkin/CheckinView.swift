@@ -113,9 +113,8 @@ struct CheckinView: View {
                             .font(.callout)) {
                     if let prizes = checkin.prizes,
                        !prizes.isEmpty {
-                        ForEach(0..<prizes.count) {
+                        ForEach(0..<prizes.count,  id:\.self) {
                             Text((session.campaigns[prizes[$0].campaignID]?.name ?? "-") + ": " + prizes[$0].displayAs)
-                                .font(Font.body)
                         }
                     }
                 }

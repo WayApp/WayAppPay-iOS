@@ -70,7 +70,7 @@
 		B18E586F27DB9CBD003D296A /* MerchantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18E586E27DB9CBD003D296A /* MerchantsView.swift */; };
 		B18E587127DBA5BA003D296A /* IssuerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18E587027DBA5BA003D296A /* IssuerEditView.swift */; };
 		B18E587327DBA7C9003D296A /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18E587227DBA7C9003D296A /* AccountsView.swift */; };
-		B198BA4E26C165D8007BE2EF /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B198BA4D26C165D8007BE2EF /* CheckoutView.swift */; };
+		B194151828049DA30087A402 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B194151728049DA30087A402 /* CheckoutView.swift */; };
 		B19ACCBD238B092A009FF084 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ACCBC238B092A009FF084 /* MainView.swift */; };
 		B19ACCC2238B092C009FF084 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */; };
 		B1A19ACB24026C490070E5FF /* NFCScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A19ACA24026C490070E5FF /* NFCScannerView.swift */; };
@@ -163,7 +163,7 @@
 		B18E586E27DB9CBD003D296A /* MerchantsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MerchantsView.swift; sourceTree = "<group>"; };
 		B18E587027DBA5BA003D296A /* IssuerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuerEditView.swift; sourceTree = "<group>"; };
 		B18E587227DBA7C9003D296A /* AccountsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountsView.swift; sourceTree = "<group>"; };
-		B198BA4D26C165D8007BE2EF /* CheckoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
+		B194151728049DA30087A402 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		B19ACCB5238B092A009FF084 /* WayPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WayPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ACCBC238B092A009FF084 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		B19ACCC1238B092C009FF084 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -333,9 +333,9 @@
 			children = (
 				B108CB2B26A5B3440071346D /* Checkin.swift */,
 				B13B688F26A5DC9700271515 /* CheckinView.swift */,
-				B198BA4D26C165D8007BE2EF /* CheckoutView.swift */,
 				B1C07EC326CE4C37003DCB11 /* CheckoutQRView.swift */,
 				B174BCAA26CE9B9F000F1E20 /* CustomerQRView.swift */,
+				B194151728049DA30087A402 /* CheckoutView.swift */,
 			);
 			path = checkin;
 			sourceTree = "<group>";
@@ -572,6 +572,7 @@
 				B1066B9C26CBD4E2000A3DB5 /* AccountRequest.swift in Sources */,
 				B135322A2795A4F600DBF0AA /* Logger.swift in Sources */,
 				B135322E2796DF4200DBF0AA /* CardsView.swift in Sources */,
+				B194151828049DA30087A402 /* CheckoutView.swift in Sources */,
 				B18E586A27DB54EF003D296A /* SepaView.swift in Sources */,
 				B12DE97123AA713C00C02657 /* Issuer.swift in Sources */,
 				B12DE98623AA7F0E00C02657 /* Biometrics.swift in Sources */,
@@ -635,7 +636,6 @@
 				B135322C2796DEA100DBF0AA /* CardRowView.swift in Sources */,
 				B1353245279810D400DBF0AA /* AuthenticationViewModel.swift in Sources */,
 				B18E586D27DB589D003D296A /* IssuersView.swift in Sources */,
-				B198BA4E26C165D8007BE2EF /* CheckoutView.swift in Sources */,
 				B108CB2C26A5B3440071346D /* Checkin.swift in Sources */,
 				B189995C270C7027002A6730 /* PushNotification.swift in Sources */,
 				B1D8750223ED8CA000A1967F /* ChangePinView.swift in Sources */,
