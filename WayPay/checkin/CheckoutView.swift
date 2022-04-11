@@ -297,7 +297,7 @@ struct CheckoutView: View {
                                     .font(.body)
                                     .multilineTextAlignment(.leading)
                                 VStack {
-                                    ForEach(0 ..< prizes.count) { index in
+                                    ForEach(0 ..< prizes.count, id:\.self) { index in
                                         PrizeRow(prize: prizes[index], index: index)
                                             .padding(.horizontal)
                                             .padding(.vertical, 6)
