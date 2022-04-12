@@ -330,7 +330,7 @@
 			path = Admin;
 			sourceTree = "<group>";
 		};
-		B13B688E26A5DC6500271515 /* Checkin */ = {
+		B13B688E26A5DC6500271515 /* QR */ = {
 			isa = PBXGroup;
 			children = (
 				B108CB2B26A5B3440071346D /* Checkin.swift */,
@@ -340,7 +340,7 @@
 				B194151728049DA30087A402 /* CheckoutView.swift */,
 				B1777512280587E800DB4FED /* CheckinTransactionsView.swift */,
 			);
-			path = Checkin;
+			path = QR;
 			sourceTree = "<group>";
 		};
 		B1609565263E874400B14A43 /* campaign */ = {
@@ -424,7 +424,7 @@
 				B1353224279595E800DBF0AA /* Account2Account */,
 				AF3A374123E4879800E437CA /* main */,
 				B1D0D8BF26CCF844009171A7 /* onboarding */,
-				B13B688E26A5DC6500271515 /* Checkin */,
+				B13B688E26A5DC6500271515 /* QR */,
 				B1609565263E874400B14A43 /* campaign */,
 				B12DE94C23AA632400C02657 /* account */,
 				B12DE95123AA641000C02657 /* general */,
