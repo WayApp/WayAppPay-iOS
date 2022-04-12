@@ -8,8 +8,6 @@
 
 import SwiftUI
 
-// OA
-
 struct CheckoutView: View {
     @EnvironmentObject var session: WayPayApp.Session
     @State var navigationSelection: Int?
@@ -435,6 +433,7 @@ struct PrizeRow: View {
         .toggleStyle(CircleToggleStyle())
     }
 }
+
 struct CheckoutView_Previews: PreviewProvider {
     static var previews: some View {
         Text("Hello")
