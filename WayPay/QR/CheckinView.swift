@@ -7,6 +7,8 @@
 //
 import SwiftUI
 
+// OA
+
 struct CheckinView: View {
     @EnvironmentObject private var session: WayPayApp.Session
     
