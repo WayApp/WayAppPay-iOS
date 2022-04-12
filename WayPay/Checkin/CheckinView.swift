@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-// XYZ 
 struct CheckinView: View {
     @EnvironmentObject private var session: WayPayApp.Session
     
@@ -119,11 +118,13 @@ struct CheckinView: View {
                         }
                     }
                 }
-                Section(header:
-                            Label(NSLocalizedString("Activity", comment: "CheckinView: section title"), systemImage: "list.bullet.rectangle")
-                            .font(.callout)) {
-                    NavigationLink(destination: TransactionsView(checkin: checkin)) {
-                        Label(NSLocalizedString("Recent purchases", comment: "CheckinView: Transactions"), systemImage: "calendar")
+                if let transactions = checkin.transactions {
+                    Section(header:
+                                Label(NSLocalizedString("Activity", comment: "CheckinView: section title"), systemImage: "list.bullet.rectangle")
+                                .font(.callout)) {
+                                    NavigationLink(destination: CheckinTransactionsView(transactions: transactions)) {
+                                        Label(NSLocalizedString("Recent purchases", comment: "CheckinView: Transactions"), systemImage: "calendar")
+                                    }
                     }
                 }
                 Button(action: {

@@ -24,6 +24,13 @@ struct IssuerAdminView: View {
             NavigationLink(destination: RoulettesView(customer: customer, issuer: issuer)) {
                 Label("Roulettes", systemImage: "dice")
             }
+            Button {
+                DispatchQueue.main.async {
+                    self.refresh(issuer.issuerUUID)
+                }
+            } label: {
+                Label("Refresh", systemImage: "arrow.clockwise.circle")
+            }
             /*
             Button {
                 DispatchQueue.main.async {

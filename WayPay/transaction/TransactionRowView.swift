@@ -11,12 +11,13 @@ import SwiftUI
 struct TransactionRowView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var session: WayPayApp.Session
-    var transaction: WayPay.PaymentTransaction
+    var transactionUUID: String
     @State private var refundResultAlert = false
     @State private var wasTransactionSuccessful = false
     @State private var send = false
     @State private var showImagePicker = false
     @State private var showTicket = false
+    @State private var ticketURL: String?
     @State var email: String = UserDefaults.standard.string(forKey: WayPay.DefaultKey.EMAIL.rawValue) ?? ""
     @State private var ticket: UIImage? = UIImage(named: WayPay.Merchant.defaultLogo)
 
@@ -32,21 +33,32 @@ struct TransactionRowView: View {
     }
 
     @ObservedObject private var keyboardObserver = UI.KeyboardObserver()
+    
+    var showTicketButton: some View {
+        Button(action: {
+            self.showTicket = true
+        }, label: {
+            Label(NSLocalizedString("Ver ticket", comment: "view sales ticket"), systemImage: "eye.circle")
+                .padding()
+        })
+    }
 
     var body: some View {
         HStack {
-            Image(systemName: transaction.type?.icon ?? "questionmark.square.fill")
+            Image(systemName: session.transactions[transactionUUID]!.type?.icon ?? "questionmark.square.fill")
                 .foregroundColor(Color.green)
             VStack(alignment: .leading, spacing: 8) {
-                Text(transaction.type?.title ?? WayPay.PaymentTransaction.TransactionType.defaultTitle)
-                Text(transaction.lastUpdateDate != nil ? TransactionRowView.dateFormatter.string(from: transaction.lastUpdateDate!) : "no date")
+                Text(session.transactions[transactionUUID]!.type?.title ?? WayPay.PaymentTransaction.TransactionType.defaultTitle)
+                Text(session.transactions[transactionUUID]!.lastUpdateDate != nil ? TransactionRowView.dateFormatter.string(from: session.transactions[transactionUUID]!.lastUpdateDate!) : "no date")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                if !transaction.getPurchaseDetail().isEmpty {
-                    Text(transaction.getPurchaseDetail())
+                if !session.transactions[transactionUUID]!.getPurchaseDetail().isEmpty {
+                    Text(session.transactions[transactionUUID]!.getPurchaseDetail())
                         .font(.footnote)
                 }
-
+                if self.ticketURL != nil {
+                    showTicketButton
+                }
             }.contextMenu {
                 Button {
                     self.send = true
@@ -60,13 +72,8 @@ struct TransactionRowView: View {
                     Label(NSLocalizedString("Fotografiar ticket", comment: "photograph sales ticket"), systemImage: "camera.badge.ellipsis")
                         .padding()
                 })
-                if transaction.ticketURL != nil {
-                    Button(action: {
-                        self.showTicket = true
-                    }, label: {
-                        Label(NSLocalizedString("Ver ticket", comment: "view sales ticket"), systemImage: "eye.circle")
-                            .padding()
-                    })
+                if session.transactions[transactionUUID]?.ticketURL != nil {
+                    showTicketButton
                 }
             }
             .alert(isPresented: $refundResultAlert) {
@@ -80,9 +87,9 @@ struct TransactionRowView: View {
                 )
             }
             Spacer()
-            Text(UI.formatPrice(transaction.amount))
+            Text(UI.formatPrice(session.transactions[transactionUUID]!.amount))
                 .bold()
-                .foregroundColor(transaction.result == .ACCEPTED ? Color.green : Color.red)
+                .foregroundColor(session.transactions[transactionUUID]!.result == .ACCEPTED ? Color.green : Color.red)
         }
         .padding()
         .sheet(isPresented: self.$send) {
@@ -96,7 +103,7 @@ struct TransactionRowView: View {
                     .padding(.bottom, UI.Constant.verticalSeparation)
                     .modifier(UI.ClearButton(text: $email))
                 Button(action: {
-                    WayPay.SendEmail.process(transaction: self.transaction, sendTo: self.email)
+                    WayPay.SendEmail.process(transaction: session.transactions[transactionUUID]!, sendTo: self.email)
                     DispatchQueue.main.async {
                         self.send = false
                     }
@@ -119,9 +126,9 @@ struct TransactionRowView: View {
             }
         }
         .sheet(isPresented: self.$showTicket) {
-            //ImageView(withURL: transaction.ticketURL)
-            //AsyncImage(url: URL(string: transaction.ticketURL!))
-            AsyncImage(url: URL(string: transaction.ticketURL!)) { image in
+            //ImageView(withURL: session.transactions[transactionUUID]!.ticketURL)
+            //AsyncImage(url: URL(string: session.transactions[transactionUUID]!.ticketURL!))
+            AsyncImage(url: URL(string: session.transactions[transactionUUID]!.ticketURL!)) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -136,11 +143,16 @@ struct TransactionRowView: View {
     }
     
     private func saveTicket() {
-        Logger.message("Completion!!!!!!")
-        transaction.saveTicket(ticketImage: ticket) { transactions, error in
+        Logger.message("Saving ticket for transactionUUID: \(session.transactions[transactionUUID]!.transactionUUID!)")
+        session.transactions[transactionUUID]!.saveTicket(ticketImage: ticket) { transactions, error in
             if let transactions = transactions,
-               let transaction = transactions.first {
-                Logger.message("Transaction.transactionUUID Ticket success: \(transaction.transactionUUID ?? "")")
+               let transaction = transactions.first,
+               let uuid = transaction.transactionUUID,
+               let ticketURL = transaction.ticketURL {
+                DispatchQueue.main.async {
+                    self.ticketURL = ticketURL
+                    session.transactions[uuid]?.ticketURL = ticketURL
+                }
             } else if let error = error  {
                 Logger.message("Transaction ticket ERROR: \(error.localizedDescription)")
             } else {
@@ -154,6 +166,6 @@ struct TransactionRowView: View {
 
 struct TransactionRowView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionRowView(transaction: WayPay.PaymentTransaction(amount: 100))
+        Text("")
     }
 }

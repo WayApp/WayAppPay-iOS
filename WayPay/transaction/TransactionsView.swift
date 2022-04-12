@@ -82,13 +82,13 @@ struct TransactionsView: View {
     @State private var isAPICallOngoing = false
     @State private var reportID = WayPay.ReportID()
     @State private var refundState: RefundState = .none
-    @State private var transactions = Container<WayPay.PaymentTransaction>()
+//    @State private var transactions = Container<WayPay.PaymentTransaction>()
 
     var checkin: WayPay.Checkin?
 
     private func fillReportID() {
         reportID.reset()
-        for transaction in self.transactions where transaction.result == .ACCEPTED {
+        for transaction in session.transactions where transaction.result == .ACCEPTED {
             switch transaction.type {
             case .SALE:
                 reportID.totalSales! += (transaction.amount ?? 0)
@@ -135,7 +135,7 @@ struct TransactionsView: View {
                                 merchant.getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: Month(rawValue: monthSelection)?.firstDay, finalDate: Month(rawValue: monthSelection)?.lastDay) { transactions, error in
                                     if let transactions = transactions {
                                         DispatchQueue.main.async {
-                                            self.transactions.setToInOrder(transactions, by:
+                                            session.transactions.setToInOrder(transactions, by:
                                                 { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                                             fillReportID()
                                         }
@@ -148,7 +148,7 @@ struct TransactionsView: View {
                 }
                 Section(header: Text(isCheckinDisplayMode ? "" : NSLocalizedString("Transactions", comment: "TransactionsView section header"))) {
                     List {
-                        ForEach(self.transactions.filter(satisfying: {
+                        ForEach(session.transactions.filter(satisfying: {
                             if (isCheckinDisplayMode) {
                                 return true
                             }
@@ -158,7 +158,7 @@ struct TransactionsView: View {
                             }
                             return false
                         })) { transaction in
-                            TransactionRowView(transaction: transaction)
+                            TransactionRowView(transactionUUID: transaction.transactionUUID!)
                         }
                     } // List
                 } // Section
@@ -178,7 +178,7 @@ struct TransactionsView: View {
                         merchant.getTransactionsForAccountByDates(accountUUID: accountUUID, initialDate: firstDayOfMonth, finalDate: lastDayOfMonth) { transactions, error in
                             if let transactions = transactions {
                                 DispatchQueue.main.async {
-                                    self.transactions.setToInOrder(transactions, by:
+                                    session.transactions.setToInOrder(transactions, by:
                                         { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) })
                                     fillReportID()
                                 }
@@ -206,8 +206,12 @@ struct TransactionsView: View {
               let transactions = checkin.transactions else {
             return
         }
-        self.transactions.setToInOrder(transactions, by:
+        Logger.message("checkin.transactions count: \(transactions.count)")
+        Logger.message("BEFORE: session.transactions count: \(session.transactions.count)")
+        session.transactions.setTo(transactions)
+        session.transactions.setToInOrder(transactions, by:
             { ($0.lastUpdateDate ?? Date.distantPast) > ($1.lastUpdateDate ?? Date.distantPast) })
+        Logger.message("AFTER: session.transactions count: \(session.transactions.count)")
     }
 
 }
