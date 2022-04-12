@@ -5,7 +5,6 @@
 //  Created by Oscar Anzola on 19/7/21.
 //  Copyright © 2021 WayApp. All rights reserved.
 //
-
 import SwiftUI
 
 struct ScanView: View {
