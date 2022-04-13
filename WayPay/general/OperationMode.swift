@@ -9,19 +9,19 @@
 import Foundation
 
 enum OperationMode {
-    case customer, merchant, user, waypay
+    case CUSTOMER, MERCHANT, USER, WAYPAY
     
-    static var current: OperationMode = .waypay
+    static var current: OperationMode = .WAYPAY
     
     static var isWayPay: Bool {
-        return current == .waypay
+        return current == .WAYPAY
     }
     
     static var isCommunity: Bool {
-        return current == .customer || current == .waypay
+        return current == .CUSTOMER || current == .WAYPAY
     }
     
     static var shouldRetrievePasses: Bool {
-        return current == .user || current == .waypay
+        return current == .USER || current == .WAYPAY
     }
 }
