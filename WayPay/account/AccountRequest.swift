@@ -21,13 +21,15 @@ extension WayPay {
         var currency: Currency?
         var countryCode: String?
         var countryName: String?
+        var format: Account.Format?
         
-        init(firstName: String, lastName: String, password: String, phone: String, user: String) {
+        init(firstName: String, lastName: String, password: String, phone: String, user: String, format: Account.Format) {
             self.firstName = firstName
             self.lastName = lastName
             self.password = password
             self.phone = phone
             self.user = user
+            self.format = format
         }
     }
         

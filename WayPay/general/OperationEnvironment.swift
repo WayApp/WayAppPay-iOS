@@ -11,7 +11,7 @@ import Foundation
 enum OperationEnvironment {
     case production, staging
     
-    static var current: OperationEnvironment = .production  
+    static var current: OperationEnvironment = .staging
     static var isLogginOn: Bool = true
         
     struct WayPayAPI {

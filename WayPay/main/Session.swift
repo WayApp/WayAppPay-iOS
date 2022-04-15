@@ -28,7 +28,8 @@ extension WayPayApp {
             if let account = WayPay.Account.load(defaultKey: WayPay.DefaultKey.ACCOUNT.rawValue, type: WayPay.Account.self) {
                 self.account = account
             }
-            if (OperationMode.shouldRetrievePasses && PKPassLibrary.isPassLibraryAvailable()) {
+            if let account = account,
+               account.shouldRetrievePasses && PKPassLibrary.isPassLibraryAvailable() {
                 passes = pkLibrary.passes()
                 passes = passes.filter({
                     $0.passTypeIdentifier == WayPay.passTypeIdentifier

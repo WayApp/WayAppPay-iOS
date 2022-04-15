@@ -23,89 +23,94 @@ struct SettingsView: View {
     @State private var shouldStampCampaignToggleCallAPI = false
     @State private var shouldPointCampaignToggleCallAPI = false
     @State var consumerRegistrationSelection: Int?
-
+    
     var body: some View {
         Form {
-            if (OperationMode.isWayPay) {
+            if let account = session.account,
+               account.isWayPay {
                 Section(header: Label("WayPay", systemImage: "ladybug")
-                            .font(.callout)) {
-                    NavigationLink(destination: WayPayAdminView()) {
-                        Label(NSLocalizedString("Admin", comment: "SettingsView: WayPay Admin option"), systemImage: "questionmark.video")
+                    .font(.callout)) {
+                        NavigationLink(destination: AccountsView()) {
+                            Label(NSLocalizedString("Accounts", comment: "WayPayAdminView: Accounts option"), systemImage: "person.fill")
+                        }
+                        NavigationLink(destination:  CustomersView()) {
+                            Label(NSLocalizedString("Customers", comment: "WayPayAdminView: Customers option"), systemImage: "signature")
+                        }
                     }
-                }
             }
             Section(header:
                         Label(NSLocalizedString("My business", comment: "SettingsView: section title"), systemImage: "cart")
-                        .font(.callout)) {
-                if let merchant = session.merchant {
-                    Text(merchant.name ?? "-")
-                        .bold()
-                } else {
-                    Text("No merchant registered")
-                }
-                NavigationLink(destination: CheckoutQRView()) {
-                    Label(NSLocalizedString("Print Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
-                }
-                /*
-                NavigationLink(destination: ConsumerRegistrationView()) {
-                    Label(NSLocalizedString("Register customer", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
-                }
-                NavigationLink(destination: CustomerQRView()) {
-                    Label(NSLocalizedString("Print Registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "printer.dotmatrix")
-                }
-                 */
-            }
-            .listItemTint(Color.green)
-            Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person")
-                        .accessibility(label: Text("My account"))
-                        .font(.callout)) {
-                if let email = session.email {
-                    Text(email)
-                        .bold()
-                }
-                NavigationLink(destination: OnboardingView(fromSettings: true)) {
-                    Label(NSLocalizedString("Tutorial", comment: "SettingsView: OnboardingView option"), systemImage: "questionmark.video")
-                }
-                Button {
-                    self.changePIN = true
-                } label: {
-                    Label("Change PIN", systemImage: "lock.square")
-                        .accessibility(label: Text("Change PIN"))
-                }
-                .sheet(isPresented: self.$changePIN) {
-                    ChangePinView()
-                }
-                Button {
-                    DispatchQueue.main.async {
-                        self.session.logout()
-                        WayPayApp.session.account?.email = ""
+                .font(.callout)) {
+                    if let merchant = session.merchant {
+                        Text(merchant.name ?? "-")
+                            .bold()
+                    } else {
+                        Text("No merchant registered")
                     }
-                } label: {
-                    Label("Logout", systemImage: "chevron.left.square")
-                        .accessibility(label: Text("Logout"))
+                    NavigationLink(destination: CheckoutQRView()) {
+                        Label(NSLocalizedString("Print Checkout QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "qrcode")
+                    }
+                    /*
+                     NavigationLink(destination: ConsumerRegistrationView()) {
+                     Label(NSLocalizedString("Register customer", comment: "SettingsView: CheckoutQRView option"), systemImage: "person.badge.plus")
+                     }
+                     NavigationLink(destination: CustomerQRView()) {
+                     Label(NSLocalizedString("Print Registration QR", comment: "SettingsView: CheckoutQRView option"), systemImage: "printer.dotmatrix")
+                     }
+                     */
                 }
-            }
-            .listItemTint(Color.green)
-            if (OperationMode.isCommunity) {
-                Section(header: Label("Community", systemImage: "person.3.sequence.fill")
-                            .font(.callout)) {
+                .listItemTint(Color.green)
+            Section(header: Label(NSLocalizedString("My account", comment: "SettingsView: section title"), systemImage: "person")
+                .accessibility(label: Text("My account"))
+                .font(.callout)) {
+                    if let email = session.email {
+                        Text(email)
+                            .bold()
+                    }
+                    NavigationLink(destination: OnboardingView(fromSettings: true)) {
+                        Label(NSLocalizedString("Tutorial", comment: "SettingsView: OnboardingView option"), systemImage: "questionmark.video")
+                    }
+                    Button {
+                        self.changePIN = true
+                    } label: {
+                        Label("Change PIN", systemImage: "lock.square")
+                            .accessibility(label: Text("Change PIN"))
+                    }
+                    .sheet(isPresented: self.$changePIN) {
+                        ChangePinView()
+                    }
                     Button {
                         DispatchQueue.main.async {
-                            self.sendPushNotificationToMerchant()
+                            self.session.logout()
+                            WayPayApp.session.account?.email = ""
                         }
                     } label: {
-                        Label("Send merchant push", systemImage: "message.fill")
-                    }
-                    Group { // Campaign
-                        Button {
-                            DispatchQueue.main.async {
-                                self.sendPushNotificationToCampaign()
-                            }
-                        } label: {
-                            Label("Send campaign push", systemImage: "message")
-                        }
+                        Label("Logout", systemImage: "chevron.left.square")
+                            .accessibility(label: Text("Logout"))
                     }
                 }
+                .listItemTint(Color.green)
+            if let account = session.account,
+               account.isCommunity {
+                Section(header: Label("Community", systemImage: "person.3.sequence.fill")
+                    .font(.callout)) {
+                        Button {
+                            DispatchQueue.main.async {
+                                self.sendPushNotificationToMerchant()
+                            }
+                        } label: {
+                            Label("Send merchant push", systemImage: "message.fill")
+                        }
+                        Group { // Campaign
+                            Button {
+                                DispatchQueue.main.async {
+                                    self.sendPushNotificationToCampaign()
+                                }
+                            } label: {
+                                Label("Send campaign push", systemImage: "message")
+                            }
+                        }
+                    }
             }
         } // Form
         .navigationBarTitle(Text("Settings"), displayMode: .inline)
@@ -125,7 +130,7 @@ struct SettingsView_Previews: PreviewProvider {
 }
 
 extension SettingsView {
-        
+    
     private func sendPushNotificationToMerchant() {
         let pushNotification = WayPay.PushNotification(text: "Hello José, Welcome to WayPay's Push Notifications")
         Logger.message("Sending merchant pushNotification with text: \(pushNotification.text)")
@@ -139,9 +144,9 @@ extension SettingsView {
                 Logger.message("PushNotification ERROR is NIL")
             }
         }
-
+        
     }
-
+    
     private func sendPushNotificationToCampaign() {
         let pushNotification = WayPay.PushNotification(text: "Campaign announcement")
         Logger.message("Sending campaign pushNotification with text: \(pushNotification.text)")
@@ -155,6 +160,6 @@ extension SettingsView {
                 Logger.message("PushNotification ERROR is NIL")
             }
         }
-
+        
     }
 }

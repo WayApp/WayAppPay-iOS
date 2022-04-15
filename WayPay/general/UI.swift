@@ -288,4 +288,12 @@ struct UI {
         }
         return ""
     }
+    
+    struct EditFieldHeader: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .font(Font.subheadline)
+                .foregroundColor(Color.green)
+        }
+    }
 }

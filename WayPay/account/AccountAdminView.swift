@@ -12,11 +12,11 @@ struct AccountAdminView: View {
     var account: WayPay.Account
 
     var body: some View {
-        Form {
+        List {
             NavigationLink(destination: CardsView()) {
                 Label("QRs", systemImage: "qrcode")
             }
-        }.navigationBarTitle(Text("Account"), displayMode: .inline)
+        }.navigationBarTitle(account.email ?? "", displayMode: .inline)
     }
 }
 

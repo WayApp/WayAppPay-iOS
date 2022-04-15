@@ -115,6 +115,7 @@ extension WayPay {
         case saveTicket(String, String, UIImage?) // POST
         // Issuers
         case getIssuers // GET
+        case createIssuer(Issuer, UIImage, UIImage, UIImage) // POST
         case editIssuer(Issuer) // PATCH
         case getIssuerTransactions(String, Day, Day) // GET
         case expireIssuerCards(String) // GET
@@ -189,6 +190,7 @@ extension WayPay {
             case .saveTicket(let merchantUUID, let transactionUUID, _): return "/merchants/\(merchantUUID)/transactions/\(transactionUUID)/tickets/"
             // Issuers
             case .getIssuers: return "/issuers/"
+            case .createIssuer: return "/issuers/"
             case .editIssuer(let issuer): return "/issuers/\(issuer.issuerUUID)/"
             case .getIssuerTransactions(let issuerUUID, _, _): return "/issuers/\(issuerUUID)/transactions/"
             case .expireIssuerCards(let issuerUUID): return "/issuers/\(issuerUUID)/expires/"
@@ -266,6 +268,7 @@ extension WayPay {
             case .saveTicket(let merchantUUID, let transactionUUID, _): return merchantUUID + "/" + transactionUUID
             // Issuers
             case .getIssuers: return ""
+            case .createIssuer: return ""
             case .editIssuer(let issuer): return issuer.issuerUUID
             case .getIssuerTransactions(let issuerUUID, _, _): return issuerUUID
             case .expireIssuerCards(let issuerUUID): return issuerUUID
@@ -310,7 +313,7 @@ extension WayPay {
                         result(.success(response))
                     }
                 }
-            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .startConsent, .saveTicket, .rouletteSpin:
+            case .account, .walletPayment, .changePIN, .forgotPIN, .checkin, .refundTransaction, .sendEmail, .createCard, .topup, .registrationAccount, .createCampaign, .rewardCampaigns, .rewardCampaign, .redeemCampaigns, .getRewards, .createAccount, .createMerchant, .createMerchantForAccount, .sendPushNotificationForMerchant, .sendPushNotificationForCampaign, .createAccountAndMerchant, .startConsent, .saveTicket, .rouletteSpin, .createIssuer:
                 HTTPCall.POST(self).task(type: Response<T>.self) { response, error in
                     if let error = error {
                         result(.failure(error))
@@ -516,6 +519,19 @@ extension WayPay {
             case .editIssuer(let issuer):
                 if let part = HTTPCall.BodyPart(issuer, name: "issuer") {
                     let multipart = HTTPCall.BodyPart.multipart([part])
+                    return (multipart.contentType, multipart.data)
+                }
+                return nil
+            case .createIssuer(let issuer, let icon, let logo, let strip):
+                var parts: [HTTPCall.BodyPart]?
+                if let partIssuer = HTTPCall.BodyPart(issuer, name: "issuer") {
+                    parts = [partIssuer]
+                    parts?.append(HTTPCall.BodyPart.image(name: "icon", image: icon))
+                    parts?.append(HTTPCall.BodyPart.image(name: "logo", image: logo))
+                    parts?.append(HTTPCall.BodyPart.image(name: "strip", image: strip))
+                }
+                if let parts = parts {
+                    let multipart = HTTPCall.BodyPart.multipart(parts)
                     return (multipart.contentType, multipart.data)
                 }
                 return nil

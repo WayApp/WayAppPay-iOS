@@ -106,7 +106,7 @@ struct MerchantRegistrationView: View {
             }
             Button(action: {
                 isAPIcalled = true
-                let accountRequest = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN(newPIN), phone: phoneNumber, user: email)
+                let accountRequest = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN(newPIN), phone: phoneNumber, user: email, format: WayPay.Account.Format.MERCHANT)
                 let merchant = WayPay.Merchant(name: businessName, email: email, registrationCode: registrationCode)
                 WayPay.Merchant.createAccountAndMerchant(accountRequest: accountRequest, merchant: merchant, logo: logo) { merchants, error in
                     isAPIcalled = false

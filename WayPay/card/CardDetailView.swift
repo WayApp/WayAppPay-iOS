@@ -15,7 +15,7 @@ struct CardDetailView: View {
     @SwiftUI.Environment(\.presentationMode) var presentationMode
     @State private var isAPICallOngoing = false
     @State private var showUpdateResultAlert = false
-    @State private var action: Int? = 10
+    @State private var action: Int = 10
     @State private var validUntil: Date = Calendar.current.date(byAdding: DateComponents(month: 3), to: Date()) ?? Date()
     @State private var consent: AfterBanks.Consent?
     @State var newAlias: String = ""
@@ -65,8 +65,8 @@ struct CardDetailView: View {
                     Text("Grant").tag(0)
                     Text("Renew").tag(1)
                     Text("Cancel").tag(2)
-                }.pickerStyle(SegmentedPickerStyle())
-                
+                }
+                Text("Selected: \(action)")
             } // VStack
             .padding(.bottom, keyboardObserver.keyboardHeight)
             Spacer()

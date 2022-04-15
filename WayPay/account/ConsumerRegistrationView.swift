@@ -65,7 +65,7 @@ struct ConsumerRegistrationView: View {
             }
             Button(action: {
                 isAPICallOngoing = true
-                let account = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN("4762"), phone: "123456789", user: email)
+                let account = WayPay.AccountRequest(firstName: firstName, lastName: lastName, password: WayPay.Account.hashedPIN("4762"), phone: "123456789", user: email, format: WayPay.Account.Format.USER)
                 WayPay.Account.createAccount(account: account) { accounts, error in
                     if let accounts = accounts,
                        !accounts.isEmpty {

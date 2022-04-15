@@ -7,10 +7,15 @@
 //
 
 import Foundation
+import UIKit
 
 extension WayPay {
     
     struct Issuer: Hashable, Codable, Identifiable, ContainerProtocol {
+        static let defaultIcon = "AppIcon"
+        static let defaultLogo = "logoPlaceholder"
+        static let defaultStrip = "WayPay-Logo"
+
         var issuerUUID: String
         var foregroundColor: String?
         var labelColor: String?
@@ -30,11 +35,32 @@ extension WayPay {
         var maxPaymentTokens: Int?
         var customerUUID: String?
 
+        init(customerUUID: String, name: String, description: String, labelColor: String, backgroundColor: String, foregroundColor: String) {
+            self.issuerUUID = UUID().uuidString
+            self.customerUUID = customerUUID
+            self.name = name
+            self.description = description
+            self.labelColor = labelColor
+            self.backgroundColor = backgroundColor
+            self.foregroundColor = foregroundColor
+            self.passTypeIdentifier = "pass.com.wayapp.pay"
+            self.aliasCertApple = "WayApp Inc"
+            self.certPassword = "W4y4ppP4y"
+            self.certApple = "AppleWWDRCA.cer"
+        }
+
         // Protocol Identifiable
         var id: String {
             return issuerUUID
         }
                 
+        static func isColorFormatValid(_ color: String) -> Bool {
+            if color.count == 7,
+               color.prefix(1) == "#" {
+                return true
+            }
+            return false
+        }
         
         static func load(completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.getIssuers.fetch(type: [Issuer].self) { response in
@@ -87,6 +113,23 @@ extension WayPay {
                 }
             }
         }
+        
+        static func create(_ issuer: Issuer, completion: @escaping ([Issuer]?, Error?) -> Void) {
+            let icon = UIImage(named: defaultIcon) ?? UIImage()
+            let logo = UIImage(named: defaultLogo) ?? UIImage()
+            let strip = UIImage(named: defaultStrip) ?? UIImage()
+            WayPay.API.createIssuer(issuer, icon, logo, strip).fetch(type: [Issuer].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
+
 
         static func expireCards(issuerUUID: String, completion: @escaping ([Issuer]?, Error?) -> Void) {
             WayPay.API.expireIssuerCards(issuerUUID).fetch(type: [Issuer].self) { response in

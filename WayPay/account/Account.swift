@@ -24,12 +24,25 @@ extension WayPay {
         var creationDate: Date
     }
 
-    struct Account: Codable, DefaultKeyPersistence, ContainerProtocol {
+    struct Account: Codable, DefaultKeyPersistence, ContainerProtocol, Hashable {
         
         static let PINLength = 4
         static let phoneNumberMinLength = 9
         static let phoneNumberMaxLength = 9
                 
+        enum Format: String, CaseIterable,Codable {
+            case CUSTOMER, MERCHANT, USER, WAYPAY
+            
+            var icon: String {
+                switch self {
+                case .CUSTOMER: return "signature"
+                case .MERCHANT: return "m.square.fill"
+                case .USER: return "person.fill"
+                case .WAYPAY: return "w.circle"
+                }
+            }
+        }
+
         enum Status: String, Codable {
             case CREATED // registered but not validated
             case ENABLED
@@ -53,6 +66,7 @@ extension WayPay {
         var address: Address?
         var creationDate: Date?
         var lastUpdateDate: Date?
+        var format: Format?
         
         init(firstName: String, lastName: String, phone: String, email: String, accountUUID: String = "") {
             self.firstName = firstName
@@ -69,6 +83,18 @@ extension WayPay {
         
         var id: String {
             return accountUUID
+        }
+        
+        var isWayPay: Bool {
+            return format == .WAYPAY
+        }
+        
+        var isCommunity: Bool {
+            return format == .CUSTOMER || format == .WAYPAY
+        }
+        
+        var shouldRetrievePasses: Bool {
+            return format == .USER || format == .WAYPAY
         }
         
         static func hashedPIN(_ pin: String) -> String {
@@ -190,7 +216,6 @@ extension WayPay {
             WayPay.API.getAccounts.fetch(type: [WayPay.Account].self) { response in
                 switch response {
                 case .success(let response?):
-                    Logger.message("Accounts=\(response.result?.count ?? 0)")
                     completion(response.result, nil)
                 case .failure(let error):
                     completion(nil, error)
@@ -265,6 +290,18 @@ extension WayPay {
             }
         }
 
+        static func create(_ accountRequest: AccountRequest, completion: @escaping ([WayPay.Account]?, Error?) -> Void) {
+            WayPay.API.createAccount(accountRequest).fetch(type: [WayPay.Account].self) { response in
+                switch response {
+                case .success(let response?):
+                    completion(response.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+                default:
+                    completion(nil, WayPay.API.ResponseError.INVALID_SERVER_DATA)
+                }
+            }
+        }
     }
 }
 

@@ -18,8 +18,14 @@ struct MerchantsView: View {
                     NavigationLink(destination: MerchantAdminView(merchant: merchant)) {
                         Text(merchant.name ?? "no name")
                     }
+                    .swipeActions(allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            delete(merchant)
+                        } label: {
+                            Label("Delete", systemImage: "trash.fill")
+                        }
+                    }
                 }
-                .onDelete(perform: delete)
             }
             .navigationBarTitle(Text("Merchants"), displayMode: .inline)
             .onAppear(perform: {
@@ -39,7 +45,9 @@ extension MerchantsView {
         if merchants.isEmpty {
             WayPay.Merchant.load { merchants, error in
                 if let merchants = merchants {
-                    self.merchants.setTo(merchants)
+                    self.merchants.setTo(merchants.filter {
+                        return customer.customerUUID == $0.customerUUID
+                    })
                 } else {
                     Logger.message("No merchants found")
                 }
@@ -47,14 +55,12 @@ extension MerchantsView {
         }
     }
     
-    private func delete(at offsets: IndexSet) {
-        for offset in offsets {
-            WayPay.Merchant.delete(merchants[offset].merchantUUID) { error in
-                if let error = error {
-                    Logger.message(error.localizedDescription)
-                } else {
-                    merchants.remove(at: offset)
-                }
+    private func delete(_ merchant: WayPay.Merchant) {
+        WayPay.Merchant.delete(merchant.merchantUUID) { error in
+            if let error = error {
+                Logger.message(error.localizedDescription)
+            } else {
+                merchants.remove(merchant)
             }
         }
     }

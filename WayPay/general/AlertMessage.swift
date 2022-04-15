@@ -78,6 +78,7 @@ extension WayPay {
         case OK
         case requestGiftcard
         case requestPoints
+        case apiErrorAlertTitle
 
         var text: String {
             switch self {
@@ -86,6 +87,7 @@ extension WayPay {
             case .OK: return NSLocalizedString("OK", comment: "SingleMessage: OK text")
             case .requestGiftcard: return NSLocalizedString("mailto:sales@wayapp.com?subject=My own giftcard&body=Hello, I am interested in selling my own digital rechargable giftcard. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!, comment: "SingleMessage: requestGiftcard")
             case .requestPoints: return NSLocalizedString("mailto:sales@wayapp.com?subject=Reward by € consumption&body=Hello, I am interested in using this feature. Please contact me. Thanks.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!, comment: "SingleMessage: requestPoints")
+            case .apiErrorAlertTitle: return NSLocalizedString("⚠️ Attention", comment: "SingleMessage: apiErrorAlertTitle")
             }
         }
     }
