@@ -77,7 +77,7 @@ struct IssuerEditView: View {
                 VStack(alignment: .leading) {
                     Text("foregroundColor")
                         .modifier(UI.EditFieldHeader())
-                    TextField(issuer.foregroundColor ?? "-", text: $foregroundColor)
+                    TextField(issuer.foregroundColor ?? "-", text: $foregroundColor) // Does not allow multiline, does not work for URLs
                         .keyboardType(.asciiCapable)
                         .textCase(.uppercase)
                         .foregroundColor(WayPay.Issuer.isColorFormatValid(labelColor) ? Color.primary : Color.red)
@@ -91,7 +91,7 @@ struct IssuerEditView: View {
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
-                    TextEditor(text: $iconURL)
+                    TextEditor(text: $iconURL) // Does not allow placeholder text and does not work under a Form, only List
                         .keyboardType(.asciiCapable)
                         .autocapitalization(.none)
                 }
